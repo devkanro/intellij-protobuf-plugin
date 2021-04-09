@@ -16,9 +16,10 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapField
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufNumberValue
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneOfField
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcMethod
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSymbolName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufKeywordToken
@@ -41,10 +42,18 @@ class ProtobufHighlightingAnnotator : Annotator {
             }
         }
 
-        override fun visitTypeName(o: ProtobufTypeName) {
-            if (BuiltInType.isBuiltInType(o.text)) {
-                createHighlight(o, ProtobufHighlighter.KEYWORD)
+        override fun visitSymbolName(o: ProtobufSymbolName) {
+            if (o.prevSibling == null && o.nextSibling == null) {
+                if (BuiltInType.isBuiltInType(o.text)) {
+                    createHighlight(o, ProtobufHighlighter.KEYWORD)
+                    return
+                }
             }
+            createHighlight(o, ProtobufHighlighter.IDENTIFIER)
+        }
+
+        override fun visitPackageName(o: ProtobufPackageName) {
+            createHighlight(o, ProtobufHighlighter.IDENTIFIER)
         }
 
         override fun visitIdentifier(o: ProtobufIdentifier) {
