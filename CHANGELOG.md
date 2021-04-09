@@ -2,11 +2,6 @@
 
 # IntelliJ Platform Plugin Template Changelog
 
-## [0.0.1]
+## [Unreleased]
 ### Added
-- Syntax highlighting
-- Symbol and References
-- Import file from library and SDK
-- Navigation
-- Find Usage
-- Code folding
+- Basically features for protobuf language
