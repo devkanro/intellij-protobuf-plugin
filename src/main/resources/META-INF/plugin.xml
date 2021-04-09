@@ -1,0 +1,58 @@
+<idea-plugin>
+    <id>io.kanro.idea.plugin.protobuf</id>
+    <name>Protobuf</name>
+    <vendor>HIGAN</vendor>
+
+    <!-- Product and plugin compatibility requirements -->
+    <!-- https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensionPoints>
+        <extensionPoint
+                interface="io.kanro.idea.plugin.protobuf.lang.file.FileResolver"
+                dynamic="true"
+                name="fileResolver"/>
+    </extensionPoints>
+
+    <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
+        <fileResolver id="module" implementation="io.kanro.idea.plugin.protobuf.lang.file.ModuleSourceProtobufFileResolver"/>
+        <fileResolver id="library" implementation="io.kanro.idea.plugin.protobuf.lang.file.LibraryProtobufFileResolver"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="protobuf" language="protobuf"
+                  implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtobufFileType" extensions="proto"/>
+        <lang.parserDefinition language="protobuf"
+                               implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtobufParserDefinition"/>
+        <lang.syntaxHighlighter language="protobuf"
+                                implementationClass="io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufHighlighter"/>
+        <annotator language="protobuf"
+                   implementationClass="io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufHighlightingAnnotator"
+                   order="FIRST"/>
+
+        <annotator language="protobuf"
+                   implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.ProtobufAnnotator"/>
+        <annotator language="protobuf"
+                   implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.Protobuf3Annotator"/>
+        <annotator language="protobuf"
+                   implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.Protobuf2Annotator"/>
+Map
+        <lang.documentationProvider language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufDocumentationProvider"/>
+        <lang.quoteHandler language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtobufQuoteHandler"/>
+        <completion.contributor language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.completion.ProtobufCompletionContributor"/>
+        <lang.psiStructureViewFactory language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufStructureViewFactory"/>
+        <elementDescriptionProvider implementation="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufElementDescriptionProvider"/>
+        <lang.importOptimizer language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.formatter.ProtobufImportOptimizer"/>
+        <lang.commenter language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.formatter.ProtobufCommenter"/>
+        <codeStyleSettingsProvider implementation="io.kanro.idea.plugin.protobuf.lang.formatter.ProtobufCodeStyleSettingsProvider"/>
+        <langCodeStyleSettingsProvider implementation="io.kanro.idea.plugin.protobuf.lang.formatter.ProtobufLanguageCodeStyleSettingsProvider"/>
+        <lang.braceMatcher language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtobufPairedBraceMatcher"/>
+        <lang.formatter language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.formatter.ProtobufFormattingModelBuilder"/>
+        <lang.findUsagesProvider language="protobuf"
+                                 implementationClass="io.kanro.idea.plugin.protobuf.lang.usage.ProtobufFindUsageProvider"
+                                 />
+        <usageTypeProvider implementation="io.kanro.idea.plugin.protobuf.lang.usage.ProtobufUsageTypeProvider"/>
+        <stubElementTypeHolder class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>
+        <lang.foldingBuilder language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.folding.ProtobufFoldingBuilder"/>
+    </extensions>
+</idea-plugin>
