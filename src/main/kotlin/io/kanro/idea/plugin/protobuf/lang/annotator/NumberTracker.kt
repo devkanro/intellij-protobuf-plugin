@@ -5,27 +5,31 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufNumberScope
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufNumbered
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufReservedNumber
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedRange
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumbered
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
+import io.kanro.idea.plugin.protobuf.lang.psi.range
+import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 
 open class NumberTracker(scope: ProtobufNumberScope) {
     private val numberMap = mutableMapOf<Long, MutableList<ProtobufNumbered>>()
-    private val reservedNameMap = mutableMapOf<LongRange, ProtobufReservedNumber>()
+    private val reservedNameMap = mutableMapOf<LongRange, ProtobufReservedRange>()
 
     init {
-        scope.numbered().forEach { record(it) }
+        scope.realItems().forEach { record(it) }
         scope.reservedRange().forEach { record(it) }
     }
 
-    protected open fun record(numbered: ProtobufNumbered) {
+    protected open fun record(numbered: ProtobufScopeItem) {
+        if (numbered !is ProtobufNumbered) return
         val number = numbered.number() ?: return
         numberMap.getOrPut(number) {
             mutableListOf()
         }.add(numbered)
     }
 
-    protected open fun record(reserved: ProtobufReservedNumber) {
+    protected open fun record(reserved: ProtobufReservedRange) {
         val range = reserved.range() ?: return
         reservedNameMap[range] = reserved
     }
@@ -35,7 +39,7 @@ open class NumberTracker(scope: ProtobufNumberScope) {
         createError(numbered, buildMessage(number, numbered) ?: return, holder)
     }
 
-    open fun visit(reserved: ProtobufReservedNumber, holder: AnnotationHolder) {
+    open fun visit(reserved: ProtobufReservedRange, holder: AnnotationHolder) {
         val range = reserved.range() ?: return
         createError(reserved, buildMessage(range, reserved) ?: return, holder)
     }
@@ -58,7 +62,7 @@ open class NumberTracker(scope: ProtobufNumberScope) {
 
     protected open fun buildMessage(
         range: LongRange,
-        reserved: ProtobufReservedNumber
+        reserved: ProtobufReservedRange
     ): String? {
         reservedNameMap.forEach { (r, element) ->
             if (element == reserved) return@forEach
@@ -73,10 +77,10 @@ open class NumberTracker(scope: ProtobufNumberScope) {
         holder.newAnnotation(
             HighlightSeverity.ERROR,
             message
-        ).range(numbered.numberElement()?.textRange ?: numbered.textRange).create()
+        ).range(numbered.intValue()?.textRange ?: numbered.textRange).create()
     }
 
-    protected open fun createError(reserved: ProtobufReservedNumber, message: String, holder: AnnotationHolder) {
+    protected open fun createError(reserved: ProtobufReservedRange, message: String, holder: AnnotationHolder) {
         holder.newAnnotation(
             HighlightSeverity.ERROR,
             message

@@ -5,8 +5,8 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupField
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneOfBody
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneofBody
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 
@@ -18,7 +18,7 @@ class Protobuf2Annotator : Annotator {
 
         element.accept(object : ProtobufVisitor() {
             override fun visitFieldDefinition(o: ProtobufFieldDefinition) {
-                if (o.parent is ProtobufOneOfBody) {
+                if (o.parent is ProtobufOneofBody) {
                     if (o.fieldLabel?.textMatches("optional") == false) {
                         holder.newAnnotation(
                             HighlightSeverity.ERROR,
@@ -39,7 +39,7 @@ class Protobuf2Annotator : Annotator {
                 }
             }
 
-            override fun visitGroupField(o: ProtobufGroupField) {
+            override fun visitGroupDefinition(o: ProtobufGroupDefinition) {
                 val name = o.qualifiedName()?.lastComponent ?: return
                 if (name.isEmpty() && !name[0].isUpperCase()) {
                     holder.newAnnotation(

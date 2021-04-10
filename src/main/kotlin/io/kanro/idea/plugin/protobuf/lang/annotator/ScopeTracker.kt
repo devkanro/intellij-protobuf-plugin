@@ -6,20 +6,21 @@ import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedName
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufMultiNameDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.forEach
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufMultiNameDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
 
 open class ScopeTracker(scope: ProtobufScope) {
-    private val nameMap = mutableMapOf<String, MutableList<ProtobufDefinition>>()
+    private val nameMap = mutableMapOf<String, MutableList<ProtobufScopeItem>>()
     private val reservedNameMap = mutableMapOf<String, MutableList<ProtobufReservedName>>()
 
     init {
-        scope.definitions().forEach { record(it) }
+        scope.forEach { record(it) }
         scope.reservedNames().forEach { record(it) }
     }
 
-    protected open fun record(definition: ProtobufDefinition) {
+    protected open fun record(definition: ProtobufScopeItem) {
         if (definition is ProtobufMultiNameDefinition) {
             definition.names().forEach {
                 nameMap.getOrPut(it) {
@@ -41,7 +42,7 @@ open class ScopeTracker(scope: ProtobufScope) {
         }.add(reserved)
     }
 
-    open fun visit(definition: ProtobufDefinition, holder: AnnotationHolder) {
+    open fun visit(definition: ProtobufScopeItem, holder: AnnotationHolder) {
         val name = definition.name() ?: return
         createError(definition, buildMessage(name, definition) ?: return, holder)
     }
@@ -53,7 +54,7 @@ open class ScopeTracker(scope: ProtobufScope) {
 
     protected open fun buildMessage(
         name: String,
-        definition: ProtobufDefinition
+        definition: ProtobufScopeItem
     ): String? {
         val reserves = reservedNameMap[name] ?: listOf()
         if (reserves.isNotEmpty()) {
@@ -77,11 +78,11 @@ open class ScopeTracker(scope: ProtobufScope) {
         return null
     }
 
-    protected open fun createError(definition: ProtobufDefinition, message: String, holder: AnnotationHolder) {
+    protected open fun createError(definition: ProtobufScopeItem, message: String, holder: AnnotationHolder) {
         holder.newAnnotation(
             HighlightSeverity.ERROR,
             message
-        ).range(definition.identifier()?.textRange ?: definition.textRange).create()
+        ).range(definition.nameElement()?.textRange ?: definition.textRange).create()
     }
 
     protected open fun createError(reserved: ProtobufReservedName, message: String, holder: AnnotationHolder) {

@@ -6,7 +6,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.usageView.UsageViewLongNameLocation
 import com.intellij.usageView.UsageViewShortNameLocation
 import com.intellij.usageView.UsageViewTypeLocation
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 
 class ProtobufElementDescriptionProvider : ElementDescriptionProvider {
     override fun getElementDescription(element: PsiElement, location: ElementDescriptionLocation): String? {

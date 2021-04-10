@@ -20,15 +20,3 @@ class LibraryProtobufFileResolver : FileResolver {
             }
     }
 }
-
-class ModuleSourceProtobufFileResolver : FileResolver {
-    override fun findFile(path: String, project: Project): Iterable<VirtualFile> {
-        return listOf()
-    }
-
-    override fun findFile(path: String, module: Module): Iterable<VirtualFile> {
-        return ModuleRootManager.getInstance(module).sourceRoots.mapNotNull {
-            it.findFileByRelativePath(path)?.takeIf { it.exists() }
-        }
-    }
-}

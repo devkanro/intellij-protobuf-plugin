@@ -36,7 +36,8 @@
                    implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.Protobuf3Annotator"/>
         <annotator language="protobuf"
                    implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.Protobuf2Annotator"/>
-Map
+
+        <iconProvider implementation="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufIconProvider"/>
         <lang.documentationProvider language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufDocumentationProvider"/>
         <lang.quoteHandler language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtobufQuoteHandler"/>
         <completion.contributor language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.completion.ProtobufCompletionContributor"/>

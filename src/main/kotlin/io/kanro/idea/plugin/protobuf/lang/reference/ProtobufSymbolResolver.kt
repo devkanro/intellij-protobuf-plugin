@@ -4,8 +4,9 @@ import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.forEach
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.public
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 import io.kanro.idea.plugin.protobuf.lang.util.AnyElement
@@ -124,7 +125,7 @@ object ProtobufSymbolResolver {
         symbol: QualifiedName,
         filter: PsiElementFilter = AnyElement
     ): ProtobufElement? {
-        scope.definitions().forEach {
+        scope.forEach {
             if (it.name() == symbol.firstComponent) {
                 if (symbol.componentCount == 1) {
                     return it.takeIf { filter.isAccepted(it) }
@@ -269,7 +270,7 @@ object ProtobufSymbolResolver {
         result: MutableList<ProtobufElement> = mutableListOf()
     ): List<ProtobufElement> {
         if (targetScope.componentCount == 0) {
-            scope.definitions().forEach {
+            scope.forEach {
                 if (filter.isAccepted(it)) {
                     result += it
                 }
@@ -277,7 +278,7 @@ object ProtobufSymbolResolver {
             return result
         }
 
-        scope.definitions().forEach {
+        scope.forEach {
             if (it.name() == targetScope.firstComponent) {
                 if (it is ProtobufScope) {
                     collectInScope(it, targetScope.removeHead(1), filter, result)

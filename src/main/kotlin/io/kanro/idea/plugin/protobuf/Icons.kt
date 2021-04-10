@@ -8,12 +8,12 @@ object Icons {
     var ENUM: Icon = loadIcon("enum.svg")
     var ENUM_VALUE: Icon = loadIcon("enum_value.svg")
     var FIELD: Icon = loadIcon("field.svg")
-    var EXTEND_FIELD: Icon = loadIcon("extend_field.svg")
+    var EXTEND: Icon = loadIcon("extend.svg")
     var GROUP_FIELD: Icon = loadIcon("group_field.svg")
     var ONEOF: Icon = loadIcon("oneof_field.svg")
     var PACKAGE: Icon = PlatformIcons.PACKAGE_ICON
     var SERVICE: Icon = loadIcon("service.svg")
-    var SERVICE_METHOD: Icon = loadIcon("rpc_method.svg")
+    var RPC_METHOD: Icon = loadIcon("rpc_method.svg")
 
     var MESSAGE: Icon = loadIcon("message.svg")
     var FILE: Icon = loadIcon("protobuf_file.svg")

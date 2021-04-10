@@ -14,14 +14,15 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupField
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapField
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneOfField
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcMethod
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneofDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufLookupItem
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufOptionOwner
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
+import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 import io.kanro.idea.plugin.protobuf.lang.support.Options
 
 class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
@@ -30,13 +31,13 @@ class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
         val owner = element.parentOfType<ProtobufOptionOwner>() ?: return null
         return when (owner) {
             is ProtobufFile -> Options.FILE_OPTIONS.messageName
-            is ProtobufMessageDefinition, is ProtobufGroupField -> Options.MESSAGE_OPTIONS.messageName
-            is ProtobufFieldDefinition, is ProtobufMapField -> Options.FIELD_OPTIONS.messageName
-            is ProtobufOneOfField -> Options.ONEOF_OPTIONS.messageName
+            is ProtobufMessageDefinition, is ProtobufGroupDefinition -> Options.MESSAGE_OPTIONS.messageName
+            is ProtobufFieldDefinition, is ProtobufMapFieldDefinition -> Options.FIELD_OPTIONS.messageName
+            is ProtobufOneofDefinition -> Options.ONEOF_OPTIONS.messageName
             is ProtobufEnumDefinition -> Options.ENUM_OPTIONS.messageName
             is ProtobufEnumValueDefinition -> Options.ENUM_VALUE_OPTIONS.messageName
             is ProtobufServiceDefinition -> Options.SERVICE_OPTIONS.messageName
-            is ProtobufRpcMethod -> Options.METHOD_OPTIONS.messageName
+            is ProtobufRpcDefinition -> Options.METHOD_OPTIONS.messageName
             else -> null
         }
     }
@@ -55,9 +56,9 @@ class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
             descriptor,
             QualifiedName.fromComponents(type)
         ) as? ProtobufMessageDefinition ?: return arrayOf()
-        val fields: MutableList<Any> = message.definitions().mapNotNull {
+        val fields: MutableList<Any> = message.realItems().mapNotNull {
             if (it !is ProtobufFieldDefinition) return@mapNotNull null
-            (it as? ProtobufLookupItem)?.lookup() ?: it
+            (it as? ProtobufLookupItem)?.lookup()
         }.toMutableList()
         if (Options.FIELD_OPTIONS.messageName == type) {
             fields += LookupElementBuilder.create("default")

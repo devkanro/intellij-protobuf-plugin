@@ -13,7 +13,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.psi.NavigatablePsiElement
 import com.intellij.psi.PsiFile
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItemContainer
 
 class ProtobufStructureViewFactory : PsiStructureViewFactory {
     override fun getStructureViewBuilder(psiFile: PsiFile): StructureViewBuilder? {
@@ -55,8 +55,8 @@ class ProtobufStructureViewElement(private val element: NavigatablePsiElement) :
     }
 
     override fun getChildren(): Array<TreeElement> {
-        if (element !is ProtobufScope) return arrayOf()
-        return element.definitions().map {
+        if (element !is ProtobufScopeItemContainer) return arrayOf()
+        return element.items().map {
             ProtobufStructureViewElement(it)
         }.toTypedArray()
     }

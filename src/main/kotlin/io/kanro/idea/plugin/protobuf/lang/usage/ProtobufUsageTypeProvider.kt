@@ -9,7 +9,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtensionOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapField
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcIO
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSymbolName
 
@@ -21,7 +21,7 @@ class ProtobufUsageTypeProvider : UsageTypeProvider {
             is ProtobufSymbolName -> when (element.parent.parent) {
                 is ProtobufRpcIO -> METHOD_PARAMETER_USAGE_TYPE
                 is ProtobufExtensionOptionName -> OPTION_USAGE_TYPE
-                is ProtobufFieldDefinition, is ProtobufMapField -> FIELD_DECLARATION_USAGE_TYPE
+                is ProtobufFieldDefinition, is ProtobufMapFieldDefinition -> FIELD_DECLARATION_USAGE_TYPE
                 is ProtobufExtendDefinition -> EXTEND_DECLARATION_USAGE_TYPE
                 else -> null
             }

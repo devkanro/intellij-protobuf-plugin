@@ -6,9 +6,11 @@ import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufOptionOwner
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufVirtualScope
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolFilters
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolResolver
 import io.kanro.idea.plugin.protobuf.lang.util.AnyElement
@@ -76,7 +78,7 @@ fun ProtobufFieldName.message(): ProtobufScope? {
     } ?: return null
 
     return when (field) {
-        is ProtobufGroupField -> field
+        is ProtobufGroupDefinition -> field
         is ProtobufFieldDefinition -> field.typeName.resolve() as? ProtobufMessageDefinition
         else -> null
     }
@@ -106,7 +108,7 @@ private fun ProtobufTypeName.tryResolve(): Pair<QualifiedName?, PsiElement?> {
         val filter = when (parent) {
             is ProtobufExtensionOptionName -> ProtobufSymbolFilters.extensionOptionName(parentOfType())
             is ProtobufFieldDefinition,
-            is ProtobufMapField -> ProtobufSymbolFilters.fieldTypeName
+            is ProtobufMapFieldDefinition -> ProtobufSymbolFilters.fieldTypeName
             is ProtobufRpcIO -> ProtobufSymbolFilters.rpcTypeName
             is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendTypeName
             else -> AnyElement
@@ -141,4 +143,35 @@ fun ProtobufEnumValue.enum(): ProtobufEnumDefinition? {
         else -> null
     } ?: return null
     return field.typeName.resolve() as? ProtobufEnumDefinition
+}
+
+fun ProtobufReservedRange.range(): LongRange? {
+    val numbers = integerValueList.map { it.text.toLong() }
+    return when (numbers.size) {
+        1 -> if (lastChild.textMatches("max")) {
+            LongRange(numbers[0], Long.MAX_VALUE)
+        } else {
+            LongRange(numbers[0], numbers[0])
+        }
+        2 -> LongRange(numbers[0], numbers[1])
+        else -> null
+    }
+}
+
+inline fun ProtobufScope.forEach(block: (ProtobufScopeItem) -> Unit) {
+    this.items().forEach {
+        if (it is ProtobufVirtualScope) {
+            it.items().forEach(block)
+        } else {
+            block(it)
+        }
+    }
+}
+
+fun ProtobufScope.realItems(): Array<ProtobufScopeItem> {
+    val result = mutableListOf<ProtobufScopeItem>()
+    this.forEach {
+        result += it
+    }
+    return result.toTypedArray()
 }

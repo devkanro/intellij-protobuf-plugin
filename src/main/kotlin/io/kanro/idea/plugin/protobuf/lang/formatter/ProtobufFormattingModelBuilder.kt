@@ -56,7 +56,7 @@ class ProtobufFormattingModelBuilder : FormattingModelBuilder {
                 .spaceIf(commonSettings.SPACE_BEFORE_CLASS_LBRACE)
                 .before(ProtobufTypes.SERVICE_BODY)
                 .spaceIf(commonSettings.SPACE_BEFORE_CLASS_LBRACE)
-                .before(ProtobufTypes.ONE_OF_BODY)
+                .before(ProtobufTypes.ONEOF_BODY)
                 .spaceIf(commonSettings.SPACE_BEFORE_CLASS_LBRACE)
                 .before(ProtobufTypes.EXTEND_BODY)
                 .spaceIf(commonSettings.SPACE_BEFORE_CLASS_LBRACE)

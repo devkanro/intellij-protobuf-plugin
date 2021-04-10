@@ -13,9 +13,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupField
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapField
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOptionAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedName
@@ -26,6 +26,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.enum
 import io.kanro.idea.plugin.protobuf.lang.psi.field
+import io.kanro.idea.plugin.protobuf.lang.psi.forEach
 import io.kanro.idea.plugin.protobuf.lang.psi.isFieldDefaultOption
 import io.kanro.idea.plugin.protobuf.lang.psi.message
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
@@ -51,7 +52,7 @@ class ProtobufAnnotator : Annotator {
 
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         element.accept(object : ProtobufVisitor() {
-            override fun visitMapField(o: ProtobufMapField) {
+            override fun visitMapFieldDefinition(o: ProtobufMapFieldDefinition) {
                 ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
                 NumberTracker.tracker(o.parentOfType() ?: return).visit(o, holder)
                 val types = o.typeNameList
@@ -107,32 +108,34 @@ class ProtobufAnnotator : Annotator {
 
             override fun visitFieldName(o: ProtobufFieldName) {
                 val message = o.message() ?: return
-                val field = message.definitions().firstOrNull {
-                    it.name() == element.text
-                } as? ProtobufFieldDefinition
-                if (field == null) {
-                    holder.newAnnotation(
-                        HighlightSeverity.ERROR,
-                        "Field '${o.text}' not found"
-                    )
-                        .range(o.textRange)
-                        .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
-                        .create()
+                message.forEach {
+                    if (it.name() == element.text) {
+                        return
+                    }
                 }
+                holder.newAnnotation(
+                    HighlightSeverity.ERROR,
+                    "Field '${o.text}' not found"
+                )
+                    .range(o.textRange)
+                    .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
+                    .create()
             }
 
             override fun visitEnumValue(o: ProtobufEnumValue) {
                 val enum = o.enum() ?: return
-                val value = enum.definitions().firstOrNull { it.name() == o.text }
-                if (value == null) {
-                    holder.newAnnotation(
-                        HighlightSeverity.ERROR,
-                        "Enum value '${o.text}' not found"
-                    )
-                        .range(o.textRange)
-                        .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
-                        .create()
+                enum.forEach {
+                    if (it.name() == element.text) {
+                        return
+                    }
                 }
+                holder.newAnnotation(
+                    HighlightSeverity.ERROR,
+                    "Enum value '${o.text}' not found"
+                )
+                    .range(o.textRange)
+                    .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
+                    .create()
             }
 
             override fun visitStringValue(o: ProtobufStringValue) {
@@ -157,7 +160,7 @@ class ProtobufAnnotator : Annotator {
 
             override fun visitEnumDefinition(o: ProtobufEnumDefinition) {
                 ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
-                if (o.definitions().isEmpty()) {
+                if (o.items().isEmpty()) {
                     holder.newAnnotation(
                         HighlightSeverity.ERROR,
                         "Enum must not be empty"
@@ -180,7 +183,7 @@ class ProtobufAnnotator : Annotator {
                 ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
             }
 
-            override fun visitGroupField(o: ProtobufGroupField) {
+            override fun visitGroupDefinition(o: ProtobufGroupDefinition) {
                 ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
                 NumberTracker.tracker(o.parentOfType() ?: return).visit(o, holder)
             }

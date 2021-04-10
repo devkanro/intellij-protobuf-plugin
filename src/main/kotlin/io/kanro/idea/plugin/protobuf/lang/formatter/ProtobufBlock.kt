@@ -10,8 +10,8 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.TokenType
 import com.intellij.psi.formatter.common.AbstractBlock
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufBlock
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufBlock
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufCommentToken
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
 

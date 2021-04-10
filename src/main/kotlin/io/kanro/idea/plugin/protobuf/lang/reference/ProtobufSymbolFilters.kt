@@ -9,14 +9,14 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendBody
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupField
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapField
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneOfField
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneofDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcMethod
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufOptionOwner
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 import io.kanro.idea.plugin.protobuf.lang.support.Options
 import io.kanro.idea.plugin.protobuf.lang.util.and
@@ -30,19 +30,19 @@ object ProtobufSymbolFilters {
     fun extensionOptionName(owner: ProtobufOptionOwner?): PsiElementFilter {
         return when (owner) {
             is ProtobufFile -> fileExtensionOptionName
-            is ProtobufMessageDefinition, is ProtobufGroupField -> messageExtensionOptionName
-            is ProtobufFieldDefinition, is ProtobufMapField -> fieldExtensionOptionName
-            is ProtobufOneOfField -> oneofExtensionOptionName
+            is ProtobufMessageDefinition, is ProtobufGroupDefinition -> messageExtensionOptionName
+            is ProtobufFieldDefinition, is ProtobufMapFieldDefinition -> fieldExtensionOptionName
+            is ProtobufOneofDefinition -> oneofExtensionOptionName
             is ProtobufEnumDefinition -> enumExtensionOptionName
             is ProtobufEnumValueDefinition -> enumValueExtensionOptionName
             is ProtobufServiceDefinition -> serviceExtensionOptionName
-            is ProtobufRpcMethod -> methodExtensionOptionName
+            is ProtobufRpcDefinition -> methodExtensionOptionName
             else -> extensionOptionName
         }
     }
 
     private val extensionOptionName = PsiElementFilter {
-        (it is ProtobufFieldDefinition || it is ProtobufGroupField) && it.parent is ProtobufExtendBody
+        (it is ProtobufFieldDefinition || it is ProtobufGroupDefinition) && it.parent is ProtobufExtendBody
     }
     private val fileExtensionOptionName = extensionOptionName and TargetOptionFilter(Options.FILE_OPTIONS)
     private val messageExtensionOptionName = extensionOptionName and TargetOptionFilter(Options.MESSAGE_OPTIONS)
@@ -56,13 +56,13 @@ object ProtobufSymbolFilters {
     fun extensionOptionNameVariants(owner: ProtobufOptionOwner?): PsiElementFilter {
         return when (owner) {
             is ProtobufFile -> fileExtensionOptionNameVariants
-            is ProtobufMessageDefinition, is ProtobufGroupField -> messageExtensionOptionNameVariants
-            is ProtobufFieldDefinition, is ProtobufMapField -> fieldExtensionOptionNameVariants
-            is ProtobufOneOfField -> oneofExtensionOptionNameVariants
+            is ProtobufMessageDefinition, is ProtobufGroupDefinition -> messageExtensionOptionNameVariants
+            is ProtobufFieldDefinition, is ProtobufMapFieldDefinition -> fieldExtensionOptionNameVariants
+            is ProtobufOneofDefinition -> oneofExtensionOptionNameVariants
             is ProtobufEnumDefinition -> enumExtensionOptionNameVariants
             is ProtobufEnumValueDefinition -> enumValueExtensionOptionNameVariants
             is ProtobufServiceDefinition -> serviceExtensionOptionNameVariants
-            is ProtobufRpcMethod -> methodExtensionOptionNameVariants
+            is ProtobufRpcDefinition -> methodExtensionOptionNameVariants
             else -> extensionOptionNameVariants
         }
     }

@@ -89,6 +89,26 @@ abstract class AbstractDocumentScope<T : AbstractDocumentScope<T>> {
         }
     }
 
+    fun img(url: String, block: ElementScope.() -> Unit = {}) {
+        tag("img") {
+            attr("src", url)
+            block()
+        }
+    }
+
+    fun img(block: ElementScope.() -> Unit) {
+        tag("img") {
+            block()
+        }
+    }
+
+    fun color(color: String, block: ElementScope.() -> Unit) {
+        tag("font") {
+            attr("color", color)
+            block()
+        }
+    }
+
     fun sectionHeader(content: String?) {
         addElement(
             ElementScope(DocumentationMarkup.SECTION_HEADER_CELL).apply {

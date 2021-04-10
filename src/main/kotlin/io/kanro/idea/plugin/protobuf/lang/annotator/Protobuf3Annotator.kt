@@ -7,10 +7,10 @@ import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtensionStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupField
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneOfBody
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneofBody
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
@@ -25,10 +25,10 @@ class Protobuf3Annotator : Annotator {
         element.accept(object : ProtobufVisitor() {
             override fun visitFieldDefinition(o: ProtobufFieldDefinition) {
                 val label = o.fieldLabel ?: return
-                if (o.parent is ProtobufOneOfBody) {
+                if (o.parent is ProtobufOneofBody) {
                     holder.newAnnotation(
                         HighlightSeverity.ERROR,
-                        "OneOf file only support none label in proto3."
+                        "OneOf field only support none label in proto3."
                     )
                         .range(o.textRange)
                         .create()
@@ -58,7 +58,7 @@ class Protobuf3Annotator : Annotator {
                     .create()
             }
 
-            override fun visitGroupField(o: ProtobufGroupField) {
+            override fun visitGroupDefinition(o: ProtobufGroupDefinition) {
                 holder.newAnnotation(
                     HighlightSeverity.ERROR,
                     "'group' is not supported in proto3."

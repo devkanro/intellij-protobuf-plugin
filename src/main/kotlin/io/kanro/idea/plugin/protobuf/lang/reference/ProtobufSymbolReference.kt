@@ -9,14 +9,14 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtensionOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapField
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcIO
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSymbolName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.absolutely
 import io.kanro.idea.plugin.protobuf.lang.psi.lastResolvedPartIndex
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufLookupItem
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 
 class ProtobufSymbolReference(element: ProtobufSymbolName) : PsiReferenceBase<ProtobufSymbolName>(element) {
@@ -32,7 +32,10 @@ class ProtobufSymbolReference(element: ProtobufSymbolName) : PsiReferenceBase<Pr
         var level = lastPartIndex - currentIndex
         while (level > 0) {
             resolvedElement = resolvedElement.parentOfType<ProtobufScope>() ?: return null
-            if (resolvedElement is ProtobufFile) break
+            if (resolvedElement is ProtobufFile) {
+                val parts = resolvedElement.packageParts()
+                return parts[parts.size - level]
+            }
             level--
         }
         return resolvedElement
@@ -47,7 +50,7 @@ class ProtobufSymbolReference(element: ProtobufSymbolName) : PsiReferenceBase<Pr
         val filter = when (typeName.parent) {
             is ProtobufExtensionOptionName -> ProtobufSymbolFilters.extensionOptionNameVariants(element.parentOfType())
             is ProtobufFieldDefinition,
-            is ProtobufMapField -> ProtobufSymbolFilters.fieldTypeNameVariants
+            is ProtobufMapFieldDefinition -> ProtobufSymbolFilters.fieldTypeNameVariants
             is ProtobufRpcIO -> ProtobufSymbolFilters.rpcTypeNameVariants
             is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendTypeNameVariants
             else -> return arrayOf()
@@ -58,11 +61,11 @@ class ProtobufSymbolReference(element: ProtobufSymbolName) : PsiReferenceBase<Pr
 
         return if (typeName.absolutely()) {
             ProtobufSymbolResolver.collectAbsolute(element, targetScope, filter)
-                .map { (it as? ProtobufLookupItem)?.lookup() ?: it }
+                .mapNotNull { (it as? ProtobufLookupItem)?.lookup() }
                 .toTypedArray()
         } else {
             ProtobufSymbolResolver.collectRelatively(element, targetScope, filter)
-                .map { (it as? ProtobufLookupItem)?.lookup() ?: it }
+                .mapNotNull { (it as? ProtobufLookupItem)?.lookup() }
                 .toTypedArray()
         }
     }

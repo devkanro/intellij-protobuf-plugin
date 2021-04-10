@@ -8,7 +8,7 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType
 import com.intellij.psi.util.elementType
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufFolding
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufFolding
 import java.util.Stack
 
 class ProtobufFoldingBuilder : FoldingBuilderEx(), DumbAware {

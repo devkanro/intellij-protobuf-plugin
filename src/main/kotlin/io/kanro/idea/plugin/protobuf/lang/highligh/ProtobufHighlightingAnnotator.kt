@@ -10,14 +10,14 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupField
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufIdentifier
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapField
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufNumberValue
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneOfField
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneofDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcMethod
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSymbolName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
@@ -57,16 +57,16 @@ class ProtobufHighlightingAnnotator : Annotator {
         }
 
         override fun visitIdentifier(o: ProtobufIdentifier) {
-            when (o.owner()) {
+            when (o.parent) {
                 is ProtobufMessageDefinition,
                 is ProtobufFieldDefinition,
-                is ProtobufMapField,
-                is ProtobufOneOfField,
-                is ProtobufGroupField,
+                is ProtobufMapFieldDefinition,
+                is ProtobufOneofDefinition,
+                is ProtobufGroupDefinition,
                 is ProtobufFieldAssign,
                 is ProtobufEnumDefinition,
                 is ProtobufServiceDefinition,
-                is ProtobufRpcMethod -> {
+                is ProtobufRpcDefinition -> {
                     createHighlight(o, ProtobufHighlighter.IDENTIFIER)
                 }
             }

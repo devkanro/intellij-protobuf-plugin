@@ -6,15 +6,19 @@ import com.intellij.psi.PsiReferenceBase
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.enum
-import io.kanro.idea.plugin.protobuf.lang.psi.field
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufLookupItem
+import io.kanro.idea.plugin.protobuf.lang.psi.forEach
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
+import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 
 class ProtobufEnumValueReference(field: ProtobufEnumValue) :
     PsiReferenceBase<ProtobufEnumValue>(field) {
     override fun resolve(): PsiElement? {
-        return element.enum()?.definitions()?.firstOrNull {
-            it.name() == element.text
+        element.enum()?.forEach {
+            if (it.name() == element.text) {
+                return it
+            }
         }
+        return null
     }
 
     override fun calculateDefaultRangeInElement(): TextRange {
@@ -22,9 +26,9 @@ class ProtobufEnumValueReference(field: ProtobufEnumValue) :
     }
 
     override fun getVariants(): Array<Any> {
-        return element.enum()?.definitions()?.mapNotNull {
+        return element.enum()?.realItems()?.mapNotNull {
             if (it !is ProtobufEnumValueDefinition) return@mapNotNull null
-            (it as? ProtobufLookupItem)?.lookup() ?: it
+            (it as? ProtobufLookupItem)?.lookup()
         }?.toTypedArray() ?: arrayOf()
     }
 }
