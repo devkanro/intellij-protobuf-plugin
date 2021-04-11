@@ -1,11 +1,12 @@
 package io.kanro.idea.plugin.protobuf.lang.psi
 
+import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 
-interface ProtobufFile : ProtobufScope, ProtobufOptionOwner {
+interface ProtobufFile : PsiFile, ProtobufScope, ProtobufOptionOwner {
     fun messages(): Iterable<ProtobufMessageDefinition>
 
     fun imports(): Iterable<ProtobufImportStatement>

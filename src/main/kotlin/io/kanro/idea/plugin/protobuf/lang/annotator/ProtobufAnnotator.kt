@@ -69,16 +69,7 @@ class ProtobufAnnotator : Annotator {
             }
 
             override fun visitImportStatement(o: ProtobufImportStatement) {
-                if (o.resolve() == null) {
-                    val path = o.stringValue ?: return
-                    holder.newAnnotation(
-                        HighlightSeverity.ERROR,
-                        "Imported file ${path.text} not found"
-                    )
-                        .range(path.textRange)
-                        .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
-                        .create()
-                }
+                ImportTracker.tracker(o.file()).visit(o, holder)
             }
 
             override fun visitTypeName(o: ProtobufTypeName) {

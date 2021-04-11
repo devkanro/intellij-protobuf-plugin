@@ -18,12 +18,12 @@ Analyzing features:
 Editor features:
 - [x] Auto Completion
 - [x] Code format
+- [x] Import optimizing
 <!-- Plugin description end -->
 
 Planned features:
 - [ ] PSI stub
 - [ ] Quick documentation
-- [ ] Import optimizing
 - [ ] Auto import
 - [ ] [AIP](https://google.aip.dev/) spec support
 - [ ] Java/Kotlin code navigation

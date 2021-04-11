@@ -377,10 +377,10 @@ private Constant ::= StringValue | IntegerValue | NumberValue | BooleanValue | M
 
 TypeName ::= '.'? SymbolName ('.' SymbolName)* {
     implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufTypeNameMixin"
 }
 SymbolName ::= IdentifierWithKeyword {
     implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"]
-    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufSymbolNameMixin"
 }
 FieldName ::= IdentifierWithKeyword {
     implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"]

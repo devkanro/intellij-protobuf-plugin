@@ -49,7 +49,7 @@ interface ProtobufDefinition : ProtobufScopeItem, PsiNameIdentifierOwner {
         val name = name() ?: return null
         return LookupElementBuilder.create(name)
             .withIcon(getIcon(false))
-            .withLookupString(name)
+            .withPresentableText(name)
             .withTailText(tailText(), true)
             .withTypeText(type())
             .withPsiElement(this)

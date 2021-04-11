@@ -34,6 +34,37 @@ inline fun <reified T : PsiElement> PsiElement.findChildren(): Array<T> {
     return result.toTypedArray()
 }
 
+inline fun <reified T : PsiElement> PsiElement.walkChildren(noinline block: (T) -> Unit) {
+    walkChildren(T::class.java, block)
+}
+
+fun <T : PsiElement> PsiElement.walkChildren(clazz: Class<*>, block: (T) -> Unit) {
+    var child: PsiElement? = this.firstChild ?: return
+    while (child != null) {
+        if (clazz.isInstance(child)) block(child as T)
+        child.walkChildren(clazz, block)
+        child = child.nextSibling
+    }
+}
+
+inline fun <reified T : PsiElement> PsiElement.next(): T? {
+    var next: PsiElement? = this.nextSibling ?: return null
+    while (next != null) {
+        if (next is T) return next
+        next = next.nextSibling
+    }
+    return null
+}
+
+inline fun <reified T : PsiElement> PsiElement.prev(): T? {
+    var prev: PsiElement? = this.prevSibling ?: return null
+    while (prev != null) {
+        if (prev is T) return prev
+        prev = prev.prevSibling
+    }
+    return null
+}
+
 fun ProtobufImportStatement.public(): Boolean {
     return importLabel?.textMatches("public") == true
 }
@@ -93,14 +124,7 @@ fun ProtobufTypeName.absolutely(): Boolean {
 }
 
 fun ProtobufTypeName.resolve(): PsiElement? {
-    val (_, element) = tryResolve()
-    return element
-}
-
-fun ProtobufTypeName.lastResolvedPartIndex(): Int {
-    val (name, _) = tryResolve()
-    name ?: return -1
-    return name.componentCount - 1
+    return this.reference?.resolve()
 }
 
 private fun ProtobufTypeName.tryResolve(): Pair<QualifiedName?, PsiElement?> {

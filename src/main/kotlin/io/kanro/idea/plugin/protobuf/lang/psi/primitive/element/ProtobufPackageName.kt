@@ -101,7 +101,7 @@ interface ProtobufPackageName :
         val name = name() ?: return null
         return LookupElementBuilder.create(name)
             .withTypeText("package")
-            .withLookupString(name)
+            .withPresentableText(name)
             .withIcon(getIcon(false))
             .withPsiElement(this)
     }

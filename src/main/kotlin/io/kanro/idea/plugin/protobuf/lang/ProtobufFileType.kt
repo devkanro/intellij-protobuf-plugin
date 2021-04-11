@@ -4,7 +4,11 @@ import com.intellij.openapi.fileTypes.LanguageFileType
 import io.kanro.idea.plugin.protobuf.Icons
 import javax.swing.Icon
 
-object ProtobufFileType : LanguageFileType(ProtobufLanguage) {
+class ProtobufFileType : LanguageFileType(ProtobufLanguage) {
+    companion object {
+        val INSTANCE = ProtobufFileType()
+    }
+
     override fun getName(): String {
         return ProtobufLanguage.id
     }

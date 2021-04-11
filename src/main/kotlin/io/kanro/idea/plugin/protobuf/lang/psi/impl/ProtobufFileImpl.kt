@@ -33,7 +33,7 @@ import javax.swing.Icon
 
 class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, ProtobufLanguage), ProtobufFile {
     override fun getFileType(): FileType {
-        return ProtobufFileType
+        return ProtobufFileType.INSTANCE
     }
 
     override fun messages(): Iterable<ProtobufMessageDefinition> {
