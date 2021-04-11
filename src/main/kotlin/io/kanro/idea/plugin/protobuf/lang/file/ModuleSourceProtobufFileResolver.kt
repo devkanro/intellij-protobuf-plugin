@@ -11,14 +11,19 @@ class ModuleSourceProtobufFileResolver : FileResolver {
     }
 
     override fun findFile(path: String, module: Module): Iterable<VirtualFile> {
-        return ModuleRootManager.getInstance(module).sourceRoots.mapNotNull {
+        val rootManager = ModuleRootManager.getInstance(module)
+        val root = rootManager.sourceRoots.takeIf { it.isNotEmpty() } ?: rootManager.contentRoots
+        return root.mapNotNull {
             it.findFileByRelativePath(path)?.takeIf { it.exists() }
         }
     }
 
     override fun collectProtobuf(path: String, module: Module): Iterable<VirtualFile> {
         val result = mutableListOf<VirtualFile>()
-        ModuleRootManager.getInstance(module).sourceRoots.forEach {
+
+        val rootManager = ModuleRootManager.getInstance(module)
+        val root = rootManager.sourceRoots.takeIf { it.isNotEmpty() } ?: rootManager.contentRoots
+        root.forEach {
             val directory = it.findFileByRelativePath(path) ?: return@forEach
             if (!directory.isDirectory) return@forEach
             FileResolver.collectProtobuf(directory, result)

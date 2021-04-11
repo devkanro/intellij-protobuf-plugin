@@ -19,6 +19,8 @@
                       implementation="io.kanro.idea.plugin.protobuf.lang.file.ModuleSourceProtobufFileResolver"/>
         <fileResolver id="library"
                       implementation="io.kanro.idea.plugin.protobuf.lang.file.LibraryProtobufFileResolver"/>
+        <fileResolver id="settings"
+                      implementation="io.kanro.idea.plugin.protobuf.lang.file.ImportRootsFileResolver"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -35,11 +37,11 @@
         <annotator language="protobuf"
                    implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.ProtobufAnnotator"/>
         <annotator
-                   language="protobuf"
-                   implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.Protobuf3Annotator"/>
+                language="protobuf"
+                implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.Protobuf3Annotator"/>
         <annotator
-                   language="protobuf"
-                   implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.Protobuf2Annotator"/>
+                language="protobuf"
+                implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.Protobuf2Annotator"/>
 
         <iconProvider implementation="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufIconProvider"/>
         <lang.documentationProvider language="protobuf"
@@ -71,5 +73,11 @@
         <stubElementTypeHolder class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>
         <lang.foldingBuilder language="protobuf"
                              implementationClass="io.kanro.idea.plugin.protobuf.lang.folding.ProtobufFoldingBuilder"/>
+
+        <projectConfigurable groupId="language"
+                             instance="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettingsConfigurable"/>
+        <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettings"/>
+
+
     </extensions>
 </idea-plugin>
