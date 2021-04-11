@@ -7,6 +7,7 @@
 - Duplicate and unused import annotator
 - Import optimizer
 - Auto-completion for import
+- Custom import root
 ### Changed
 - Fix some keywords highlight in typename(etc. 'rpc')
 - Refactor psi structure by default implementation
