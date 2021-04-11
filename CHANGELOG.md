@@ -3,6 +3,7 @@
 # IntelliJ Platform Plugin Template Changelog
 
 ## [Unreleased]
+## [0.0.4]
 ### Added
 - Duplicate and unused import annotator
 - Import optimizer
