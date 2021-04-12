@@ -2,6 +2,10 @@
 
 [![JetBrains Plugins](https://img.shields.io/jetbrains/plugin/v/16422)](https://plugins.jetbrains.com/plugin/16422-protobuf)
 
+## Reference
+Inspired by [protobuf-jetbrains-plugin](https://github.com/ksprojects/protobuf-jetbrains-plugin) and [intellij-protobuf-editor](https://github.com/jvolkman/intellij-protobuf-editor).
+
+## Descriptor
 <!-- Plugin description -->
 IntelliJ-based IDEs Protobuf Language Plugin that provides Protobuf language support.
 
