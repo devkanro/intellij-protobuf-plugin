@@ -27,7 +27,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSyntaxStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionHover
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
+import io.kanro.idea.plugin.protobuf.lang.support.Resources
 import io.kanro.idea.plugin.protobuf.lang.util.doc
 import javax.swing.Icon
 
@@ -139,12 +139,8 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
         return findChildByClass(ProtobufPackageStatement::class.java)?.packageNameList?.toTypedArray() ?: arrayOf()
     }
 
-    override fun options(): Array<ProtobufOptionHover> {
-        return this.findChildrenByClass(ProtobufOptionHover::class.java)
-    }
-
-    override fun items(): Array<ProtobufScopeItem> {
-        return this.findChildrenByClass(ProtobufScopeItem::class.java)
+    override fun resourceDefinitions(): Array<ProtobufOptionHover> {
+        return options(Resources.resourceDefinitionOption)
     }
 
     override fun reservedNames(): Array<ProtobufReservedName> {

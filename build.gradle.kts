@@ -84,11 +84,6 @@ tasks {
         dependsOn(generateProtobufLexer, generateProtobufParser)
     }
 
-    withType<org.jetbrains.intellij.tasks.RunIdeBase> {
-        jbrVersion("11_0_10b1341.21")
-        jvmArgs("-Xmx2G")
-    }
-
     patchPluginXml {
         version(properties("pluginVersion"))
         sinceBuild(properties("pluginSinceBuild"))
@@ -119,6 +114,7 @@ tasks {
 
     runPluginVerifier {
         ideVersions(properties("pluginVerifierIdeVersions"))
+        verifierVersion("1.255")
     }
 
     publishPlugin {

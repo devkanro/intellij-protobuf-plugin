@@ -16,6 +16,7 @@ object Icons {
     var RPC_METHOD: Icon = loadIcon("rpc_method.svg")
 
     var MESSAGE: Icon = loadIcon("message.svg")
+    var RESOURCE_MESSAGE: Icon = loadIcon("resource_message.svg")
     var FILE: Icon = loadIcon("protobuf_file.svg")
     var LOGO: Icon = loadIcon("logo.svg")
     var FOLDER: Icon = PlatformIcons.FOLDER_ICON

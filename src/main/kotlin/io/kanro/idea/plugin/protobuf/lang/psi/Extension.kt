@@ -3,17 +3,21 @@ package io.kanro.idea.plugin.protobuf.lang.psi
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItemContainer
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufVirtualScope
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolFilters
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolResolver
 import io.kanro.idea.plugin.protobuf.lang.util.AnyElement
+import java.util.Stack
 
 inline fun <reified T : PsiElement> PsiElement.findChild(): T? {
     var child: PsiElement? = this.firstChild ?: return null
@@ -24,26 +28,56 @@ inline fun <reified T : PsiElement> PsiElement.findChild(): T? {
     return return null
 }
 
-inline fun <reified T : PsiElement> PsiElement.findChildren(): Array<T> {
+inline fun <reified T : PsiElement> PsiElement.findChildren(filter: (T) -> Boolean = { true }): Array<T> {
     var child: PsiElement? = this.firstChild ?: return arrayOf()
     val result = mutableListOf<T>()
     while (child != null) {
-        if (child is T) result += child
+        if (child is T && filter(child)) result += child
         child = child.nextSibling
     }
     return result.toTypedArray()
 }
 
-inline fun <reified T : PsiElement> PsiElement.walkChildren(noinline block: (T) -> Unit) {
-    walkChildren(T::class.java, block)
+inline fun <reified T : PsiElement> PsiElement.walkChildren(block: (T) -> Unit) {
+    val stack = Stack<PsiElement>()
+    stack.add(this.firstChild ?: return)
+
+    while (stack.isNotEmpty()) {
+        val item = stack.pop()
+        if (item is T) block(item)
+        item.firstChild?.let {
+            stack.add(it)
+        }
+        item.nextSibling?.let {
+            stack.add(it)
+        }
+    }
 }
 
-fun <T : PsiElement> PsiElement.walkChildren(clazz: Class<*>, block: (T) -> Unit) {
-    var child: PsiElement? = this.firstChild ?: return
-    while (child != null) {
-        if (clazz.isInstance(child)) block(child as T)
-        child.walkChildren(clazz, block)
-        child = child.nextSibling
+inline fun PsiElement.walkChildren(filter: PsiElementFilter, block: (PsiElement) -> Unit) {
+    val stack = Stack<PsiElement>()
+    stack.add(this.firstChild ?: return)
+
+    while (stack.isNotEmpty()) {
+        val item = stack.pop()
+        if (filter.isAccepted(item)) block(item)
+        item.firstChild?.let {
+            stack.add(it)
+        }
+        item.nextSibling?.let {
+            stack.add(it)
+        }
+    }
+}
+
+inline fun <reified T : ProtobufScopeItem> ProtobufScopeItemContainer.walkItem(block: (T) -> Unit) {
+    val stack = Stack<ProtobufElement>()
+    stack.add(this)
+
+    while (stack.isNotEmpty()) {
+        val item = stack.pop()
+        if (item is T) block(item)
+        if (item is ProtobufScopeItemContainer) stack.addAll(item.items())
     }
 }
 
@@ -157,7 +191,7 @@ private fun ProtobufTypeName.tryResolve(): Pair<QualifiedName?, PsiElement?> {
 }
 
 fun ProtobufEnumValue.enum(): ProtobufEnumDefinition? {
-    val field = when (val parent = this.parent) {
+    val field = when (val parent = this.parent.parent) {
         is ProtobufOptionAssign -> {
             parent.optionName.field() as? ProtobufFieldDefinition
         }
@@ -198,4 +232,8 @@ fun ProtobufScope.realItems(): Array<ProtobufScopeItem> {
         result += it
     }
     return result.toTypedArray()
+}
+
+fun ProtobufStringValue.value(): String? {
+    return stringLiteral.text?.trim('"')
 }

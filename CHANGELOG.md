@@ -3,6 +3,9 @@
 # IntelliJ Platform Plugin Template Changelog
 
 ## [Unreleased]
+### Added
+- Add [Resource Type](https://aip.bybutter.com/123) support for AIP-123
+
 ## [0.0.5]
 ### Changed
 - Add enum value highlight in option usage

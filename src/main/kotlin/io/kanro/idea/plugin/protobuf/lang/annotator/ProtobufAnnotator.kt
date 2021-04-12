@@ -130,7 +130,7 @@ class ProtobufAnnotator : Annotator {
             }
 
             override fun visitStringValue(o: ProtobufStringValue) {
-                val field = when (val parent = o.parent) {
+                val field = when (val parent = o.parent?.parent) {
                     is ProtobufOptionAssign -> {
                         parent.optionName.field() as? ProtobufFieldDefinition ?: return
                     }
@@ -146,6 +146,17 @@ class ProtobufAnnotator : Annotator {
                     )
                         .range(o.textRange)
                         .create()
+                }
+                o.reference?.let {
+                    if (it.resolve() == null) {
+                        holder.newAnnotation(
+                            HighlightSeverity.ERROR,
+                            "Resource name ${o.text} not found."
+                        )
+                            .range(o.textRange)
+                            .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
+                            .create()
+                    }
                 }
             }
 

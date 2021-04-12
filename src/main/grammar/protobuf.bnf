@@ -373,7 +373,9 @@ ExtendBody ::=  '{' ExtendElement* '}' {
 
 private ExtendElement ::= GroupDefinition | FieldDefinition | ';' {recoverWhile=ExtendElementRecovery}
 private ExtendElementRecovery ::= !(FieldLabel | group | TypeName | ';' | '}')
-private Constant ::= StringValue | IntegerValue | NumberValue | BooleanValue | MessageValue | EnumValue
+Constant ::= StringValue | IntegerValue | NumberValue | BooleanValue | MessageValue | EnumValue {
+    implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"]
+}
 
 TypeName ::= '.'? SymbolName ('.' SymbolName)* {
     implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"]
@@ -400,6 +402,7 @@ private IdentifierWithKeyword ::= IDENTIFIER_LITERAL | <<parseKeyword>>
 
 StringValue ::= STRING_LITERAL {
     implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufStringValueMixin"
 }
 IntegerValue ::= '-'? INTEGER_LITERAL{
     implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"]
