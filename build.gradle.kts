@@ -114,7 +114,6 @@ tasks {
 
     runPluginVerifier {
         ideVersions(properties("pluginVerifierIdeVersions"))
-        verifierVersion("1.255")
     }
 
     publishPlugin {
