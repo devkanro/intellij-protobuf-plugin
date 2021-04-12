@@ -3,6 +3,7 @@
 # IntelliJ Platform Plugin Template Changelog
 
 ## [Unreleased]
+## [0.0.5]
 ### Changed
 - Add enum value highlight in option usage
 - Fix import optimizer action
