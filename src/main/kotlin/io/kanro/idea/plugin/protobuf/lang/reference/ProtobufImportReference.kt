@@ -12,6 +12,7 @@ import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
 
@@ -66,9 +67,7 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
             }
         }
 
-        private val completeImportInsert = DeclarativeInsertHandler.Builder()
-            .insertOrMove("\";")
-            .build()
+        private val completeImportInsert = SmartInsertHandler("\";")
 
         private val nextImportInsert = DeclarativeInsertHandler.Builder()
             .insertOrMove("/")

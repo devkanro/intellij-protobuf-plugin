@@ -3,6 +3,11 @@
 # IntelliJ Platform Plugin Template Changelog
 
 ## [Unreleased]
+### Changed
+- Add enum value highlight in option usage
+- Fix import optimizer action
+- Optimize import auto completion
+
 ## [0.0.4]
 ### Added
 - Duplicate and unused import annotator

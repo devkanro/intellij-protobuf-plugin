@@ -13,7 +13,7 @@ class ProtobufImportOptimizer : ImportOptimizer {
 
     override fun processFile(file: PsiFile): Runnable {
         return Runnable {
-            processFile(file)
+            ProtobufImportOptimizer.processFile(file)
         }
     }
 

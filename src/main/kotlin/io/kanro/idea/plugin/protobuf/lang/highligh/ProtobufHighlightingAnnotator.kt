@@ -6,6 +6,7 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
@@ -34,6 +35,10 @@ class ProtobufHighlightingAnnotator : Annotator {
     private class ProtobufHighlightingVisitor(val holder: AnnotationHolder) : ProtobufVisitor() {
         override fun visitEnumValueDefinition(o: ProtobufEnumValueDefinition) {
             createHighlight(o.identifier() ?: return, ProtobufHighlighter.ENUM_VALUE)
+        }
+
+        override fun visitEnumValue(o: ProtobufEnumValue) {
+            createHighlight(o, ProtobufHighlighter.ENUM_VALUE)
         }
 
         override fun visitNumberValue(o: ProtobufNumberValue) {
