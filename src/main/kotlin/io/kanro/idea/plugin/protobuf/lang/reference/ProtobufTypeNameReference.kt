@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
+import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
@@ -95,6 +96,12 @@ class ProtobufTypeNameReference(
                 .mapNotNull { lookupFor(it, targetScope) }
                 .toTypedArray()
         }
+    }
+
+    override fun handleElementRename(newElementName: String): PsiElement {
+        (element.symbolNameList[symbolIndex].identifierLiteral?.node as? LeafElement)
+            ?.replaceWithText(newElementName)
+        return element
     }
 
     private fun lookupFor(element: ProtobufElement, scope: QualifiedName): LookupElement? {

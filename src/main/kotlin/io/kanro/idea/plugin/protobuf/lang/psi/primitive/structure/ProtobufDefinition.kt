@@ -35,7 +35,7 @@ interface ProtobufDefinition : ProtobufScopeItem, PsiNameIdentifierOwner {
 
     @JvmDefault
     override fun setName(name: String): PsiElement {
-        (identifier()?.node as? LeafElement)?.replaceWithText(name)
+        (identifier()?.identifierLiteral?.node as? LeafElement)?.replaceWithText(name)
         return this
     }
 

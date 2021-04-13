@@ -8,14 +8,14 @@ import com.intellij.psi.PsiNameIdentifierOwner
 import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.Icons
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufDocumented
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufNamedElement
 import io.kanro.idea.plugin.protobuf.lang.util.doc
 import javax.swing.Icon
 
 interface ProtobufPackageName :
-    ProtobufElement,
+    ProtobufNamedElement,
     ProtobufLookupItem,
     ProtobufDocumented,
     NavigatablePsiElement,
@@ -23,7 +23,7 @@ interface ProtobufPackageName :
     PsiNameIdentifierOwner {
 
     @JvmDefault
-    fun name(): String? {
+    override fun name(): String? {
         return nameIdentifier?.text
     }
 

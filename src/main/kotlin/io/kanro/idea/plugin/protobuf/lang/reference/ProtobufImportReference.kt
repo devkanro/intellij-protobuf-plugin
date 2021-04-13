@@ -41,6 +41,10 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
         }.toTypedArray()
     }
 
+    override fun handleElementRename(newElementName: String): PsiElement {
+        return super.handleElementRename(newElementName)
+    }
+
     companion object {
         private fun fileLookup(parent: String, file: VirtualFile): LookupElement {
             val completionText = if (parent == ".") {

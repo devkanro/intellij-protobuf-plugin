@@ -81,8 +81,6 @@ class ProtobufBlock(
 
     override fun buildChildren(): List<Block> {
         var child: ASTNode? = node.firstChildNode ?: return listOf()
-        if (type == BlockType.FRAGMENT && child?.textLength == node.textLength) return listOf()
-
         val result = mutableListOf<Block>()
         while (child != null) {
             if (child.elementType == TokenType.WHITE_SPACE) {

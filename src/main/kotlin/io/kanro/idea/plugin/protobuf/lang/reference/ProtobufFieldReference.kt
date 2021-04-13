@@ -3,6 +3,7 @@ package io.kanro.idea.plugin.protobuf.lang.reference
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
+import com.intellij.psi.impl.source.tree.LeafElement
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldName
@@ -40,6 +41,11 @@ class ProtobufFieldReference(field: ProtobufFieldName) :
                 }
             }
         }.toTypedArray()
+    }
+
+    override fun handleElementRename(newElementName: String): PsiElement {
+        (element.identifierLiteral?.node as? LeafElement)?.replaceWithText(newElementName)
+        return element
     }
 
     companion object {

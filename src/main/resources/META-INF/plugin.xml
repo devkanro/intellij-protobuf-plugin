@@ -73,6 +73,8 @@
         <stubElementTypeHolder class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>
         <lang.foldingBuilder language="protobuf"
                              implementationClass="io.kanro.idea.plugin.protobuf.lang.folding.ProtobufFoldingBuilder"/>
+        <lang.refactoringSupport language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufRefactoringSupportProvider"/>
+        <spellchecker.support language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtobufSpellcheckingStrategy"/>
 
         <projectConfigurable groupId="language"
                              instance="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettingsConfigurable"/>

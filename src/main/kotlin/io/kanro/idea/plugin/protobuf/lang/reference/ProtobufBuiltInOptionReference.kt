@@ -8,6 +8,7 @@ import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufBuiltInOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
@@ -58,12 +59,13 @@ class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
         ) as? ProtobufMessageDefinition ?: return arrayOf()
         val fields: MutableList<Any> = message.realItems().mapNotNull {
             if (it !is ProtobufFieldDefinition) return@mapNotNull null
-            (it as? ProtobufLookupItem)?.lookup()
+            (it as? ProtobufLookupItem)?.lookup()?.withInsertHandler(optionInsertHandler)
         }.toMutableList()
         if (Options.FIELD_OPTIONS.messageName == type) {
             fields += LookupElementBuilder.create("default")
                 .withTypeText("option")
                 .withIcon(Icons.FIELD)
+                .withInsertHandler(optionInsertHandler)
         }
         return fields.toTypedArray()
     }
@@ -76,5 +78,9 @@ class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
         return FileResolver.resolveFile("google/protobuf/descriptor.proto", element).firstOrNull()?.let {
             PsiManager.getInstance(element.project).findFile(it) as? ProtobufFile
         }
+    }
+
+    companion object {
+        private val optionInsertHandler = SmartInsertHandler(" = ")
     }
 }

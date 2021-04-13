@@ -5,6 +5,9 @@
 ## [Unreleased]
 ### Added
 - Add [Resource Type](https://aip.bybutter.com/123) support for AIP-123
+- Add [Http transcoding](https://aip.bybutter.com/127) support for AIP-127
+- Add spellchecker
+- Add in-place rename support
 
 ## [0.0.5]
 ### Changed

@@ -3,6 +3,7 @@ package io.kanro.idea.plugin.protobuf.aip.reference
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
+import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
@@ -34,7 +35,7 @@ class ProtobufRpcOutputFieldReference(field: ProtobufStringValue) :
 
 abstract class ProtobufFieldReferenceInString(field: ProtobufStringValue) :
     PsiReferenceBase<ProtobufStringValue>(field) {
-    protected abstract fun message(): ProtobufMessageDefinition?
+    abstract fun message(): ProtobufMessageDefinition?
 
     override fun resolve(): PsiElement? {
         val fieldText = element.value() ?: return null
@@ -60,6 +61,11 @@ abstract class ProtobufFieldReferenceInString(field: ProtobufStringValue) :
                 }
             }
         }?.toTypedArray() ?: arrayOf()
+    }
+
+    override fun handleElementRename(newElementName: String): PsiElement {
+        (element.stringLiteral.node as? LeafElement)?.replaceWithText("\"$newElementName\"")
+        return element
     }
 
     companion object {

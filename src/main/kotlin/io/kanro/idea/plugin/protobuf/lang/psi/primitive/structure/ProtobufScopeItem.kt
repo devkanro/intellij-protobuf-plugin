@@ -5,20 +5,18 @@ import com.intellij.psi.NavigatablePsiElement
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufDocumented
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufNamedElement
 import io.kanro.idea.plugin.protobuf.lang.util.doc
 import javax.swing.Icon
 
 interface ProtobufScopeItem :
-    ProtobufElement,
+    ProtobufNamedElement,
     ProtobufLookupItem,
     ProtobufDocumented,
     NavigatablePsiElement,
     ItemPresentation {
-    fun name(): String?
-
     fun nameElement(): PsiElement?
 
     fun type(): String

@@ -91,7 +91,7 @@ FileOption ::= option OptionAssign ';' {
 OptionAssign ::= OptionName '=' Constant {
     pin=1
     implements=[
-        "io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufStatement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufOptionAssign"
     ]
 }

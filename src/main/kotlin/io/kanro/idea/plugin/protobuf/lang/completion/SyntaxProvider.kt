@@ -3,7 +3,6 @@ package io.kanro.idea.plugin.protobuf.lang.completion
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
-import com.intellij.codeInsight.completion.DeclarativeInsertHandler
 import com.intellij.codeInsight.lookup.AutoCompletionPolicy
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
@@ -29,8 +28,6 @@ class SyntaxProvider : CompletionProvider<CompletionParameters>() {
     }
 
     companion object {
-        private val completeSyntaxInsert = DeclarativeInsertHandler.Builder()
-            .insertOrMove("\";")
-            .build()
+        private val completeSyntaxInsert = SmartInsertHandler("\";")
     }
 }
