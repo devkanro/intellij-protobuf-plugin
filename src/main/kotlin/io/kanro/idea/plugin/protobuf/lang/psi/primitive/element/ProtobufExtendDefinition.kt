@@ -28,7 +28,7 @@ interface ProtobufExtendDefinition : ProtobufVirtualScope {
 
     @JvmDefault
     override fun name(): String? {
-        return (findChild<ProtobufTypeName>()?.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.toString()
+        return (findChild<ProtobufTypeName>()?.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.toString()
     }
 
     @JvmDefault

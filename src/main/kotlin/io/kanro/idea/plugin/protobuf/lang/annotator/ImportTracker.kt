@@ -9,9 +9,8 @@ import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufFileReferenceContributor
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import io.kanro.idea.plugin.protobuf.lang.quickfix.OptimizeImportsFix
@@ -23,11 +22,8 @@ open class ImportTracker(file: ProtobufFile) {
 
     init {
         file.imports().forEach { record(it) }
-        file.walkChildren(importUsageFilter) {
-            when (it) {
-                is ProtobufStringValue -> record(it)
-                is ProtobufTypeName -> record(it)
-            }
+        file.walkChildren<ProtobufFileReferenceContributor> {
+            record(it)
         }
     }
 
@@ -54,13 +50,8 @@ open class ImportTracker(file: ProtobufFile) {
         }.add(statement)
     }
 
-    protected open fun record(typeName: ProtobufTypeName) {
-        val file = typeName.resolve()?.containingFile as? ProtobufFile ?: return
-        fileReference[file] = fileReference.getOrDefault(file, 0) + 1
-    }
-
-    protected open fun record(stringValue: ProtobufStringValue) {
-        val file = stringValue.reference?.resolve()?.containingFile as? ProtobufFile ?: return
+    protected open fun record(typeName: ProtobufFileReferenceContributor) {
+        val file = typeName.reference?.resolve()?.containingFile as? ProtobufFile ?: return
         fileReference[file] = fileReference.getOrDefault(file, 0) + 1
     }
 

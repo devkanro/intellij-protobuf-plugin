@@ -4,11 +4,11 @@ import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
 import io.kanro.idea.plugin.protobuf.lang.psi.value
-import io.kanro.idea.plugin.protobuf.lang.support.Resources
 import javax.swing.Icon
 
 interface ProtobufMessageDefinition : ProtobufNumberScope, ProtobufDefinition {
@@ -33,8 +33,8 @@ interface ProtobufMessageDefinition : ProtobufNumberScope, ProtobufDefinition {
     fun resourceName(): String? {
         if (this !is ProtobufOptionOwner) return null
         return CachedValuesManager.getCachedValue(this) {
-            options(Resources.resourceOption).forEach {
-                it.value(Resources.resourceTypeField)?.stringValue?.value()?.let {
+            options(AipOptions.resourceOption).forEach {
+                it.value(AipOptions.resourceTypeField)?.stringValue?.value()?.let {
                     return@getCachedValue CachedValueProvider.Result.create(
                         it,
                         PsiModificationTracker.MODIFICATION_COUNT

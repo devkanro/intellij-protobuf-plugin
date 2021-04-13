@@ -18,7 +18,7 @@ interface ProtobufOptionHover : ProtobufElement {
     fun isOption(extensionOptionName: QualifiedName): Boolean {
         val option = option() ?: return false
         val field =
-            option.optionName.extensionOptionName?.typeName?.resolve() as? ProtobufFieldDefinition ?: return false
+            option.optionName.extensionOptionName?.typeName?.reference?.resolve() as? ProtobufFieldDefinition ?: return false
         return field.qualifiedName() == extensionOptionName
     }
 

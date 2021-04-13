@@ -22,7 +22,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOptionAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedRange
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.enum
@@ -78,7 +77,7 @@ class ProtobufAnnotator : Annotator {
 
             override fun visitTypeName(o: ProtobufTypeName) {
                 if (o.symbolNameList.size == 1 && BuiltInType.isBuiltInType(o.text)) return
-                if (o.resolve() == null) {
+                if (o.reference?.resolve() == null) {
                     holder.newAnnotation(
                         HighlightSeverity.ERROR,
                         "Symbol '${o.text}' not found"
@@ -133,21 +132,6 @@ class ProtobufAnnotator : Annotator {
                     .create()
             }
 
-            override fun visitStringValue(o: ProtobufStringValue) {
-                o.reference?.let {
-                    if (it.resolve() == null) {
-                        holder.newAnnotation(
-                            HighlightSeverity.ERROR,
-                            "Resource name ${o.text} not found."
-                        )
-                            .range(o.textRange)
-                            .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
-                            .create()
-                    }
-                    return
-                }
-            }
-
             override fun visitConstant(o: ProtobufConstant) {
                 val field = when (val parent = o.parent) {
                     is ProtobufOptionAssign -> {
@@ -185,7 +169,7 @@ class ProtobufAnnotator : Annotator {
                         "Field \"${field.name()}\" required a uint value"
                     } else null
                     else -> {
-                        when (val typeDefinition = field.typeName.resolve()) {
+                        when (val typeDefinition = field.typeName.reference?.resolve()) {
                             is ProtobufEnumDefinition -> if (o.enumValue == null) {
                                 "Field \"${field.name()}\" required a value of \"${typeDefinition.qualifiedName()}\""
                             } else null

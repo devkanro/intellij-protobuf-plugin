@@ -98,7 +98,7 @@ object ProtobufSymbolFilters {
     private class TargetOptionFilter(private val option: Options) : PsiElementFilter {
         override fun isAccepted(element: PsiElement): Boolean {
             val extend = element.parentOfType<ProtobufExtendDefinition>() ?: return false
-            val name = (extend.typeName?.resolve() as? ProtobufMessageDefinition)?.qualifiedName() ?: return false
+            val name = (extend.typeName?.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName() ?: return false
             return name == option.qualifiedName
         }
     }

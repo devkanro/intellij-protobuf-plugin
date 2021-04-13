@@ -1,22 +1,16 @@
 package io.kanro.idea.plugin.protobuf.lang.psi
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiElementFilter
-import com.intellij.psi.util.PsiModificationTracker
-import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItemContainer
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufVirtualScope
-import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolFilters
-import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolResolver
-import io.kanro.idea.plugin.protobuf.lang.util.AnyElement
 import java.util.Stack
 
 inline fun <reified T : PsiElement> PsiElement.findChild(): T? {
@@ -25,7 +19,16 @@ inline fun <reified T : PsiElement> PsiElement.findChild(): T? {
         if (child is T) return child
         child = child.nextSibling
     }
-    return return null
+    return null
+}
+
+inline fun <reified T : PsiElement> PsiElement.findLastChild(): T? {
+    var child: PsiElement? = this.lastChild ?: return null
+    while (child != null) {
+        if (child is T) return child
+        child = child.prevSibling
+    }
+    return null
 }
 
 inline fun <reified T : PsiElement> PsiElement.findChildren(filter: (T) -> Boolean = { true }): Array<T> {
@@ -111,22 +114,22 @@ fun ProtobufImportStatement.resolve(): ProtobufFile? {
     return reference?.resolve() as? ProtobufFile
 }
 
-fun ProtobufOptionName.field(): ProtobufDefinition? {
+fun ProtobufOptionName.field(): ProtobufFieldLike? {
     this.fieldName?.let {
-        return it.reference?.resolve() as? ProtobufDefinition
+        return it.reference?.resolve() as? ProtobufFieldLike
     }
     this.extensionOptionName?.let {
-        return it.typeName?.resolve() as? ProtobufDefinition
+        return it.typeName?.reference?.resolve() as? ProtobufFieldLike
     }
     this.builtInOptionName?.let {
-        return it.reference?.resolve() as? ProtobufDefinition
+        return it.reference?.resolve() as? ProtobufFieldLike
     }
     return null
 }
 
 fun ProtobufFieldName.message(): ProtobufScope? {
     val field = when (val parent = this.parent) {
-        is ProtobufOptionName -> parent.extensionOptionName?.typeName?.resolve()
+        is ProtobufOptionName -> parent.extensionOptionName?.typeName?.reference?.resolve()
         is ProtobufFieldAssign -> {
             val messageValue = parent.parent as? ProtobufMessageValue ?: return null
             when (val assign = messageValue.parent.parent) {
@@ -144,7 +147,7 @@ fun ProtobufFieldName.message(): ProtobufScope? {
 
     return when (field) {
         is ProtobufGroupDefinition -> field
-        is ProtobufFieldDefinition -> field.typeName.resolve() as? ProtobufMessageDefinition
+        is ProtobufFieldDefinition -> field.typeName.reference?.resolve() as? ProtobufMessageDefinition
         else -> null
     }
 }
@@ -157,39 +160,6 @@ fun ProtobufTypeName.absolutely(): Boolean {
     return firstChild !is ProtobufSymbolName
 }
 
-fun ProtobufTypeName.resolve(): PsiElement? {
-    return this.reference?.resolve()
-}
-
-private fun ProtobufTypeName.tryResolve(): Pair<QualifiedName?, PsiElement?> {
-    return CachedValuesManager.getCachedValue(this) {
-        val filter = when (parent) {
-            is ProtobufExtensionOptionName -> ProtobufSymbolFilters.extensionOptionName(parentOfType())
-            is ProtobufFieldDefinition,
-            is ProtobufMapFieldDefinition -> ProtobufSymbolFilters.fieldTypeName
-            is ProtobufRpcIO -> ProtobufSymbolFilters.rpcTypeName
-            is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendTypeName
-            else -> AnyElement
-        }
-        var name = QualifiedName.fromComponents(this.symbolNameList.map { it.text })
-        while (name.componentCount > 0) {
-            val result = if (absolutely()) {
-                ProtobufSymbolResolver.resolveAbsolutely(this, name, filter)
-            } else {
-                ProtobufSymbolResolver.resolveRelatively(this, name, filter)
-            }
-            if (result != null) {
-                return@getCachedValue CachedValueProvider.Result.create(
-                    name to result,
-                    this
-                )
-            }
-            name = name.removeLastComponent()
-        }
-        CachedValueProvider.Result.create(null to null, PsiModificationTracker.MODIFICATION_COUNT)
-    }
-}
-
 fun ProtobufEnumValue.enum(): ProtobufEnumDefinition? {
     val field = when (val parent = this.parent.parent) {
         is ProtobufOptionAssign -> {
@@ -200,7 +170,7 @@ fun ProtobufEnumValue.enum(): ProtobufEnumDefinition? {
         }
         else -> null
     } ?: return null
-    return field.typeName.resolve() as? ProtobufEnumDefinition
+    return field.typeName.reference?.resolve() as? ProtobufEnumDefinition
 }
 
 fun ProtobufReservedRange.range(): LongRange? {
@@ -214,6 +184,10 @@ fun ProtobufReservedRange.range(): LongRange? {
         2 -> LongRange(numbers[0], numbers[1])
         else -> null
     }
+}
+
+operator fun ProtobufScope.iterator(): Iterator<ProtobufScopeItem> {
+    return realItems().iterator()
 }
 
 inline fun ProtobufScope.forEach(block: (ProtobufScopeItem) -> Unit) {

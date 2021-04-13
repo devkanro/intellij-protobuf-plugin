@@ -78,6 +78,8 @@
                              instance="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettingsConfigurable"/>
         <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettings"/>
 
-
+        <!-- AIP Spec -->
+        <psi.referenceContributor language="protobuf" implementation="io.kanro.idea.plugin.protobuf.aip.reference.contributor.AipReferenceContributor"/>
+        <annotator language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.aip.annotator.AipAnnotator"/>
     </extensions>
 </idea-plugin>

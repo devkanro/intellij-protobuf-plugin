@@ -3,12 +3,13 @@ package io.kanro.idea.plugin.protobuf.lang.reference
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.forEach
 import io.kanro.idea.plugin.protobuf.lang.psi.message
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 
 class ProtobufFieldReference(field: ProtobufFieldName) :
@@ -17,13 +18,8 @@ class ProtobufFieldReference(field: ProtobufFieldName) :
     override fun resolve(): PsiElement? {
         val message = element.message() ?: return null
         message.forEach {
-            if (it.name() == element.text) {
-                return when (it) {
-                    is ProtobufFieldDefinition,
-                    is ProtobufMapFieldDefinition,
-                    is ProtobufGroupDefinition -> it
-                    else -> null
-                }
+            if (it is ProtobufFieldLike && it.fieldName() == element.text) {
+                return it
             }
         }
         return null
@@ -36,12 +32,18 @@ class ProtobufFieldReference(field: ProtobufFieldName) :
     override fun getVariants(): Array<Any> {
         val message = element.message() ?: return arrayOf()
         return message.realItems().mapNotNull {
-            when (it) {
-                is ProtobufFieldDefinition,
-                is ProtobufMapFieldDefinition,
-                is ProtobufGroupDefinition -> it.lookup()
-                else -> null
+            (it as? ProtobufFieldLike)?.lookup()?.let {
+                when (element.parent) {
+                    is ProtobufFieldAssign -> it.withInsertHandler(fieldInsertHandler)
+                    is ProtobufOptionName -> it.withInsertHandler(optionInsertHandler)
+                    else -> it
+                }
             }
         }.toTypedArray()
+    }
+
+    companion object {
+        private val fieldInsertHandler = SmartInsertHandler(": ")
+        private val optionInsertHandler = SmartInsertHandler(" = ")
     }
 }

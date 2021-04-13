@@ -90,7 +90,10 @@ FileOption ::= option OptionAssign ';' {
 /* Options */
 OptionAssign ::= OptionName '=' Constant {
     pin=1
-    implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"]
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufStatement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufOptionAssign"
+    ]
 }
 
 OptionName ::= (BuiltInOptionName | ExtensionOptionName) ('.' FieldName)? {
@@ -378,7 +381,10 @@ Constant ::= StringValue | IntegerValue | NumberValue | BooleanValue | MessageVa
 }
 
 TypeName ::= '.'? SymbolName ('.' SymbolName)* {
-    implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"]
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"
+        "io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufFileReferenceContributor"
+    ]
     mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufTypeNameMixin"
 }
 SymbolName ::= IdentifierWithKeyword {
@@ -401,7 +407,10 @@ Identifier::= IdentifierWithKeyword {
 private IdentifierWithKeyword ::= IDENTIFIER_LITERAL | <<parseKeyword>>
 
 StringValue ::= STRING_LITERAL {
-    implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"]
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"
+        "io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufFileReferenceContributor"
+    ]
     mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufStringValueMixin"
 }
 IntegerValue ::= '-'? INTEGER_LITERAL{
@@ -422,5 +431,8 @@ MessageValue ::= '{' FieldAssign* '}' {
 }
 FieldAssign ::= FieldName ':' Constant (';' | ',')? {
     pin = 1
-    implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufStatement"]
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufStatement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufFieldAssign"
+    ]
 }

@@ -2,28 +2,23 @@ package io.kanro.idea.plugin.protobuf.lang.psi.mixin
 
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiReference
+import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
-import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufBuiltInOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElementBase
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionHover
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufBuiltInOptionReference
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufEnumValueReference
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufFieldReference
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufImportReference
-import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufResourceReference
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufTypeNameReference
 import io.kanro.idea.plugin.protobuf.lang.support.BuiltInType
-import io.kanro.idea.plugin.protobuf.lang.support.Resources
 
 abstract class ProtobufTypeNameMixin(node: ASTNode) : ProtobufElementBase(node), ProtobufTypeName {
     override fun getReference(): PsiReference? {
@@ -75,10 +70,10 @@ abstract class ProtobufFieldNameMixin(node: ASTNode) : ProtobufElementBase(node)
 
 abstract class ProtobufStringValueMixin(node: ASTNode) : ProtobufElementBase(node), ProtobufStringValue {
     override fun getReference(): PsiReference? {
-        val hover = parentOfType<ProtobufOptionHover>() ?: return null
-        if (parentOfType<ProtobufOptionOwner>() !is ProtobufFieldDefinition) return null
-        if (!hover.isOption(Resources.resourceReferenceOption)) return null
-        if (hover.value(Resources.resourceTypeField)?.stringValue != this) return null
-        return ProtobufResourceReference(this)
+        return references.firstOrNull()
+    }
+
+    override fun getReferences(): Array<PsiReference> {
+        return ReferenceProvidersRegistry.getReferencesFromProviders(this)
     }
 }

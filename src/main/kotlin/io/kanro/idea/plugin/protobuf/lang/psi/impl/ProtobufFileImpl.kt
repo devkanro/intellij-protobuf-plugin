@@ -14,6 +14,7 @@ import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
@@ -27,7 +28,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSyntaxStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionHover
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
-import io.kanro.idea.plugin.protobuf.lang.support.Resources
 import io.kanro.idea.plugin.protobuf.lang.util.doc
 import javax.swing.Icon
 
@@ -140,7 +140,7 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
     }
 
     override fun resourceDefinitions(): Array<ProtobufOptionHover> {
-        return options(Resources.resourceDefinitionOption)
+        return options(AipOptions.resourceDefinitionOption)
     }
 
     override fun reservedNames(): Array<ProtobufReservedName> {
