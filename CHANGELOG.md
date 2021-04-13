@@ -3,6 +3,7 @@
 # IntelliJ Platform Plugin Template Changelog
 
 ## [Unreleased]
+## [0.0.6]
 ### Added
 - Add [Resource Type](https://aip.bybutter.com/123) support for AIP-123
 - Add [Http transcoding](https://aip.bybutter.com/127) support for AIP-127
