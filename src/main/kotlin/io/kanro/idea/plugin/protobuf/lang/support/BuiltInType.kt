@@ -17,8 +17,10 @@ enum class BuiltInType {
     SFIXED32,
     SFIXED64;
 
+    private val value = name.toLowerCase()
+
     fun value(): String {
-        return this.name.toLowerCase()
+        return value
     }
 
     companion object {

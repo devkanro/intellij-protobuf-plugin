@@ -48,4 +48,42 @@ object ProtobufResourceResolver {
         }
         return null
     }
+
+    fun collectAbsolutely(
+        file: ProtobufFile,
+        result: MutableList<ProtobufElement> = mutableListOf()
+    ): List<ProtobufElement> {
+        collectAbsolutelyInFile(file, result)
+
+        val stack = Stack<ProtobufFile>()
+        stack.addAll(file.imports().mapNotNull { it.resolve() })
+
+        while (stack.isNotEmpty()) {
+            val targetFile = stack.pop()
+            collectAbsolutelyInFile(targetFile, result)
+            targetFile.imports().forEach {
+                if (it.public()) {
+                    it.resolve()?.let { stack.push(it) }
+                }
+            }
+        }
+        return result
+    }
+
+    fun collectAbsolutelyInFile(
+        file: ProtobufFile,
+        result: MutableList<ProtobufElement> = mutableListOf()
+    ): ProtobufElement? {
+        file.resourceDefinitions().forEach {
+            if (it.value(Resources.resourceTypeField)?.stringValue?.value() != null) {
+                result += it
+            }
+        }
+        file.walkChildren<ProtobufMessageDefinition> {
+            if (it.resourceName() != null) {
+                result += it
+            }
+        }
+        return null
+    }
 }

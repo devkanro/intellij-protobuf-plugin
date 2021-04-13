@@ -75,15 +75,10 @@ abstract class ProtobufFieldNameMixin(node: ASTNode) : ProtobufElementBase(node)
 
 abstract class ProtobufStringValueMixin(node: ASTNode) : ProtobufElementBase(node), ProtobufStringValue {
     override fun getReference(): PsiReference? {
-        if (this.stringLiteral.text?.trim('"')?.matches(typeNameRegex) != true) return null
         val hover = parentOfType<ProtobufOptionHover>() ?: return null
         if (parentOfType<ProtobufOptionOwner>() !is ProtobufFieldDefinition) return null
         if (!hover.isOption(Resources.resourceReferenceOption)) return null
         if (hover.value(Resources.resourceTypeField)?.stringValue != this) return null
         return ProtobufResourceReference(this)
-    }
-
-    companion object {
-        private val typeNameRegex = """[^/]+/[^/]+""".toRegex()
     }
 }

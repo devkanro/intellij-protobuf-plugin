@@ -129,7 +129,7 @@ fun ProtobufFieldName.message(): ProtobufScope? {
         is ProtobufOptionName -> parent.extensionOptionName?.typeName?.resolve()
         is ProtobufFieldAssign -> {
             val messageValue = parent.parent as? ProtobufMessageValue ?: return null
-            when (val assign = messageValue.parent) {
+            when (val assign = messageValue.parent.parent) {
                 is ProtobufOptionAssign -> {
                     assign.optionName.field()
                 }
@@ -236,4 +236,21 @@ fun ProtobufScope.realItems(): Array<ProtobufScopeItem> {
 
 fun ProtobufStringValue.value(): String? {
     return stringLiteral.text?.trim('"')
+}
+
+fun ProtobufNumberValue.float(): Double? {
+    return when (val text = this.text.replace("""\s""".toRegex(), "")) {
+        "nan", "-nan" -> Double.NaN
+        "inf" -> Double.POSITIVE_INFINITY
+        "-inf" -> Double.NEGATIVE_INFINITY
+        else -> text.toDoubleOrNull()
+    }
+}
+
+fun ProtobufNumberValue.int(): Long? {
+    return text.toLongOrNull()
+}
+
+fun ProtobufNumberValue.uint(): ULong? {
+    return text.toULongOrNull()
 }
