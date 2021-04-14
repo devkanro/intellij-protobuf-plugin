@@ -3,6 +3,9 @@
 # IntelliJ Platform Plugin Template Changelog
 
 ## [Unreleased]
+### Changed
+- Change logo and add more icons for method
+
 ## [0.0.6]
 ### Added
 - Add [Resource Type](https://aip.bybutter.com/123) support for AIP-123

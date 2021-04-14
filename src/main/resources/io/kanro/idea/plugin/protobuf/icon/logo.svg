@@ -1,16 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>画板</title>
-    <g id="画板" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="编组" transform="translate(0.000000, 2.700000)" fill-rule="nonzero">
-            <g id="编组-3" transform="translate(0.500000, 0.361540)">
-                <polygon id="路径" fill="#F26522" points="3.55555556 -1.88811399e-16 2.21282615 2.25494521 3.63335159 5.26372342 6.72264333 -6.13407762e-16"></polygon>
-                <polygon id="路径" fill="#40B6E0" points="0.54405988 4.97777778 3.55555556 9.95555556 6.72264333 9.95555556 2.21282615 2.25494521"></polygon>
-            </g>
-            <g id="编组-3" transform="translate(12.055725, 5.317096) rotate(180.000000) translate(-12.055725, -5.317096) translate(8.555725, 0.317096)">
-                <polygon id="路径" fill="#F4AF3D" points="3.55555556 -1.88811399e-16 2.21282615 2.25494521 3.63335159 5.26372342 6.72264333 -6.13407762e-16"></polygon>
-                <polygon id="路径" fill="#62B543" points="0.54405988 4.97777778 3.55555556 9.95555556 6.72264333 9.95555556 2.21282615 2.25494521"></polygon>
-            </g>
-        </g>
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+    <g fill-rule="nonzero" fill="none">
+        <path fill="#db4437" d="M4.056 3.062L2.713 5.316l1.42 3.01 3.09-5.264z"/>
+        <path fill="#4285f4" d="M1.044 8.04l3.012 4.977h3.167l-4.51-7.7z"/>
+    </g>
+    <g>
+        <path fill="#ffc107" d="M12 13.017l1.343-2.255-1.42-3.009-3.09 5.264z"/>
+        <path fill="#0f9d58" d="M15.012 8.04L12 3.061H8.833l4.51 7.7z"/>
     </g>
 </svg>
