@@ -8,6 +8,7 @@ object AipOptions {
     val resourceDefinitionOption = QualifiedName.fromComponents("google", "api", "resource_definition")
     val resourceOption = QualifiedName.fromComponents("google", "api", "resource")
     val resourceTypeField = QualifiedName.fromComponents("type")
+    val resourceChildTypeField = QualifiedName.fromComponents("child_type")
 
     val httpRuleBodyName = QualifiedName.fromComponents("google", "api", "HttpRule", "body")
     val httpRuleResponseBodyName = QualifiedName.fromComponents("google", "api", "HttpRule", "response_body")

@@ -10,7 +10,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.value
 import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import java.util.Stack
 
-object ProtobufResourceResolver {
+object AipResourceResolver {
     fun resolveAbsolutely(
         file: ProtobufFile,
         resourceName: String

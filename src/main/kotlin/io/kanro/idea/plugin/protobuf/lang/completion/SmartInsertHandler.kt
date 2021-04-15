@@ -10,7 +10,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
 import kotlin.math.min
 
-class SmartInsertHandler(val value: String, val autoPopup: Boolean = false) : InsertHandler<LookupElement> {
+class SmartInsertHandler(val value: String, val offset: Int = 0, val autoPopup: Boolean = false) : InsertHandler<LookupElement> {
     override fun handleInsert(context: InsertionContext, item: LookupElement) {
         val editor = context.editor
         val project = editor.project ?: return
@@ -20,6 +20,7 @@ class SmartInsertHandler(val value: String, val autoPopup: Boolean = false) : In
         model.moveToOffset(model.offset + moveOffset)
         EditorModificationUtil.insertStringAtCaret(editor, value.substring(moveOffset))
         PsiDocumentManager.getInstance(project).commitDocument(editor.document)
+        model.moveToOffset(model.offset + offset)
 
         if (autoPopup) {
             AutoPopupController.getInstance(project).autoPopupMemberLookup(editor, null)

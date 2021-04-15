@@ -73,15 +73,21 @@
         <stubElementTypeHolder class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>
         <lang.foldingBuilder language="protobuf"
                              implementationClass="io.kanro.idea.plugin.protobuf.lang.folding.ProtobufFoldingBuilder"/>
-        <lang.refactoringSupport language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufRefactoringSupportProvider"/>
-        <spellchecker.support language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtobufSpellcheckingStrategy"/>
+        <lang.refactoringSupport language="protobuf"
+                                 implementationClass="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufRefactoringSupportProvider"/>
+        <spellchecker.support language="protobuf"
+                              implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtobufSpellcheckingStrategy"/>
 
         <projectConfigurable groupId="language"
                              instance="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettingsConfigurable"/>
         <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettings"/>
 
         <!-- AIP Spec -->
-        <psi.referenceContributor language="protobuf" implementation="io.kanro.idea.plugin.protobuf.aip.reference.contributor.AipReferenceContributor"/>
+        <psi.referenceContributor language="protobuf"
+                                  implementation="io.kanro.idea.plugin.protobuf.aip.reference.contributor.AipReferenceContributor"/>
         <annotator language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.aip.annotator.AipAnnotator"/>
+        <completion.contributor language="protobuf"
+                                implementationClass="io.kanro.idea.plugin.protobuf.aip.completion.AipCompletionContributor"/>
+
     </extensions>
 </idea-plugin>

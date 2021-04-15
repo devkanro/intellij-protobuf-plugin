@@ -14,6 +14,9 @@ object Icons {
     var PACKAGE: Icon = PlatformIcons.PACKAGE_ICON
     var SERVICE: Icon = loadIcon("service.svg")
     var RPC_METHOD: Icon = loadIcon("rpc_method.svg")
+    var RPC_METHOD_CLIENT_STREAM: Icon = loadIcon("rpc_method_client_stream.svg")
+    var RPC_METHOD_SERVER_STREAM: Icon = loadIcon("rpc_method_server_stream.svg")
+    var RPC_METHOD_BISTREAM: Icon = loadIcon("rpc_method_bistream.svg")
 
     var MESSAGE: Icon = loadIcon("message.svg")
     var RESOURCE_MESSAGE: Icon = loadIcon("resource_message.svg")

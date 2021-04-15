@@ -79,7 +79,7 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
             .build()
 
         fun resolve(element: ProtobufImportStatement): PsiElement? {
-            val filePath = element.stringValue!!.text
+            val filePath = element.stringValue?.text ?: return null
             val file =
                 FileResolver.resolveFile(filePath.substring(1, filePath.length - 1), element).firstOrNull()
                     ?: return null

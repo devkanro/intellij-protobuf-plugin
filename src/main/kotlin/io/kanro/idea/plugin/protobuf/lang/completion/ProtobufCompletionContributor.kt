@@ -1,10 +1,7 @@
 package io.kanro.idea.plugin.protobuf.lang.completion
 
-import com.intellij.codeInsight.completion.AddSpaceInsertHandler
 import com.intellij.codeInsight.completion.CompletionContributor
 import com.intellij.codeInsight.completion.CompletionType
-import com.intellij.codeInsight.lookup.LookupElement
-import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiErrorElement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
@@ -65,14 +62,4 @@ class ProtobufCompletionContributor : CompletionContributor() {
             SyntaxProvider()
         )
     }
-}
-
-fun keywordElement(keyword: String): LookupElement {
-    return LookupElementBuilder.create(keyword).withTypeText("keyword")
-        .withInsertHandler(AddSpaceInsertHandler.INSTANCE)
-}
-
-fun builtInTypeElement(keyword: String): LookupElement {
-    return LookupElementBuilder.create(keyword).withTypeText("built-in")
-        .withInsertHandler(AddSpaceInsertHandler.INSTANCE)
 }

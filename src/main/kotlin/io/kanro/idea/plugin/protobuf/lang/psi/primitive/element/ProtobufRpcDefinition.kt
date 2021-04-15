@@ -18,7 +18,17 @@ interface ProtobufRpcDefinition : ProtobufDefinition {
 
     @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
-        return Icons.RPC_METHOD
+        val parameters = findChildren<ProtobufRpcIO>()
+        if (parameters.size != 2) return Icons.RPC_METHOD
+        val inputStream = parameters[0].firstChild.elementType is ProtobufKeywordToken
+        val outputStream = parameters[1].firstChild.elementType is ProtobufKeywordToken
+
+        return when {
+            inputStream && outputStream -> Icons.RPC_METHOD_BISTREAM
+            outputStream -> Icons.RPC_METHOD_SERVER_STREAM
+            inputStream -> Icons.RPC_METHOD_CLIENT_STREAM
+            else -> Icons.RPC_METHOD
+        }
     }
 
     @JvmDefault

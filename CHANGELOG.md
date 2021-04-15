@@ -3,8 +3,12 @@
 # IntelliJ Platform Plugin Template Changelog
 
 ## [Unreleased]
+### Added
+- Add icons for stream method
+- Add method auto-completion
+- Add cache for collect proto in archive
 ### Changed
-- Change logo and add more icons for method
+- Change logo
 
 ## [0.0.6]
 ### Added

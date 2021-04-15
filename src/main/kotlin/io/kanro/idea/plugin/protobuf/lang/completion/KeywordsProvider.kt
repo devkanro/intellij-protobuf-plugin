@@ -3,6 +3,9 @@ package io.kanro.idea.plugin.protobuf.lang.completion
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
+import com.intellij.codeInsight.completion.InsertHandler
+import com.intellij.codeInsight.lookup.LookupElement
+import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
 
 class KeywordsProvider(keywords: List<String>) : CompletionProvider<CompletionParameters>() {
@@ -45,5 +48,22 @@ class KeywordsProvider(keywords: List<String>) : CompletionProvider<CompletionPa
                     "option", "rpc"
                 )
             )
+
+        fun keywordElement(keyword: String): LookupElement {
+            return LookupElementBuilder.create(keyword).withTypeText("keyword")
+                .withInsertHandler(keywordInsertHandler(keyword))
+        }
+
+        private val insertHandlerCache = mutableMapOf<String, InsertHandler<LookupElement>>()
+
+        fun keywordInsertHandler(keyword: String): InsertHandler<LookupElement> {
+            return insertHandlerCache.getOrPut(keyword) {
+                when (keyword) {
+                    "import" -> SmartInsertHandler(" \"\"", -1, true)
+                    "syntax" -> SmartInsertHandler(" = \"\"", -1, true)
+                    else -> SmartInsertHandler(" ")
+                }
+            }
+        }
     }
 }

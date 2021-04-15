@@ -15,7 +15,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.value
 class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<ProtobufStringValue>(element) {
     override fun resolve(): PsiElement? {
         val resourceName = element.stringLiteral.text.trim('"')
-        return ProtobufResourceResolver.resolveAbsolutely(element.file(), resourceName)
+        return AipResourceResolver.resolveAbsolutely(element.file(), resourceName)
     }
 
     override fun calculateDefaultRangeInElement(): TextRange {
@@ -23,7 +23,7 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
     }
 
     override fun getVariants(): Array<Any> {
-        return ProtobufResourceResolver.collectAbsolutely(element.file()).mapNotNull {
+        return AipResourceResolver.collectAbsolutely(element.file()).mapNotNull {
             when (it) {
                 is ProtobufMessageDefinition -> {
                     val resourceName = it.resourceName() ?: return@mapNotNull null
