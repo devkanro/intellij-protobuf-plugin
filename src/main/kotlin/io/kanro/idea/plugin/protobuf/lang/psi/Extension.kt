@@ -2,6 +2,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiElementFilter
+import com.intellij.psi.util.elementType
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
@@ -11,6 +12,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItemContainer
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufVirtualScope
+import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufKeywordToken
 import java.util.Stack
 
 inline fun <reified T : PsiElement> PsiElement.findChild(): T? {
@@ -41,15 +43,17 @@ inline fun <reified T : PsiElement> PsiElement.findChildren(filter: (T) -> Boole
     return result.toTypedArray()
 }
 
-inline fun <reified T : PsiElement> PsiElement.walkChildren(block: (T) -> Unit) {
+inline fun <reified T : PsiElement> PsiElement.walkChildren(childTree: Boolean = true, block: (T) -> Unit) {
     val stack = Stack<PsiElement>()
     stack.add(this.firstChild ?: return)
 
     while (stack.isNotEmpty()) {
         val item = stack.pop()
         if (item is T) block(item)
-        item.firstChild?.let {
-            stack.add(it)
+        if (childTree) {
+            item.firstChild?.let {
+                stack.add(it)
+            }
         }
         item.nextSibling?.let {
             stack.add(it)
@@ -57,15 +61,17 @@ inline fun <reified T : PsiElement> PsiElement.walkChildren(block: (T) -> Unit) 
     }
 }
 
-inline fun PsiElement.walkChildren(filter: PsiElementFilter, block: (PsiElement) -> Unit) {
+inline fun PsiElement.walkChildren(filter: PsiElementFilter, childTree: Boolean = true, block: (PsiElement) -> Unit) {
     val stack = Stack<PsiElement>()
     stack.add(this.firstChild ?: return)
 
     while (stack.isNotEmpty()) {
         val item = stack.pop()
         if (filter.isAccepted(item)) block(item)
-        item.firstChild?.let {
-            stack.add(it)
+        if (childTree) {
+            item.firstChild?.let {
+                stack.add(it)
+            }
         }
         item.nextSibling?.let {
             stack.add(it)
@@ -227,4 +233,13 @@ fun ProtobufNumberValue.int(): Long? {
 
 fun ProtobufNumberValue.uint(): ULong? {
     return text.toULongOrNull()
+}
+
+fun ProtobufRpcIO.stream(): Boolean {
+    this.walkChildren<PsiElement>(false) {
+        if (it.elementType is ProtobufKeywordToken && it.textMatches("stream")) {
+            return true
+        }
+    }
+    return false
 }

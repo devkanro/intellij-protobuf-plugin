@@ -7,6 +7,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.findChild
 import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
 import io.kanro.idea.plugin.protobuf.lang.psi.findLastChild
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.stream
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufKeywordToken
 import javax.swing.Icon
 
@@ -20,8 +21,8 @@ interface ProtobufRpcDefinition : ProtobufDefinition {
     override fun getIcon(unused: Boolean): Icon? {
         val parameters = findChildren<ProtobufRpcIO>()
         if (parameters.size != 2) return Icons.RPC_METHOD
-        val inputStream = parameters[0].firstChild.elementType is ProtobufKeywordToken
-        val outputStream = parameters[1].firstChild.elementType is ProtobufKeywordToken
+        val inputStream = parameters[0].stream()
+        val outputStream = parameters[1].stream()
 
         return when {
             inputStream && outputStream -> Icons.RPC_METHOD_BISTREAM
@@ -47,10 +48,10 @@ interface ProtobufRpcDefinition : ProtobufDefinition {
         if (parameters.size != 2) return "()"
         var input = parameters[0].typeName.symbolNameList.lastOrNull()?.text ?: return "()"
         var output = parameters[1].typeName.symbolNameList.lastOrNull()?.text ?: return "()"
-        if (parameters[0].firstChild.elementType is ProtobufKeywordToken) {
+        if (parameters[0].stream()) {
             input = "stream $input"
         }
-        if (parameters[1].firstChild.elementType is ProtobufKeywordToken) {
+        if (parameters[1].stream()) {
             output = "stream $output"
         }
         return "($input): $output"

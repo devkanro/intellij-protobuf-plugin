@@ -45,15 +45,10 @@ interface FileResolver {
             }
         }
 
-        @OptIn(ExperimentalTime::class)
         override fun collectProtobuf(path: String, module: Module): Iterable<VirtualFile> {
-            val test = measureTimedValue {
-                extensionPoint.extensionList.asSequence().flatMap {
-                    it.collectProtobuf(path, module).asSequence()
-                }.asIterable()
-            }
-            Logger.getInstance(FileResolver::class.java).error("Collect protobuf in ${test.duration}")
-            return test.value
+            return extensionPoint.extensionList.asSequence().flatMap {
+                it.collectProtobuf(path, module).asSequence()
+            }.asIterable()
         }
 
         override fun collectProtobuf(path: String, project: Project): Iterable<VirtualFile> {
