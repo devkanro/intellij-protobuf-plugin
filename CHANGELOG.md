@@ -3,6 +3,7 @@
 # IntelliJ Platform Plugin Template Changelog
 
 ## [Unreleased]
+## [0.0.7]
 ### Added
 - Add icons for stream method
 - Add method auto-completion
