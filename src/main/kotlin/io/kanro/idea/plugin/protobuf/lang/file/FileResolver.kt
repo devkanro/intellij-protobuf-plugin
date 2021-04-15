@@ -1,14 +1,11 @@
 package io.kanro.idea.plugin.protobuf.lang.file
 
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-import kotlin.time.ExperimentalTime
-import kotlin.time.measureTimedValue
 
 interface FileResolver {
     companion object : FileResolver {

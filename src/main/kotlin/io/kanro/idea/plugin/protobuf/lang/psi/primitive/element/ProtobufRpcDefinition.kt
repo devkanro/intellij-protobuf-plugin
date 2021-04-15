@@ -1,6 +1,5 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 
-import com.intellij.psi.util.elementType
 import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcIO
 import io.kanro.idea.plugin.protobuf.lang.psi.findChild
@@ -8,7 +7,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
 import io.kanro.idea.plugin.protobuf.lang.psi.findLastChild
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.stream
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufKeywordToken
 import javax.swing.Icon
 
 interface ProtobufRpcDefinition : ProtobufDefinition {
