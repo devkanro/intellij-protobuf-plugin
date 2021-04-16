@@ -1,4 +1,4 @@
-# IntelliJ Protobuf Language Plugin
+# ![Logo](resources/logo.svg)IntelliJ Protobuf Language Plugin
 
 [![JetBrains Plugins](https://img.shields.io/jetbrains/plugin/v/16422)](https://plugins.jetbrains.com/plugin/16422-protobuf)
 
