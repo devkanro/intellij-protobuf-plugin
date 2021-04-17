@@ -19,6 +19,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufIdentifier
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.string.plural
 
 class AipCompletionContributor : CompletionContributor() {
     init {
@@ -107,14 +108,17 @@ class MethodInsertHandler(val method: String) : InsertHandler<LookupElement> {
         val message = item.`object` as? ProtobufMessageDefinition ?: return
         val editor = context.editor
         val messageName = message.name()
-        val methodName = item.lookupString
+
+        val pluralize = method.startsWith("Batch") || method == "List"
+        val prefix = "${method}${if (pluralize) messageName?.plural() else messageName}"
+        val request = "${prefix}Request"
         val response = when (method) {
             "Get",
             "Create",
             "Update" -> messageName
             "Delete" -> "google.protobuf.Empty"
-            else -> "${methodName}Response"
+            else -> "${prefix}Response"
         }
-        EditorModificationUtil.insertStringAtCaret(editor, "(${methodName}Request) returns ($response)")
+        EditorModificationUtil.insertStringAtCaret(editor, "($request) returns ($response)")
     }
 }

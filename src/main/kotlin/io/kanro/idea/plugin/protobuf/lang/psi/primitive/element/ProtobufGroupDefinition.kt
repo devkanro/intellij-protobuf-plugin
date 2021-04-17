@@ -5,6 +5,8 @@ import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufMultiNameDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
+import io.kanro.idea.plugin.protobuf.string.toCamelCase
+import io.kanro.idea.plugin.protobuf.string.toSnakeCase
 import javax.swing.Icon
 
 interface ProtobufGroupDefinition : ProtobufFieldLike, ProtobufNumberScope, ProtobufMultiNameDefinition {
@@ -30,6 +32,7 @@ interface ProtobufGroupDefinition : ProtobufFieldLike, ProtobufNumberScope, Prot
 
     @JvmDefault
     override fun names(): Set<String> {
-        return setOfNotNull(name(), identifier()?.text)
+        val groupName = identifier()?.text ?: return emptySet()
+        return setOf(groupName, groupName.toSnakeCase(), groupName.toCamelCase())
     }
 }

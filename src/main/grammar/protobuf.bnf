@@ -70,6 +70,9 @@ PackageName::= IdentifierWithKeyword {
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufPackageName"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufPackageNameMixin"
+    stubClass= "io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufPackageNameStub"
+    elementTypeFactory = 'io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes.get'
 }
 ImportStatement ::= import ImportLabel? StringValue ';' {
     pin=1
@@ -117,6 +120,9 @@ MessageDefinition ::= message Identifier MessageBody {
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBodyOwner"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufMessageDefinitionMixin"
+    stubClass= "io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufMessageStub"
+    elementTypeFactory = 'io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes.get'
 }
 MessageBody ::= '{' MessageElement* '}' {
     pin=1
@@ -157,6 +163,9 @@ FieldDefinition ::= FieldLabel? TypeName Identifier '=' IntegerValue FieldOption
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBodyOwner"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufFieldDefinitionMixin"
+    stubClass= "io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufFieldStub"
+    elementTypeFactory = 'io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes.get'
 }
 FieldOptionBlock ::= '[' FieldOption (',' FieldOption)* ']' {
     pin=1
@@ -187,6 +196,9 @@ OneofDefinition ::= oneof Identifier OneofBody {
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBodyOwner"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufOneofDefinitionMixin"
+    stubClass= "io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufOneofStub"
+    elementTypeFactory = 'io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes.get'
 }
 OneofBody ::= '{' OneofElement* '}' {
     pin=1
@@ -206,12 +218,15 @@ OneofOption ::= option OptionAssign ';'  {
 }
 
 MapFieldDefinition ::= map '<' TypeName ',' TypeName '>' Identifier '=' IntegerValue FieldOptionBlock? ';' {
-   pin=1
+    pin=1
     implements=[
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufStatement"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufMapFieldDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufMapFieldDefinitionMixin"
+    stubClass= "io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufMapFieldStub"
+    elementTypeFactory = 'io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes.get'
 }
 
 GroupDefinition ::= FieldLabel? group Identifier '=' IntegerValue MessageBody {
@@ -221,6 +236,9 @@ GroupDefinition ::= FieldLabel? group Identifier '=' IntegerValue MessageBody {
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufGroupDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufGroupDefinitionMixin"
+    stubClass= "io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufGroupStub"
+    elementTypeFactory = 'io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes.get'
 }
 
 ExtensionStatement ::= extensions Ranges ';' {
@@ -260,6 +278,9 @@ EnumDefinition ::= enum Identifier EnumBody {
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBodyOwner"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufEnumDefinitionMixin"
+    stubClass= "io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufEnumStub"
+    elementTypeFactory = 'io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes.get'
 }
 
 EnumBody ::= '{' EnumElement* '}' {
@@ -286,6 +307,9 @@ EnumValueDefinition ::= Identifier '=' IntegerValue EnumValueOptionBlock? ';' {
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBodyOwner"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufEnumValueDefinitionMixin"
+    stubClass= "io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufEnumValueStub"
+    elementTypeFactory = 'io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes.get'
 }
 EnumValueOptionBlock ::= '[' EnumValueOption (',' EnumValueOption)* ']' {
     pin=1
@@ -310,6 +334,9 @@ ServiceDefinition ::= service Identifier ServiceBody  {
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBodyOwner"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufServiceDefinitionMixin"
+    stubClass= "io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufServiceStub"
+    elementTypeFactory = 'io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes.get'
 }
 
 ServiceBody ::= '{' ServiceElement* '}' {
@@ -337,6 +364,9 @@ RpcDefinition ::= rpc Identifier RpcIO returns RpcIO ( RpcBody | ';') {
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBodyOwner"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufRpcDefinitionMixin"
+    stubClass= "io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufRpcStub"
+    elementTypeFactory = 'io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes.get'
 }
 RpcIO ::= '(' stream? TypeName ')' {
     implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufBlock"]
@@ -364,6 +394,9 @@ ExtendDefinition ::= extend TypeName ExtendBody  {
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufExtendDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBodyOwner"
    ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufExtendDefinitionMixin"
+    stubClass= "io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufExtendStub"
+    elementTypeFactory = 'io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes.get'
 }
 
 ExtendBody ::=  '{' ExtendElement* '}' {

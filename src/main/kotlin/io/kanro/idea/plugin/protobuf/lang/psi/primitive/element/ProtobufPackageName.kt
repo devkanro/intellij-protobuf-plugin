@@ -33,11 +33,6 @@ interface ProtobufPackageName :
     }
 
     @JvmDefault
-    override fun getName(): String? {
-        return name()
-    }
-
-    @JvmDefault
     override fun setName(name: String): PsiElement {
         (node as? LeafElement)?.replaceWithText(name)
         return this

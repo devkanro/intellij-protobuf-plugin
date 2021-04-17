@@ -7,12 +7,14 @@ import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.findChild
+import io.kanro.idea.plugin.protobuf.lang.psi.jsonName
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufMultiNameDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 import javax.swing.Icon
 
-interface ProtobufFieldDefinition : ProtobufFieldLike {
+interface ProtobufFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefinition {
     @JvmDefault
     override fun type(): String {
         return "field"
@@ -45,5 +47,10 @@ interface ProtobufFieldDefinition : ProtobufFieldLike {
             return it
         }
         return findChild<ProtobufTypeName>()?.symbolNameList?.lastOrNull()?.text
+    }
+
+    @JvmDefault
+    override fun names(): Set<String> {
+        return setOfNotNull(name(), jsonName())
     }
 }

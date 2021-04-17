@@ -81,6 +81,12 @@
         <projectConfigurable groupId="language"
                              instance="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettingsConfigurable"/>
         <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettings"/>
+        <gotoSymbolContributor implementation="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufGotoSymbolContributor"/>
+
+        <!-- Stub -->
+        <stubElementTypeHolder class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex"/>
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex"/>
 
         <!-- AIP Spec -->
         <psi.referenceContributor language="protobuf"

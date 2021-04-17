@@ -29,19 +29,9 @@ interface ProtobufDefinition : ProtobufScopeItem, PsiNameIdentifierOwner {
     }
 
     @JvmDefault
-    override fun getName(): String? {
-        return name()
-    }
-
-    @JvmDefault
     override fun setName(name: String): PsiElement {
         (identifier()?.identifierLiteral?.node as? LeafElement)?.replaceWithText(name)
         return this
-    }
-
-    @JvmDefault
-    override fun getNavigationElement(): PsiElement {
-        return nameIdentifier ?: this
     }
 
     @JvmDefault

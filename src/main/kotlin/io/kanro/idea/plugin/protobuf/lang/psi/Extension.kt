@@ -13,6 +13,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeI
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItemContainer
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufVirtualScope
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufKeywordToken
+import io.kanro.idea.plugin.protobuf.string.toCamelCase
 import java.util.Stack
 
 inline fun <reified T : PsiElement> PsiElement.findChild(): T? {
@@ -242,4 +243,13 @@ fun ProtobufRpcIO.stream(): Boolean {
         }
     }
     return false
+}
+
+fun ProtobufFieldLike.jsonName(): String? {
+    if (this is ProtobufOptionOwner) {
+        options("json_name").lastOrNull()?.value()?.stringValue?.value()?.let {
+            return it
+        }
+    }
+    return name()?.toCamelCase()
 }

@@ -1,8 +1,12 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# IntelliJ Platform Plugin Template Changelog
+# IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Added
+- Add PSI stub support
+- Add goto symbol contributor
+
 ## [0.0.7]
 ### Added
 - Add icons for stream method
