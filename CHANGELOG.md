@@ -6,6 +6,7 @@
 ### Added
 - Add PSI stub support
 - Add goto symbol contributor
+- Add auto import for symbols
 
 ## [0.0.7]
 ### Added

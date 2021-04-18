@@ -29,14 +29,14 @@ Editor features:
 - [x] Code format
 - [x] Import optimizing
 - [x] [AIP](https://google.aip.dev/) spec support
+- [x] PSI stub
+- [x] Auto import
 
 <!-- Plugin description end -->
 
 Planned features:
 
-- [ ] PSI stub
 - [ ] Quick documentation
-- [ ] Auto import
 - [ ] Java/Kotlin code navigation
 - [ ] [Sisyphus](https://github.com/ButterCam/sisyphus) framework integration
 
@@ -57,5 +57,8 @@ Planned features:
 
 4. AIP-127 Http transcoding
    ![transcoding](resources/aip-127.png)
+   
+5. Auto import
+   ![auto import](resources/auto_import.gif)
    
 More features wait for your discover...
