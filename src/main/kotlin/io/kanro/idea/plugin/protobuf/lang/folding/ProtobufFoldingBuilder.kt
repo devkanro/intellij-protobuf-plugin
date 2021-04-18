@@ -4,16 +4,26 @@ import com.intellij.lang.ASTNode
 import com.intellij.lang.folding.FoldingBuilderEx
 import com.intellij.lang.folding.FoldingDescriptor
 import com.intellij.openapi.editor.Document
+import com.intellij.openapi.editor.FoldingGroup
 import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.util.TextRange
+import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.TokenType
 import com.intellij.psi.util.elementType
+import com.intellij.refactoring.suggested.startOffset
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufFolding
 import java.util.Stack
 
 class ProtobufFoldingBuilder : FoldingBuilderEx(), DumbAware {
     override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean): Array<FoldingDescriptor> {
         val result = mutableListOf<FoldingDescriptor>()
+        val file = (root.containingFile as? ProtobufFile) ?: return arrayOf()
+        result += buildFoldingDescriptorForFile(file)
+
         val stack = Stack<PsiElement>()
         stack.push(root)
 
@@ -34,5 +44,43 @@ class ProtobufFoldingBuilder : FoldingBuilderEx(), DumbAware {
 
     override fun isCollapsedByDefault(node: ASTNode): Boolean {
         return false
+    }
+
+    private fun buildFoldingDescriptorForFile(protobufFile: ProtobufFile): List<FoldingDescriptor> {
+        val result = mutableListOf<FoldingDescriptor>()
+        val stack = Stack<ProtobufImportStatement>()
+
+        protobufFile.children.forEach {
+            when (it) {
+                is ProtobufImportStatement -> stack.push(it)
+                is PsiWhiteSpace,
+                is PsiComment -> {
+                }
+                else -> {
+                    if (stack.size >= 2) {
+                        val start = stack.firstElement()
+                        val end = stack.lastElement()
+                        stack.clear()
+                        val range = TextRange.create(
+                            start.stringValue?.startOffset ?: return@forEach,
+                            end.startOffset + end.textLength
+                        )
+
+                        result += FoldingDescriptor(
+                            protobufFile.node,
+                            range,
+                            FoldingGroup.newGroup("import"),
+                            "...",
+                            true,
+                            setOf()
+                        )
+                    } else {
+                        stack.clear()
+                    }
+                }
+            }
+        }
+
+        return result
     }
 }

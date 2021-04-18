@@ -11,10 +11,11 @@ import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufFileStubImpl
+import io.kanro.idea.plugin.protobuf.lang.psi.stub.primitive.ProtobufScopeStub
 
 interface ProtobufStub<T : ProtobufElement> : StubElement<T>
 
-interface ProtobufFileStub : PsiFileStub<ProtobufFile> {
+interface ProtobufFileStub : PsiFileStub<ProtobufFile>, ProtobufScopeStub {
     object Type : IStubFileElementType<ProtobufFileStub>("PROTO_FILE", ProtobufLanguage) {
         override fun getExternalId(): String {
             return "protobuf.file"

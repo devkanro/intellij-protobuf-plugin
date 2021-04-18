@@ -31,8 +31,8 @@ import io.kanro.idea.plugin.protobuf.lang.psi.forEach
 import io.kanro.idea.plugin.protobuf.lang.psi.int
 import io.kanro.idea.plugin.protobuf.lang.psi.isFieldDefaultOption
 import io.kanro.idea.plugin.protobuf.lang.psi.message
-import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 import io.kanro.idea.plugin.protobuf.lang.psi.uint
+import io.kanro.idea.plugin.protobuf.lang.quickfix.AddImportFix
 import io.kanro.idea.plugin.protobuf.lang.support.BuiltInType
 
 class ProtobufAnnotator : Annotator {
@@ -84,6 +84,7 @@ class ProtobufAnnotator : Annotator {
                     )
                         .range(o.textRange)
                         .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
+                        .withFix(AddImportFix())
                         .create()
                 }
             }

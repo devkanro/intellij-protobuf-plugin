@@ -12,6 +12,29 @@ interface FileResolver {
         var extensionPoint: ExtensionPointName<FileResolver> =
             ExtensionPointName.create("io.kanro.idea.plugin.protobuf.fileResolver")
 
+        fun getImportPath(file: VirtualFile, element: PsiElement): String? {
+            val module = ModuleUtil.findModuleForPsiElement(element)
+            return if (module != null) {
+                getImportPath(file, module)
+            } else {
+                getImportPath(file, element.project)
+            }
+        }
+
+        override fun getImportPath(file: VirtualFile, module: Module): String? {
+            extensionPoint.extensionList.forEach {
+                it.getImportPath(file, module)?.let { return it }
+            }
+            return null
+        }
+
+        override fun getImportPath(file: VirtualFile, project: Project): String? {
+            extensionPoint.extensionList.forEach {
+                it.getImportPath(file, project)?.let { return it }
+            }
+            return null
+        }
+
         fun resolveFile(path: String, element: PsiElement): Iterable<VirtualFile> {
             val module = ModuleUtil.findModuleForPsiElement(element)
             return if (module != null) {
@@ -54,6 +77,10 @@ interface FileResolver {
             }.asIterable()
         }
     }
+
+    fun getImportPath(file: VirtualFile, project: Project): String?
+
+    fun getImportPath(file: VirtualFile, module: Module): String?
 
     fun findFile(path: String, project: Project): Iterable<VirtualFile>
 

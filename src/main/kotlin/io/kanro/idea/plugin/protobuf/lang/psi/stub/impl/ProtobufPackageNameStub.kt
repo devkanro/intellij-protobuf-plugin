@@ -9,4 +9,8 @@ class ProtobufPackageNameStub(
     data: Array<String>,
     parent: StubElement<*>?
 ) : ProtobufStubBase<ProtobufPackageName>(data, parent, ProtobufPackageNameStubType),
-    ProtobufStub<ProtobufPackageName>
+    ProtobufStub<ProtobufPackageName> {
+    fun name(): String? {
+        return data(0).takeIf { it.isNotEmpty() }
+    }
+}

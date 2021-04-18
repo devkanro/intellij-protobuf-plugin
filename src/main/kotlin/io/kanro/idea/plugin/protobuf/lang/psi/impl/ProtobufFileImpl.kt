@@ -5,6 +5,7 @@ import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.navigation.ItemPresentation
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.module.ModuleManager
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.ProjectLocator
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.libraries.LibraryUtil
@@ -17,6 +18,7 @@ import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
+import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
@@ -26,8 +28,12 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSyntaxStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.findChild
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionHover
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.value
+import io.kanro.idea.plugin.protobuf.lang.util.ProtobufPsiFactory
 import io.kanro.idea.plugin.protobuf.lang.util.doc
 import javax.swing.Icon
 
@@ -141,6 +147,44 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
 
     override fun resourceDefinitions(): Array<ProtobufOptionHover> {
         return options(AipOptions.resourceDefinitionOption)
+    }
+
+    override fun addImport(protobufElement: ProtobufElement): Boolean {
+        val targetFile = protobufElement.file()
+        if (this == targetFile) return false
+        val imports = imports()
+        val module = ModuleUtil.findModuleForFile(this)
+        val path = if (module != null) {
+            FileResolver.getImportPath(targetFile.virtualFile, module)
+        } else {
+            FileResolver.getImportPath(targetFile.virtualFile, this.project)
+        } ?: return false
+
+        imports.forEach {
+            if (it.stringValue?.value() == path) return false
+        }
+
+        imports.lastOrNull()?.let {
+            val file = ProtobufPsiFactory.createFile(project, "\nimport \"$path\";")
+            addRangeAfter(file.firstChild, file.lastChild, it)
+            return true
+        }
+
+        findChild<ProtobufPackageStatement>()?.let {
+            val file = ProtobufPsiFactory.createFile(project, "\n\nimport \"$path\";")
+            addRangeAfter(file.firstChild, file.lastChild, it)
+            return true
+        }
+
+        findChild<ProtobufSyntaxStatement>()?.let {
+            val file = ProtobufPsiFactory.createFile(project, "\n\nimport \"$path\";")
+            addRangeAfter(file.firstChild, file.lastChild, it)
+            return true
+        }
+
+        val file = ProtobufPsiFactory.createFile(project, "import \"$path\";\n\n")
+        addRangeBefore(file.firstChild, file.lastChild, firstChild)
+        return true
     }
 
     override fun reservedNames(): Array<ProtobufReservedName> {

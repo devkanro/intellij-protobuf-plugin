@@ -3,6 +3,7 @@ package io.kanro.idea.plugin.protobuf.lang.file
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
+import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem
 import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
@@ -11,6 +12,20 @@ abstract class RootsFileResolver : FileResolver {
     protected abstract fun getRoots(project: Project): Iterable<VirtualFile>
 
     protected abstract fun getRoots(module: Module): Iterable<VirtualFile>
+
+    override fun getImportPath(file: VirtualFile, project: Project): String? {
+        getRoots(project).forEach {
+            VfsUtilCore.getRelativePath(file, it)?.let { return it }
+        }
+        return null
+    }
+
+    override fun getImportPath(file: VirtualFile, module: Module): String? {
+        getRoots(module).forEach {
+            VfsUtilCore.getRelativePath(file, it)?.let { return it }
+        }
+        return null
+    }
 
     override fun findFile(path: String, project: Project): Iterable<VirtualFile> {
         return findFile(path, getRoots(project))

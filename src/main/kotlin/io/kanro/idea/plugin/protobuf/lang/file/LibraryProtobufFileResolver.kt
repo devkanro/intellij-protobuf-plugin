@@ -8,11 +8,10 @@ import com.intellij.openapi.vfs.VirtualFile
 
 class LibraryProtobufFileResolver : RootsFileResolver() {
     override fun getRoots(project: Project): Iterable<VirtualFile> {
-        return ProjectRootManager.getInstance(project).orderEntries().allSourceRoots.asIterable()
+        return ProjectRootManager.getInstance(project).orderEntries().allLibrariesAndSdkClassesRoots.asIterable()
     }
 
     override fun getRoots(module: Module): Iterable<VirtualFile> {
-        return ModuleRootManager.getInstance(module).orderEntries()
-            .withoutModuleSourceEntries().allSourceRoots.asIterable()
+        return ModuleRootManager.getInstance(module).orderEntries().allLibrariesAndSdkClassesRoots.asIterable()
     }
 }

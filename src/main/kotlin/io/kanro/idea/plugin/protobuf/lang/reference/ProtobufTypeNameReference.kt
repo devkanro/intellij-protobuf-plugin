@@ -2,14 +2,21 @@ package io.kanro.idea.plugin.protobuf.lang.reference
 
 import com.intellij.codeInsight.completion.DeclarativeInsertHandler
 import com.intellij.codeInsight.lookup.LookupElement
+import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.util.TextRange
+import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.psi.impl.source.tree.LeafElement
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.stubs.StubIndex
+import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
+import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtensionOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
@@ -22,8 +29,11 @@ import io.kanro.idea.plugin.protobuf.lang.psi.absolutely
 import io.kanro.idea.plugin.protobuf.lang.psi.prev
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
+import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex
 import io.kanro.idea.plugin.protobuf.lang.util.AnyElement
+import io.kanro.idea.plugin.protobuf.lang.util.removeCommonPrefix
 
 class ProtobufTypeNameReference(
     element: ProtobufTypeName,
@@ -75,6 +85,8 @@ class ProtobufTypeNameReference(
     }
 
     override fun getVariants(): Array<Any> {
+        val result = mutableListOf<Any>()
+        val addedElements = mutableSetOf<ProtobufElement>()
         val filter = when (element.parent) {
             is ProtobufExtensionOptionName -> ProtobufSymbolFilters.extensionOptionNameVariants(element.parentOfType())
             is ProtobufFieldDefinition,
@@ -83,19 +95,64 @@ class ProtobufTypeNameReference(
             is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendTypeNameVariants
             else -> return arrayOf()
         }
+        val pattern = element.text
+        getVariantsInCurrentScope(pattern, filter, result, addedElements)
+        getVariantsInStubIndex(pattern, filter, result, addedElements)
+        return result.toTypedArray()
+    }
 
-        val targetName = element.text.substringBeforeLast('.', "").trim('.')
-        val targetScope =
-            if (targetName.isEmpty()) QualifiedName.fromComponents() else QualifiedName.fromDottedString(targetName)
-        return if (element.absolutely()) {
+    private fun getVariantsInCurrentScope(
+        pattern: String,
+        filter: PsiElementFilter,
+        result: MutableList<Any>,
+        elements: MutableSet<ProtobufElement>
+    ) {
+        val targetName = pattern.substringBeforeLast('.', "").trim('.')
+        val targetScope = if (targetName.isEmpty())
+            QualifiedName.fromComponents()
+        else
+            QualifiedName.fromDottedString(targetName)
+        if (element.absolutely()) {
             ProtobufSymbolResolver.collectAbsolute(element, targetScope, filter)
-                .mapNotNull { lookupFor(it, targetScope) }
-                .toTypedArray()
         } else {
             ProtobufSymbolResolver.collectRelatively(element, targetScope, filter)
-                .mapNotNull { lookupFor(it, targetScope) }
-                .toTypedArray()
+        }.forEach {
+            if (it in elements) return@forEach
+            result += lookupFor(it, targetScope) ?: return@forEach
+            elements += it
         }
+    }
+
+    private fun getVariantsInStubIndex(
+        pattern: String,
+        filter: PsiElementFilter,
+        result: MutableList<Any>,
+        elements: MutableSet<ProtobufElement>
+    ): Array<Any> {
+        if (pattern.contains('.')) return arrayOf()
+        if (!pattern.endsWith("IntellijIdeaRulezzz")) return arrayOf()
+        val searchName = pattern.substringBefore("IntellijIdeaRulezzz")
+
+        val module = ModuleUtil.findModuleForPsiElement(element)
+        val scope = if (module != null) {
+            GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)
+        } else {
+            GlobalSearchScope.projectScope(element.project)
+        }
+
+        val matcher = PlatformPatterns.string().contains(searchName)
+        val currentScope = element.parentOfType<ProtobufScope>()?.scope()
+        return StubIndex.getInstance().getAllKeys(ShortNameIndex.key, element.project).asSequence().filter {
+            matcher.accepts(it)
+        }.flatMap {
+            StubIndex.getElements(ShortNameIndex.key, it, element.project, scope, ProtobufElement::class.java)
+        }.filter {
+            filter.isAccepted(it)
+        }.mapNotNull {
+            if (it in elements) return@mapNotNull null
+            result += lookupForStub(it, currentScope) ?: return@mapNotNull null
+            elements += it
+        }.toList().toTypedArray()
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {
@@ -111,6 +168,22 @@ class ProtobufTypeNameReference(
             builder = builder.withInsertHandler(packageInsertHandler)
         }
         return builder
+    }
+
+    private fun lookupForStub(element: ProtobufElement, currentScope: QualifiedName?): LookupElement? {
+        if (element !is ProtobufScopeItem) return null
+        val qualifiedName = element.qualifiedName() ?: return null
+
+        val targetName = if (currentScope != null) {
+            qualifiedName.removeCommonPrefix(currentScope)
+        } else qualifiedName
+        return LookupElementBuilder.create(targetName)
+            .withLookupString(qualifiedName.lastComponent!!)
+            .withPresentableText(qualifiedName.lastComponent!!)
+            .withIcon(element.getIcon(false))
+            .withTailText("${element.tailText() ?: ""} (${qualifiedName.removeTail(1)})", true)
+            .withTypeText(element.type())
+            .withInsertHandler(AddImportInsertHandler(element))
     }
 
     companion object {
