@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [0.0.8]
 ### Added
 - Add PSI stub support
 - Add goto symbol contributor
