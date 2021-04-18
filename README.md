@@ -44,7 +44,7 @@ Planned features:
 
 ![screenshot](resources/screenshot.png)
 
-### Features
+### Highlight Features
 
 1. Import optimizer  
    ![import](resources/import_optimizer.png)
