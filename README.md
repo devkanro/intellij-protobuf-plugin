@@ -46,19 +46,19 @@ Planned features:
 
 ### Features
 
-1. Import optimizer
+1. Import optimizer  
    ![import](resources/import_optimizer.png)
    
-2. In-place rename
+2. In-place rename  
    ![rename](resources/rename.png)
    
-3. AIP-123 Resource Type
+3. AIP-123 Resource Type  
    ![resource](resources/aip-123.png)
 
-4. AIP-127 Http transcoding
+4. AIP-127 Http transcoding  
    ![transcoding](resources/aip-127.png)
    
-5. Auto import
+5. Auto import  
    ![auto import](resources/auto_import.gif)
    
-More features wait for your discover...
+More features wait for your discovering...
