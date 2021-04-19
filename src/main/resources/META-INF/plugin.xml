@@ -17,6 +17,8 @@
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
         <fileResolver id="module"
                       implementation="io.kanro.idea.plugin.protobuf.lang.file.ModuleSourceProtobufFileResolver"/>
+        <fileResolver id="depModule"
+                      implementation="io.kanro.idea.plugin.protobuf.lang.file.DepModuleSourceProtobufFileResolver"/>
         <fileResolver id="library"
                       implementation="io.kanro.idea.plugin.protobuf.lang.file.LibraryProtobufFileResolver"/>
         <fileResolver id="settings"
