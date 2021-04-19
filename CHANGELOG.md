@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [0.0.9]
 ### Added
 - Add dep module source root file resolver
 - Add resource type auto import
