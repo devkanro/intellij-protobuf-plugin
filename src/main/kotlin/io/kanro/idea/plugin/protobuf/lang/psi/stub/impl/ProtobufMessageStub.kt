@@ -19,6 +19,10 @@ class ProtobufMessageStub(
         return data(0).takeIf { it.isNotEmpty() }
     }
 
+    fun resourceType(): String? {
+        return data(1).takeIf { it.isNotEmpty() }
+    }
+
     override fun scope(): QualifiedName? {
         return qualifiedName()
     }

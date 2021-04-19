@@ -10,7 +10,8 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
 import kotlin.math.min
 
-class SmartInsertHandler(val value: String, val offset: Int = 0, val autoPopup: Boolean = false) : InsertHandler<LookupElement> {
+class SmartInsertHandler(val value: String, val offset: Int = 0, val autoPopup: Boolean = false) :
+    InsertHandler<LookupElement> {
     override fun handleInsert(context: InsertionContext, item: LookupElement) {
         val editor = context.editor
         val project = editor.project ?: return

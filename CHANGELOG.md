@@ -3,6 +3,10 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Added
+- Add dep module source root file resolver
+- Add resource type auto import
+
 ## [0.0.8]
 ### Added
 - Add PSI stub support

@@ -36,7 +36,7 @@ abstract class ProtobufMessageDefinitionMixin :
     constructor(stub: ProtobufMessageStub, type: IStubElementType<*, *>) : super(stub, type)
 
     override fun stubData(): Array<String> {
-        return arrayOf(name() ?: "", resourceName() ?: "")
+        return arrayOf(name() ?: "", resourceType() ?: "")
     }
 }
 

@@ -14,23 +14,23 @@ import javax.swing.Icon
 interface ProtobufMessageDefinition : ProtobufNumberScope, ProtobufDefinition {
     @JvmDefault
     override fun type(): String {
-        if (resourceName() != null) return "resource"
+        if (resourceType() != null) return "resource"
         return "message"
     }
 
     @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
-        if (resourceName() != null) return Icons.RESOURCE_MESSAGE
+        if (resourceType() != null) return Icons.RESOURCE_MESSAGE
         return Icons.MESSAGE
     }
 
     @JvmDefault
     override fun tailText(): String? {
-        return resourceName()?.let { ": $it" }
+        return resourceType()?.let { ": $it" }
     }
 
     @JvmDefault
-    fun resourceName(): String? {
+    fun resourceType(): String? {
         if (this !is ProtobufOptionOwner) return null
         return CachedValuesManager.getCachedValue(this) {
             options(AipOptions.resourceOption).forEach {

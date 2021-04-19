@@ -26,7 +26,7 @@ interface ProtobufFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefiniti
     }
 
     @JvmDefault
-    fun resourceName(): String? {
+    fun resourceType(): String? {
         if (this !is ProtobufOptionOwner) return null
         return CachedValuesManager.getCachedValue(this) {
             options(AipOptions.resourceReferenceOption).forEach {
@@ -43,7 +43,7 @@ interface ProtobufFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefiniti
 
     @JvmDefault
     override fun fieldType(): String? {
-        resourceName()?.let {
+        resourceType()?.let {
             return it
         }
         return findChild<ProtobufTypeName>()?.symbolNameList?.lastOrNull()?.text

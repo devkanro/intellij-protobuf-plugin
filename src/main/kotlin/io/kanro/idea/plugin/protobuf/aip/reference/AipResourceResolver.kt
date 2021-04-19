@@ -42,7 +42,7 @@ object AipResourceResolver {
             }
         }
         file.walkChildren<ProtobufMessageDefinition> {
-            if (it.resourceName() == resourceName) {
+            if (it.resourceType() == resourceName) {
                 return it
             }
         }
@@ -80,7 +80,7 @@ object AipResourceResolver {
             }
         }
         file.walkChildren<ProtobufMessageDefinition> {
-            if (it.resourceName() != null) {
+            if (it.resourceType() != null) {
                 result += it
             }
         }
