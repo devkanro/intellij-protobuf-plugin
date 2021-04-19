@@ -12,4 +12,7 @@ object AipOptions {
 
     val httpRuleBodyName = QualifiedName.fromComponents("google", "api", "HttpRule", "body")
     val httpRuleResponseBodyName = QualifiedName.fromComponents("google", "api", "HttpRule", "response_body")
+
+    val lroMetadataName = QualifiedName.fromComponents("google", "longrunning", "OperationInfo", "metadata_type")
+    val lroResponseName = QualifiedName.fromComponents("google", "longrunning", "OperationInfo", "response_type")
 }

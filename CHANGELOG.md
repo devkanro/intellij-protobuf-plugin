@@ -3,6 +3,8 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+- Add [Long running operation](https://aip.bybutter.com/151) support for AIP-151
+
 ## [0.0.9]
 ### Added
 - Add dep module source root file resolver
