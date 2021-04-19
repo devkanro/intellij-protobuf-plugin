@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [0.0.10]
 - Add [Long running operation](https://aip.bybutter.com/151) support for AIP-151
 
 ## [0.0.9]
