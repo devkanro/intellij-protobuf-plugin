@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [0.0.11]
 ### Added
 - Add support for platform api 201
 
