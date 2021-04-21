@@ -3,6 +3,9 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Added
+- Add support for platform api 201
+
 ## [0.0.10]
 - Add [Long running operation](https://aip.bybutter.com/151) support for AIP-151
 

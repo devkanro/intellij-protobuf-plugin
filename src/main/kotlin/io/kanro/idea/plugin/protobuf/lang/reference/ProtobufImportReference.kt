@@ -1,6 +1,5 @@
 package io.kanro.idea.plugin.protobuf.lang.reference
 
-import com.intellij.codeInsight.completion.DeclarativeInsertHandler
 import com.intellij.codeInsight.lookup.AutoCompletionPolicy
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
@@ -73,10 +72,7 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
 
         private val completeImportInsert = SmartInsertHandler("\";")
 
-        private val nextImportInsert = DeclarativeInsertHandler.Builder()
-            .insertOrMove("/")
-            .triggerAutoPopup()
-            .build()
+        private val nextImportInsert = SmartInsertHandler("/", 0, true)
 
         fun resolve(element: ProtobufImportStatement): PsiElement? {
             val filePath = element.stringValue?.text ?: return null

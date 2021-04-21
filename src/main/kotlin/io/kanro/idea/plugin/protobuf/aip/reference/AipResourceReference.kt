@@ -60,7 +60,7 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
         return StubIndex.getInstance().getAllKeys(ResourceTypeIndex.key, element.project).asSequence().filter {
             matcher.accepts(it)
         }.flatMap {
-            StubIndex.getElements(ResourceTypeIndex.key, it, element.project, scope, ProtobufElement::class.java)
+            StubIndex.getElements(ResourceTypeIndex.key, it, element.project, scope, ProtobufElement::class.java).asSequence()
         }.mapNotNull {
             if (it in elements) return@mapNotNull null
             result += lookup(it, true) ?: return@mapNotNull null

@@ -1,6 +1,5 @@
 package io.kanro.idea.plugin.protobuf.lang.reference
 
-import com.intellij.codeInsight.completion.DeclarativeInsertHandler
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.module.ModuleUtil
@@ -17,6 +16,7 @@ import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
+import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtensionOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
@@ -146,6 +146,7 @@ class ProtobufTypeNameReference(
             matcher.accepts(it)
         }.flatMap {
             StubIndex.getElements(ShortNameIndex.key, it, element.project, scope, ProtobufElement::class.java)
+                .asSequence()
         }.filter {
             filter.isAccepted(it)
         }.mapNotNull {
@@ -187,9 +188,6 @@ class ProtobufTypeNameReference(
     }
 
     companion object {
-        private val packageInsertHandler = DeclarativeInsertHandler.Builder()
-            .insertOrMove(".")
-            .triggerAutoPopup()
-            .build()
+        private val packageInsertHandler = SmartInsertHandler(".", 0, true)
     }
 }

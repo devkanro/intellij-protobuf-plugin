@@ -1,11 +1,11 @@
 package io.kanro.idea.plugin.protobuf.lang.formatter
 
-import com.intellij.formatting.FormattingContext
 import com.intellij.formatting.FormattingModel
 import com.intellij.formatting.FormattingModelBuilder
 import com.intellij.formatting.SpacingBuilder
 import com.intellij.formatting.Wrap
 import com.intellij.formatting.WrapType
+import com.intellij.psi.PsiElement
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings
 import com.intellij.psi.formatter.FormattingDocumentModelImpl
@@ -15,16 +15,16 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
 
 class ProtobufFormattingModelBuilder : FormattingModelBuilder {
-    override fun createModel(formattingContext: FormattingContext): FormattingModel {
-        val file = formattingContext.containingFile
+    override fun createModel(element: PsiElement, settings: CodeStyleSettings): FormattingModel {
+        val file = element.containingFile
         return PsiBasedFormattingModel(
             file,
             ProtobufBlock(
                 BlockType.BODY,
-                formattingContext.node,
+                element.node,
                 Wrap.createWrap(WrapType.NONE, false),
                 null,
-                spacingBuilder(formattingContext.codeStyleSettings)
+                spacingBuilder(settings)
             ),
             FormattingDocumentModelImpl.createOn(file)
         )

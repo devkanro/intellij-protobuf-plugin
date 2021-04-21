@@ -31,6 +31,6 @@ interface ProtobufMapFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefin
 
     @JvmDefault
     override fun names(): Set<String> {
-        return setOfNotNull(name(), jsonName())
+        return listOfNotNull(name(), jsonName()).toSet()
     }
 }
