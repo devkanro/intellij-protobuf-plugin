@@ -14,6 +14,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldName
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
@@ -21,6 +22,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOptionAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedRange
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
@@ -31,9 +33,14 @@ import io.kanro.idea.plugin.protobuf.lang.psi.forEach
 import io.kanro.idea.plugin.protobuf.lang.psi.int
 import io.kanro.idea.plugin.protobuf.lang.psi.isFieldDefaultOption
 import io.kanro.idea.plugin.protobuf.lang.psi.message
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.uint
 import io.kanro.idea.plugin.protobuf.lang.quickfix.AddImportFix
+import io.kanro.idea.plugin.protobuf.lang.quickfix.RenameFix
 import io.kanro.idea.plugin.protobuf.lang.support.BuiltInType
+import io.kanro.idea.plugin.protobuf.string.case.CaseFormat
+import io.kanro.idea.plugin.protobuf.string.toCase
+import io.kanro.idea.plugin.protobuf.string.toScreamingSnakeCase
 
 class ProtobufAnnotator : Annotator {
     companion object {
@@ -55,7 +62,22 @@ class ProtobufAnnotator : Annotator {
 
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         element.accept(object : ProtobufVisitor() {
+            private fun requireCase(type: String, o: ProtobufDefinition, case: CaseFormat) {
+                val name = o.name() ?: return
+                if (name != name.toCase(case)) {
+                    holder.newAnnotation(
+                        HighlightSeverity.WARNING,
+                        "$type should be ${case.name.toCase(case)}"
+                    )
+                        .range(o.identifier()?.textRange ?: o.textRange)
+                        .withFix(RenameFix(name.toCase(case), o))
+                        .create()
+                }
+            }
+
             override fun visitMapFieldDefinition(o: ProtobufMapFieldDefinition) {
+                requireCase("Field name", o, CaseFormat.SNAKE_CASE)
+
                 ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
                 NumberTracker.tracker(o.parentOfType() ?: return).visit(o, holder)
                 val types = o.typeNameList
@@ -202,26 +224,55 @@ class ProtobufAnnotator : Annotator {
             }
 
             override fun visitFieldDefinition(o: ProtobufFieldDefinition) {
+                requireCase("Field name", o, CaseFormat.SNAKE_CASE)
+
+                ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
+                NumberTracker.tracker(o.parentOfType() ?: return).visit(o, holder)
+            }
+
+            override fun visitGroupDefinition(o: ProtobufGroupDefinition) {
+                requireCase("Group name", o, CaseFormat.PASCAL_CASE)
+
                 ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
                 NumberTracker.tracker(o.parentOfType() ?: return).visit(o, holder)
             }
 
             override fun visitMessageDefinition(o: ProtobufMessageDefinition) {
+                requireCase("Message name", o, CaseFormat.PASCAL_CASE)
+
                 ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
             }
 
             override fun visitServiceDefinition(o: ProtobufServiceDefinition) {
+                requireCase("Message name", o, CaseFormat.PASCAL_CASE)
+
                 ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
             }
 
-            override fun visitGroupDefinition(o: ProtobufGroupDefinition) {
+            override fun visitRpcDefinition(o: ProtobufRpcDefinition) {
+                requireCase("Method name", o, CaseFormat.PASCAL_CASE)
+
                 ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
-                NumberTracker.tracker(o.parentOfType() ?: return).visit(o, holder)
             }
 
             override fun visitEnumValueDefinition(o: ProtobufEnumValueDefinition) {
+                requireCase("Enum value name", o, CaseFormat.SCREAMING_SNAKE_CASE)
+
                 ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
                 NumberTracker.tracker(o.parentOfType() ?: return).visit(o, holder)
+
+                val enumName = o.name() ?: return
+                if (o.owner()?.owner() is ProtobufFile) {
+                    val parentName = o.owner()?.name() ?: return
+                    if (!enumName.startsWith(parentName.toScreamingSnakeCase())) {
+                        holder.newAnnotation(
+                            HighlightSeverity.WARNING,
+                            "Value name of root enum should be start with enum name"
+                        )
+                            .range(o.identifier()?.textRange ?: o.textRange)
+                            .create()
+                    }
+                }
             }
 
             override fun visitReservedName(o: ProtobufReservedName) {

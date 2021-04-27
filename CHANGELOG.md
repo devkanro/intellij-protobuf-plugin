@@ -3,6 +3,9 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Added
+- Add case annotator for definitions
+
 ## [0.0.11]
 ### Added
 - Add support for platform api 201
