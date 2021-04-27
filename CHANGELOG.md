@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [0.0.12]
 ### Added
 - Add case annotator for definitions
 
