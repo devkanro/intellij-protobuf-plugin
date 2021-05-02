@@ -3,6 +3,9 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Added
+- Add quick document with commonmark
+
 ## [0.0.12]
 ### Added
 - Add case annotator for definitions

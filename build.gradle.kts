@@ -41,6 +41,10 @@ intellij {
     setPlugins(*properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty).toTypedArray())
 }
 
+dependencies {
+    implementation("org.commonmark:commonmark:0.17.1")
+}
+
 // Configure gradle-changelog-plugin plugin.
 // Read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {

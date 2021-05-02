@@ -1,6 +1,9 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature
 
-interface ProtobufDocumented {
+import com.intellij.psi.PsiElement
+import io.kanro.idea.plugin.protobuf.lang.psi.prev
+
+interface ProtobufDocumented : PsiElement {
     @JvmDefault
     fun navigateInfo(): String? {
         return null
@@ -8,7 +11,9 @@ interface ProtobufDocumented {
 
     @JvmDefault
     fun document(): String? {
-        return null
+        val document = this.prev<ProtobufDocument>()
+        if (document?.owner != this) return null
+        return document.render()
     }
 
     @JvmDefault

@@ -46,6 +46,8 @@
                 implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.Protobuf2Annotator"/>
 
         <iconProvider implementation="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufIconProvider"/>
+        <lang.ast.factory implementationClass="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufASTFactory"
+                          language="protobuf"/>
         <lang.documentationProvider language="protobuf"
                                     implementationClass="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufDocumentationProvider"/>
         <lang.quoteHandler language="protobuf"
@@ -83,7 +85,8 @@
         <projectConfigurable groupId="language"
                              instance="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettingsConfigurable"/>
         <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettings"/>
-        <gotoSymbolContributor implementation="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufGotoSymbolContributor"/>
+        <gotoSymbolContributor
+                implementation="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufGotoSymbolContributor"/>
 
         <!-- Stub -->
         <stubElementTypeHolder class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>

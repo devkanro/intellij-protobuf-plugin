@@ -37,6 +37,9 @@ class ProtobufHighlighter : SyntaxHighlighterBase() {
         val BLOCK_COMMENT = TextAttributesKey.createTextAttributesKey(
             "PROTO_BLOCK_COMMENT", DefaultLanguageHighlighterColors.BLOCK_COMMENT
         )
+        val DOC_COMMENT = TextAttributesKey.createTextAttributesKey(
+            "PROTO_DOC_COMMENT", DefaultLanguageHighlighterColors.DOC_COMMENT
+        )
         val LINE_COMMENT = TextAttributesKey.createTextAttributesKey(
             "PROTO_LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT
         )

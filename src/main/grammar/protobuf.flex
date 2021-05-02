@@ -13,7 +13,7 @@ import com.intellij.psi.tree.IElementType;
 %function advance
 %type IElementType
 %unicode
-%state COMMENT, AFTER_NUMBER
+%state LINE_COMMENT, BLOCK_COMMENT, AFTER_NUMBER
 
 // General classes
 Alpha = [a-zA-Z_]
@@ -32,10 +32,13 @@ Symbol = [!#$%&()*+,-./:;<=>?@\[\\\]\^`{|}~]
 
 // Whitespace.
 WhitespaceNoNewline = [\ \t\r\f\x0b] // '\x0b' is '\v' (vertical tab) in C.
-Whitespace = ({WhitespaceNoNewline} | "\n")+
+NewLine = "\n"
+Whitespace = ({WhitespaceNoNewline} | {NewLine})+
+LeadingWhitespace = {NewLine} {WhitespaceNoNewline}*
 
 // Comments.
-CLineComment = "//" [^\n]*
+CLineComment = ("//" [^\n]*)
+CLineComments = {CLineComment} ({LeadingWhitespace} {CLineComment})*
 CBlockComment = "/*" !([^]* "*/" [^]*) "*/"?
 
 // Identifiers.
@@ -128,11 +131,15 @@ String = {SingleQuotedString} | {DoubleQuotedString}
   {Float}                   { yybegin(AFTER_NUMBER); return ProtobufTokens.FLOAT_LITERAL; }
 
   // C-style comments, allowed when injected into protobuf.
-  "/*" | "//" {
+  "//" {
     yypushback(2);
-    yybegin(COMMENT);
+    yybegin(LINE_COMMENT);
   }
 
+  "/*" {
+    yypushback(2);
+    yybegin(BLOCK_COMMENT);
+  }
 
   // Additional unmatched symbols are matched individually as SYMBOL.
   {Symbol} { return ProtobufTokens.SYMBOL; }
@@ -141,8 +148,11 @@ String = {SingleQuotedString} | {DoubleQuotedString}
   [^] { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
-<COMMENT> {
-  {CLineComment}            { yybegin(YYINITIAL); return ProtobufTokens.LINE_COMMENT; }
+<LINE_COMMENT> {
+  {CLineComments}           { yybegin(YYINITIAL); return ProtobufTokens.LINE_COMMENT; }
+}
+
+<BLOCK_COMMENT> {
   {CBlockComment}           { yybegin(YYINITIAL); return ProtobufTokens.BLOCK_COMMENT; }
 }
 

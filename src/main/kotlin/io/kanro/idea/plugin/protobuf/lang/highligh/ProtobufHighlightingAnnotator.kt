@@ -4,6 +4,7 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfoType
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.openapi.editor.colors.TextAttributesKey
+import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
@@ -22,9 +23,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSymbolName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufKeywordToken
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufToken
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufDocument
 import io.kanro.idea.plugin.protobuf.lang.support.BuiltInType
 
 class ProtobufHighlightingAnnotator : Annotator {
@@ -81,10 +80,10 @@ class ProtobufHighlightingAnnotator : Annotator {
             createHighlight(o, ProtobufHighlighter.IDENTIFIER)
         }
 
-        override fun visitElement(o: ProtobufElement) {
-            when (o.node.elementType) {
-                is ProtobufToken, is ProtobufKeywordToken -> {
-                    o
+        override fun visitComment(comment: PsiComment) {
+            if (comment is ProtobufDocument) {
+                if (comment.owner != null) {
+                    createHighlight(comment, ProtobufHighlighter.DOC_COMMENT)
                 }
             }
         }
