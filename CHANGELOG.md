@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [1.0.0]
 ### Added
 - Add quick document with commonmark
 - Add 'json_name' option support
