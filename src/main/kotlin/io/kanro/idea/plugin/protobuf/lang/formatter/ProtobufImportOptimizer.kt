@@ -2,7 +2,7 @@ package io.kanro.idea.plugin.protobuf.lang.formatter
 
 import com.intellij.lang.ImportOptimizer
 import com.intellij.psi.PsiFile
-import io.kanro.idea.plugin.protobuf.lang.annotator.ImportTracker
+import io.kanro.idea.plugin.protobuf.lang.annotator.FileTracker
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 
@@ -20,7 +20,7 @@ class ProtobufImportOptimizer : ImportOptimizer {
     companion object {
         fun processFile(file: PsiFile) {
             if (file !is ProtobufFile) return
-            val tracker = ImportTracker.tracker(file)
+            val tracker = FileTracker.tracker(file)
             file.imports().forEach {
                 val resolved = it.resolve() ?: return@forEach
                 if (tracker.isUnused(resolved)) {

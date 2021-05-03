@@ -9,19 +9,23 @@ import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes
+import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufFileReferenceContributor
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import io.kanro.idea.plugin.protobuf.lang.quickfix.OptimizeImportsFix
 import io.kanro.idea.plugin.protobuf.lang.util.asFilter
 
-open class ImportTracker(file: ProtobufFile) {
+open class FileTracker(file: ProtobufFile) {
     private val imported = mutableMapOf<String, MutableSet<ProtobufImportStatement>>()
     private val fileReference = mutableMapOf<ProtobufFile, Int>()
+    private val packageStatements = mutableListOf<ProtobufPackageStatement>()
 
     init {
         file.imports().forEach { record(it) }
+        packageStatements += file.findChildren()
         file.walkChildren<ProtobufFileReferenceContributor> {
             record(it)
         }
@@ -39,6 +43,12 @@ open class ImportTracker(file: ProtobufFile) {
         }
     }
 
+    open fun visit(statement: ProtobufPackageStatement, holder: AnnotationHolder) {
+        if (packageStatements.size > 1) {
+            createDuplicate(statement, holder)
+        }
+    }
+
     open fun isUnused(file: ProtobufFile): Boolean {
         return fileReference.getOrDefault(file, 0) == 0
     }
@@ -53,6 +63,13 @@ open class ImportTracker(file: ProtobufFile) {
     protected open fun record(typeName: ProtobufFileReferenceContributor) {
         val file = typeName.reference?.resolve()?.containingFile as? ProtobufFile ?: return
         fileReference[file] = fileReference.getOrDefault(file, 0) + 1
+    }
+
+    protected open fun createDuplicate(statement: ProtobufPackageStatement, holder: AnnotationHolder) {
+        holder.newAnnotation(
+            HighlightSeverity.ERROR,
+            "Duplicate package statement: \"${statement.packageNameList.joinToString(".") { it.text }}\""
+        ).range(statement.textRange).create()
     }
 
     protected open fun createDuplicate(statement: ProtobufImportStatement, file: String, holder: AnnotationHolder) {
@@ -83,10 +100,10 @@ open class ImportTracker(file: ProtobufFile) {
     companion object {
         private val importUsageFilter = TokenSet.create(ProtobufTypes.TYPE_NAME, ProtobufTypes.STRING_VALUE).asFilter()
 
-        fun tracker(file: ProtobufFile): ImportTracker {
+        fun tracker(file: ProtobufFile): FileTracker {
             return CachedValuesManager.getCachedValue(file) {
                 CachedValueProvider.Result.create(
-                    ImportTracker(file), PsiModificationTracker.MODIFICATION_COUNT
+                    FileTracker(file), PsiModificationTracker.MODIFICATION_COUNT
                 )
             }
         }

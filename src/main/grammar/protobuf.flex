@@ -123,6 +123,7 @@ String = {SingleQuotedString} | {DoubleQuotedString}
   "syntax"                  { return ProtobufTokens.SYNTAX; }
   "to"                      { return ProtobufTokens.TO; }
   "true"                    { return ProtobufTokens.TRUE; }
+  "false"                   { return ProtobufTokens.FALSE; }
   "weak"                    { return ProtobufTokens.WEAK; }
 
   {Identifier}              { return ProtobufTokens.IDENTIFIER_LITERAL; }

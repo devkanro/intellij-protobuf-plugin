@@ -10,12 +10,11 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
-import com.intellij.psi.TokenType
-import com.intellij.psi.util.elementType
 import com.intellij.refactoring.suggested.startOffset
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufFolding
+import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import java.util.Stack
 
 class ProtobufFoldingBuilder : FoldingBuilderEx(), DumbAware {
@@ -24,16 +23,8 @@ class ProtobufFoldingBuilder : FoldingBuilderEx(), DumbAware {
         val file = (root.containingFile as? ProtobufFile) ?: return arrayOf()
         result += buildFoldingDescriptorForFile(file)
 
-        val stack = Stack<PsiElement>()
-        stack.push(root)
-
-        while (stack.isNotEmpty()) {
-            val element = stack.pop()
-            (element as? ProtobufFolding)?.folding()?.let { result += it }
-
-            element.children.forEach {
-                if (it.elementType != TokenType.WHITE_SPACE) stack.push(it)
-            }
+        root.walkChildren<ProtobufFolding> {
+            it.folding()?.let { result += it }
         }
         return result.toTypedArray()
     }

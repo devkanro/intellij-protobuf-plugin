@@ -5,6 +5,9 @@
 ## [Unreleased]
 ### Added
 - Add quick document with commonmark
+- Add 'json_name' option support
+### Fixed
+- 'default' option value type annotation
 
 ## [0.0.12]
 ### Added

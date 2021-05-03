@@ -21,8 +21,11 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneofDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.isFieldDefaultOption
+import io.kanro.idea.plugin.protobuf.lang.psi.isFieldJsonNameOption
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 import io.kanro.idea.plugin.protobuf.lang.support.Options
 
@@ -44,6 +47,16 @@ class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
     }
 
     override fun resolve(): PsiElement? {
+        if (element.isFieldJsonNameOption()) {
+            return ProtobufSymbolResolver.resolveInScope(
+                descriptor() ?: return null,
+                QualifiedName.fromComponents("FieldDescriptorProto", "json_name")
+            )
+        }
+        if (element.isFieldDefaultOption()) {
+            return element.parentOfType<ProtobufOptionOwner>() as? ProtobufFieldLike
+        }
+
         return ProtobufSymbolResolver.resolveInScope(
             descriptor() ?: return null,
             QualifiedName.fromComponents(optionType(), element.text)
@@ -63,6 +76,10 @@ class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
         }.toMutableList()
         if (Options.FIELD_OPTIONS.messageName == type) {
             fields += LookupElementBuilder.create("default")
+                .withTypeText("option")
+                .withIcon(Icons.FIELD)
+                .withInsertHandler(optionInsertHandler)
+            fields += LookupElementBuilder.create("json_name")
                 .withTypeText("option")
                 .withIcon(Icons.FIELD)
                 .withInsertHandler(optionInsertHandler)

@@ -20,6 +20,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOptionAssign
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedRange
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
@@ -31,7 +32,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.field
 import io.kanro.idea.plugin.protobuf.lang.psi.float
 import io.kanro.idea.plugin.protobuf.lang.psi.forEach
 import io.kanro.idea.plugin.protobuf.lang.psi.int
-import io.kanro.idea.plugin.protobuf.lang.psi.isFieldDefaultOption
 import io.kanro.idea.plugin.protobuf.lang.psi.message
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.uint
@@ -75,6 +75,10 @@ class ProtobufAnnotator : Annotator {
                 }
             }
 
+            override fun visitPackageStatement(o: ProtobufPackageStatement) {
+                FileTracker.tracker(o.file()).visit(o, holder)
+            }
+
             override fun visitMapFieldDefinition(o: ProtobufMapFieldDefinition) {
                 requireCase("Field name", o, CaseFormat.SNAKE_CASE)
 
@@ -94,7 +98,7 @@ class ProtobufAnnotator : Annotator {
             }
 
             override fun visitImportStatement(o: ProtobufImportStatement) {
-                ImportTracker.tracker(o.file()).visit(o, holder)
+                FileTracker.tracker(o.file()).visit(o, holder)
             }
 
             override fun visitTypeName(o: ProtobufTypeName) {
@@ -112,7 +116,7 @@ class ProtobufAnnotator : Annotator {
             }
 
             override fun visitBuiltInOptionName(o: ProtobufBuiltInOptionName) {
-                if (!o.isFieldDefaultOption() && o.reference?.resolve() == null) {
+                if (o.reference?.resolve() == null) {
                     holder.newAnnotation(
                         HighlightSeverity.ERROR,
                         "Built-in option '${o.text}' not found"
@@ -180,16 +184,16 @@ class ProtobufAnnotator : Annotator {
                     BuiltInType.UINT32.value(),
                     BuiltInType.UINT64.value(),
                     BuiltInType.FIXED32.value(),
-                    BuiltInType.FIXED64.value() -> if (o.numberValue?.int() == null) {
-                        "Field \"${field.name()}\" required a int value"
+                    BuiltInType.FIXED64.value() -> if (o.numberValue?.uint() == null) {
+                        "Field \"${field.name()}\" required a uint value"
                     } else null
                     BuiltInType.INT32.value(),
                     BuiltInType.INT64.value(),
                     BuiltInType.SINT32.value(),
                     BuiltInType.SINT64.value(),
                     BuiltInType.SFIXED32.value(),
-                    BuiltInType.SFIXED64.value() -> if (o.numberValue?.uint() == null) {
-                        "Field \"${field.name()}\" required a uint value"
+                    BuiltInType.SFIXED64.value() -> if (o.numberValue?.int() == null) {
+                        "Field \"${field.name()}\" required a int value"
                     } else null
                     else -> {
                         when (val typeDefinition = field.typeName.reference?.resolve()) {
