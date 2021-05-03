@@ -5,6 +5,8 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufBuiltInOptionName
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtensionStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
@@ -12,6 +14,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneofBody
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.isFieldDefaultOption
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
@@ -96,6 +99,42 @@ class Protobuf3Annotator : Annotator {
                     )
                         .range(o.textRange)
                         .create()
+                }
+            }
+
+            override fun visitEnumDefinition(o: ProtobufEnumDefinition) {
+                val items = o.items()
+                val first = items.firstOrNull { it is ProtobufEnumValueDefinition }
+                val zeroDefinition = items.firstOrNull { it is ProtobufEnumValueDefinition && it.number() == 0L }
+
+                if (zeroDefinition == null) {
+                    holder.newAnnotation(
+                        HighlightSeverity.ERROR,
+                        "'zero' enum value is required in proto3."
+                    )
+                        .range(o.textRange)
+                        .create()
+                } else if (zeroDefinition != first) {
+                    holder.newAnnotation(
+                        HighlightSeverity.WARNING,
+                        "'${zeroDefinition.name()}' needs be first element in proto3 for compatibility with the proto2."
+                    )
+                        .range(o.textRange)
+                        .create()
+                }
+            }
+
+            override fun visitTypeName(o: ProtobufTypeName) {
+                val type = o.reference?.resolve()
+                if (type is ProtobufEnumDefinition) {
+                    if (type.file().syntax() != "proto3") {
+                        holder.newAnnotation(
+                            HighlightSeverity.ERROR,
+                            "Proto2 Enums is not supported in proto3."
+                        )
+                            .range(o.textRange)
+                            .create()
+                    }
                 }
             }
         })

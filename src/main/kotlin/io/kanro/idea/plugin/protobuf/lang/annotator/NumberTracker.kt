@@ -15,6 +15,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 open class NumberTracker(scope: ProtobufNumberScope) {
     private val numberMap = mutableMapOf<Long, MutableList<ProtobufNumbered>>()
     private val reservedNameMap = mutableMapOf<LongRange, ProtobufReservedRange>()
+    private val allowAlias = scope.allowAlias()
 
     init {
         scope.realItems().forEach { record(it) }
@@ -54,7 +55,7 @@ open class NumberTracker(scope: ProtobufNumberScope) {
             }
         }
         val elements = numberMap[number] ?: listOf()
-        if (elements.size > 1) {
+        if (!allowAlias && elements.size > 1) {
             return "Conflicting declarations: \"$number\""
         }
         return null

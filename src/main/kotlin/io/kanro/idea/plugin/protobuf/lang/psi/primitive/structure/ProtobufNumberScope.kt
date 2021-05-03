@@ -22,4 +22,9 @@ interface ProtobufNumberScope : ProtobufScope {
             findChildren()
         }
     }
+
+    @JvmDefault
+    fun allowAlias(): Boolean {
+        return false
+    }
 }

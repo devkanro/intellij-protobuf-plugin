@@ -6,6 +6,7 @@
 ### Added
 - Add quick document with commonmark
 - Add 'json_name' option support
+- Add 'allow_alias' option support
 ### Fixed
 - 'default' option value type annotation
 
