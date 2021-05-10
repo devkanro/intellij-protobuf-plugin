@@ -6,6 +6,7 @@ import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
+import com.intellij.psi.search.GlobalSearchScope
 
 interface FileResolver {
     companion object : FileResolver {
@@ -76,6 +77,29 @@ interface FileResolver {
                 it.collectProtobuf(path, project).asSequence()
             }.asIterable()
         }
+
+        override fun searchScope(project: Project): GlobalSearchScope {
+            val scopes = extensionPoint.extensionList.map {
+                it.searchScope(project)
+            }
+            return GlobalSearchScope.union(scopes)
+        }
+
+        override fun searchScope(module: Module): GlobalSearchScope {
+            val scopes = extensionPoint.extensionList.map {
+                it.searchScope(module)
+            }
+            return GlobalSearchScope.union(scopes)
+        }
+
+        fun searchScope(element: PsiElement): GlobalSearchScope {
+            val module = ModuleUtil.findModuleForPsiElement(element)
+            return if (module != null) {
+                searchScope(module)
+            } else {
+                searchScope(element.project)
+            }
+        }
     }
 
     fun getImportPath(file: VirtualFile, project: Project): String?
@@ -89,4 +113,8 @@ interface FileResolver {
     fun collectProtobuf(path: String, project: Project): Iterable<VirtualFile>
 
     fun collectProtobuf(path: String, module: Module): Iterable<VirtualFile>
+
+    fun searchScope(project: Project): GlobalSearchScope
+
+    fun searchScope(module: Module): GlobalSearchScope
 }

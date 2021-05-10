@@ -25,5 +25,7 @@ interface ProtobufFile : PsiFile, ProtobufScope, ProtobufOptionOwner {
 
     fun addImport(protobufElement: ProtobufElement): Boolean
 
+    fun addImport(path: String): Boolean
+
     object Type : IFileElementType("PROTO_FILE", ProtobufLanguage)
 }

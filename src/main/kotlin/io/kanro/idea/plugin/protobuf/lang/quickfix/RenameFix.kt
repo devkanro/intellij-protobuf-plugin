@@ -1,15 +1,15 @@
 package io.kanro.idea.plugin.protobuf.lang.quickfix
 
-import com.intellij.codeInsight.intention.impl.BaseIntentionAction
+import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiElement
+import com.intellij.psi.util.parentOfType
 import com.intellij.refactoring.RefactoringFactory
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 
-class RenameFix(private val newName: String, private val element: ProtobufDefinition?) : BaseIntentionAction() {
+class RenameFix(private val newName: String) : PsiElementBaseIntentionAction() {
     init {
         text = "Rename to \"$newName\""
     }
@@ -18,13 +18,11 @@ class RenameFix(private val newName: String, private val element: ProtobufDefini
         return "Rename"
     }
 
-    override fun isAvailable(project: Project, editor: Editor?, file: PsiFile?): Boolean {
-        return file is ProtobufFile && file.isWritable
+    override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
+        return element.parentOfType<ProtobufDefinition>() != null
     }
 
-    override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {
-        if (file !is ProtobufFile) return
-        element ?: return
+    override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
         DumbService.getInstance(project).smartInvokeLater {
             RefactoringFactory.getInstance(project).createRename(element, newName).run()
         }

@@ -2,18 +2,17 @@ package io.kanro.idea.plugin.protobuf.aip.reference
 
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
-import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.ComposedInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
+import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFileOption
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
@@ -48,14 +47,7 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
     ): Array<Any> {
         if (!pattern.endsWith("IntellijIdeaRulezzz")) return arrayOf()
         val searchName = pattern.substringBefore("IntellijIdeaRulezzz")
-
-        val module = ModuleUtil.findModuleForPsiElement(element)
-        val scope = if (module != null) {
-            GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)
-        } else {
-            GlobalSearchScope.projectScope(element.project)
-        }
-
+        val scope = FileResolver.searchScope(element)
         val matcher = PlatformPatterns.string().contains(searchName)
         return StubIndex.getInstance().getAllKeys(ResourceTypeIndex.key, element.project).asSequence().filter {
             matcher.accepts(it)

@@ -2,7 +2,6 @@ package io.kanro.idea.plugin.protobuf.lang.reference
 
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiElement
@@ -10,13 +9,13 @@ import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.psi.impl.source.tree.LeafElement
-import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
+import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtensionOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
@@ -132,14 +131,7 @@ class ProtobufTypeNameReference(
         if (pattern.contains('.')) return arrayOf()
         if (!pattern.endsWith("IntellijIdeaRulezzz")) return arrayOf()
         val searchName = pattern.substringBefore("IntellijIdeaRulezzz")
-
-        val module = ModuleUtil.findModuleForPsiElement(element)
-        val scope = if (module != null) {
-            GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)
-        } else {
-            GlobalSearchScope.projectScope(element.project)
-        }
-
+        val scope = FileResolver.searchScope(element)
         val matcher = PlatformPatterns.string().contains(searchName)
         val currentScope = element.parentOfType<ProtobufScope>()?.scope()
         return StubIndex.getInstance().getAllKeys(ShortNameIndex.key, element.project).asSequence().filter {

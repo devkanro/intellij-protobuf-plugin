@@ -22,6 +22,8 @@ Analyzing features:
 - [x] Code folding
 - [x] Semantic analysis
 - [x] Struct Viewer
+- [x] Quick documentation
+- [x] PSI stub
 
 Editor features:
 
@@ -29,14 +31,13 @@ Editor features:
 - [x] Code format
 - [x] Import optimizing
 - [x] [AIP](https://google.aip.dev/) spec support
-- [x] PSI stub
 - [x] Auto import
+- [x] Import quick fix
 
 <!-- Plugin description end -->
 
 Planned features:
 
-- [ ] Quick documentation
 - [ ] Java/Kotlin code navigation
 - [ ] [Sisyphus](https://github.com/ButterCam/sisyphus) framework integration
 

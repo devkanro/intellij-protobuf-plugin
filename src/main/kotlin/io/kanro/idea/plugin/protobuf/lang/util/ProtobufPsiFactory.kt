@@ -6,7 +6,9 @@ import com.intellij.psi.PsiWhiteSpace
 import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.findChild
+import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 
 object ProtobufPsiFactory {
     fun createFile(project: Project, text: String): ProtobufFile {
@@ -17,6 +19,13 @@ object ProtobufPsiFactory {
 
     fun createImport(project: Project, text: String): ProtobufImportStatement {
         return createFile(project, text).findChild() ?: throw IllegalStateException("Wrong import statement '$text'")
+    }
+
+    fun createTypeName(project: Project, text: String): ProtobufTypeName {
+        createFile(project, "message Test { optional $text test = 1; }").walkChildren<ProtobufTypeName> {
+            return it
+        }
+        throw IllegalStateException("Wrong type name '$text'")
     }
 
     fun createWhiteSpace(project: Project, text: String): PsiWhiteSpace {

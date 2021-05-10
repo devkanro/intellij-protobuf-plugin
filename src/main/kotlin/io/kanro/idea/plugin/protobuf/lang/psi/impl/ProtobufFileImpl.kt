@@ -5,7 +5,6 @@ import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.navigation.ItemPresentation
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.module.ModuleManager
-import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.ProjectLocator
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.libraries.LibraryUtil
@@ -18,7 +17,6 @@ import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
-import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
@@ -150,18 +148,22 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
     }
 
     override fun addImport(protobufElement: ProtobufElement): Boolean {
-        val targetFile = protobufElement.file()
-        if (this == targetFile) return false
-        val imports = imports()
-        val module = ModuleUtil.findModuleForFile(this)
-        val path = if (module != null) {
-            FileResolver.getImportPath(targetFile.virtualFile, module)
-        } else {
-            FileResolver.getImportPath(targetFile.virtualFile, this.project)
-        } ?: return false
+        return addImport(protobufElement.importPath(this) ?: return false)
+    }
 
+    override fun addImport(path: String): Boolean {
+        val imports = imports()
         imports.forEach {
             if (it.stringValue?.value() == path) return false
+        }
+
+        imports.forEach {
+            val imported = it.stringValue?.value() ?: return@forEach
+            if (path < imported) {
+                val file = ProtobufPsiFactory.createFile(project, "import \"$path\";\n")
+                addRangeBefore(file.firstChild, file.lastChild, it)
+                return true
+            }
         }
 
         imports.lastOrNull()?.let {

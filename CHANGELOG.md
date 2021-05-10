@@ -3,6 +3,10 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Added
+- Add quick fix for unimported symbols
+- Auto sort imports
+
 ## [1.0.0]
 ### Added
 - Add quick document with commonmark

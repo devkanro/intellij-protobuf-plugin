@@ -6,11 +6,13 @@ fun String.toQualifiedName(): QualifiedName {
     return QualifiedName.fromDottedString(this)
 }
 
-fun QualifiedName.removeCommonPrefix(other: QualifiedName): QualifiedName {
-    return removeCommonPrefix(other, 0)
+fun QualifiedName.removeCommonPrefix(other: QualifiedName?): QualifiedName {
+    return removeCommonPrefix(other ?: return this, 0)
 }
 
 private fun QualifiedName.removeCommonPrefix(other: QualifiedName, index: Int): QualifiedName {
+    if (index >= this.componentCount) return this.removeHead(index - 1)
+    if (index >= other.componentCount) return this.removeHead(index - 1)
     if (this.components[index] == other.components[index]) {
         return removeCommonPrefix(other, index + 1)
     }

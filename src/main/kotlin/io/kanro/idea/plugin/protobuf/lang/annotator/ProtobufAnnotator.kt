@@ -70,7 +70,7 @@ class ProtobufAnnotator : Annotator {
                         "$type should be ${case.name.toCase(case)}"
                     )
                         .range(o.identifier()?.textRange ?: o.textRange)
-                        .withFix(RenameFix(name.toCase(case), o))
+                        .withFix(RenameFix(name.toCase(case)))
                         .create()
                 }
             }
@@ -110,7 +110,7 @@ class ProtobufAnnotator : Annotator {
                     )
                         .range(o.textRange)
                         .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
-                        .withFix(AddImportFix())
+                        .withFix(AddImportFix(o))
                         .create()
                 }
             }
