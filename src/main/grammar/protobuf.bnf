@@ -417,6 +417,7 @@ TypeName ::= '.'? SymbolName ('.' SymbolName)* {
     implements=[
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufFileReferenceContributor"
+        "io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost"
     ]
     mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufTypeNameMixin"
 }
@@ -443,6 +444,7 @@ StringValue ::= STRING_LITERAL {
     implements=[
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufFileReferenceContributor"
+        "io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost"
     ]
     mixin="io.kanro.idea.plugin.protobuf.lang.psi.mixin.ProtobufStringValueMixin"
 }

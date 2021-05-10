@@ -10,6 +10,18 @@ fun QualifiedName.removeCommonPrefix(other: QualifiedName?): QualifiedName {
     return removeCommonPrefix(other ?: return this, 0)
 }
 
+fun QualifiedName.matchesSuffix(suffix: QualifiedName): Boolean {
+    if (componentCount < suffix.componentCount) {
+        return false
+    }
+    for (i in 1..suffix.componentCount) {
+        if (components[componentCount - i] != suffix.components[suffix.componentCount - i]) {
+            return false
+        }
+    }
+    return true
+}
+
 private fun QualifiedName.removeCommonPrefix(other: QualifiedName, index: Int): QualifiedName {
     if (index >= this.componentCount) return this.removeHead(index - 1)
     if (index >= other.componentCount) return this.removeHead(index - 1)

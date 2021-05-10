@@ -9,10 +9,11 @@ import io.kanro.idea.plugin.protobuf.aip.reference.AipResourceReference
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufFieldReferenceInString
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcInputFieldReference
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcOutputFieldReference
-import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufTypeNameInStringReference
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.value
+import io.kanro.idea.plugin.protobuf.lang.quickfix.AddImportFix
+import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufTypeNameReference
 
 class AipAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
@@ -42,13 +43,14 @@ class AipAnnotator : Annotator {
                                     .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
                                     .create()
                             }
-                            is ProtobufTypeNameInStringReference -> {
+                            is ProtobufTypeNameReference -> {
                                 holder.newAnnotation(
                                     HighlightSeverity.ERROR,
                                     "Type \"${o.value()}\" not found."
                                 )
                                     .range(o.textRange)
                                     .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
+                                    .withFix(AddImportFix(o))
                                     .create()
                             }
                         }

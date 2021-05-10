@@ -8,7 +8,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
-import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.QualifiedName
@@ -23,11 +22,11 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcIO
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
-import io.kanro.idea.plugin.protobuf.lang.psi.absolutely
 import io.kanro.idea.plugin.protobuf.lang.psi.prev
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHover
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex
@@ -35,18 +34,16 @@ import io.kanro.idea.plugin.protobuf.lang.util.AnyElement
 import io.kanro.idea.plugin.protobuf.lang.util.removeCommonPrefix
 
 class ProtobufTypeNameReference(
-    element: ProtobufTypeName,
+    element: ProtobufSymbolReferenceHost,
+    val hover: ProtobufSymbolReferenceHover,
     val symbolIndex: Int,
     val child: ProtobufTypeNameReference?
-) :
-    PsiReferenceBase<ProtobufTypeName>(element) {
+) : PsiReferenceBase<ProtobufSymbolReferenceHost>(element) {
+
     private object Resolver : ResolveCache.Resolver {
         override fun resolve(ref: PsiReference, incompleteCode: Boolean): PsiElement? {
             ref as ProtobufTypeNameReference
-            val symbolNameList = ref.element.symbolNameList
-            val resolveName = QualifiedName.fromComponents(
-                symbolNameList.subList(0, ref.symbolIndex + 1).mapNotNull { it.identifierLiteral?.text }
-            )
+            val resolveName = ref.hover.symbol().subQualifiedName(0, ref.symbolIndex + 1)
             val filter = when (ref.element.parent) {
                 is ProtobufExtensionOptionName -> ProtobufSymbolFilters.extensionOptionNameVariants(ref.element.parentOfType())
                 is ProtobufFieldDefinition,
@@ -55,7 +52,7 @@ class ProtobufTypeNameReference(
                 is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendTypeNameVariants
                 else -> AnyElement
             }
-            return if (ref.element.absolutely()) {
+            return if (ref.hover.absolutely()) {
                 ProtobufSymbolResolver.resolveAbsolutely(ref.element, resolveName, filter)
             } else {
                 ProtobufSymbolResolver.resolveRelatively(ref.element, resolveName, filter)
@@ -80,7 +77,11 @@ class ProtobufTypeNameReference(
     }
 
     override fun calculateDefaultRangeInElement(): TextRange {
-        return element.symbolNameList[symbolIndex].textRangeInParent
+        val part = hover.symbolParts()[symbolIndex]
+        return TextRange.from(
+            part.startOffset,
+            part.value.length
+        )
     }
 
     override fun getVariants(): Array<Any> {
@@ -111,7 +112,7 @@ class ProtobufTypeNameReference(
             QualifiedName.fromComponents()
         else
             QualifiedName.fromDottedString(targetName)
-        if (element.absolutely()) {
+        if (hover.absolutely()) {
             ProtobufSymbolResolver.collectAbsolute(element, targetScope, filter)
         } else {
             ProtobufSymbolResolver.collectRelatively(element, targetScope, filter)
@@ -149,8 +150,7 @@ class ProtobufTypeNameReference(
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {
-        (element.symbolNameList[symbolIndex].identifierLiteral?.node as? LeafElement)
-            ?.replaceWithText(newElementName)
+        hover.renamePart(symbolIndex, newElementName)
         return element
     }
 

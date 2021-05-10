@@ -12,6 +12,10 @@
                 interface="io.kanro.idea.plugin.protobuf.lang.file.FileResolver"
                 dynamic="true"
                 name="fileResolver"/>
+        <extensionPoint
+                interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceProvider"
+                dynamic="true"
+                name="symbolReferenceProvider"/>
     </extensionPoints>
 
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
@@ -23,6 +27,7 @@
                       implementation="io.kanro.idea.plugin.protobuf.lang.file.LibraryProtobufFileResolver"/>
         <fileResolver id="settings"
                       implementation="io.kanro.idea.plugin.protobuf.lang.file.ImportRootsFileResolver"/>
+        <symbolReferenceProvider implementation="io.kanro.idea.plugin.protobuf.aip.reference.contributor.ProtobufTypeNameInStringProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -87,6 +92,8 @@
         <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettings"/>
         <gotoSymbolContributor
                 implementation="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufGotoSymbolContributor"/>
+        <psi.referenceContributor
+                implementation="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolReferenceContributor"/>
 
         <!-- Stub -->
         <stubElementTypeHolder class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>

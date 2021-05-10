@@ -167,10 +167,6 @@ fun ProtobufBuiltInOptionName.isFieldJsonNameOption(): Boolean {
     return this.textMatches("json_name") && parentOfType<ProtobufOptionOwner>() is ProtobufFieldDefinition
 }
 
-fun ProtobufTypeName.absolutely(): Boolean {
-    return firstChild !is ProtobufSymbolName
-}
-
 fun ProtobufEnumValue.enum(): ProtobufEnumDefinition? {
     val field = when (val parent = this.parent.parent) {
         is ProtobufOptionAssign -> {

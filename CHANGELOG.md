@@ -3,6 +3,9 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Added
+- Add quick fix for unimported symbols in string
+
 ## [1.1.0]
 ### Added
 - Add quick fix for unimported symbols
