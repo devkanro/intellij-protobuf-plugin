@@ -13,6 +13,8 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeI
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItemContainer
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufVirtualScope
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufKeywordToken
+import io.kanro.idea.plugin.protobuf.string.parseDoubleOrNull
+import io.kanro.idea.plugin.protobuf.string.parseLongOrNull
 import io.kanro.idea.plugin.protobuf.string.toCamelCase
 import java.util.Stack
 
@@ -220,20 +222,16 @@ fun ProtobufStringValue.value(): String? {
 }
 
 fun ProtobufNumberValue.float(): Double? {
-    return when (val text = this.text.replace("""\s""".toRegex(), "")) {
-        "nan", "-nan" -> Double.NaN
-        "inf" -> Double.POSITIVE_INFINITY
-        "-inf" -> Double.NEGATIVE_INFINITY
-        else -> text.toDoubleOrNull()
-    }
+    return floatLiteral?.text?.parseDoubleOrNull()
+        ?: integerLiteral?.text?.parseLongOrNull()?.toDouble()
 }
 
 fun ProtobufNumberValue.int(): Long? {
-    return text.toLongOrNull()
+    return integerLiteral?.text?.parseLongOrNull()
 }
 
 fun ProtobufNumberValue.uint(): ULong? {
-    return text.toULongOrNull()
+    return int()?.toULong()
 }
 
 fun ProtobufRpcIO.stream(): Boolean {

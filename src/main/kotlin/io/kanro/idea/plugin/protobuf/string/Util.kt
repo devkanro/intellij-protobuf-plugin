@@ -38,3 +38,22 @@ fun TextRange.trim(text: String, char: Char): TextRange {
     val end = this.endOffset - (subText.length - subText.trimEnd(char).length)
     return TextRange.create(start, end)
 }
+
+fun String.parseLongOrNull(): Long? {
+    if (startsWith("0x", true)) {
+        return substring(2).toLongOrNull(16)
+    }
+    if (startsWith("0") && length > 1 && matches("[0-7]+".toRegex())) {
+        return substring(1).toLongOrNull(8)
+    }
+    return toLongOrNull()
+}
+
+fun String.parseDoubleOrNull(): Double? {
+    return when (replace("\\s".toRegex(), "")) {
+        "nan", "-nan" -> Double.NaN
+        "inf" -> Double.POSITIVE_INFINITY
+        "-inf" -> Double.NEGATIVE_INFINITY
+        else -> toDoubleOrNull()
+    }
+}
