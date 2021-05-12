@@ -35,7 +35,7 @@ class ProtobufHighlighter : SyntaxHighlighterBase() {
             "PROTO_METHOD", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
         )
         val ENUM = TextAttributesKey.createTextAttributesKey(
-            "PROTO_ENUM", DefaultLanguageHighlighterColors.CLASS_NAME
+            "PROTO_ENUM", DefaultLanguageHighlighterColors.INTERFACE_NAME
         )
         val NUMBER = TextAttributesKey.createTextAttributesKey(
             "PROTO_NUMBER", DefaultLanguageHighlighterColors.NUMBER
