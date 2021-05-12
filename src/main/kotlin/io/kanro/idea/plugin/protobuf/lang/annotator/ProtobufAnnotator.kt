@@ -114,11 +114,6 @@ class ProtobufAnnotator : Annotator {
                     return
                 }
 
-                holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
-                    .range(o.textRange)
-                    .textAttributes(ProtobufHighlighter.IDENTIFIER)
-                    .create()
-
                 if (o.reference?.resolve() == null) {
                     holder.newAnnotation(
                         HighlightSeverity.ERROR,
@@ -169,6 +164,10 @@ class ProtobufAnnotator : Annotator {
                         return
                     }
                 }
+                holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
+                    .range(o.textRange)
+                    .textAttributes(ProtobufHighlighter.FIELD)
+                    .create()
                 holder.newAnnotation(
                     HighlightSeverity.ERROR,
                     "Field '${o.text}' not found"
