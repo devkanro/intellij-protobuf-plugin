@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [1.2.0]
 ### Added
 - Add quick fix for unimported symbols in string
 - Colorful symbols
