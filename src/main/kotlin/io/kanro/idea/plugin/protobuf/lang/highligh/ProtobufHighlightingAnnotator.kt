@@ -21,10 +21,8 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneofDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSymbolName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufDocument
-import io.kanro.idea.plugin.protobuf.lang.support.BuiltInType
 
 class ProtobufHighlightingAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
@@ -46,33 +44,21 @@ class ProtobufHighlightingAnnotator : Annotator {
             }
         }
 
-        override fun visitSymbolName(o: ProtobufSymbolName) {
-            if (o.prevSibling == null && o.nextSibling == null) {
-                if (BuiltInType.isBuiltInType(o.text)) {
-                    createHighlight(o, ProtobufHighlighter.KEYWORD)
-                    return
-                }
-            }
-            createHighlight(o, ProtobufHighlighter.IDENTIFIER)
-        }
-
         override fun visitPackageName(o: ProtobufPackageName) {
             createHighlight(o, ProtobufHighlighter.IDENTIFIER)
         }
 
         override fun visitIdentifier(o: ProtobufIdentifier) {
             when (o.parent) {
-                is ProtobufMessageDefinition,
-                is ProtobufFieldDefinition,
-                is ProtobufMapFieldDefinition,
-                is ProtobufOneofDefinition,
-                is ProtobufGroupDefinition,
-                is ProtobufFieldAssign,
-                is ProtobufEnumDefinition,
-                is ProtobufServiceDefinition,
-                is ProtobufRpcDefinition -> {
-                    createHighlight(o, ProtobufHighlighter.IDENTIFIER)
-                }
+                is ProtobufMessageDefinition -> createHighlight(o, ProtobufHighlighter.MESSAGE)
+                is ProtobufFieldDefinition -> createHighlight(o, ProtobufHighlighter.FIELD)
+                is ProtobufMapFieldDefinition -> createHighlight(o, ProtobufHighlighter.FIELD)
+                is ProtobufOneofDefinition -> createHighlight(o, ProtobufHighlighter.FIELD)
+                is ProtobufGroupDefinition -> createHighlight(o, ProtobufHighlighter.MESSAGE)
+                is ProtobufFieldAssign -> createHighlight(o, ProtobufHighlighter.FIELD)
+                is ProtobufEnumDefinition -> createHighlight(o, ProtobufHighlighter.ENUM)
+                is ProtobufServiceDefinition -> createHighlight(o, ProtobufHighlighter.SERVICE)
+                is ProtobufRpcDefinition -> createHighlight(o, ProtobufHighlighter.METHOD)
             }
         }
 

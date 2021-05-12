@@ -22,6 +22,21 @@ class ProtobufHighlighter : SyntaxHighlighterBase() {
         val IDENTIFIER = TextAttributesKey.createTextAttributesKey(
             "PROTO_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER
         )
+        val FIELD = TextAttributesKey.createTextAttributesKey(
+            "PROTO_FIELD", DefaultLanguageHighlighterColors.INSTANCE_FIELD
+        )
+        val MESSAGE = TextAttributesKey.createTextAttributesKey(
+            "PROTO_MESSAGE", DefaultLanguageHighlighterColors.CLASS_NAME
+        )
+        val SERVICE = TextAttributesKey.createTextAttributesKey(
+            "PROTO_SERVICE", DefaultLanguageHighlighterColors.INTERFACE_NAME
+        )
+        val METHOD = TextAttributesKey.createTextAttributesKey(
+            "PROTO_METHOD", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
+        )
+        val ENUM = TextAttributesKey.createTextAttributesKey(
+            "PROTO_ENUM", DefaultLanguageHighlighterColors.CLASS_NAME
+        )
         val NUMBER = TextAttributesKey.createTextAttributesKey(
             "PROTO_NUMBER", DefaultLanguageHighlighterColors.NUMBER
         )
@@ -83,7 +98,6 @@ class ProtobufHighlighter : SyntaxHighlighterBase() {
             ProtobufTokens.SEMI to SEMICOLON,
             ProtobufTokens.SLASH to OPERATION_SIGN,
             ProtobufTokens.FLOAT_LITERAL to NUMBER,
-            ProtobufTokens.IDENTIFIER_LITERAL to IDENTIFIER,
             ProtobufTokens.INTEGER_LITERAL to NUMBER,
             ProtobufTokens.STRING_LITERAL to STRING,
             ProtobufTokens.BLOCK_COMMENT to BLOCK_COMMENT,

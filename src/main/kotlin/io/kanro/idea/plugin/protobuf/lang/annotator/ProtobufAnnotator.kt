@@ -1,11 +1,13 @@
 package io.kanro.idea.plugin.protobuf.lang.annotator
 
+import com.intellij.codeInsight.daemon.impl.HighlightInfoType
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
+import io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufHighlighter
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufBuiltInOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufConstant
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
@@ -34,9 +36,11 @@ import io.kanro.idea.plugin.protobuf.lang.psi.forEach
 import io.kanro.idea.plugin.protobuf.lang.psi.int
 import io.kanro.idea.plugin.protobuf.lang.psi.message
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.uint
 import io.kanro.idea.plugin.protobuf.lang.quickfix.AddImportFix
 import io.kanro.idea.plugin.protobuf.lang.quickfix.RenameFix
+import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufTypeNameReference
 import io.kanro.idea.plugin.protobuf.lang.support.BuiltInType
 import io.kanro.idea.plugin.protobuf.string.case.CaseFormat
 import io.kanro.idea.plugin.protobuf.string.toCase
@@ -102,7 +106,19 @@ class ProtobufAnnotator : Annotator {
             }
 
             override fun visitTypeName(o: ProtobufTypeName) {
-                if (o.symbolNameList.size == 1 && BuiltInType.isBuiltInType(o.text)) return
+                if (o.symbolNameList.size == 1 && BuiltInType.isBuiltInType(o.text)) {
+                    holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
+                        .range(o.textRange)
+                        .textAttributes(ProtobufHighlighter.KEYWORD)
+                        .create()
+                    return
+                }
+
+                holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
+                    .range(o.textRange)
+                    .textAttributes(ProtobufHighlighter.IDENTIFIER)
+                    .create()
+
                 if (o.reference?.resolve() == null) {
                     holder.newAnnotation(
                         HighlightSeverity.ERROR,
@@ -112,6 +128,25 @@ class ProtobufAnnotator : Annotator {
                         .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
                         .withFix(AddImportFix(o))
                         .create()
+                }
+
+                o.references.forEach {
+                    if (it !is ProtobufTypeNameReference) return@forEach
+                    val result = it.resolve() ?: return@forEach
+                    when (result) {
+                        is ProtobufFieldLike -> holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
+                            .range(it.absoluteRange)
+                            .textAttributes(ProtobufHighlighter.FIELD)
+                            .create()
+                        is ProtobufMessageDefinition -> holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
+                            .range(it.absoluteRange)
+                            .textAttributes(ProtobufHighlighter.MESSAGE)
+                            .create()
+                        is ProtobufEnumDefinition -> holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
+                            .range(it.absoluteRange)
+                            .textAttributes(ProtobufHighlighter.ENUM)
+                            .create()
+                    }
                 }
             }
 

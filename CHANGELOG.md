@@ -5,6 +5,7 @@
 ## [Unreleased]
 ### Added
 - Add quick fix for unimported symbols in string
+- Colorful symbols
 ### Fixed
 - Fix hex int parsing in field definition (#12)
 
