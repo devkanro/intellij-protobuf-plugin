@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [1.2.1]
 ### Fixed
 - Fix boundary problem to resolve context range in string value
 - Fix highlight for keyword in package name
