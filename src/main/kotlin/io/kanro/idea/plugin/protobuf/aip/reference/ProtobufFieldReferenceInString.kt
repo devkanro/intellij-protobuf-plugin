@@ -15,6 +15,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.forEach
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
+import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 
 class ProtobufRpcInputFieldReference(field: ProtobufStringValue) :
@@ -48,7 +49,7 @@ abstract class ProtobufFieldReferenceInString(field: ProtobufStringValue) :
     }
 
     override fun calculateDefaultRangeInElement(): TextRange {
-        return TextRange.create(1, element.textLength - 1)
+        return element.stringRangeInParent()
     }
 
     override fun getVariants(): Array<Any> {

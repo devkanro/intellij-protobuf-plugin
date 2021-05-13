@@ -14,6 +14,8 @@ import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
+import io.kanro.idea.plugin.protobuf.lang.psi.value
 
 class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBase<ProtobufImportStatement>(import) {
     private object Resolver : ResolveCache.Resolver {
@@ -29,7 +31,7 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
 
     override fun calculateDefaultRangeInElement(): TextRange {
         val string = element.stringValue ?: return TextRange.EMPTY_RANGE
-        return TextRange.create(string.startOffsetInParent + 1, string.startOffsetInParent + string.textLength - 1)
+        return string.stringRangeInParent()
     }
 
     override fun getVariants(): Array<Any> {
@@ -75,10 +77,8 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
         private val nextImportInsert = SmartInsertHandler("/", 0, true)
 
         fun resolve(element: ProtobufImportStatement): PsiElement? {
-            val filePath = element.stringValue?.text ?: return null
-            val file =
-                FileResolver.resolveFile(filePath.substring(1, filePath.length - 1), element).firstOrNull()
-                    ?: return null
+            val filePath = element.stringValue?.value() ?: return null
+            val file = FileResolver.resolveFile(filePath, element).firstOrNull() ?: return null
             return PsiManager.getInstance(element.project).findFile(file)
         }
     }

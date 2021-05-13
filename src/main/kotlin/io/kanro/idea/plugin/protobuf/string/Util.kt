@@ -31,14 +31,6 @@ fun CharSequence.splitToRange(char: Char, skipEmpty: Boolean = false): List<Text
     return result
 }
 
-fun TextRange.trim(text: String, char: Char): TextRange {
-    val subText = substring(text)
-    if (subText.trimStart(char).isEmpty()) return TextRange.create(startOffset, startOffset)
-    val start = this.startOffset + (subText.length - subText.trimStart(char).length)
-    val end = this.endOffset - (subText.length - subText.trimEnd(char).length)
-    return TextRange.create(start, end)
-}
-
 fun String.parseLongOrNull(): Long? {
     if (startsWith("0x", true)) {
         return substring(2).toLongOrNull(16)

@@ -17,6 +17,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFileOption
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ResourceTypeIndex
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 
@@ -27,7 +28,7 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
     }
 
     override fun calculateDefaultRangeInElement(): TextRange {
-        return TextRange.create(1, element.textLength - 1)
+        return element.stringRangeInParent()
     }
 
     override fun getVariants(): Array<Any> {

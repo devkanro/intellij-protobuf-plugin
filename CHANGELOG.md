@@ -3,6 +3,10 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Fixed
+- Fix boundary problem to resolve context range in string value
+
+
 ## [1.2.0]
 ### Added
 - Add quick fix for unimported symbols in string

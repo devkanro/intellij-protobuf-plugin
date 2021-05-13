@@ -1,5 +1,6 @@
 package io.kanro.idea.plugin.protobuf.lang.psi
 
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.elementType
@@ -219,6 +220,29 @@ fun ProtobufScope.realItems(): Array<ProtobufScopeItem> {
 
 fun ProtobufStringValue.value(): String? {
     return stringLiteral.text?.trim('"')
+}
+
+fun ProtobufStringValue.stringRange(): TextRange {
+    return stringRange(textRange)
+}
+
+fun ProtobufStringValue.stringRangeInParent(): TextRange {
+    return stringRange(textRangeInParent)
+}
+
+private fun ProtobufStringValue.stringRange(relativelyRange: TextRange): TextRange {
+    var textRange = relativelyRange
+    val text = text
+
+    if (textRange.length == 0) return textRange
+    if (text.startsWith('"')) {
+        textRange = TextRange.create(textRange.startOffset + 1, textRange.endOffset)
+    }
+    if (textRange.length == 0) return textRange
+    if (text.endsWith('"')) {
+        textRange = TextRange.create(textRange.startOffset, textRange.endOffset - 1)
+    }
+    return textRange
 }
 
 fun ProtobufNumberValue.float(): Double? {
