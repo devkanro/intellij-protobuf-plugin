@@ -5,7 +5,7 @@
 ## [Unreleased]
 ### Fixed
 - Fix boundary problem to resolve context range in string value
-
+- Fix highlight for keyword in package name
 
 ## [1.2.0]
 ### Added

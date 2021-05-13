@@ -141,6 +141,10 @@ class ProtobufAnnotator : Annotator {
                             .range(it.absoluteRange)
                             .textAttributes(ProtobufHighlighter.ENUM)
                             .create()
+                        else -> holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
+                            .range(it.absoluteRange)
+                            .textAttributes(ProtobufHighlighter.IDENTIFIER)
+                            .create()
                     }
                 }
             }
