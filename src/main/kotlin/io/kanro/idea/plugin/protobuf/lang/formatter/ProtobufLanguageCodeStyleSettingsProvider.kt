@@ -4,6 +4,7 @@ import com.intellij.application.options.IndentOptionsEditor
 import com.intellij.application.options.SmartIndentOptionsEditor
 import com.intellij.lang.Language
 import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable
+import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizableOptions
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
@@ -74,6 +75,7 @@ message GetMessageRequest {
         indentOptions: CommonCodeStyleSettings.IndentOptions
     ) {
         commonSettings.SPACE_BEFORE_COLON = false
+        commonSettings.KEEP_BLANK_LINES_BETWEEN_PACKAGE_DECLARATION_AND_HEADER = 1
     }
 
     override fun customizeSettings(consumer: CodeStyleSettingsCustomizable, settingsType: SettingsType) {
@@ -97,6 +99,37 @@ message GetMessageRequest {
                 consumer.showStandardOptions("SPACE_BEFORE_METHOD_LBRACE")
                 consumer.renameStandardOption("SPACE_BEFORE_METHOD_LBRACE", "Option left bracket")
                 consumer.moveStandardOption("SPACE_BEFORE_METHOD_LBRACE", "Before block")
+            }
+            SettingsType.BLANK_LINES_SETTINGS -> {
+                val blankLines = CodeStyleSettingsCustomizableOptions.getInstance().BLANK_LINES
+                consumer.showCustomOption(
+                    ProtobufCodeStyleSettings::class.java,
+                    ProtobufCodeStyleSettings::BLANK_LINES_AFTER_SYNTAX.name,
+                    "After syntax statement",
+                    blankLines
+                )
+                consumer.showStandardOptions("BLANK_LINES_AFTER_PACKAGE")
+                consumer.showStandardOptions("BLANK_LINES_AFTER_IMPORTS")
+                consumer.showCustomOption(
+                    ProtobufCodeStyleSettings::class.java,
+                    ProtobufCodeStyleSettings::BLANK_LINES_AFTER_FILE_OPTIONS.name,
+                    "After file options",
+                    blankLines
+                )
+
+                val blankLinesKeep = CodeStyleSettingsCustomizableOptions.getInstance().BLANK_LINES_KEEP
+                consumer.showCustomOption(
+                    ProtobufCodeStyleSettings::class.java,
+                    ProtobufCodeStyleSettings::KEEP_BLANK_LINES_BETWEEN_IMPORTS.name,
+                    "Between imports",
+                    blankLinesKeep
+                )
+                consumer.showCustomOption(
+                    ProtobufCodeStyleSettings::class.java,
+                    ProtobufCodeStyleSettings::KEEP_BLANK_LINES_BETWEEN_FILE_OPTIONS.name,
+                    "Between file options",
+                    blankLinesKeep
+                )
             }
         }
     }

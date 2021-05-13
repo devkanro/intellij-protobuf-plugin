@@ -25,8 +25,9 @@ class ProtobufImportOptimizer : ImportOptimizer {
     companion object {
         fun processFile(file: PsiFile) {
             if (file !is ProtobufFile) return
-            val tracker = FileTracker.tracker(file)
             val imports = file.imports()
+            if (imports.count() == 0) return
+            val tracker = FileTracker.tracker(file)
             val optimizedImports = imports.mapNotNull {
                 val resolved = it.resolve() ?: return@mapNotNull it
                 if (tracker.isUnused(resolved)) {

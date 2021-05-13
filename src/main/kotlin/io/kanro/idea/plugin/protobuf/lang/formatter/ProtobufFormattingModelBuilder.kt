@@ -33,7 +33,22 @@ class ProtobufFormattingModelBuilder : FormattingModelBuilder {
     companion object {
         private fun spacingBuilder(settings: CodeStyleSettings): SpacingBuilder {
             val commonSettings: CommonCodeStyleSettings = settings.getCommonSettings(ProtobufLanguage)
+            val customSettings = settings.getCustomSettings(ProtobufCodeStyleSettings::class.java)
             return SpacingBuilder(commonSettings)
+                .between(ProtobufTypes.IMPORT_STATEMENT, ProtobufTypes.IMPORT_STATEMENT)
+                .spacing(0, 0, 1, true, customSettings.KEEP_BLANK_LINES_BETWEEN_IMPORTS)
+                .between(ProtobufTypes.FILE_OPTION, ProtobufTypes.FILE_OPTION)
+                .spacing(0, 0, 1, true, customSettings.KEEP_BLANK_LINES_BETWEEN_FILE_OPTIONS)
+
+                .after(ProtobufTypes.SYNTAX_STATEMENT)
+                .blankLines(customSettings.BLANK_LINES_AFTER_SYNTAX)
+                .after(ProtobufTypes.PACKAGE_STATEMENT)
+                .blankLines(commonSettings.BLANK_LINES_AFTER_PACKAGE)
+                .after(ProtobufTypes.IMPORT_STATEMENT)
+                .blankLines(commonSettings.BLANK_LINES_AFTER_IMPORTS)
+                .after(ProtobufTypes.FILE_OPTION)
+                .blankLines(customSettings.BLANK_LINES_AFTER_FILE_OPTIONS)
+
                 .withinPair(ProtobufTokens.LBRACE, ProtobufTokens.RBRACE)
                 .spaceIf(commonSettings.SPACE_WITHIN_BRACES, false)
                 .withinPair(ProtobufTokens.LBRACK, ProtobufTokens.RBRACK)

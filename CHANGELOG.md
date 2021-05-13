@@ -3,6 +3,9 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Added
+- Add line breaking settings for protobuf code style
+
 ## [1.2.1]
 ### Fixed
 - Fix boundary problem to resolve context range in string value
