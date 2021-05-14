@@ -6,6 +6,7 @@
 ### Added
 - Add line breaking settings for protobuf code style
 - Resolve symbol reference in quick document
+- Field name and enum value name suggestion
 
 ## [1.2.1]
 ### Fixed

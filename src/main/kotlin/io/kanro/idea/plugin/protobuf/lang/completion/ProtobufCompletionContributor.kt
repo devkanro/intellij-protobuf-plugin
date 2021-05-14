@@ -4,9 +4,12 @@ import com.intellij.codeInsight.completion.CompletionContributor
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiErrorElement
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumBody
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufIdentifier
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcBody
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSyntaxStatement
@@ -26,6 +29,7 @@ class ProtobufCompletionContributor : CompletionContributor() {
             CompletionType.BASIC,
             PlatformPatterns.psiElement()
                 .inside(ProtobufFieldDefinition::class.java)
+                .inside(ProtobufTypeName::class.java)
                 .andNot(PlatformPatterns.psiElement().afterLeaf(".")),
             KeywordsProvider.messageLevelKeywords
         )
@@ -33,9 +37,17 @@ class ProtobufCompletionContributor : CompletionContributor() {
         extend(
             CompletionType.BASIC,
             PlatformPatterns.psiElement()
-                .inside(ProtobufEnumValue::class.java)
-                .andNot(PlatformPatterns.psiElement().afterLeaf("=")),
+                .withParent(PsiErrorElement::class.java)
+                .inside(ProtobufEnumBody::class.java),
             KeywordsProvider.enumLevelKeywords
+        )
+
+        extend(
+            CompletionType.BASIC,
+            PlatformPatterns.psiElement()
+                .withParent(PsiErrorElement::class.java)
+                .inside(ProtobufRpcBody::class.java),
+            KeywordsProvider.methodLevelKeywords
         )
 
         extend(
@@ -60,6 +72,22 @@ class ProtobufCompletionContributor : CompletionContributor() {
                 .inside(ProtobufSyntaxStatement::class.java)
                 .withParent(ProtobufStringValue::class.java),
             SyntaxProvider()
+        )
+
+        extend(
+            CompletionType.BASIC,
+            PlatformPatterns.psiElement()
+                .withSuperParent(2, ProtobufFieldDefinition::class.java)
+                .withParent(ProtobufIdentifier::class.java),
+            FieldNameProvider
+        )
+
+        extend(
+            CompletionType.BASIC,
+            PlatformPatterns.psiElement()
+                .withSuperParent(2, ProtobufEnumValueDefinition::class.java)
+                .withParent(ProtobufIdentifier::class.java),
+            EnumValueNameProvider
         )
     }
 }

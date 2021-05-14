@@ -49,6 +49,13 @@ class KeywordsProvider(keywords: List<String>) : CompletionProvider<CompletionPa
                 )
             )
 
+        val methodLevelKeywords
+            get() = KeywordsProvider(
+                listOf(
+                    "option"
+                )
+            )
+
         fun keywordElement(keyword: String): LookupElement {
             return LookupElementBuilder.create(keyword).withTypeText("keyword")
                 .withInsertHandler(keywordInsertHandler(keyword))

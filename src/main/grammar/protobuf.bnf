@@ -97,7 +97,9 @@ OptionAssign ::= OptionName '=' Constant {
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufOptionAssign"
     ]
+    recoverWhile=OptionAssignRecovery
 }
+private OptionAssignRecovery ::= !(option | ',' | '}' | ']' | ';')
 
 OptionName ::= (BuiltInOptionName | ExtensionOptionName) ('.' FieldName)? {
     implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"]
@@ -378,7 +380,8 @@ RpcBody ::= '{' RpcElement* '}' {
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBody"
     ]
 }
-private RpcElement ::= RpcOption | ';'
+private RpcElement ::= RpcOption | ';' { recoverWhile=RpcElementRecovery }
+private RpcElementRecovery ::= !(option | ';' | '}')
 RpcOption ::= option OptionAssign ';' {
     pin=1
     implements=[
@@ -405,6 +408,7 @@ ExtendBody ::=  '{' ExtendElement* '}' {
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufBlock"
         "io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBody"
     ]
+    recoverWhile=BodyRecovery
 }
 
 private ExtendElement ::= GroupDefinition | FieldDefinition | ';' {recoverWhile=ExtendElementRecovery}
