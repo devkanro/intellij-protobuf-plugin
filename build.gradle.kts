@@ -43,6 +43,8 @@ intellij {
 
 dependencies {
     implementation("org.commonmark:commonmark:0.17.1")
+    implementation("org.commonmark:commonmark-ext-gfm-tables:0.17.1")
+    implementation("org.commonmark:commonmark-ext-autolink:0.17.1")
 }
 
 // Configure gradle-changelog-plugin plugin.

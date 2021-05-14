@@ -27,7 +27,7 @@ interface ProtobufScopeItem :
     }
 
     @JvmDefault
-    fun qualifiedName(): QualifiedName? {
+    override fun qualifiedName(): QualifiedName? {
         return owner()?.scope()?.append(name() ?: return null)
     }
 

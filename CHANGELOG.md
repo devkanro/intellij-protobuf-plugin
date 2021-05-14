@@ -5,6 +5,7 @@
 ## [Unreleased]
 ### Added
 - Add line breaking settings for protobuf code style
+- Resolve symbol reference in quick document
 
 ## [1.2.1]
 ### Fixed

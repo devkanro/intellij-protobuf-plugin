@@ -26,7 +26,7 @@ class ProtobufLineCommentImpl(type: IElementType, text: CharSequence) :
 
     override fun render(): String {
         return CachedValuesManager.getCachedValue(this) {
-            val result = renderDoc(text.trimMargin("//"))
+            val result = renderDoc(this, text.trimMargin("//"))
             CachedValueProvider.Result.create(result, PsiModificationTracker.MODIFICATION_COUNT)
         }
     }

@@ -39,7 +39,7 @@ interface ProtobufPackageName :
     }
 
     @JvmDefault
-    fun qualifiedName(): QualifiedName? {
+    override fun qualifiedName(): QualifiedName? {
         val list = mutableListOf<String>()
         var item: PsiElement? = this
         while (item != null) {
