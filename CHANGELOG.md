@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [1.3.0]
 ### Added
 - Add line breaking settings for protobuf code style
 - Resolve symbol reference in quick document
