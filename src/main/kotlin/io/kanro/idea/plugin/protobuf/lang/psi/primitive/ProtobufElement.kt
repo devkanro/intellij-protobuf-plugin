@@ -12,9 +12,9 @@ interface ProtobufElement : PsiElement {
     }
 
     @JvmDefault
-    fun importPath(context: ProtobufFile): String? {
+    fun importPath(context: ProtobufFile? = null): String? {
         val file = file()
-        val module = ModuleUtil.findModuleForFile(context)
+        val module = ModuleUtil.findModuleForFile(context ?: file)
         return if (module != null) {
             FileResolver.getImportPath(file.virtualFile, module)
         } else {

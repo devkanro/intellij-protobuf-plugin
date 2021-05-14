@@ -1,11 +1,7 @@
 package io.kanro.idea.plugin.protobuf.lang.util
 
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
-import com.intellij.psi.util.PsiModificationTracker
+import com.intellij.codeInsight.documentation.DocumentationManagerProtocol
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufNamedElement
-import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolResolver
 import org.commonmark.ext.autolink.AutolinkExtension
 import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.internal.InlineParserImpl
@@ -32,17 +28,13 @@ class ProtoDocInlineParserContext(private val context: ProtobufElement, private 
         return delegate.customDelimiterProcessors
     }
 
-    override fun getLinkReferenceDefinition(label: String): LinkReferenceDefinition? {
+    override fun getLinkReferenceDefinition(label: String): LinkReferenceDefinition {
         delegate.getLinkReferenceDefinition(label)?.let {
             return it
         }
-        val resolved =
-            ProtobufSymbolResolver.resolveRelatively(context, label.toQualifiedName()) as? ProtobufNamedElement
-                ?: return null
-        return CachedValuesManager.getCachedValue(resolved) {
-            val result = LinkReferenceDefinition(resolved.qualifiedName().toString(), "/", "")
-            CachedValueProvider.Result.create(result, PsiModificationTracker.MODIFICATION_COUNT)
-        }
+        val path =
+            "${DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL}$label${DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL_REF_SEPARATOR}$label"
+        return LinkReferenceDefinition(label, path, label)
     }
 }
 
