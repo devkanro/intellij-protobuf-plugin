@@ -3,6 +3,9 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Added
+- Auto suggest field number when pick suggested field name
+
 ## [1.3.0]
 ### Added
 - Add line breaking settings for protobuf code style
