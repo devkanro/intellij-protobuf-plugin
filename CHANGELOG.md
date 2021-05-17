@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [1.3.1]
 ### Added
 - Auto suggest field number when pick suggested field name
 
