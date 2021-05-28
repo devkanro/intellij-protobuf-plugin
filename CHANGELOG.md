@@ -3,6 +3,9 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Changed
+- Upgrade to IntelliJ platform 212 EAP
+
 ## [1.3.1]
 ### Added
 - Auto suggest field number when pick suggested field name
