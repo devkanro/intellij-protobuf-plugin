@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [1.4-EAP]
 ### Changed
 - Upgrade to IntelliJ platform 212 EAP
 
