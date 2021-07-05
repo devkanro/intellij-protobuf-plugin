@@ -8,6 +8,7 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufHighlighter
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufArrayValue
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufBuiltInOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufConstant
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
@@ -198,7 +199,14 @@ class ProtobufAnnotator : Annotator {
             }
 
             override fun visitConstant(o: ProtobufConstant) {
-                val field = when (val parent = o.parent) {
+                val parent = when (val parent = o.parent) {
+                    is ProtobufArrayValue -> {
+                        parent.parent.parent
+                    }
+                    else -> parent
+                }
+
+                val field = when (parent) {
                     is ProtobufOptionAssign -> {
                         parent.optionName.field() as? ProtobufFieldDefinition ?: return
                     }
@@ -206,6 +214,15 @@ class ProtobufAnnotator : Annotator {
                         parent.fieldName.reference?.resolve() as? ProtobufFieldDefinition ?: return
                     }
                     else -> return
+                }
+
+                if (o.arrayValue != null) {
+                    if (field.fieldLabel?.textMatches("repeated") != true) {
+                        holder.newAnnotation(HighlightSeverity.ERROR, "Field \"${field.name()}\" is not a repeated value")
+                            .range(o.textRange)
+                            .create()
+                    }
+                    return
                 }
 
                 val message = when (val type = field.typeName.text) {

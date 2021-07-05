@@ -138,11 +138,25 @@ fun ProtobufOptionName.field(): ProtobufFieldLike? {
 }
 
 fun ProtobufFieldName.message(): ProtobufScope? {
-    val field = when (val parent = this.parent) {
+    val parent = when (val parent = this.parent) {
+        is ProtobufArrayValue -> {
+            parent.parent.parent
+        }
+        else -> parent
+    }
+
+    val field = when (parent) {
         is ProtobufOptionName -> parent.extensionOptionName?.typeName?.reference?.resolve()
         is ProtobufFieldAssign -> {
             val messageValue = parent.parent as? ProtobufMessageValue ?: return null
-            when (val assign = messageValue.parent.parent) {
+            val assign = when (val assign = messageValue.parent.parent) {
+                is ProtobufArrayValue -> {
+                    assign.parent.parent
+                }
+                else -> assign
+            }
+
+            when (assign) {
                 is ProtobufOptionAssign -> {
                     assign.optionName.field()
                 }

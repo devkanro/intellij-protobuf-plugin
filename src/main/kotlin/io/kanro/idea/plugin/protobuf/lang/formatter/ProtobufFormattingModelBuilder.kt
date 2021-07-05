@@ -49,6 +49,11 @@ class ProtobufFormattingModelBuilder : FormattingModelBuilder {
                 .after(ProtobufTypes.FILE_OPTION)
                 .blankLines(customSettings.BLANK_LINES_AFTER_FILE_OPTIONS)
 
+                .between(ProtobufTypes.IDENTIFIER, ProtobufTypes.RPC_IO)
+                .none()
+                .around(ProtobufTokens.RETURNS)
+                .spaces(1)
+
                 .withinPair(ProtobufTokens.LBRACE, ProtobufTokens.RBRACE)
                 .spaceIf(commonSettings.SPACE_WITHIN_BRACES, false)
                 .withinPair(ProtobufTokens.LBRACK, ProtobufTokens.RBRACK)

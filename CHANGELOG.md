@@ -3,7 +3,10 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
-## [1.4-EAP]
+### Changed
+- Support array in protobuf options
+
+## [1.4.0-EAP]
 ### Changed
 - Upgrade to IntelliJ platform 212 EAP
 
