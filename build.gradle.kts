@@ -1,5 +1,5 @@
-
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.kotlin.gradle.internal.ensureParentDirsCreated
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
@@ -12,7 +12,7 @@ plugins {
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "1.1.2"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-    id("org.jetbrains.changelog") version "1.1.2"
+    id("org.jetbrains.changelog") version "1.2.0"
 
     id("org.jetbrains.grammarkit") version "2021.1.3"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
@@ -87,6 +87,17 @@ tasks {
         kotlinOptions.jvmTarget = "1.8"
         kotlinOptions.freeCompilerArgs += "-Xjvm-default=compatibility"
         dependsOn(generateProtobufLexer, generateProtobufParser)
+    }
+
+    prepareSandbox {
+        doLast {
+            val file = file(buildDir.resolve("idea-sandbox/config/disabled_plugins.txt"))
+            file.ensureParentDirsCreated()
+            file.writeText(buildString {
+                appendln("idea.plugin.protoeditor")
+                appendln("com.intellij.grpc")
+            })
+        }
     }
 
     patchPluginXml {
