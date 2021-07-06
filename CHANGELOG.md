@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [1.4.1-EAP]
 ### Changed
 - Support array in protobuf options
 
