@@ -93,10 +93,12 @@ tasks {
         doLast {
             val file = file(buildDir.resolve("idea-sandbox/config/disabled_plugins.txt"))
             file.ensureParentDirsCreated()
-            file.writeText(buildString {
-                appendln("idea.plugin.protoeditor")
-                appendln("com.intellij.grpc")
-            })
+            file.writeText(
+                buildString {
+                    appendln("idea.plugin.protoeditor")
+                    appendln("com.intellij.grpc")
+                }
+            )
         }
     }
 
