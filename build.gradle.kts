@@ -49,8 +49,8 @@ dependencies {
 // Configure gradle-changelog-plugin plugin.
 // Read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
-    version = properties("pluginVersion")
-    groups = emptyList()
+    version.set(properties("pluginVersion"))
+    groups.set(emptyList())
 }
 
 val generateProtobufLexer = task<org.jetbrains.grammarkit.tasks.GenerateLexer>("generateProtobufLexer") {
