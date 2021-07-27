@@ -9,7 +9,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldL
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufValueAssign
 
 interface ProtobufFieldAssign : ProtobufValueAssign {
-    @JvmDefault
     override fun field(): ProtobufFieldLike? {
         val targetField = findChild<ProtobufFieldName>()?.text ?: return null
         val parentAssign = parentOfType<ProtobufValueAssign>() ?: return null

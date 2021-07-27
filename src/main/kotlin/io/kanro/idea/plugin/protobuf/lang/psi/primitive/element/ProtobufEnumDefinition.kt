@@ -7,17 +7,12 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumber
 import javax.swing.Icon
 
 interface ProtobufEnumDefinition : ProtobufNumberScope, ProtobufDefinition, ProtobufOptionOwner {
-    @JvmDefault
     override fun type(): String {
         return "enum"
     }
-
-    @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.ENUM
     }
-
-    @JvmDefault
     override fun allowAlias(): Boolean {
         return this.options("allow_alias").firstOrNull()?.value()?.booleanValue?.text == "true"
     }

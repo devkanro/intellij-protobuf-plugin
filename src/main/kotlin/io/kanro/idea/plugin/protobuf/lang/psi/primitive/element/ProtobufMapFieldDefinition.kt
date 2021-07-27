@@ -9,17 +9,12 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufMultiN
 import javax.swing.Icon
 
 interface ProtobufMapFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefinition {
-    @JvmDefault
     override fun type(): String {
         return "field"
     }
-
-    @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.FIELD
     }
-
-    @JvmDefault
     override fun fieldType(): String? {
         val typeNames = findChildren<ProtobufTypeName>()
         if (typeNames.size != 2) return "map"
@@ -28,8 +23,6 @@ interface ProtobufMapFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefin
 
         return "map<$key, $value>"
     }
-
-    @JvmDefault
     override fun names(): Set<String> {
         return setOfNotNull(name(), jsonName())
     }

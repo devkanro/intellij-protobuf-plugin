@@ -12,6 +12,8 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufStubBase
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.primitive.ProtobufNamedStub
+import io.kanro.idea.plugin.protobuf.lang.psi.stub.readMap
+import io.kanro.idea.plugin.protobuf.lang.psi.stub.readStringArray
 
 abstract class ProtobufStubTypeBase<TStub : ProtobufStubBase<TPsi>, TPsi : PsiElement>(
     name: String
@@ -23,18 +25,14 @@ abstract class ProtobufStubTypeBase<TStub : ProtobufStubBase<TPsi>, TPsi : PsiEl
     }
 
     override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): TStub {
-        val size = dataStream.readVarInt()
-        val data = (0 until size).map {
-            dataStream.readNameString() ?: throw IllegalStateException("Wrong stub data")
-        }.toTypedArray()
-        return createStub(data, parentStub)
+        return createStub(dataStream.readStringArray(), dataStream.readMap(), parentStub)
     }
 
     override fun createStub(psi: TPsi, parentStub: StubElement<out PsiElement>?): TStub {
         if (psi !is ProtobufStubSupport<*, *>) {
             throw IllegalStateException("Psi must implement ProtobufStubSupport")
         }
-        return createStub(psi.stubData(), parentStub)
+        return createStub(psi.stubData(), psi.stubExternalData(), parentStub)
     }
 
     override fun indexStub(stub: TStub, sink: IndexSink) {
@@ -48,5 +46,5 @@ abstract class ProtobufStubTypeBase<TStub : ProtobufStubBase<TPsi>, TPsi : PsiEl
         }
     }
 
-    abstract fun createStub(data: Array<String>, parentStub: StubElement<*>?): TStub
+    abstract fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): TStub
 }

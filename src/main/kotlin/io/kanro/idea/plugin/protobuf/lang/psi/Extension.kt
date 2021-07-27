@@ -268,8 +268,8 @@ fun ProtobufNumberValue.int(): Long? {
     return integerLiteral?.text?.parseLongOrNull()
 }
 
-fun ProtobufNumberValue.uint(): ULong? {
-    return int()?.toULong()
+fun ProtobufNumberValue.uint(): Long? {
+    return int()
 }
 
 fun ProtobufRpcIO.stream(): Boolean {

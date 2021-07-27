@@ -12,8 +12,8 @@ object ProtobufOneofStubType : ProtobufStubTypeBase<ProtobufOneofStub, ProtobufO
         return "protobuf.oneof.stub"
     }
 
-    override fun createStub(data: Array<String>, parentStub: StubElement<*>?): ProtobufOneofStub {
-        return ProtobufOneofStub(data, parentStub)
+    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufOneofStub {
+        return ProtobufOneofStub(data, external, parentStub)
     }
 
     override fun createPsi(stub: ProtobufOneofStub): ProtobufOneofDefinition {

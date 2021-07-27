@@ -10,27 +10,18 @@ import io.kanro.idea.plugin.protobuf.string.toSnakeCase
 import javax.swing.Icon
 
 interface ProtobufGroupDefinition : ProtobufFieldLike, ProtobufNumberScope, ProtobufMultiNameDefinition {
-    @JvmDefault
     override fun type(): String {
         return "group"
     }
-
-    @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.GROUP_FIELD
     }
-
-    @JvmDefault
     override fun fieldType(): String? {
         return identifier()?.text
     }
-
-    @JvmDefault
     override fun name(): String? {
         return identifier()?.text?.let { StringUtil.wordsToBeginFromLowerCase(it) }
     }
-
-    @JvmDefault
     override fun names(): Set<String> {
         val groupName = identifier()?.text ?: return emptySet()
         return setOf(groupName, groupName.toSnakeCase(), groupName.toCamelCase())

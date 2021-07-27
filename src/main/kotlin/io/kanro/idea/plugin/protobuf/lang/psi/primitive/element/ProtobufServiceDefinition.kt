@@ -6,12 +6,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import javax.swing.Icon
 
 interface ProtobufServiceDefinition : ProtobufScope, ProtobufDefinition {
-    @JvmDefault
     override fun type(): String {
         return "service"
     }
-
-    @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.SERVICE
     }

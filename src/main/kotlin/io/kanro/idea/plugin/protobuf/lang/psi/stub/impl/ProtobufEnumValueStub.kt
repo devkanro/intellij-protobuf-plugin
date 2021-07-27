@@ -8,8 +8,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufEnumValueStubTyp
 
 class ProtobufEnumValueStub(
     data: Array<String>,
+    external: Map<String, String>,
     parent: StubElement<*>?
-) : ProtobufStubBase<ProtobufEnumValueDefinition>(data, parent, ProtobufEnumValueStubType),
+) : ProtobufStubBase<ProtobufEnumValueDefinition>(data, external, parent, ProtobufEnumValueStubType),
     ProtobufStub<ProtobufEnumValueDefinition>,
     ProtobufNamedStub {
     override fun name(): String? {

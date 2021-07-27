@@ -12,24 +12,17 @@ import io.kanro.idea.plugin.protobuf.lang.psi.value
 import javax.swing.Icon
 
 interface ProtobufMessageDefinition : ProtobufNumberScope, ProtobufDefinition {
-    @JvmDefault
     override fun type(): String {
         if (resourceType() != null) return "resource"
         return "message"
     }
-
-    @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
         if (resourceType() != null) return Icons.RESOURCE_MESSAGE
         return Icons.MESSAGE
     }
-
-    @JvmDefault
     override fun tailText(): String? {
         return resourceType()?.let { ": $it" }
     }
-
-    @JvmDefault
     fun resourceType(): String? {
         if (this !is ProtobufOptionOwner) return null
         return CachedValuesManager.getCachedValue(this) {

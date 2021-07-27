@@ -10,12 +10,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stream
 import javax.swing.Icon
 
 interface ProtobufRpcDefinition : ProtobufDefinition {
-    @JvmDefault
     override fun type(): String {
         return "rpc"
     }
-
-    @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
         val parameters = findChildren<ProtobufRpcIO>()
         if (parameters.size != 2) return Icons.RPC_METHOD
@@ -29,18 +26,12 @@ interface ProtobufRpcDefinition : ProtobufDefinition {
             else -> Icons.RPC_METHOD
         }
     }
-
-    @JvmDefault
     fun input(): ProtobufRpcIO? {
         return findChild()
     }
-
-    @JvmDefault
     fun output(): ProtobufRpcIO? {
         return findLastChild()
     }
-
-    @JvmDefault
     override fun tailText(): String? {
         val parameters = findChildren<ProtobufRpcIO>()
         if (parameters.size != 2) return "()"

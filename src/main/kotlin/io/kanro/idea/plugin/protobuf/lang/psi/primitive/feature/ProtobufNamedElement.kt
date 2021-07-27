@@ -7,4 +7,10 @@ interface ProtobufNamedElement : ProtobufElement {
     fun name(): String?
 
     fun qualifiedName(): QualifiedName?
+
+    fun externalName(id: String): String? {
+        return ProtobufExternalNameProvider.externalName(id, this)
+    }
+
+    fun externalQualifiedName(id: String): QualifiedName?
 }

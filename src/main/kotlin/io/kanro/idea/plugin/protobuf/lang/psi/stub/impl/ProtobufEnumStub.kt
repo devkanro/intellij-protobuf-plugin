@@ -10,8 +10,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufEnumStubType
 
 class ProtobufEnumStub(
     data: Array<String>,
+    external: Map<String, String>,
     parent: StubElement<*>?
-) : ProtobufStubBase<ProtobufEnumDefinition>(data, parent, ProtobufEnumStubType),
+) : ProtobufStubBase<ProtobufEnumDefinition>(data, external, parent, ProtobufEnumStubType),
     ProtobufStub<ProtobufEnumDefinition>,
     ProtobufNamedStub,
     ProtobufScopeStub {

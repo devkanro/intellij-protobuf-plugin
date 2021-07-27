@@ -5,12 +5,9 @@ import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufFolding
 
 interface ProtobufBody : ProtobufFolding {
-    @JvmDefault
     fun owner(): ProtobufBodyOwner {
         return parentOfType() ?: throw IllegalStateException()
     }
-
-    @JvmDefault
     override fun folding(): FoldingDescriptor? {
         val start = node.firstChildNode
         val end = node.lastChildNode

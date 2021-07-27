@@ -10,8 +10,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufGroupStubType
 
 class ProtobufGroupStub(
     data: Array<String>,
+    external: Map<String, String>,
     parent: StubElement<*>?
-) : ProtobufStubBase<ProtobufGroupDefinition>(data, parent, ProtobufGroupStubType),
+) : ProtobufStubBase<ProtobufGroupDefinition>(data, external, parent, ProtobufGroupStubType),
     ProtobufStub<ProtobufGroupDefinition>,
     ProtobufNamedStub,
     ProtobufScopeStub {

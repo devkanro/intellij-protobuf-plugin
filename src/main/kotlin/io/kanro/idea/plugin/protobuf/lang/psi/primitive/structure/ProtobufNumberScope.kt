@@ -5,7 +5,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBodyOwner
 
 interface ProtobufNumberScope : ProtobufScope {
-    @JvmDefault
     fun reservedRange(): Array<ProtobufReservedRange> {
         return if (this is ProtobufBodyOwner) {
             this.body()?.findChildren() ?: arrayOf()
@@ -13,8 +12,6 @@ interface ProtobufNumberScope : ProtobufScope {
             findChildren()
         }
     }
-
-    @JvmDefault
     fun extensionRange(): Array<ProtobufReservedRange> {
         return if (this is ProtobufBodyOwner) {
             this.body()?.findChildren() ?: arrayOf()
@@ -22,8 +19,6 @@ interface ProtobufNumberScope : ProtobufScope {
             findChildren()
         }
     }
-
-    @JvmDefault
     fun allowAlias(): Boolean {
         return false
     }

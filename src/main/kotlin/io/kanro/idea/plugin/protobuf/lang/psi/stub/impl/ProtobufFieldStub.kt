@@ -8,8 +8,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufFieldStubType
 
 class ProtobufFieldStub(
     data: Array<String>,
+    external: Map<String, String>,
     parent: StubElement<*>?
-) : ProtobufStubBase<ProtobufFieldDefinition>(data, parent, ProtobufFieldStubType),
+) : ProtobufStubBase<ProtobufFieldDefinition>(data, external, parent, ProtobufFieldStubType),
     ProtobufStub<ProtobufFieldDefinition>,
     ProtobufNamedStub {
     override fun name(): String? {

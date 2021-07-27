@@ -16,6 +16,14 @@
                 interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceProvider"
                 dynamic="true"
                 name="symbolReferenceProvider"/>
+        <extensionPoint
+                interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufExternalNameProvider"
+                dynamic="true"
+                name="externalNameProvider"/>
+        <extensionPoint
+                interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubExternalProvider"
+                dynamic="true"
+                name="stubExternalProvider"/>
     </extensionPoints>
 
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
@@ -28,6 +36,7 @@
         <fileResolver id="settings"
                       implementation="io.kanro.idea.plugin.protobuf.lang.file.ImportRootsFileResolver"/>
         <symbolReferenceProvider implementation="io.kanro.idea.plugin.protobuf.aip.reference.contributor.ProtobufTypeNameInStringProvider"/>
+        <stubExternalProvider implementation="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubExternalNameProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -108,5 +117,9 @@
         <completion.contributor language="protobuf"
                                 implementationClass="io.kanro.idea.plugin.protobuf.aip.completion.AipCompletionContributor"/>
 
+        <!-- Sisyphus Spec -->
+        <codeInsight.lineMarkerProvider language="UAST"
+                                        implementationClass="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusLineMarkerProvider"/>
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.jvm.ProtobufJvmNameIndex"/>
     </extensions>
 </idea-plugin>

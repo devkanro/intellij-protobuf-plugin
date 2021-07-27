@@ -7,8 +7,6 @@ interface ProtobufScopeItemStub : Stub
 
 interface ProtobufNamedStub : ProtobufScopeItemStub {
     fun name(): String?
-
-    @JvmDefault
     fun qualifiedName(): QualifiedName? {
         val name = name() ?: return null
         return parentOfType<ProtobufScopeStub>()?.scope()?.append(name) ?: QualifiedName.fromComponents(name)
@@ -16,7 +14,6 @@ interface ProtobufNamedStub : ProtobufScopeItemStub {
 }
 
 interface ProtobufScopeItemContainerStub : Stub {
-    @JvmDefault
     fun items(): Array<ProtobufScopeItemStub> {
         return childrenStubs.filterIsInstance<ProtobufScopeItemStub>().toTypedArray()
     }

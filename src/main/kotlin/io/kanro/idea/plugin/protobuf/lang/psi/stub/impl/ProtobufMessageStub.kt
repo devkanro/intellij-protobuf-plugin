@@ -10,8 +10,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufMessageStubType
 
 class ProtobufMessageStub(
     data: Array<String>,
+    external: Map<String, String>,
     parent: StubElement<*>?
-) : ProtobufStubBase<ProtobufMessageDefinition>(data, parent, ProtobufMessageStubType),
+) : ProtobufStubBase<ProtobufMessageDefinition>(data, external, parent, ProtobufMessageStubType),
     ProtobufStub<ProtobufMessageDefinition>,
     ProtobufNamedStub,
     ProtobufScopeStub {

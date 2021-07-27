@@ -11,27 +11,18 @@ import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 import javax.swing.Icon
 
 interface ProtobufExtendDefinition : ProtobufVirtualScope {
-    @JvmDefault
     override fun type(): String {
         return "extend"
     }
-
-    @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.EXTEND
     }
-
-    @JvmDefault
     override fun nameElement(): PsiElement? {
         return findChild<ProtobufTypeName>()
     }
-
-    @JvmDefault
     override fun name(): String? {
         return (findChild<ProtobufTypeName>()?.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.toString()
     }
-
-    @JvmDefault
     override fun lookup(): LookupElementBuilder? {
         return null
     }

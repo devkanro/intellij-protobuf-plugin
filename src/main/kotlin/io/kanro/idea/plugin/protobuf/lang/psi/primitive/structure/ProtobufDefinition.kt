@@ -8,33 +8,27 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufIdentifier
 import io.kanro.idea.plugin.protobuf.lang.psi.findChild
 
 interface ProtobufDefinition : ProtobufScopeItem, PsiNameIdentifierOwner {
-    @JvmDefault
     fun identifier(): ProtobufIdentifier? {
         return findChild()
     }
 
-    @JvmDefault
     override fun name(): String? {
         return identifier()?.text
     }
 
-    @JvmDefault
     override fun nameElement(): PsiElement? {
         return identifier()
     }
 
-    @JvmDefault
     override fun getNameIdentifier(): PsiElement? {
         return identifier()
     }
 
-    @JvmDefault
     override fun setName(name: String): PsiElement {
         (identifier()?.identifierLiteral?.node as? LeafElement)?.replaceWithText(name)
         return this
     }
 
-    @JvmDefault
     override fun lookup(): LookupElementBuilder? {
         val name = name() ?: return null
         return LookupElementBuilder.create(name)

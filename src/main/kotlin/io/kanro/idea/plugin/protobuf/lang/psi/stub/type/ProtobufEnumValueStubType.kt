@@ -12,8 +12,8 @@ object ProtobufEnumValueStubType : ProtobufStubTypeBase<ProtobufEnumValueStub, P
         return "protobuf.enum_value.stub"
     }
 
-    override fun createStub(data: Array<String>, parentStub: StubElement<*>?): ProtobufEnumValueStub {
-        return ProtobufEnumValueStub(data, parentStub)
+    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufEnumValueStub {
+        return ProtobufEnumValueStub(data, external, parentStub)
     }
 
     override fun createPsi(stub: ProtobufEnumValueStub): ProtobufEnumValueDefinition {
