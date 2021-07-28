@@ -272,6 +272,10 @@ fun ProtobufNumberValue.uint(): Long? {
     return int()
 }
 
+fun ProtobufBooleanValue.value(): Boolean {
+    return textMatches("true")
+}
+
 fun ProtobufRpcIO.stream(): Boolean {
     this.walkChildren<PsiElement>(false) {
         if (it.elementType is ProtobufKeywordToken && it.textMatches("stream")) {

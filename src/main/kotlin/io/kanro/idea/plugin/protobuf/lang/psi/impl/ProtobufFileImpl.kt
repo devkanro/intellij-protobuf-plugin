@@ -28,7 +28,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSyntaxStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.findChild
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufExternalNameProvider
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufIndexProvider
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionHover
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.value
@@ -139,7 +139,7 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
     }
 
     override fun externalScope(id: String): QualifiedName? {
-        return ProtobufExternalNameProvider.externalPackage(id, this)
+        return ProtobufIndexProvider.externalPackage(id, this)
     }
 
     override fun syntax(): String? {

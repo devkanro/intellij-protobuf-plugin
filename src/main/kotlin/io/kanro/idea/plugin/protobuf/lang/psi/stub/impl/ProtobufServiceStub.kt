@@ -23,4 +23,12 @@ class ProtobufServiceStub(
     override fun scope(): QualifiedName? {
         return qualifiedName()
     }
+
+    override fun externalName(key: String): String? {
+        return externalData(key)
+    }
+
+    override fun externalScope(key: String): QualifiedName? {
+        return externalQualifiedName(key)
+    }
 }

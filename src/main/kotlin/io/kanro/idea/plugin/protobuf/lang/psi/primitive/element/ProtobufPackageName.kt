@@ -47,10 +47,6 @@ interface ProtobufPackageName :
         return QualifiedName.fromComponents(list)
     }
 
-    override fun externalQualifiedName(id: String): QualifiedName? {
-        return null
-    }
-
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.PACKAGE
     }

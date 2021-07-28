@@ -14,7 +14,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.StubBasedProtobufElementBase
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufExternalNameProvider
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubSupport
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufEnumStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufEnumValueStub
@@ -38,16 +37,6 @@ abstract class ProtobufMessageDefinitionMixin :
 
     override fun stubData(): Array<String> {
         return arrayOf(name() ?: "", resourceType() ?: "")
-    }
-
-    override fun stubExternalData(): Map<String, String> {
-        val result = super.stubExternalData().toMutableMap()
-        ProtobufExternalNameProvider.extensionPoint.extensionList.forEach {
-            it.externalName(this)?.let { name ->
-                result[it.id()] = name
-            }
-        }
-        return result
     }
 }
 

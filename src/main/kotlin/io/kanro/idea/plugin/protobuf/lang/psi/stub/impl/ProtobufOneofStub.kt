@@ -18,4 +18,8 @@ class ProtobufOneofStub(
     override fun name(): String? {
         return data(0).takeIf { it.isNotEmpty() }
     }
+
+    override fun externalName(key: String): String? {
+        return externalData(key)
+    }
 }

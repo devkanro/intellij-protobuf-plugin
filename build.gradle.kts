@@ -102,6 +102,10 @@ tasks {
         }
     }
 
+    runIde {
+        jvmArgs("-Xmx8196m")
+    }
+
     patchPluginXml {
         version.set(properties("pluginVersion"))
         sinceBuild.set(properties("pluginSinceBuild"))

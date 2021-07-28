@@ -10,6 +10,12 @@ interface ProtobufStubSupport<TStub : StubElement<TPsi>, TPsi : ProtobufElement>
     }
 
     fun stubExternalData(): Map<String, String> {
-        return mapOf()
+        if (this !is ProtobufNamedElement) return mapOf()
+
+        val result = mutableMapOf<String, String>()
+        ProtobufStubExternalProvider.extensionPoint.extensionList.forEach {
+            it.mergeExternalData(this, result)
+        }
+        return result
     }
 }

@@ -7,18 +7,22 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufFileStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.writeMap
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.writeStringArray
+import io.kanro.idea.plugin.protobuf.lang.util.toQualifiedName
 
 class ProtobufFileStubImpl(
     file: ProtobufFile?,
-    private val data: Array<String>,
-    private val external: Map<String, String>
+    private val data: Array<String> = file?.stubData() ?: arrayOf(),
+    private val external: Map<String, String> = file?.stubExternalData() ?: mapOf()
 ) :
     PsiFileStubImpl<ProtobufFile>(file),
     ProtobufFileStub {
-    constructor(file: ProtobufFile?) : this(file, arrayOf(), mapOf())
 
     override fun scope(): QualifiedName {
         return QualifiedName.fromComponents(childrenStubs.filterIsInstance<ProtobufPackageNameStub>().map { it.name() })
+    }
+
+    override fun externalScope(key: String): QualifiedName? {
+        return externalData(key)?.toQualifiedName()
     }
 
     override fun data(index: Int): String {

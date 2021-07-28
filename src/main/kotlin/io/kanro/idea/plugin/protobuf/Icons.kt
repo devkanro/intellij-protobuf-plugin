@@ -24,6 +24,12 @@ object Icons {
     var LOGO: Icon = loadIcon("logo.svg")
     var FOLDER: Icon = PlatformIcons.FOLDER_ICON
 
+    var IMPLEMENTED_SERVICE: Icon = loadIcon("implementedService.svg")
+    var IMPLEMENTING_SERVICE: Icon = loadIcon("implementingService.svg")
+
+    var IMPLEMENTED_RPC: Icon = loadIcon("implementedRpc.svg")
+    var IMPLEMENTING_RPC: Icon = loadIcon("implementingRpc.svg")
+
     private fun loadIcon(name: String): Icon {
         return IconLoader.getIcon("/io/kanro/idea/plugin/protobuf/icon/$name", Icons::class.java)
     }

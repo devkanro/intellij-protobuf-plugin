@@ -4,6 +4,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubExternalProvider
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionHover
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
@@ -26,6 +27,18 @@ interface ProtobufFile : PsiFile, ProtobufScope, ProtobufOptionOwner {
     fun addImport(protobufElement: ProtobufElement): Boolean
 
     fun addImport(path: String): Boolean
+
+    fun stubData(): Array<String> {
+        return arrayOf()
+    }
+
+    fun stubExternalData(): Map<String, String> {
+        val result = mutableMapOf<String, String>()
+        ProtobufStubExternalProvider.extensionPoint.extensionList.forEach {
+            it.mergeExternalData(this, result)
+        }
+        return result
+    }
 
     object Type : IFileElementType("PROTO_FILE", ProtobufLanguage)
 }

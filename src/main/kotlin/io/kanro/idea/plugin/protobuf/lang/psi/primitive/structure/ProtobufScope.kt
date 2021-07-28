@@ -10,10 +10,6 @@ interface ProtobufScope : ProtobufScopeItemContainer, ProtobufScopeItem {
         return qualifiedName()
     }
 
-    fun externalScope(id: String): QualifiedName? {
-        return externalQualifiedName(id)
-    }
-
     fun reservedNames(): Array<ProtobufReservedName> {
         return if (this is ProtobufBodyOwner) {
             this.body()?.findChildren() ?: arrayOf()

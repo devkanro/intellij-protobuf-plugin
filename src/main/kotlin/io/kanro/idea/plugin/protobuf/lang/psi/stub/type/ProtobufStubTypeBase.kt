@@ -7,6 +7,7 @@ import com.intellij.psi.stubs.StubElement
 import com.intellij.psi.stubs.StubInputStream
 import com.intellij.psi.stubs.StubOutputStream
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufIndexProvider
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubSupport
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufStubBase
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex
@@ -44,6 +45,8 @@ abstract class ProtobufStubTypeBase<TStub : ProtobufStubBase<TPsi>, TPsi : PsiEl
                 sink.occurrence(QualifiedNameIndex.key, it.toString())
             }
         }
+
+        ProtobufIndexProvider.buildIndex(stub, sink)
     }
 
     abstract fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): TStub
