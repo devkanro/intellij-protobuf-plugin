@@ -1,6 +1,7 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 
 import com.intellij.openapi.util.text.StringUtil
+import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufMultiNameDefinition
@@ -10,6 +11,9 @@ import io.kanro.idea.plugin.protobuf.string.toSnakeCase
 import javax.swing.Icon
 
 interface ProtobufGroupDefinition : ProtobufFieldLike, ProtobufNumberScope, ProtobufMultiNameDefinition {
+    override fun scope(): QualifiedName? {
+        return qualifiedName()
+    }
     override fun type(): String {
         return "group"
     }

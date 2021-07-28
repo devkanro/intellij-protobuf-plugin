@@ -27,6 +27,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHover
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex
@@ -164,7 +165,7 @@ class ProtobufTypeNameReference(
     }
 
     private fun lookupForStub(element: ProtobufElement, currentScope: QualifiedName?): LookupElement? {
-        if (element !is ProtobufScopeItem) return null
+        if (element !is ProtobufDefinition) return null
         val qualifiedName = element.qualifiedName() ?: return null
 
         val targetName = if (currentScope != null) {

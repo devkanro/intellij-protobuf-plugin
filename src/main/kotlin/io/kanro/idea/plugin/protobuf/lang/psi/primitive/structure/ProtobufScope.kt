@@ -6,9 +6,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBodyOwner
 
 interface ProtobufScope : ProtobufScopeItemContainer, ProtobufScopeItem {
-    fun scope(): QualifiedName? {
-        return qualifiedName()
-    }
+    fun scope(): QualifiedName?
 
     fun reservedNames(): Array<ProtobufReservedName> {
         return if (this is ProtobufBodyOwner) {

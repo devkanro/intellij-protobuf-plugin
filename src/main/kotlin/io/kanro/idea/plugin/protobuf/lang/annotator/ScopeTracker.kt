@@ -6,7 +6,8 @@ import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedName
-import io.kanro.idea.plugin.protobuf.lang.psi.forEach
+import io.kanro.idea.plugin.protobuf.lang.psi.items
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufMultiNameDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
@@ -16,11 +17,11 @@ open class ScopeTracker(scope: ProtobufScope) {
     private val reservedNameMap = mutableMapOf<String, MutableList<ProtobufReservedName>>()
 
     init {
-        scope.forEach { record(it) }
+        scope.items<ProtobufDefinition> { record(it) }
         scope.reservedNames().forEach { record(it) }
     }
 
-    protected open fun record(definition: ProtobufScopeItem) {
+    protected open fun record(definition: ProtobufDefinition) {
         if (definition is ProtobufMultiNameDefinition) {
             definition.names().forEach {
                 nameMap.getOrPut(it) {
@@ -42,7 +43,7 @@ open class ScopeTracker(scope: ProtobufScope) {
         }.add(reserved)
     }
 
-    open fun visit(definition: ProtobufScopeItem, holder: AnnotationHolder) {
+    open fun visit(definition: ProtobufDefinition, holder: AnnotationHolder) {
         val name = definition.name() ?: return
         createError(definition, buildMessage(name, definition) ?: return, holder)
     }
@@ -78,7 +79,7 @@ open class ScopeTracker(scope: ProtobufScope) {
         return null
     }
 
-    protected open fun createError(definition: ProtobufScopeItem, message: String, holder: AnnotationHolder) {
+    protected open fun createError(definition: ProtobufDefinition, message: String, holder: AnnotationHolder) {
         holder.newAnnotation(
             HighlightSeverity.ERROR,
             message

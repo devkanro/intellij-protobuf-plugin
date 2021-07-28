@@ -72,7 +72,7 @@ class SisyphusLineMarkerProvider : RelatedItemLineMarkerProvider() {
         val sourcePsi = method.sourcePsi ?: return null
         val serviceDefinition = findServiceProtobufDefinition(method.uastParent as? UClass ?: return null)
             ?: return null
-        val serviceName = serviceDefinition.externalQualifiedName(SisyphusIndexProvider.key) ?: return null
+        val serviceName = SisyphusNamespace.scope(serviceDefinition) ?: return null
 
         return CachedValuesManager.getCachedValue(sourcePsi) {
             val scope = FileResolver.searchScope(sourcePsi)

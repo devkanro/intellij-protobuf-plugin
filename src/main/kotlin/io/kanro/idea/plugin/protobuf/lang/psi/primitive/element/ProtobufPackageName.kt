@@ -34,19 +34,6 @@ interface ProtobufPackageName :
         return this
     }
 
-    override fun qualifiedName(): QualifiedName? {
-        val list = mutableListOf<String>()
-        var item: PsiElement? = this
-        while (item != null) {
-            if (item is ProtobufPackageName) {
-                list += item.name() ?: return null
-            }
-            item = item.prevSibling
-        }
-        list.reverse()
-        return QualifiedName.fromComponents(list)
-    }
-
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.PACKAGE
     }

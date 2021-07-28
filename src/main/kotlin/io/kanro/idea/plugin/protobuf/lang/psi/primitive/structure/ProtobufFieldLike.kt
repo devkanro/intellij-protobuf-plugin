@@ -6,6 +6,7 @@ interface ProtobufFieldLike : ProtobufDefinition, ProtobufNumbered {
     }
 
     fun fieldType(): String?
+
     override fun tailText(): String? {
         return ": ${fieldType()} = ${number()}"
     }

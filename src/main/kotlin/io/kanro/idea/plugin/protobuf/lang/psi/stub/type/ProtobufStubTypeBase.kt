@@ -12,7 +12,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubSupp
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufStubBase
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.primitive.ProtobufNamedStub
+import io.kanro.idea.plugin.protobuf.lang.psi.stub.primitive.ProtobufDefinitionStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.readMap
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.readStringArray
 
@@ -37,7 +37,7 @@ abstract class ProtobufStubTypeBase<TStub : ProtobufStubBase<TPsi>, TPsi : PsiEl
     }
 
     override fun indexStub(stub: TStub, sink: IndexSink) {
-        if (stub is ProtobufNamedStub) {
+        if (stub is ProtobufDefinitionStub) {
             stub.name()?.let {
                 sink.occurrence(ShortNameIndex.key, it)
             }

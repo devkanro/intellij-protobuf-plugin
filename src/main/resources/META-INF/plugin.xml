@@ -21,7 +21,7 @@
         <extensionPoint
                 interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufIndexProvider"
                 dynamic="true"
-                name="externalNameProvider"/>
+                name="indexProvider"/>
         <extensionPoint
                 interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubExternalProvider"
                 dynamic="true"

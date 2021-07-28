@@ -1,21 +1,26 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature
 
 import com.intellij.psi.util.QualifiedName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufFileStub
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.stub.primitive.ProtobufDefinitionStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.primitive.ProtobufNamedStub
+import io.kanro.idea.plugin.protobuf.lang.psi.stub.primitive.ProtobufScopeStub
 
 interface ExternalProtobufNamespace {
+    fun name(element: ProtobufNamedElement?): String?
 
-    fun packageName(file: ProtobufFile): QualifiedName?
+    fun name(element: ProtobufNamedStub?): String?
 
-    fun packageName(file: ProtobufFileStub): QualifiedName?
+    fun scope(element: ProtobufScope?): QualifiedName?
 
-    fun name(element: ProtobufNamedElement): String?
+    fun scope(element: ProtobufScopeStub?): QualifiedName?
+}
 
-    fun name(element: ProtobufNamedStub): String?
+fun ExternalProtobufNamespace.qualifiedName(element: ProtobufDefinition): QualifiedName? {
+    return scope(element.owner())?.append(name(element))
+}
 
-    fun qualifiedName(element: ProtobufNamedElement): QualifiedName?
-
-    fun qualifiedName(element: ProtobufNamedStub): QualifiedName?
+fun ExternalProtobufNamespace.qualifiedName(element: ProtobufDefinitionStub): QualifiedName? {
+    return scope(element.owner())?.append(name(element))
 }

@@ -7,7 +7,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufFileStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.writeMap
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.writeStringArray
-import io.kanro.idea.plugin.protobuf.lang.util.toQualifiedName
 
 class ProtobufFileStubImpl(
     file: ProtobufFile?,
@@ -19,10 +18,6 @@ class ProtobufFileStubImpl(
 
     override fun scope(): QualifiedName {
         return QualifiedName.fromComponents(childrenStubs.filterIsInstance<ProtobufPackageNameStub>().map { it.name() })
-    }
-
-    override fun externalScope(key: String): QualifiedName? {
-        return externalData(key)?.toQualifiedName()
     }
 
     override fun data(index: Int): String {

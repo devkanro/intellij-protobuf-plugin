@@ -8,7 +8,7 @@ import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOptionName
-import io.kanro.idea.plugin.protobuf.lang.psi.forEach
+import io.kanro.idea.plugin.protobuf.lang.psi.items
 import io.kanro.idea.plugin.protobuf.lang.psi.message
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
@@ -18,8 +18,8 @@ class ProtobufFieldReference(field: ProtobufFieldName) :
 
     override fun resolve(): PsiElement? {
         val message = element.message() ?: return null
-        message.forEach {
-            if (it is ProtobufFieldLike && it.fieldName() == element.text) {
+        message.items<ProtobufFieldLike> {
+            if (it.fieldName() == element.text) {
                 return it
             }
         }

@@ -33,8 +33,8 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.enum
 import io.kanro.idea.plugin.protobuf.lang.psi.field
 import io.kanro.idea.plugin.protobuf.lang.psi.float
-import io.kanro.idea.plugin.protobuf.lang.psi.forEach
 import io.kanro.idea.plugin.protobuf.lang.psi.int
+import io.kanro.idea.plugin.protobuf.lang.psi.items
 import io.kanro.idea.plugin.protobuf.lang.psi.message
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
@@ -164,7 +164,7 @@ class ProtobufAnnotator : Annotator {
 
             override fun visitFieldName(o: ProtobufFieldName) {
                 val message = o.message() ?: return
-                message.forEach {
+                message.items<ProtobufFieldLike> {
                     if (it.name() == element.text) {
                         return
                     }
@@ -184,7 +184,7 @@ class ProtobufAnnotator : Annotator {
 
             override fun visitEnumValue(o: ProtobufEnumValue) {
                 val enum = o.enum() ?: return
-                enum.forEach {
+                enum.items<ProtobufEnumValueDefinition> {
                     if (it.name() == element.text) {
                         return
                     }

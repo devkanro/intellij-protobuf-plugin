@@ -1,6 +1,6 @@
 <idea-plugin>
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
-        <externalNameProvider implementation="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusIndexProvider"/>
+        <indexProvider implementation="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusIndexProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -9,6 +9,6 @@
         <stubIndex implementation="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusNameIndex"/>
         <codeInsight.lineMarkerProvider language="protobuf"
                                         implementationClass="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusProtobufLineMarkerProvider"/>
-
+        <findUsagesHandlerFactory implementation="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusFindUsageFactory"/>
     </extensions>
 </idea-plugin>

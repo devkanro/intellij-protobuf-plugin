@@ -18,4 +18,3 @@ interface ProtobufIndexProvider {
 
     fun buildIndex(stub: ProtobufStub<*>, sink: IndexSink)
 }
-
