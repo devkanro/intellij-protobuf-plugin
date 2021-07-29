@@ -1,5 +1,6 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 
+import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcIO
 import io.kanro.idea.plugin.protobuf.lang.psi.findChild
@@ -10,12 +11,14 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stream
 import javax.swing.Icon
 
 interface ProtobufRpcDefinition : ProtobufDefinition {
-    @JvmDefault
+    override fun owner(): ProtobufServiceDefinition? {
+        return parentOfType()
+    }
+
     override fun type(): String {
         return "rpc"
     }
 
-    @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
         val parameters = findChildren<ProtobufRpcIO>()
         if (parameters.size != 2) return Icons.RPC_METHOD
@@ -30,17 +33,14 @@ interface ProtobufRpcDefinition : ProtobufDefinition {
         }
     }
 
-    @JvmDefault
     fun input(): ProtobufRpcIO? {
         return findChild()
     }
 
-    @JvmDefault
     fun output(): ProtobufRpcIO? {
         return findLastChild()
     }
 
-    @JvmDefault
     override fun tailText(): String? {
         val parameters = findChildren<ProtobufRpcIO>()
         if (parameters.size != 2) return "()"

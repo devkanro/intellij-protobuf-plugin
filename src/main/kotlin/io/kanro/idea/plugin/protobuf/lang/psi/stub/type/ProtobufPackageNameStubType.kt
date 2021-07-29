@@ -12,8 +12,8 @@ object ProtobufPackageNameStubType : ProtobufStubTypeBase<ProtobufPackageNameStu
         return "protobuf.package_name.stub"
     }
 
-    override fun createStub(data: Array<String>, parentStub: StubElement<*>?): ProtobufPackageNameStub {
-        return ProtobufPackageNameStub(data, parentStub)
+    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufPackageNameStub {
+        return ProtobufPackageNameStub(data, external, parentStub)
     }
 
     override fun createPsi(stub: ProtobufPackageNameStub): ProtobufPackageName {

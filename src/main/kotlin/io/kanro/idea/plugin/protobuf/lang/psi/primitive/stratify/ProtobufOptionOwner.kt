@@ -5,7 +5,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 
 interface ProtobufOptionOwner : ProtobufElement {
-    @JvmDefault
     fun options(): Array<ProtobufOptionHover> {
         return if (this is ProtobufBodyOwner) {
             body()?.findChildren() ?: arrayOf()
@@ -17,7 +16,6 @@ interface ProtobufOptionOwner : ProtobufElement {
     /**
      * Find extension options by QualifiedName
      */
-    @JvmDefault
     fun options(name: QualifiedName): Array<ProtobufOptionHover> {
         val target = if (this is ProtobufBodyOwner) {
             body() ?: return arrayOf()
@@ -33,7 +31,6 @@ interface ProtobufOptionOwner : ProtobufElement {
     /**
      * Find builtin options by QualifiedName
      */
-    @JvmDefault
     fun options(name: String): Array<ProtobufOptionHover> {
         val target = if (this is ProtobufBodyOwner) {
             body() ?: return arrayOf()

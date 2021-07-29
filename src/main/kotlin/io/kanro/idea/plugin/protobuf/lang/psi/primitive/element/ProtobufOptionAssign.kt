@@ -7,7 +7,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldL
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufValueAssign
 
 interface ProtobufOptionAssign : ProtobufValueAssign {
-    @JvmDefault
     override fun field(): ProtobufFieldLike? {
         return findChild<ProtobufOptionName>()?.field()
     }

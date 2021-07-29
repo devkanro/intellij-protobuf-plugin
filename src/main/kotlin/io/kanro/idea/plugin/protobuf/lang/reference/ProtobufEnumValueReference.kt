@@ -7,14 +7,14 @@ import com.intellij.psi.impl.source.tree.LeafElement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.enum
-import io.kanro.idea.plugin.protobuf.lang.psi.forEach
+import io.kanro.idea.plugin.protobuf.lang.psi.items
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 
 class ProtobufEnumValueReference(field: ProtobufEnumValue) :
     PsiReferenceBase<ProtobufEnumValue>(field) {
     override fun resolve(): PsiElement? {
-        element.enum()?.forEach {
+        element.enum()?.items<ProtobufEnumValueDefinition> {
             if (it.name() == element.text) {
                 return it
             }

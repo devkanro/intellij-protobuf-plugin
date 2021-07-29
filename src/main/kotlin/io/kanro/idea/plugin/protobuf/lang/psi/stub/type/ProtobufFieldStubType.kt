@@ -12,8 +12,8 @@ object ProtobufFieldStubType : ProtobufStubTypeBase<ProtobufFieldStub, ProtobufF
         return "protobuf.field.stub"
     }
 
-    override fun createStub(data: Array<String>, parentStub: StubElement<*>?): ProtobufFieldStub {
-        return ProtobufFieldStub(data, parentStub)
+    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufFieldStub {
+        return ProtobufFieldStub(data, external, parentStub)
     }
 
     override fun createPsi(stub: ProtobufFieldStub): ProtobufFieldDefinition {

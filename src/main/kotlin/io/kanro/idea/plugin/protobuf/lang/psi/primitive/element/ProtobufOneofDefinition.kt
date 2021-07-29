@@ -6,17 +6,12 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufVirtua
 import javax.swing.Icon
 
 interface ProtobufOneofDefinition : ProtobufVirtualScope, ProtobufDefinition {
-    @JvmDefault
     override fun type(): String {
         return "oneof"
     }
-
-    @JvmDefault
     override fun getPresentableText(): String? {
         return "oneof ${name()}"
     }
-
-    @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.ONEOF
     }

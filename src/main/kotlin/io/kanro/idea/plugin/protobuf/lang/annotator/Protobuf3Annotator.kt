@@ -105,7 +105,7 @@ class Protobuf3Annotator : Annotator {
             override fun visitEnumDefinition(o: ProtobufEnumDefinition) {
                 val items = o.items()
                 val first = items.firstOrNull { it is ProtobufEnumValueDefinition }
-                val zeroDefinition = items.firstOrNull { it is ProtobufEnumValueDefinition && it.number() == 0L }
+                val zeroDefinition = items.firstOrNull { it is ProtobufEnumValueDefinition && it.number() == 0L } as? ProtobufEnumValueDefinition
 
                 if (zeroDefinition == null) {
                     holder.newAnnotation(

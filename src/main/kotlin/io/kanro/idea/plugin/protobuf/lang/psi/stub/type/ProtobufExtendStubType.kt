@@ -12,8 +12,8 @@ object ProtobufExtendStubType : ProtobufStubTypeBase<ProtobufExtendStub, Protobu
         return "protobuf.extend.stub"
     }
 
-    override fun createStub(data: Array<String>, parentStub: StubElement<*>?): ProtobufExtendStub {
-        return ProtobufExtendStub(data, parentStub)
+    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufExtendStub {
+        return ProtobufExtendStub(data, external, parentStub)
     }
 
     override fun createPsi(stub: ProtobufExtendStub): ProtobufExtendDefinition {

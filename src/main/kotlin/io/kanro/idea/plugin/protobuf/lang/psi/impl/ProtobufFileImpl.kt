@@ -11,7 +11,6 @@ import com.intellij.openapi.roots.libraries.LibraryUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem
 import com.intellij.psi.FileViewProvider
-import com.intellij.psi.PsiElement
 import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
@@ -32,7 +31,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionH
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 import io.kanro.idea.plugin.protobuf.lang.util.ProtobufPsiFactory
-import io.kanro.idea.plugin.protobuf.lang.util.doc
 import javax.swing.Icon
 
 class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, ProtobufLanguage), ProtobufFile {
@@ -64,16 +62,12 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
         return null
     }
 
+    override fun getPresentableText(): String? {
+        return name()
+    }
+
     override fun name(): String {
         return this.name
-    }
-
-    override fun nameElement(): PsiElement? {
-        return null
-    }
-
-    override fun type(): String {
-        return "file"
     }
 
     override fun getPresentation(): ItemPresentation? {
@@ -84,7 +78,7 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
         return scope()?.toString()
     }
 
-    private fun getRootInfo(): String? {
+    private fun getRootInfo(): String {
         return when (val system = virtualFile.fileSystem) {
             is ArchiveFileSystem -> {
                 val project = ProjectLocator.getInstance().guessProjectForFile(virtualFile)
@@ -108,20 +102,6 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
                 "(external)"
             }
             else -> "(unsupported)"
-        }
-    }
-
-    override fun navigateInfo(): String? {
-        return doc {
-            link {
-                locationString?.let {
-                    text("$it ")
-                }
-            }
-            text(getRootInfo())
-            definition {
-                text("${type()} $presentableText")
-            }
         }
     }
 

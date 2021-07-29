@@ -1,0 +1,92 @@
+package io.kanro.idea.plugin.protobuf.sisyphus
+
+import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo
+import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider
+import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder
+import com.intellij.psi.PsiElement
+import com.intellij.psi.stubs.StubIndex
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
+import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
+import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstanceOrNull
+import org.jetbrains.uast.UClass
+import org.jetbrains.uast.UIdentifier
+import org.jetbrains.uast.UMethod
+import org.jetbrains.uast.toUElementOfType
+
+class SisyphusLineMarkerProvider : RelatedItemLineMarkerProvider() {
+    override fun collectNavigationMarkers(
+        element: PsiElement,
+        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
+    ) {
+        val identifier = element.toUElementOfType<UIdentifier>() ?: return
+        when (val parent = identifier.uastParent) {
+            is UClass -> {
+                val service = findServiceProtobufDefinition(parent) ?: return
+                val builder: NavigationGutterIconBuilder<PsiElement> =
+                    NavigationGutterIconBuilder.create(Icons.IMPLEMENTING_SERVICE)
+                        .setTargets(service)
+                        .setTooltipText("Implementing")
+                result.add(builder.createLineMarkerInfo(element))
+            }
+            is UMethod -> {
+                val method = findMethodProtobufDefinition(parent) ?: return
+                val builder: NavigationGutterIconBuilder<PsiElement> =
+                    NavigationGutterIconBuilder.create(Icons.IMPLEMENTING_RPC)
+                        .setTargets(method)
+                        .setTooltipText("Implementing")
+                result.add(builder.createLineMarkerInfo(element))
+            }
+        }
+    }
+
+    fun findServiceProtobufDefinition(clazz: UClass): ProtobufServiceDefinition? {
+        val sourceClazz = clazz.sourcePsi ?: return null
+        clazz.findAnnotation("com.bybutter.sisyphus.middleware.grpc.RpcServiceImpl") ?: return null
+
+        return CachedValuesManager.getCachedValue(sourceClazz) {
+            val scope = FileResolver.searchScope(sourceClazz)
+            for (it in clazz.uastSuperTypes) {
+                val qualifiedName = it.getQualifiedName() ?: continue
+                val element = StubIndex.getElements(
+                    SisyphusNameIndex.key,
+                    qualifiedName,
+                    sourceClazz.project,
+                    scope,
+                    ProtobufElement::class.java
+                ).firstIsInstanceOrNull<ProtobufServiceDefinition>()
+
+                if (element != null) {
+                    return@getCachedValue CachedValueProvider.Result.create(element, sourceClazz)
+                }
+            }
+            return@getCachedValue CachedValueProvider.Result.create(null, sourceClazz)
+        }
+    }
+
+    fun findMethodProtobufDefinition(method: UMethod): ProtobufElement? {
+        val sourcePsi = method.sourcePsi ?: return null
+        val serviceDefinition = findServiceProtobufDefinition(method.uastParent as? UClass ?: return null)
+            ?: return null
+        val serviceName = SisyphusNamespace.scope(serviceDefinition) ?: return null
+
+        return CachedValuesManager.getCachedValue(sourcePsi) {
+            val scope = FileResolver.searchScope(sourcePsi)
+
+            val methodName = serviceName.append(method.name).toString()
+            val element = StubIndex.getElements(
+                SisyphusNameIndex.key,
+                methodName,
+                sourcePsi.project,
+                scope,
+                ProtobufElement::class.java
+            ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
+
+            return@getCachedValue CachedValueProvider.Result.create(element, sourcePsi, serviceDefinition)
+        }
+    }
+}

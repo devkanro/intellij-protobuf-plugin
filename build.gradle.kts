@@ -85,7 +85,7 @@ tasks {
 
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
-        kotlinOptions.freeCompilerArgs += "-Xjvm-default=compatibility"
+        kotlinOptions.freeCompilerArgs += "-Xjvm-default=all"
         dependsOn(generateProtobufLexer, generateProtobufParser)
     }
 
@@ -100,6 +100,10 @@ tasks {
                 }
             )
         }
+    }
+
+    runIde {
+        jvmArgs("-Xmx8196m")
     }
 
     patchPluginXml {

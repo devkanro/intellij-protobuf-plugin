@@ -6,7 +6,6 @@ import com.intellij.psi.PsiWhiteSpace
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 
 interface ProtobufDocument : PsiDocCommentBase {
-    @JvmDefault
     override fun getOwner(): PsiElement? {
         var next = nextSibling
         var newLine = 0

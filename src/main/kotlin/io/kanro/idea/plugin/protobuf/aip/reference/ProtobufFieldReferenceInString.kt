@@ -11,7 +11,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.forEach
+import io.kanro.idea.plugin.protobuf.lang.psi.items
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
@@ -40,8 +40,8 @@ abstract class ProtobufFieldReferenceInString(field: ProtobufStringValue) :
 
     override fun resolve(): PsiElement? {
         val fieldText = element.value() ?: return null
-        message()?.forEach {
-            if (it is ProtobufFieldLike && it.fieldName() == fieldText) {
+        message()?.items<ProtobufFieldLike> {
+            if (it.fieldName() == fieldText) {
                 return it
             }
         }

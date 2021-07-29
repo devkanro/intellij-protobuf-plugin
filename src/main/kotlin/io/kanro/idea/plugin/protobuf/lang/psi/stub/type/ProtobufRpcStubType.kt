@@ -12,8 +12,8 @@ object ProtobufRpcStubType : ProtobufStubTypeBase<ProtobufRpcStub, ProtobufRpcDe
         return "protobuf.rpc.stub"
     }
 
-    override fun createStub(data: Array<String>, parentStub: StubElement<*>?): ProtobufRpcStub {
-        return ProtobufRpcStub(data, parentStub)
+    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufRpcStub {
+        return ProtobufRpcStub(data, external, parentStub)
     }
 
     override fun createPsi(stub: ProtobufRpcStub): ProtobufRpcDefinition {

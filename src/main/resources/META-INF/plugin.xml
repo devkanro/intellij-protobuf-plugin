@@ -6,6 +6,8 @@
     <!-- Product and plugin compatibility requirements -->
     <!-- https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends optional="true" config-file="io.kanro.idea.plugin.protobuf-sisyphus.xml">org.jetbrains.kotlin</depends>
 
     <extensionPoints>
         <extensionPoint
@@ -16,6 +18,14 @@
                 interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceProvider"
                 dynamic="true"
                 name="symbolReferenceProvider"/>
+        <extensionPoint
+                interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufIndexProvider"
+                dynamic="true"
+                name="indexProvider"/>
+        <extensionPoint
+                interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubExternalProvider"
+                dynamic="true"
+                name="stubExternalProvider"/>
     </extensionPoints>
 
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
@@ -27,7 +37,10 @@
                       implementation="io.kanro.idea.plugin.protobuf.lang.file.LibraryProtobufFileResolver"/>
         <fileResolver id="settings"
                       implementation="io.kanro.idea.plugin.protobuf.lang.file.ImportRootsFileResolver"/>
-        <symbolReferenceProvider implementation="io.kanro.idea.plugin.protobuf.aip.reference.contributor.ProtobufTypeNameInStringProvider"/>
+        <symbolReferenceProvider
+                implementation="io.kanro.idea.plugin.protobuf.aip.reference.contributor.ProtobufTypeNameInStringProvider"/>
+        <stubExternalProvider
+                implementation="io.kanro.idea.plugin.protobuf.jvm.FileJavaOptionsProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -107,6 +120,5 @@
         <annotator language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.aip.annotator.AipAnnotator"/>
         <completion.contributor language="protobuf"
                                 implementationClass="io.kanro.idea.plugin.protobuf.aip.completion.AipCompletionContributor"/>
-
     </extensions>
 </idea-plugin>

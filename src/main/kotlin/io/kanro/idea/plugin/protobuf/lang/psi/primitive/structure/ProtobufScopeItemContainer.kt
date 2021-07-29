@@ -5,7 +5,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufBodyOwner
 
 interface ProtobufScopeItemContainer : ProtobufElement {
-    @JvmDefault
     fun items(): Array<ProtobufScopeItem> {
         return if (this is ProtobufBodyOwner) {
             this.body()?.findChildren() ?: arrayOf()

@@ -6,7 +6,6 @@ import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 
 interface ProtobufSymbolReferenceHost : ProtobufElement {
-    @JvmDefault
     fun referencesHover(): ProtobufSymbolReferenceHover? {
         return ProtobufSymbolReferenceProvider.hovers(this)
     }
@@ -31,7 +30,6 @@ interface ProtobufSymbolReferenceProvider {
 }
 
 interface ProtobufSymbolReferenceHover {
-    @JvmDefault
     fun symbol(): QualifiedName {
         return QualifiedName.fromComponents(symbolParts().map { it.value })
     }

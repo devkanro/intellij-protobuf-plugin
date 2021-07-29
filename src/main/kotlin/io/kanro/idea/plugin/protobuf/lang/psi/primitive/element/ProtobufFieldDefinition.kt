@@ -15,17 +15,12 @@ import io.kanro.idea.plugin.protobuf.lang.psi.value
 import javax.swing.Icon
 
 interface ProtobufFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefinition {
-    @JvmDefault
     override fun type(): String {
         return "field"
     }
-
-    @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.FIELD
     }
-
-    @JvmDefault
     fun resourceType(): String? {
         if (this !is ProtobufOptionOwner) return null
         return CachedValuesManager.getCachedValue(this) {
@@ -40,16 +35,12 @@ interface ProtobufFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefiniti
             return@getCachedValue CachedValueProvider.Result.create(null, PsiModificationTracker.MODIFICATION_COUNT)
         }
     }
-
-    @JvmDefault
     override fun fieldType(): String? {
         resourceType()?.let {
             return it
         }
         return findChild<ProtobufTypeName>()?.symbolNameList?.lastOrNull()?.text
     }
-
-    @JvmDefault
     override fun names(): Set<String> {
         return setOfNotNull(name(), jsonName())
     }

@@ -21,48 +21,27 @@ interface ProtobufPackageName :
     NavigatablePsiElement,
     ItemPresentation,
     PsiNameIdentifierOwner {
-
-    @JvmDefault
     override fun name(): String? {
         return nameIdentifier?.text
     }
 
-    @JvmDefault
     override fun getNameIdentifier(): PsiElement? {
         return this
     }
 
-    @JvmDefault
     override fun setName(name: String): PsiElement {
         (node as? LeafElement)?.replaceWithText(name)
         return this
     }
 
-    @JvmDefault
-    override fun qualifiedName(): QualifiedName? {
-        val list = mutableListOf<String>()
-        var item: PsiElement? = this
-        while (item != null) {
-            if (item is ProtobufPackageName) {
-                list += item.name() ?: return null
-            }
-            item = item.prevSibling
-        }
-        list.reverse()
-        return QualifiedName.fromComponents(list)
-    }
-
-    @JvmDefault
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.PACKAGE
     }
 
-    @JvmDefault
     override fun getPresentableText(): String? {
         return name()
     }
 
-    @JvmDefault
     override fun getLocationString(): String? {
         val list = mutableListOf<String>()
         var item: PsiElement? = this.prevSibling
@@ -76,7 +55,6 @@ interface ProtobufPackageName :
         return QualifiedName.fromComponents(list).toString()
     }
 
-    @JvmDefault
     override fun navigateInfo(): String? {
         return doc {
             link {
@@ -91,7 +69,6 @@ interface ProtobufPackageName :
         }
     }
 
-    @JvmDefault
     override fun lookup(): LookupElementBuilder? {
         val name = name() ?: return null
         return LookupElementBuilder.create(name)

@@ -214,19 +214,24 @@ operator fun ProtobufScope.iterator(): Iterator<ProtobufScopeItem> {
     return realItems().iterator()
 }
 
-inline fun ProtobufScope.forEach(block: (ProtobufScopeItem) -> Unit) {
+inline fun <reified T : ProtobufScopeItem> ProtobufScope.items(block: (T) -> Unit) {
     this.items().forEach {
-        if (it is ProtobufVirtualScope) {
-            it.items().forEach(block)
-        } else {
-            block(it)
+        when (it) {
+            is ProtobufVirtualScope -> {
+                it.items().forEach {
+                    if (it is T) block(it)
+                }
+            }
+            is T -> {
+                block(it)
+            }
         }
     }
 }
 
 fun ProtobufScope.realItems(): Array<ProtobufScopeItem> {
     val result = mutableListOf<ProtobufScopeItem>()
-    this.forEach {
+    this.items<ProtobufScopeItem> {
         result += it
     }
     return result.toTypedArray()
@@ -268,8 +273,12 @@ fun ProtobufNumberValue.int(): Long? {
     return integerLiteral?.text?.parseLongOrNull()
 }
 
-fun ProtobufNumberValue.uint(): ULong? {
-    return int()?.toULong()
+fun ProtobufNumberValue.uint(): Long? {
+    return int()
+}
+
+fun ProtobufBooleanValue.value(): Boolean {
+    return textMatches("true")
 }
 
 fun ProtobufRpcIO.stream(): Boolean {
