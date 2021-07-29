@@ -12,27 +12,31 @@ and [intellij-protobuf-editor](https://github.com/jvolkman/intellij-protobuf-edi
 <!-- Plugin description -->
 IntelliJ-based IDEs Protobuf Language Plugin that provides Protobuf language support.
 
+> ⚠️ Attention ⚠️  
+> This plugin is not compatible with [Jetbrains Official Protobuf Plugin](https://plugins.jetbrains.com/plugin/14004-protocol-buffers) which bundled in 2021.2 and later.  
+> You should disable **Protocol Buffer** and **gRPC** to ues this plugin.
+
 Analyzing features:
 
-- [x] Syntax highlighting
-- [x] Symbol and References
-- [x] Import file from library and SDK
-- [x] Navigation
-- [x] Find Usage
-- [x] Code folding
-- [x] Semantic analysis
-- [x] Struct Viewer
-- [x] Quick documentation
-- [x] PSI stub
+✅ Syntax highlighting  
+✅ Symbol and References  
+✅ Import file from library and SDK  
+✅ Navigation  
+✅ Find Usage  
+✅ Code folding  
+✅ Semantic analysis  
+✅ Struct Viewer  
+✅ Quick documentation  
+✅ PSI stub
 
 Editor features:
 
-- [x] Auto Completion
-- [x] Code format
-- [x] Import optimizing
-- [x] [AIP](https://google.aip.dev/) spec support
-- [x] Auto import
-- [x] Import quick fix
+✅ Auto Completion  
+✅ Code format  
+✅ Import optimizing  
+✅ [AIP](https://google.aip.dev/) spec support  
+✅ Auto import  
+✅ Import quick fix
 
 <!-- Plugin description end -->
 
