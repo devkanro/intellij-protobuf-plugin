@@ -1,0 +1,11 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
+        <indexProvider implementation="io.kanro.idea.plugin.protobuf.jvm.JvmIndexProvider"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.jvm.JvmNameIndex"/>
+        <codeInsight.lineMarkerProvider language="UAST"
+                                        implementationClass="io.kanro.idea.plugin.protobuf.jvm.JavaLineMarkerProvider"/>
+        </extensions>
+</idea-plugin>

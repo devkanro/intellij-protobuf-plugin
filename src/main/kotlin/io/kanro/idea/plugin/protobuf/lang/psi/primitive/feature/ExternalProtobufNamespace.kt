@@ -18,9 +18,15 @@ interface ExternalProtobufNamespace {
 }
 
 fun ExternalProtobufNamespace.qualifiedName(element: ProtobufDefinition): QualifiedName? {
-    return scope(element.owner())?.append(name(element))
+    return when(element) {
+        is ProtobufScope -> scope(element)
+        else -> scope(element.owner())?.append(name(element))
+    }
 }
 
 fun ExternalProtobufNamespace.qualifiedName(element: ProtobufDefinitionStub): QualifiedName? {
-    return scope(element.owner())?.append(name(element))
+    return when(element) {
+        is ProtobufScopeStub -> scope(element)
+        else -> scope(element.owner())?.append(name(element))
+    }
 }

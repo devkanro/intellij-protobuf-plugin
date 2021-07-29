@@ -1,4 +1,4 @@
-package io.kanro.idea.plugin.protobuf.sisyphus
+package io.kanro.idea.plugin.protobuf.jvm
 
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider
@@ -8,6 +8,7 @@ import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.jvm.name.JvmNamespace
 import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
@@ -18,12 +19,13 @@ import org.jetbrains.uast.UIdentifier
 import org.jetbrains.uast.UMethod
 import org.jetbrains.uast.toUElementOfType
 
-class SisyphusLineMarkerProvider : RelatedItemLineMarkerProvider() {
+class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
     override fun collectNavigationMarkers(
         element: PsiElement,
         result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
     ) {
         val identifier = element.toUElementOfType<UIdentifier>() ?: return
+        if (!isJava(element)) return
         when (val parent = identifier.uastParent) {
             is UClass -> {
                 val service = findServiceProtobufDefinition(parent) ?: return
@@ -46,14 +48,13 @@ class SisyphusLineMarkerProvider : RelatedItemLineMarkerProvider() {
 
     fun findServiceProtobufDefinition(clazz: UClass): ProtobufServiceDefinition? {
         val sourceClazz = clazz.sourcePsi ?: return null
-        clazz.findAnnotation("com.bybutter.sisyphus.middleware.grpc.RpcServiceImpl") ?: return null
 
         return CachedValuesManager.getCachedValue(sourceClazz) {
             val scope = FileResolver.searchScope(sourceClazz)
             for (it in clazz.uastSuperTypes) {
                 val qualifiedName = it.getQualifiedName() ?: continue
                 val element = StubIndex.getElements(
-                    SisyphusNameIndex.key,
+                    JvmNameIndex.key,
                     qualifiedName,
                     sourceClazz.project,
                     scope,
@@ -72,14 +73,14 @@ class SisyphusLineMarkerProvider : RelatedItemLineMarkerProvider() {
         val sourcePsi = method.sourcePsi ?: return null
         val serviceDefinition = findServiceProtobufDefinition(method.uastParent as? UClass ?: return null)
             ?: return null
-        val serviceName = SisyphusNamespace.scope(serviceDefinition) ?: return null
+        val serviceName = JvmNamespace.scope(serviceDefinition) ?: return null
 
         return CachedValuesManager.getCachedValue(sourcePsi) {
             val scope = FileResolver.searchScope(sourcePsi)
 
             val methodName = serviceName.append(method.name).toString()
             val element = StubIndex.getElements(
-                SisyphusNameIndex.key,
+                JvmNameIndex.key,
                 methodName,
                 sourcePsi.project,
                 scope,

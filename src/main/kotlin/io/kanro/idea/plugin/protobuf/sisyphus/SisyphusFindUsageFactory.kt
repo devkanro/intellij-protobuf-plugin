@@ -19,6 +19,7 @@ class SisyphusFindUsageFactory : FindUsagesHandlerFactory() {
     override fun createFindUsagesHandler(element: PsiElement, forHighlightUsages: Boolean): FindUsagesHandler? {
         if (forHighlightUsages) return null
         if (element !is ProtobufDefinition) return null
+        if(!isSisyphus(element)) return null
 
         return when (element) {
             is ProtobufMessageDefinition -> {

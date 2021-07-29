@@ -5,6 +5,8 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufIndexPro
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.qualifiedName
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.primitive.ProtobufDefinitionStub
+import io.kanro.idea.plugin.protobuf.sisyphus.name.SisyphusClientNamespace
+import io.kanro.idea.plugin.protobuf.sisyphus.name.SisyphusNamespace
 
 class SisyphusIndexProvider : ProtobufIndexProvider {
     override fun buildIndex(stub: ProtobufStub<*>, sink: IndexSink) {

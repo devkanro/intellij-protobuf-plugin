@@ -17,6 +17,7 @@ class SisyphusProtobufLineMarkerProvider : RelatedItemLineMarkerProvider() {
         result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
     ) {
         val identifier = element as? ProtobufIdentifier ?: return
+        if(!isSisyphus(element)) return
 
         when (val owner = identifier.parent) {
             is ProtobufRpcDefinition -> {

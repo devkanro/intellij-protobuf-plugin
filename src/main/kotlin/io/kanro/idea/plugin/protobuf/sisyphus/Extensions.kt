@@ -2,8 +2,10 @@ package io.kanro.idea.plugin.protobuf.sisyphus
 
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiEnumConstant
 import com.intellij.psi.PsiMethod
+import com.intellij.psi.search.GlobalSearchScope
 import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufEnumValueDefinition
@@ -11,6 +13,11 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufMessageD
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
+import io.kanro.idea.plugin.protobuf.sisyphus.name.SisyphusClientNamespace
+import io.kanro.idea.plugin.protobuf.sisyphus.name.SisyphusFieldGetterNamespace
+import io.kanro.idea.plugin.protobuf.sisyphus.name.SisyphusFieldSetterNamespace
+import io.kanro.idea.plugin.protobuf.sisyphus.name.SisyphusMutableMessageNamespace
+import io.kanro.idea.plugin.protobuf.sisyphus.name.SisyphusNamespace
 
 fun ProtobufMessageDefinition.toClass(): PsiClass? {
     val scope = FileResolver.searchScope(this)
@@ -76,4 +83,12 @@ fun ProtobufFieldLike.toSetter(): PsiMethod? {
         }
         else -> null
     }
+}
+
+/**
+ * [com.bybutter.sisyphus.protobuf.Message] must be found in project.
+ */
+fun isSisyphus(element: PsiElement): Boolean {
+    return JavaPsiFacade.getInstance(element.project)
+        .findClass("com.bybutter.sisyphus.protobuf.Message", GlobalSearchScope.allScope(element.project)) != null
 }

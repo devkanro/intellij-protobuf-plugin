@@ -7,6 +7,7 @@
     <!-- https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
+    <depends optional="true" config-file="io.kanro.idea.plugin.protobuf-jvm.xml">com.intellij.modules.java</depends>
     <depends optional="true" config-file="io.kanro.idea.plugin.protobuf-sisyphus.xml">org.jetbrains.kotlin</depends>
 
     <extensionPoints>
