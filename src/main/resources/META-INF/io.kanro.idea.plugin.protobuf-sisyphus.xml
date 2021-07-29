@@ -4,9 +4,9 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusNameIndex"/>
         <codeInsight.lineMarkerProvider language="UAST"
                                         implementationClass="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusKotlinLineMarkerProvider"/>
-        <stubIndex implementation="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusNameIndex"/>
         <codeInsight.lineMarkerProvider language="protobuf"
                                         implementationClass="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusProtobufLineMarkerProvider"/>
         <findUsagesHandlerFactory implementation="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusFindUsageFactory"/>

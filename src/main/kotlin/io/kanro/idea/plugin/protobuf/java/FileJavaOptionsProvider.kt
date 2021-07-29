@@ -1,13 +1,24 @@
-package io.kanro.idea.plugin.protobuf.jvm
+package io.kanro.idea.plugin.protobuf.java
 
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubExternalProvider
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubSupport
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufFileStub
+import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufStub
+import io.kanro.idea.plugin.protobuf.lang.psi.stub.primitive.ProtobufFieldLikeStub
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 
 class FileJavaOptionsProvider : ProtobufStubExternalProvider {
     override fun mergeExternalData(element: ProtobufStubSupport<*, *>, external: MutableMap<String, String>) {
+        when (element) {
+            is ProtobufFieldLike -> {
+                element.jsonName()?.let {
+                    external["json_name"] = it
+                }
+            }
+        }
     }
 
     override fun mergeExternalData(file: ProtobufFile, external: MutableMap<String, String>) {
@@ -21,6 +32,18 @@ class FileJavaOptionsProvider : ProtobufStubExternalProvider {
             external["java_multiple_files"] = it.toString()
         }
     }
+}
+
+fun ProtobufFieldLike.jsonName(): String? {
+    return if (this is ProtobufOptionOwner) {
+        options("json_name").lastOrNull()?.value()?.stringValue?.value()
+    } else null
+}
+
+fun ProtobufFieldLikeStub.jsonName(): String? {
+    return if (this is ProtobufStub<*>) {
+        externalData("json_name")
+    } else null
 }
 
 fun ProtobufFile.javaPackage(): String? {

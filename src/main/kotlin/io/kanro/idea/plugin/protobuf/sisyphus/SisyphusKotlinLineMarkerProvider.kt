@@ -3,7 +3,6 @@ package io.kanro.idea.plugin.protobuf.sisyphus
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder
-import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElement
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.CachedValueProvider
@@ -13,7 +12,6 @@ import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.sisyphus.name.SisyphusNamespace
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstanceOrNull
 import org.jetbrains.uast.UClass
 import org.jetbrains.uast.UIdentifier
@@ -26,7 +24,7 @@ class SisyphusKotlinLineMarkerProvider : RelatedItemLineMarkerProvider() {
         result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
     ) {
         val identifier = element.toUElementOfType<UIdentifier>() ?: return
-        if(!isSisyphus(element)) return
+        if (!isSisyphus(element)) return
         when (val parent = identifier.uastParent) {
             is UClass -> {
                 val service = findServiceProtobufDefinition(parent) ?: return
@@ -62,7 +60,6 @@ class SisyphusKotlinLineMarkerProvider : RelatedItemLineMarkerProvider() {
                     scope,
                     ProtobufElement::class.java
                 ).firstIsInstanceOrNull<ProtobufServiceDefinition>()
-
                 if (element != null) {
                     return@getCachedValue CachedValueProvider.Result.create(element, sourceClazz)
                 }
@@ -73,23 +70,24 @@ class SisyphusKotlinLineMarkerProvider : RelatedItemLineMarkerProvider() {
 
     fun findMethodProtobufDefinition(method: UMethod): ProtobufElement? {
         val sourcePsi = method.sourcePsi ?: return null
-        val serviceDefinition = findServiceProtobufDefinition(method.uastParent as? UClass ?: return null)
-            ?: return null
-        val serviceName = SisyphusNamespace.scope(serviceDefinition) ?: return null
+        val clazz = method.uastParent as? UClass ?: return null
 
         return CachedValuesManager.getCachedValue(sourcePsi) {
             val scope = FileResolver.searchScope(sourcePsi)
-
-            val methodName = serviceName.append(method.name).toString()
-            val element = StubIndex.getElements(
-                SisyphusNameIndex.key,
-                methodName,
-                sourcePsi.project,
-                scope,
-                ProtobufElement::class.java
-            ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
-
-            return@getCachedValue CachedValueProvider.Result.create(element, sourcePsi, serviceDefinition)
+            for (it in clazz.uastSuperTypes) {
+                val methodName = "${it.getQualifiedName()}.${method.name}"
+                val element = StubIndex.getElements(
+                    SisyphusNameIndex.key,
+                    methodName,
+                    sourcePsi.project,
+                    scope,
+                    ProtobufElement::class.java
+                ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
+                if (element != null) {
+                    return@getCachedValue CachedValueProvider.Result.create(element, sourcePsi)
+                }
+            }
+            return@getCachedValue CachedValueProvider.Result.create(null, sourcePsi)
         }
     }
 }

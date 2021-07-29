@@ -1,4 +1,4 @@
-package io.kanro.idea.plugin.protobuf.jvm
+package io.kanro.idea.plugin.protobuf.java
 
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider
@@ -8,7 +8,6 @@ import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import io.kanro.idea.plugin.protobuf.Icons
-import io.kanro.idea.plugin.protobuf.jvm.name.JvmNamespace
 import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
@@ -54,7 +53,7 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
             for (it in clazz.uastSuperTypes) {
                 val qualifiedName = it.getQualifiedName() ?: continue
                 val element = StubIndex.getElements(
-                    JvmNameIndex.key,
+                    JavaNameIndex.key,
                     qualifiedName,
                     sourceClazz.project,
                     scope,
@@ -71,23 +70,24 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
 
     fun findMethodProtobufDefinition(method: UMethod): ProtobufElement? {
         val sourcePsi = method.sourcePsi ?: return null
-        val serviceDefinition = findServiceProtobufDefinition(method.uastParent as? UClass ?: return null)
-            ?: return null
-        val serviceName = JvmNamespace.scope(serviceDefinition) ?: return null
+        val clazz = method.uastParent as? UClass ?: return null
 
         return CachedValuesManager.getCachedValue(sourcePsi) {
             val scope = FileResolver.searchScope(sourcePsi)
-
-            val methodName = serviceName.append(method.name).toString()
-            val element = StubIndex.getElements(
-                JvmNameIndex.key,
-                methodName,
-                sourcePsi.project,
-                scope,
-                ProtobufElement::class.java
-            ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
-
-            return@getCachedValue CachedValueProvider.Result.create(element, sourcePsi, serviceDefinition)
+            for (it in clazz.uastSuperTypes) {
+                val methodName = "${it.getQualifiedName()}.${method.name}"
+                val element = StubIndex.getElements(
+                    JavaNameIndex.key,
+                    methodName,
+                    sourcePsi.project,
+                    scope,
+                    ProtobufElement::class.java
+                ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
+                if (element != null) {
+                    return@getCachedValue CachedValueProvider.Result.create(element, sourcePsi)
+                }
+            }
+            return@getCachedValue CachedValueProvider.Result.create(null, sourcePsi)
         }
     }
 }

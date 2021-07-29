@@ -21,6 +21,8 @@ interface ProtobufDefinitionStub : ProtobufNamedStub, ProtobufScopeItemStub {
     }
 }
 
+interface ProtobufFieldLikeStub : ProtobufDefinitionStub
+
 interface ProtobufScopeItemContainerStub : Stub {
     fun items(): Array<ProtobufScopeItemStub> {
         return childrenStubs.filterIsInstance<ProtobufScopeItemStub>().toTypedArray()

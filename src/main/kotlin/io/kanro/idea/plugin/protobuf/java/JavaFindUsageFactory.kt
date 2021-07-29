@@ -1,4 +1,4 @@
-package io.kanro.idea.plugin.protobuf.sisyphus
+package io.kanro.idea.plugin.protobuf.java
 
 import com.intellij.find.findUsages.FindUsagesHandler
 import com.intellij.find.findUsages.FindUsagesHandlerFactory
@@ -11,7 +11,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 
-class SisyphusFindUsageFactory : FindUsagesHandlerFactory() {
+class JavaFindUsageFactory : FindUsagesHandlerFactory() {
     override fun canFindUsages(element: PsiElement): Boolean {
         return element is ProtobufDefinition
     }
@@ -19,11 +19,18 @@ class SisyphusFindUsageFactory : FindUsagesHandlerFactory() {
     override fun createFindUsagesHandler(element: PsiElement, forHighlightUsages: Boolean): FindUsagesHandler? {
         if (forHighlightUsages) return null
         if (element !is ProtobufDefinition) return null
-        if (!isSisyphus(element)) return null
+        if (!isJava(element)) return null
 
         return when (element) {
             is ProtobufMessageDefinition -> {
-                ProtoDefinitionFindUsage(element, listOfNotNull(element.toClass()).toTypedArray())
+                ProtoDefinitionFindUsage(
+                    element,
+                    listOfNotNull(
+                        element.toClass(),
+                        element.toMessageOrBuilderClass(),
+                        element.toBuilderClass()
+                    ).toTypedArray()
+                )
             }
             is ProtobufEnumDefinition -> {
                 ProtoDefinitionFindUsage(element, listOfNotNull(element.toClass()).toTypedArray())
@@ -31,7 +38,12 @@ class SisyphusFindUsageFactory : FindUsagesHandlerFactory() {
             is ProtobufServiceDefinition -> {
                 ProtoDefinitionFindUsage(
                     element,
-                    listOfNotNull(element.toClass(), element.toClientClass()).toTypedArray()
+                    listOfNotNull(
+                        element.toImplBaseClass(),
+                        element.toStubClass(),
+                        element.toBlockingStubClass(),
+                        element.toFutureStubClass()
+                    ).toTypedArray()
                 )
             }
             is ProtobufEnumValueDefinition -> {
@@ -40,13 +52,18 @@ class SisyphusFindUsageFactory : FindUsagesHandlerFactory() {
             is ProtobufRpcDefinition -> {
                 ProtoDefinitionFindUsage(
                     element,
-                    listOfNotNull(element.toMethod(), element.toClientMethod()).toTypedArray()
+                    listOfNotNull(
+                        element.toImplBaseMethod(),
+                        element.toStubMethod(),
+                        element.toBlockingStubMethod(),
+                        element.toFutureStubMethod()
+                    ).toTypedArray()
                 )
             }
             is ProtobufFieldLike -> {
                 ProtoDefinitionFindUsage(
                     element,
-                    (element.toGetters() + element.toSetters()) as Array<PsiElement>
+                    listOfNotNull(*element.toGetters(), *element.toSetters()).toTypedArray()
                 )
             }
             else -> null
