@@ -13,7 +13,7 @@ and [intellij-protobuf-editor](https://github.com/jvolkman/intellij-protobuf-edi
 IntelliJ-based IDEs Protobuf Language Plugin that provides Protobuf language support.
 
 > ⚠️ Attention ⚠️  
-> This plugin is not compatible with [Jetbrains Official Protobuf Plugin](https://plugins.jetbrains.com/plugin/14004-protocol-buffers) which is bundled in 2021.2 and later.  
+> This plugin is not compatible with [Jetbrains Official Protobuf Plugin](https://plugins.jetbrains.com/plugin/14004-protocol-buffers) bundled in 2021.2 and later.  
 > You should disable **Protocol Buffer** and **gRPC** to use this plugin.
 
 Analyzing features:
@@ -27,9 +27,9 @@ Analyzing features:
 ✅ Semantic analysis  
 ✅ Struct Viewer  
 ✅ Quick documentation  
-✅ PSI stub
-✅ [Sisyphus](https://github.com/ButterCam/sisyphus) framework integration
-⚠️ Java/Kotlin code navigation (Only for Sisyphus now)
+✅ PSI stub  
+✅ [Sisyphus](https://github.com/ButterCam/sisyphus) framework integration  
+⚠️ Java/Kotlin code navigation (Only for Sisyphus now)  
 
 Editor features:
 
@@ -41,6 +41,12 @@ Editor features:
 ✅ Import quick fix
 
 <!-- Plugin description end -->
+
+Planned features:
+
+🙋 Golang code navigation  
+🙋 Decompile from proto descriptor for some language(etc. golang)  
+🙋 Proto text support  
 
 ## Screenshots
 
