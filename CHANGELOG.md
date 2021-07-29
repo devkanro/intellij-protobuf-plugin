@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+## [1.4.0]
 ### Added
 - Sisyphus navigation support
 ### Changed
