@@ -3,12 +3,10 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
-## [1.4.1-EAP]
+### Added
+- Sisyphus navigation support
 ### Changed
 - Support array in protobuf options
-
-## [1.4.0-EAP]
-### Changed
 - Upgrade to IntelliJ platform 212 EAP
 
 ## [1.3.1]
