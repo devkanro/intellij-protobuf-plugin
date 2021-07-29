@@ -1,0 +1,14 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
+        <indexProvider implementation="io.kanro.idea.plugin.protobuf.java.JavaIndexProvider"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.java.JavaNameIndex"/>
+        <codeInsight.lineMarkerProvider language="UAST"
+                                        implementationClass="io.kanro.idea.plugin.protobuf.java.JavaLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider language="protobuf"
+                                        implementationClass="io.kanro.idea.plugin.protobuf.java.ProtobufLineMarkerProvider"/>
+        <findUsagesHandlerFactory implementation="io.kanro.idea.plugin.protobuf.java.JavaFindUsageFactory"/>
+    </extensions>
+</idea-plugin>

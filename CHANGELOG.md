@@ -3,14 +3,24 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
-## [1.4.0]
+
 ### Added
+
+- Java navigation and find usage support
+
+## [1.4.0]
+
+### Added
+
 - Sisyphus navigation support
+
 ### Changed
+
 - Support array in protobuf options
 - Upgrade to IntelliJ platform 212 EAP
 
 ## [1.3.1]
+
 ### Added
 - Auto suggest field number when pick suggested field name
 

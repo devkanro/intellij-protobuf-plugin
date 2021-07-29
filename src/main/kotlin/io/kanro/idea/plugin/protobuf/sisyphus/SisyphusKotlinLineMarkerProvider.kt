@@ -18,12 +18,13 @@ import org.jetbrains.uast.UIdentifier
 import org.jetbrains.uast.UMethod
 import org.jetbrains.uast.toUElementOfType
 
-class SisyphusLineMarkerProvider : RelatedItemLineMarkerProvider() {
+class SisyphusKotlinLineMarkerProvider : RelatedItemLineMarkerProvider() {
     override fun collectNavigationMarkers(
         element: PsiElement,
         result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
     ) {
         val identifier = element.toUElementOfType<UIdentifier>() ?: return
+        if (!isSisyphus(element)) return
         when (val parent = identifier.uastParent) {
             is UClass -> {
                 val service = findServiceProtobufDefinition(parent) ?: return
@@ -59,7 +60,6 @@ class SisyphusLineMarkerProvider : RelatedItemLineMarkerProvider() {
                     scope,
                     ProtobufElement::class.java
                 ).firstIsInstanceOrNull<ProtobufServiceDefinition>()
-
                 if (element != null) {
                     return@getCachedValue CachedValueProvider.Result.create(element, sourceClazz)
                 }
@@ -70,23 +70,24 @@ class SisyphusLineMarkerProvider : RelatedItemLineMarkerProvider() {
 
     fun findMethodProtobufDefinition(method: UMethod): ProtobufElement? {
         val sourcePsi = method.sourcePsi ?: return null
-        val serviceDefinition = findServiceProtobufDefinition(method.uastParent as? UClass ?: return null)
-            ?: return null
-        val serviceName = SisyphusNamespace.scope(serviceDefinition) ?: return null
+        val clazz = method.uastParent as? UClass ?: return null
 
         return CachedValuesManager.getCachedValue(sourcePsi) {
             val scope = FileResolver.searchScope(sourcePsi)
-
-            val methodName = serviceName.append(method.name).toString()
-            val element = StubIndex.getElements(
-                SisyphusNameIndex.key,
-                methodName,
-                sourcePsi.project,
-                scope,
-                ProtobufElement::class.java
-            ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
-
-            return@getCachedValue CachedValueProvider.Result.create(element, sourcePsi, serviceDefinition)
+            for (it in clazz.uastSuperTypes) {
+                val methodName = "${it.getQualifiedName()}.${method.name}"
+                val element = StubIndex.getElements(
+                    SisyphusNameIndex.key,
+                    methodName,
+                    sourcePsi.project,
+                    scope,
+                    ProtobufElement::class.java
+                ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
+                if (element != null) {
+                    return@getCachedValue CachedValueProvider.Result.create(element, sourcePsi)
+                }
+            }
+            return@getCachedValue CachedValueProvider.Result.create(null, sourcePsi)
         }
     }
 }

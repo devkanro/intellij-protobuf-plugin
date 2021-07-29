@@ -1,4 +1,4 @@
-package io.kanro.idea.plugin.protobuf.sisyphus
+package io.kanro.idea.plugin.protobuf.java
 
 import com.intellij.psi.stubs.IndexSink
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufIndexProvider
@@ -6,13 +6,13 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufRpcStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufServiceStub
 
-class SisyphusIndexProvider : ProtobufIndexProvider {
+class JavaIndexProvider : ProtobufIndexProvider {
     override fun buildIndex(stub: ProtobufStub<*>, sink: IndexSink) {
         when (stub) {
-            is ProtobufServiceStub -> sink.occurrence(SisyphusNameIndex.key, stub.fullClassName().toString())
+            is ProtobufServiceStub -> sink.occurrence(JavaNameIndex.key, stub.fullImplBaseName().toString())
             is ProtobufRpcStub -> sink.occurrence(
-                SisyphusNameIndex.key,
-                stub.owner()?.fullClassName()?.append(stub.methodName()).toString()
+                JavaNameIndex.key,
+                stub.owner()?.fullImplBaseName()?.append(stub.methodName()).toString()
             )
         }
     }

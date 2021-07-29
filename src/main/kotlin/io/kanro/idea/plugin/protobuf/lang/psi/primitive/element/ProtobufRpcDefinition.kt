@@ -3,6 +3,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcIO
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.findChild
 import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
 import io.kanro.idea.plugin.protobuf.lang.psi.findLastChild

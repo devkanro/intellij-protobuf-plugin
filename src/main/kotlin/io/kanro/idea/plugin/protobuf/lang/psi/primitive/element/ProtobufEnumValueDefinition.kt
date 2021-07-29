@@ -2,6 +2,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumbered
 import javax.swing.Icon
 

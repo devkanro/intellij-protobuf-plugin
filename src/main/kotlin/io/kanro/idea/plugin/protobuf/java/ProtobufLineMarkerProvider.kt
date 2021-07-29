@@ -1,4 +1,4 @@
-package io.kanro.idea.plugin.protobuf.sisyphus
+package io.kanro.idea.plugin.protobuf.java
 
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider
@@ -11,17 +11,17 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufIdentifier
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 
-class SisyphusProtobufLineMarkerProvider : RelatedItemLineMarkerProvider() {
+class ProtobufLineMarkerProvider : RelatedItemLineMarkerProvider() {
     override fun collectNavigationMarkers(
         element: PsiElement,
         result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
     ) {
         val identifier = element as? ProtobufIdentifier ?: return
-        if (!isSisyphus(element)) return
+        if (!isJava(element)) return
 
         when (val owner = identifier.parent) {
             is ProtobufRpcDefinition -> {
-                val method = owner.toMethod() ?: return
+                val method = owner.toImplBaseMethod() ?: return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
                     NavigationGutterIconBuilder.create(Icons.IMPLEMENTED_RPC)
                         .setTargets(OverridingMethodsSearch.search(method).toList())
@@ -29,7 +29,7 @@ class SisyphusProtobufLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 result.add(builder.createLineMarkerInfo(element))
             }
             is ProtobufServiceDefinition -> {
-                val clazz = owner.toClass() ?: return
+                val clazz = owner.toImplBaseClass() ?: return
                 val apis = DirectClassInheritorsSearch.search(clazz).findAll().toList()
                 val builder: NavigationGutterIconBuilder<PsiElement> =
                     NavigationGutterIconBuilder.create(Icons.IMPLEMENTED_SERVICE)

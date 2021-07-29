@@ -28,8 +28,8 @@ Analyzing features:
 ✅ Struct Viewer  
 ✅ Quick documentation  
 ✅ PSI stub  
-✅ [Sisyphus](https://github.com/ButterCam/sisyphus) framework integration  
-⚠️ Java/Kotlin code navigation (Only for Sisyphus now)  
+✅ Java/Kotlin support  
+✅ [Sisyphus](https://github.com/ButterCam/sisyphus) framework integration
 
 Editor features:
 
