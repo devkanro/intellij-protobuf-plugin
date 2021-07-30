@@ -7,7 +7,6 @@ import com.intellij.psi.PsiEnumConstant
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.QualifiedName
-import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
@@ -18,8 +17,7 @@ import io.kanro.idea.plugin.protobuf.sisyphus.isSisyphus
 
 fun PsiElement.findJavaClass(name: QualifiedName?): PsiClass? {
     val className = name?.toString() ?: return null
-    val scope = FileResolver.searchScope(this)
-    return JavaPsiFacade.getInstance(project).findClass(className, scope)
+    return JavaPsiFacade.getInstance(project).findClass(className, GlobalSearchScope.allScope(project))
 }
 
 fun ProtobufMessageDefinition.toClass(): PsiClass? {
@@ -61,6 +59,10 @@ fun ProtobufServiceDefinition.toImplBaseClass(): PsiClass? {
     return findJavaClass(fullImplBaseName())
 }
 
+fun ProtobufServiceDefinition.toCoroutineImplBaseClass(): PsiClass? {
+    return findJavaClass(fullCoroutineImplBaseName())
+}
+
 fun ProtobufServiceDefinition.toStubClass(): PsiClass? {
     return findJavaClass(fullStubName())
 }
@@ -73,8 +75,17 @@ fun ProtobufServiceDefinition.toFutureStubClass(): PsiClass? {
     return findJavaClass(fullFutureStubName())
 }
 
+fun ProtobufServiceDefinition.toCoroutineStubClass(): PsiClass? {
+    if (!isKotlin(this)) return null
+    return findJavaClass(fullCoroutineStubName())
+}
+
 fun ProtobufRpcDefinition.toImplBaseMethod(): PsiMethod? {
     return owner()?.toImplBaseClass()?.findMethodsByName(methodName(), false)?.firstOrNull()
+}
+
+fun ProtobufRpcDefinition.toCoroutineImplBaseMethod(): PsiMethod? {
+    return owner()?.toCoroutineImplBaseClass()?.findMethodsByName(methodName(), false)?.firstOrNull()
 }
 
 fun ProtobufRpcDefinition.toStubMethod(): PsiMethod? {
@@ -89,10 +100,19 @@ fun ProtobufRpcDefinition.toFutureStubMethod(): PsiMethod? {
     return owner()?.toFutureStubClass()?.findMethodsByName(methodName(), false)?.firstOrNull()
 }
 
+fun ProtobufRpcDefinition.toCoroutineStubMethod(): PsiMethod? {
+    return owner()?.toCoroutineStubClass()?.findMethodsByName(methodName(), false)?.firstOrNull()
+}
+
 /**
  * [com.google.protobuf.MessageOrBuilder] must be found in project.
  */
 fun isJava(element: PsiElement): Boolean {
     return !isSisyphus(element) && JavaPsiFacade.getInstance(element.project)
         .findClass("com.google.protobuf.MessageOrBuilder", GlobalSearchScope.allScope(element.project)) != null
+}
+
+fun isKotlin(element: PsiElement): Boolean {
+    return !isSisyphus(element) && JavaPsiFacade.getInstance(element.project)
+        .findClass("io.grpc.kotlin.AbstractCoroutineStub", GlobalSearchScope.allScope(element.project)) != null
 }

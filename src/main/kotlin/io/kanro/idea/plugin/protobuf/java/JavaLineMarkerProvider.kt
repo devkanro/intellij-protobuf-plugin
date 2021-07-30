@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
@@ -45,8 +46,12 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
         }
     }
 
+    private val javaImplBase = QualifiedName.fromDottedString("io.grpc.BindableService")
+
     fun findServiceProtobufDefinition(clazz: UClass): ProtobufServiceDefinition? {
         val sourceClazz = clazz.sourcePsi ?: return null
+        val bindableService = sourceClazz.findJavaClass(javaImplBase) ?: return null
+        if (!clazz.javaPsi.isInheritor(bindableService, true)) return null
 
         return CachedValuesManager.getCachedValue(sourceClazz) {
             val scope = FileResolver.searchScope(sourceClazz)
@@ -71,6 +76,8 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
     fun findMethodProtobufDefinition(method: UMethod): ProtobufElement? {
         val sourcePsi = method.sourcePsi ?: return null
         val clazz = method.uastParent as? UClass ?: return null
+        val bindableService = sourcePsi.findJavaClass(javaImplBase) ?: return null
+        if (!clazz.javaPsi.isInheritor(bindableService, true)) return null
 
         return CachedValuesManager.getCachedValue(sourcePsi) {
             val scope = FileResolver.searchScope(sourcePsi)

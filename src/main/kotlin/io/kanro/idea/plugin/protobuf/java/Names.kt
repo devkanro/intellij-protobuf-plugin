@@ -136,12 +136,28 @@ fun ProtobufServiceStub.rpcName(): String? {
     return name()?.let { "${it}Grpc" }
 }
 
+fun ProtobufServiceDefinition.rpcKtName(): String? {
+    return name()?.let { "${it}GrpcKt" }
+}
+
+fun ProtobufServiceStub.rpcKtName(): String? {
+    return name()?.let { "${it}GrpcKt" }
+}
+
 fun ProtobufServiceDefinition.implBaseName(): String? {
     return name()?.let { "${it}ImplBase" }
 }
 
 fun ProtobufServiceStub.implBaseName(): String? {
     return name()?.let { "${it}ImplBase" }
+}
+
+fun ProtobufServiceDefinition.coroutineImplBaseName(): String? {
+    return name()?.let { "${it}CoroutineImplBase" }
+}
+
+fun ProtobufServiceStub.coroutineImplBaseName(): String? {
+    return name()?.let { "${it}CoroutineImplBase" }
 }
 
 fun ProtobufServiceDefinition.stubName(): String? {
@@ -168,6 +184,14 @@ fun ProtobufServiceStub.futureStubName(): String? {
     return name()?.let { "${it}FutureStub" }
 }
 
+fun ProtobufServiceDefinition.coroutineStubName(): String? {
+    return name()?.let { "${it}CoroutineStub" }
+}
+
+fun ProtobufServiceStub.coroutineStubName(): String? {
+    return name()?.let { "${it}CoroutineStub" }
+}
+
 fun ProtobufServiceDefinition.fullRpcName(): QualifiedName {
     return owner()?.fullPackageName()?.append(rpcName()) ?: QualifiedName.fromComponents(rpcName())
 }
@@ -176,12 +200,28 @@ fun ProtobufServiceStub.fullRpcName(): QualifiedName {
     return owner()?.fullPackageName()?.append(rpcName()) ?: QualifiedName.fromComponents(rpcName())
 }
 
+fun ProtobufServiceDefinition.fullRpcKtName(): QualifiedName {
+    return owner()?.fullPackageName()?.append(rpcKtName()) ?: QualifiedName.fromComponents(rpcKtName())
+}
+
+fun ProtobufServiceStub.fullRpcKtName(): QualifiedName {
+    return owner()?.fullPackageName()?.append(rpcKtName()) ?: QualifiedName.fromComponents(rpcKtName())
+}
+
 fun ProtobufServiceDefinition.fullImplBaseName(): QualifiedName {
     return fullRpcName().append(implBaseName())
 }
 
 fun ProtobufServiceStub.fullImplBaseName(): QualifiedName {
     return fullRpcName().append(implBaseName())
+}
+
+fun ProtobufServiceDefinition.fullCoroutineImplBaseName(): QualifiedName {
+    return fullRpcKtName().append(coroutineImplBaseName())
+}
+
+fun ProtobufServiceStub.fullCoroutineImplBaseName(): QualifiedName {
+    return fullRpcKtName().append(coroutineImplBaseName())
 }
 
 fun ProtobufServiceDefinition.fullStubName(): QualifiedName {
@@ -206,6 +246,14 @@ fun ProtobufServiceDefinition.fullFutureStubName(): QualifiedName {
 
 fun ProtobufServiceStub.fullFutureStubName(): QualifiedName {
     return fullRpcName().append(futureStubName())
+}
+
+fun ProtobufServiceDefinition.fullCoroutineStubName(): QualifiedName {
+    return fullRpcKtName().append(coroutineStubName())
+}
+
+fun ProtobufServiceStub.fullCoroutineStubName(): QualifiedName {
+    return fullRpcKtName().append(coroutineStubName())
 }
 
 fun ProtobufRpcDefinition.methodName(): String? {

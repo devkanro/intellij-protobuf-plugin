@@ -21,19 +21,30 @@ class ProtobufLineMarkerProvider : RelatedItemLineMarkerProvider() {
 
         when (val owner = identifier.parent) {
             is ProtobufRpcDefinition -> {
-                val method = owner.toImplBaseMethod() ?: return
+                val methods = owner.toImplBaseMethod()?.let {
+                    OverridingMethodsSearch.search(it).toList()
+                } ?: listOf()
+                val ktMethods = owner.toCoroutineImplBaseMethod()?.let {
+                    OverridingMethodsSearch.search(it).toList()
+                } ?: listOf()
+                if (methods.isEmpty() && ktMethods.isEmpty()) return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
                     NavigationGutterIconBuilder.create(Icons.IMPLEMENTED_RPC)
-                        .setTargets(OverridingMethodsSearch.search(method).toList())
+                        .setTargets(methods + ktMethods)
                         .setTooltipText("Implemented")
                 result.add(builder.createLineMarkerInfo(element))
             }
             is ProtobufServiceDefinition -> {
-                val clazz = owner.toImplBaseClass() ?: return
-                val apis = DirectClassInheritorsSearch.search(clazz).findAll().toList()
+                val apis = owner.toImplBaseClass()?.let {
+                    DirectClassInheritorsSearch.search(it).findAll().toList()
+                } ?: listOf()
+                val ktApis = owner.toCoroutineImplBaseClass()?.let {
+                    DirectClassInheritorsSearch.search(it).findAll().toList()
+                } ?: listOf()
+                if (apis.isEmpty() && ktApis.isEmpty()) return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
                     NavigationGutterIconBuilder.create(Icons.IMPLEMENTED_SERVICE)
-                        .setTargets(apis)
+                        .setTargets(apis + ktApis)
                         .setTooltipText("Implemented")
                 result.add(builder.createLineMarkerInfo(element))
             }
