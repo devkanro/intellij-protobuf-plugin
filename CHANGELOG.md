@@ -3,6 +3,11 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+
+### Added
+
+- gRPC endpoints support
+
 ## [1.4.1]
 
 ### Added

@@ -30,6 +30,8 @@ object Icons {
     var IMPLEMENTED_RPC: Icon = loadIcon("implementedRpc.svg")
     var IMPLEMENTING_RPC: Icon = loadIcon("implementingRpc.svg")
 
+    var PROCEDURE: Icon = loadIcon("procedure.svg")
+
     private fun loadIcon(name: String): Icon {
         return IconLoader.getIcon("/io/kanro/idea/plugin/protobuf/icon/$name", Icons::class.java)
     }

@@ -9,6 +9,9 @@
     <depends>com.intellij.modules.lang</depends>
     <depends optional="true" config-file="io.kanro.idea.plugin.protobuf-java.xml">com.intellij.modules.java</depends>
     <depends optional="true" config-file="io.kanro.idea.plugin.protobuf-sisyphus.xml">org.jetbrains.kotlin</depends>
+    <depends optional="true" config-file="io.kanro.idea.plugin.protobuf-microservices.xml">
+        com.intellij.modules.microservices
+    </depends>
 
     <extensionPoints>
         <extensionPoint
