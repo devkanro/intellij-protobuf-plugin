@@ -7,6 +7,7 @@
 ### Added
 
 - Java navigation and find usage support
+- Quick fix for resource name
 
 ### Fixed
 

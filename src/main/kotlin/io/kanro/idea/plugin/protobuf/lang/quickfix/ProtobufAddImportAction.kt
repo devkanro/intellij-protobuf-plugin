@@ -24,7 +24,7 @@ class ProtobufAddImportAction(
     private val project: Project,
     private val editor: Editor,
     private val host: ProtobufSymbolReferenceHost,
-    private val hover: ProtobufSymbolReferenceHover,
+    private val hover: ProtobufSymbolReferenceHover?,
     private val elements: Array<ProtobufDefinition>
 ) : QuestionAction {
     private fun hintText(): String {
@@ -102,15 +102,19 @@ class ProtobufAddImportAction(
             {
                 ApplicationManager.getApplication().runWriteAction {
                     val file = host.file()
-                    val parts = hover.symbolParts()
                     val targetName = name.removeCommonPrefix(file.scope()).toString()
 
                     file.addImport(element)
-                    if (!hover.absolutely() && parts.size == 1) {
-                        if (parts.first().value != targetName) {
-                            hover.rename(targetName)
+
+                    if (hover != null) {
+                        val parts = hover.symbolParts()
+                        if (!hover.absolutely() && parts.size == 1) {
+                            if (parts.first().value != targetName) {
+                                hover.rename(targetName)
+                            }
                         }
                     }
+
                     PsiDocumentManager.getInstance(project).commitAllDocuments()
                 }
             },

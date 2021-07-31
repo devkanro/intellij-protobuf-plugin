@@ -5,6 +5,7 @@ import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
+import io.kanro.idea.plugin.protobuf.aip.quickfix.AddResourceImportFix
 import io.kanro.idea.plugin.protobuf.aip.reference.AipResourceReference
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufFieldReferenceInString
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcInputFieldReference
@@ -29,6 +30,7 @@ class AipAnnotator : Annotator {
                                 )
                                     .range(o.textRange)
                                     .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
+                                    .withFix(AddResourceImportFix(o))
                                     .create()
                             }
                             is ProtobufRpcInputFieldReference,
@@ -36,7 +38,7 @@ class AipAnnotator : Annotator {
                                 holder.newAnnotation(
                                     HighlightSeverity.ERROR,
                                     "Field ${o.text} of message \"${
-                                    (it as ProtobufFieldReferenceInString).message()?.qualifiedName()
+                                        (it as ProtobufFieldReferenceInString).message()?.qualifiedName()
                                     }\" not found."
                                 )
                                     .range(o.textRange)
