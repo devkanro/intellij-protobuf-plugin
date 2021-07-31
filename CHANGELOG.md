@@ -8,6 +8,10 @@
 
 - Java navigation and find usage support
 
+### Fixed
+
+- Fix rename quick fix
+
 ## [1.4.0]
 
 ### Added
