@@ -63,7 +63,7 @@ class GrpcEndpointsProvider : EndpointsProvider<ProtobufServiceModel, ProtobufRp
 
     override fun getStatus(project: Project): EndpointsProvider.Status {
         return if (FileTypeIndex.getFiles(ProtobufFileType.INSTANCE, GlobalSearchScope.projectScope(project))
-                .isEmpty()
+            .isEmpty()
         ) {
             EndpointsProvider.Status.AVAILABLE
         } else {
