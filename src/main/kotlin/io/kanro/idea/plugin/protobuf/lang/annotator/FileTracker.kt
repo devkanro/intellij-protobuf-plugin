@@ -38,7 +38,7 @@ open class FileTracker(file: ProtobufFile) {
             return
         }
         val resolvedFile = statement.resolve() ?: return createUnknown(statement, file, holder)
-        if (fileReference.getOrDefault(resolvedFile, 0) == 0) {
+        if (statement.importLabel?.textMatches("public") != true && fileReference.getOrDefault(resolvedFile, 0) == 0) {
             createUnused(statement, file, holder)
         }
     }

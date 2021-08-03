@@ -7,6 +7,13 @@
 ### Added
 
 - gRPC endpoints support
+- Decompile proto source from generated go code
+- Resolve proto in go src root
+- Resolve proto in decompiled protos
+
+### Fixed
+
+- Fix rename proto file exception
 
 ## [1.4.1]
 

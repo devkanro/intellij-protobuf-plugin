@@ -16,6 +16,7 @@ import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
 import io.kanro.idea.plugin.protobuf.lang.psi.value
+import io.kanro.idea.plugin.protobuf.lang.util.ProtobufPsiFactory
 
 class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBase<ProtobufImportStatement>(import) {
     private object Resolver : ResolveCache.Resolver {
@@ -43,7 +44,12 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {
-        return super.handleElementRename(newElementName)
+        val text = element.stringValue?.value() ?: return element
+        val oldFile = resolve() ?: return element
+        val oldName = oldFile.containingFile.virtualFile?.name ?: return element
+        val newImport = text.replace(oldName, newElementName)
+        element.stringValue?.replace(ProtobufPsiFactory.createStringValue(element.project, newImport))
+        return element
     }
 
     companion object {
