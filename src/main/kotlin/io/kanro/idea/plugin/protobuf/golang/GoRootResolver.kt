@@ -1,11 +1,9 @@
 package io.kanro.idea.plugin.protobuf.golang
 
-import com.goide.dep.GoDepUtil
 import com.goide.project.GoRootsProvider
 import com.goide.psi.GoNamedElement
 import com.goide.psi.GoVarSpec
 import com.goide.stubs.index.GoAllPrivateNamesIndex
-import com.goide.util.GoUtil
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.progress.runBackgroundableTask
