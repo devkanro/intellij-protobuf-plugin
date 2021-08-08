@@ -1,12 +1,16 @@
 <idea-plugin>
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
         <fileResolver implementation="io.kanro.idea.plugin.protobuf.golang.GoRootResolver"/>
+        <indexProvider implementation="io.kanro.idea.plugin.protobuf.golang.GoIndexProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <stubIndex implementation="io.kanro.idea.plugin.protobuf.java.JavaNameIndex"/>
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.golang.GoNameIndex"/>
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.golang.GoUnimplementedServerNameIndex"/>
+        <postStartupActivity implementation="io.kanro.idea.plugin.protobuf.golang.GoDecompileService"/>
         <codeInsight.lineMarkerProvider language="go"
                                         implementationClass="io.kanro.idea.plugin.protobuf.golang.GoDecompileLineMarker"/>
-        <postStartupActivity implementation="io.kanro.idea.plugin.protobuf.golang.GoDecompileService"/>
+        <codeInsight.lineMarkerProvider language="go"
+                                        implementationClass="io.kanro.idea.plugin.protobuf.golang.GoLineMarkerProvider"/>
     </extensions>
 </idea-plugin>

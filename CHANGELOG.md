@@ -10,6 +10,7 @@
 - Decompile proto source from generated go code
 - Resolve proto in go src root
 - Resolve proto in decompiled protos
+- Implementing navigation for golang
 
 ### Fixed
 
