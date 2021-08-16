@@ -101,7 +101,7 @@ OptionAssign ::= OptionName '=' Constant {
 }
 private OptionAssignRecovery ::= !(option | ',' | '}' | ']' | ';')
 
-OptionName ::= (BuiltInOptionName | ExtensionOptionName) ('.' FieldName)? {
+OptionName ::= (BuiltInOptionName | ExtensionOptionName) ('.' FieldName)* {
     implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufFragment"]
 }
 BuiltInOptionName ::= IdentifierWithKeyword {

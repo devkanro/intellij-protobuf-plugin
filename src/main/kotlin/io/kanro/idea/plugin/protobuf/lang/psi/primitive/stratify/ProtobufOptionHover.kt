@@ -33,7 +33,7 @@ interface ProtobufOptionHover : ProtobufElement {
         if (field.componentCount == 0) return value()
         val optionName = option()?.optionName ?: return null
         var findName = field
-        optionName.fieldName?.let {
+        optionName.fieldNameList.forEach {
             if (!it.textMatches(findName.firstComponent ?: return null)) return null
             findName = findName.removeHead(1)
         }

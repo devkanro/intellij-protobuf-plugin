@@ -125,7 +125,7 @@ fun ProtobufImportStatement.resolve(): ProtobufFile? {
 }
 
 fun ProtobufOptionName.field(): ProtobufFieldLike? {
-    this.fieldName?.let {
+    this.fieldNameList.lastOrNull()?.let {
         return it.reference?.resolve() as? ProtobufFieldLike
     }
     this.extensionOptionName?.let {
@@ -146,7 +146,16 @@ fun ProtobufFieldName.message(): ProtobufScope? {
     }
 
     val field = when (parent) {
-        is ProtobufOptionName -> parent.extensionOptionName?.typeName?.reference?.resolve()
+        is ProtobufOptionName -> {
+            val prevField = this.prev<ProtobufFieldName>()
+            if (prevField == null) {
+                parent.extensionOptionName?.typeName?.reference?.resolve()
+            } else {
+                prevField.message()?.items()?.firstOrNull {
+                    (it as? ProtobufFieldLike)?.fieldName() == this.identifierLiteral?.text
+                }
+            }
+        }
         is ProtobufFieldAssign -> {
             val messageValue = parent.parent as? ProtobufMessageValue ?: return null
             val assign = when (val assign = messageValue.parent.parent) {
