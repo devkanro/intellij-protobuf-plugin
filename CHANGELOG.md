@@ -3,6 +3,13 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+
+### Added
+
+- Support multi field name in options #42
+- Support `returns` keyword auto-completion #47
+- Add more `extend` checks
+
 ## [1.4.2]
 
 ### Added

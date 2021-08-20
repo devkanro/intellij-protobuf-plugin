@@ -62,7 +62,8 @@ open class ScopeTracker(scope: ProtobufScope) {
             return "Name reserved: \"$name\""
         }
         val elements = nameMap[name] ?: listOf()
-        if (elements.size > 1) {
+        if (elements.isEmpty()) return null
+        if (elements.size > 1 || elements[0] != definition) {
             return "Conflicting declarations: \"$name\""
         }
         return null

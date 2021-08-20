@@ -56,6 +56,13 @@ class KeywordsProvider(keywords: List<String>) : CompletionProvider<CompletionPa
                 )
             )
 
+        val rpcLevelKeywords
+            get() = KeywordsProvider(
+                listOf(
+                    "returns"
+                )
+            )
+
         fun keywordElement(keyword: String): LookupElement {
             return LookupElementBuilder.create(keyword).withTypeText("keyword")
                 .withInsertHandler(keywordInsertHandler(keyword))
@@ -68,6 +75,7 @@ class KeywordsProvider(keywords: List<String>) : CompletionProvider<CompletionPa
                 when (keyword) {
                     "import" -> SmartInsertHandler(" \"\"", -1, true)
                     "syntax" -> SmartInsertHandler(" = \"\"", -1, true)
+                    "returns" -> SmartInsertHandler(" ();", -2, true)
                     else -> SmartInsertHandler(" ")
                 }
             }

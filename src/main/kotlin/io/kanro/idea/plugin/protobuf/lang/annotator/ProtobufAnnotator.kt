@@ -14,6 +14,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufConstant
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldName
@@ -36,8 +37,12 @@ import io.kanro.idea.plugin.protobuf.lang.psi.float
 import io.kanro.idea.plugin.protobuf.lang.psi.int
 import io.kanro.idea.plugin.protobuf.lang.psi.items
 import io.kanro.idea.plugin.protobuf.lang.psi.message
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
+import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumbered
+import io.kanro.idea.plugin.protobuf.lang.psi.range
 import io.kanro.idea.plugin.protobuf.lang.psi.uint
 import io.kanro.idea.plugin.protobuf.lang.quickfix.AddImportFix
 import io.kanro.idea.plugin.protobuf.lang.quickfix.RenameFix
@@ -87,8 +92,9 @@ class ProtobufAnnotator : Annotator {
             override fun visitMapFieldDefinition(o: ProtobufMapFieldDefinition) {
                 requireCase("Field name", o, CaseFormat.SNAKE_CASE)
 
-                ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
-                NumberTracker.tracker(o.parentOfType() ?: return).visit(o, holder)
+                o.owner()?.let { ScopeTracker.tracker(it).visit(o, holder) }
+                o.parentOfType<ProtobufNumberScope>()?.let { NumberTracker.tracker(it).visit(o, holder) }
+                visitExtendItem(o)
                 val types = o.typeNameList
                 if (types.size != 2) return
                 val keyType = types[0].text
@@ -218,7 +224,10 @@ class ProtobufAnnotator : Annotator {
 
                 if (o.arrayValue != null) {
                     if (field.fieldLabel?.textMatches("repeated") != true) {
-                        holder.newAnnotation(HighlightSeverity.ERROR, "Field \"${field.name()}\" is not a repeated value")
+                        holder.newAnnotation(
+                            HighlightSeverity.ERROR,
+                            "Field \"${field.name()}\" is not a repeated value"
+                        )
                             .range(o.textRange)
                             .create()
                     }
@@ -271,7 +280,7 @@ class ProtobufAnnotator : Annotator {
             }
 
             override fun visitEnumDefinition(o: ProtobufEnumDefinition) {
-                ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
+                o.owner()?.let { ScopeTracker.tracker(it).visit(o, holder) }
                 if (o.items().isEmpty()) {
                     holder.newAnnotation(
                         HighlightSeverity.ERROR,
@@ -285,40 +294,64 @@ class ProtobufAnnotator : Annotator {
             override fun visitFieldDefinition(o: ProtobufFieldDefinition) {
                 requireCase("Field name", o, CaseFormat.SNAKE_CASE)
 
-                ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
-                NumberTracker.tracker(o.parentOfType() ?: return).visit(o, holder)
+                o.owner()?.let { ScopeTracker.tracker(it).visit(o, holder) }
+                o.parentOfType<ProtobufNumberScope>()?.let { NumberTracker.tracker(it).visit(o, holder) }
+                visitExtendItem(o)
+            }
+
+            private fun visitExtendItem(o: ProtobufElement) {
+                val extendMessage =
+                    o.parentOfType<ProtobufExtendDefinition>()?.typeName?.reference?.resolve() as? ProtobufMessageDefinition
+                        ?: return
+
+                val insideExtension = (o as? ProtobufNumbered)?.number()?.let { number ->
+                    extendMessage.extensionRange().any {
+                        it.range()?.contains(number) == true
+                    }
+                }
+                if (insideExtension != true) {
+                    holder.newAnnotation(
+                        HighlightSeverity.ERROR,
+                        "Extend field number must defined in extension range."
+                    )
+                        .range((o as? ProtobufNumbered)?.intValue()?.textRange ?: o.textRange)
+                        .create()
+                }
+                ScopeTracker.tracker(extendMessage).visit(o as? ProtobufDefinition ?: return, holder)
+                NumberTracker.tracker(extendMessage).visit(o as? ProtobufNumbered ?: return, holder)
             }
 
             override fun visitGroupDefinition(o: ProtobufGroupDefinition) {
                 requireCase("Group name", o, CaseFormat.PASCAL_CASE)
 
-                ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
-                NumberTracker.tracker(o.parentOfType() ?: return).visit(o, holder)
+                o.owner()?.let { ScopeTracker.tracker(it).visit(o, holder) }
+                o.parentOfType<ProtobufNumberScope>()?.let { NumberTracker.tracker(it).visit(o, holder) }
+                visitExtendItem(o)
             }
 
             override fun visitMessageDefinition(o: ProtobufMessageDefinition) {
                 requireCase("Message name", o, CaseFormat.PASCAL_CASE)
 
-                ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
+                o.owner()?.let { ScopeTracker.tracker(it).visit(o, holder) }
             }
 
             override fun visitServiceDefinition(o: ProtobufServiceDefinition) {
                 requireCase("Message name", o, CaseFormat.PASCAL_CASE)
 
-                ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
+                o.owner()?.let { ScopeTracker.tracker(it).visit(o, holder) }
             }
 
             override fun visitRpcDefinition(o: ProtobufRpcDefinition) {
                 requireCase("Method name", o, CaseFormat.PASCAL_CASE)
 
-                ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
+                o.owner()?.let { ScopeTracker.tracker(it).visit(o, holder) }
             }
 
             override fun visitEnumValueDefinition(o: ProtobufEnumValueDefinition) {
                 requireCase("Enum value name", o, CaseFormat.SCREAMING_SNAKE_CASE)
 
-                ScopeTracker.tracker(o.owner() ?: return).visit(o, holder)
-                NumberTracker.tracker(o.parentOfType() ?: return).visit(o, holder)
+                o.owner()?.let { ScopeTracker.tracker(it).visit(o, holder) }
+                o.parentOfType<ProtobufNumberScope>()?.let { NumberTracker.tracker(it).visit(o, holder) }
 
                 val enumName = o.name() ?: return
                 if (o.owner()?.owner() is ProtobufFile) {

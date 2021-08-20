@@ -53,6 +53,14 @@ class ProtobufCompletionContributor : CompletionContributor() {
         extend(
             CompletionType.BASIC,
             PlatformPatterns.psiElement()
+                .withSuperParent(2, ProtobufServiceDefinition::class.java)
+                .afterLeaf(")"),
+            KeywordsProvider.rpcLevelKeywords
+        )
+
+        extend(
+            CompletionType.BASIC,
+            PlatformPatterns.psiElement()
                 .withSuperParent(3, ProtobufServiceDefinition::class.java)
                 .withParent(PsiErrorElement::class.java),
             KeywordsProvider.serviceLevelKeywords

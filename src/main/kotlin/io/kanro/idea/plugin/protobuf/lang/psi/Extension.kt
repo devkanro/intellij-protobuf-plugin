@@ -151,9 +151,7 @@ fun ProtobufFieldName.message(): ProtobufScope? {
             if (prevField == null) {
                 parent.extensionOptionName?.typeName?.reference?.resolve()
             } else {
-                prevField.message()?.items()?.firstOrNull {
-                    (it as? ProtobufFieldLike)?.fieldName() == this.identifierLiteral?.text
-                }
+                prevField.reference?.resolve()
             }
         }
         is ProtobufFieldAssign -> {

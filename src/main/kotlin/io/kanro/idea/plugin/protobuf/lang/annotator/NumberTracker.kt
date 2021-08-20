@@ -55,7 +55,8 @@ open class NumberTracker(scope: ProtobufNumberScope) {
             }
         }
         val elements = numberMap[number] ?: listOf()
-        if (!allowAlias && elements.size > 1) {
+        if (elements.isEmpty()) return null
+        if (!allowAlias && (elements.size > 1 || elements[0] != numbered)) {
             return "Conflicting declarations: \"$number\""
         }
         return null
