@@ -16,8 +16,6 @@ import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ListTableModel
 import com.intellij.util.ui.components.BorderLayoutPanel
 import io.kanro.idea.plugin.protobuf.lang.util.contentEquals
-import org.jetbrains.kotlin.idea.roots.invalidateProjectRoots
-import org.jetbrains.kotlin.idea.util.getSourceRoot
 import java.awt.BorderLayout
 import javax.swing.JComponent
 import javax.swing.JPanel

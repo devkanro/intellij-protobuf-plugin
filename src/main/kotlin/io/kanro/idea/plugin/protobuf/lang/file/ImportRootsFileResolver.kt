@@ -14,9 +14,9 @@ class ImportRootsFileResolver : RootsFileResolver() {
 
         return settings.state.importRoots.mapNotNull {
             val root = VirtualFileManager.getInstance().findFileByUrl(it.path) ?: return@mapNotNull null
-            if(it.common) return@mapNotNull root
-            if(fileUrl == null) return@mapNotNull null
-            if(fileUrl.startsWith(it.path)) return@mapNotNull root
+            if (it.common) return@mapNotNull root
+            if (fileUrl == null) return@mapNotNull null
+            if (fileUrl.startsWith(it.path)) return@mapNotNull root
             null
         }
     }

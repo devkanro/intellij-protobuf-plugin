@@ -39,7 +39,6 @@ class ProtobufFormattingModelBuilder : FormattingModelBuilder {
                 .spacing(0, 0, 1, true, customSettings.KEEP_BLANK_LINES_BETWEEN_IMPORTS)
                 .between(ProtobufTypes.FILE_OPTION, ProtobufTypes.FILE_OPTION)
                 .spacing(0, 0, 1, true, customSettings.KEEP_BLANK_LINES_BETWEEN_FILE_OPTIONS)
-
                 .after(ProtobufTypes.SYNTAX_STATEMENT)
                 .blankLines(customSettings.BLANK_LINES_AFTER_SYNTAX)
                 .after(ProtobufTypes.PACKAGE_STATEMENT)
@@ -48,12 +47,10 @@ class ProtobufFormattingModelBuilder : FormattingModelBuilder {
                 .blankLines(commonSettings.BLANK_LINES_AFTER_IMPORTS)
                 .after(ProtobufTypes.FILE_OPTION)
                 .blankLines(customSettings.BLANK_LINES_AFTER_FILE_OPTIONS)
-
                 .between(ProtobufTypes.IDENTIFIER, ProtobufTypes.RPC_IO)
                 .none()
                 .around(ProtobufTokens.RETURNS)
                 .spaces(1)
-
                 .withinPair(ProtobufTokens.LBRACE, ProtobufTokens.RBRACE)
                 .spaceIf(commonSettings.SPACE_WITHIN_BRACES, false)
                 .withinPair(ProtobufTokens.LBRACK, ProtobufTokens.RBRACK)
