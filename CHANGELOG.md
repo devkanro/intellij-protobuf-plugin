@@ -3,6 +3,11 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+
+### Added
+
+- :sparkles: Support mark root path as non-common root
+
 ## [1.4.3]
 
 ### Added
