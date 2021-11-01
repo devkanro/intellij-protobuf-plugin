@@ -13,9 +13,9 @@ interface ProtobufElement : PsiElement {
         val file = file()
         val module = ModuleUtil.findModuleForFile(context ?: file)
         return if (module != null) {
-            FileResolver.getImportPath(file.virtualFile, module)
+            FileResolver.getImportPath(file.virtualFile, module, this)
         } else {
-            FileResolver.getImportPath(file.virtualFile, this.project)
+            FileResolver.getImportPath(file.virtualFile, this.project, this)
         }
     }
 }

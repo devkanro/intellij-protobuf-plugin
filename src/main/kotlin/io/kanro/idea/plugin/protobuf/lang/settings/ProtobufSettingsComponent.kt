@@ -6,6 +6,9 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx
+import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.ui.BooleanTableCellEditor
+import com.intellij.ui.BooleanTableCellRenderer
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.layout.panel
 import com.intellij.ui.table.TableView
@@ -13,13 +16,18 @@ import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ListTableModel
 import com.intellij.util.ui.components.BorderLayoutPanel
 import io.kanro.idea.plugin.protobuf.lang.util.contentEquals
+import org.jetbrains.kotlin.idea.roots.invalidateProjectRoots
+import org.jetbrains.kotlin.idea.util.getSourceRoot
 import java.awt.BorderLayout
 import javax.swing.JComponent
 import javax.swing.JPanel
+import javax.swing.JTable
+import javax.swing.table.TableCellEditor
+import javax.swing.table.TableCellRenderer
 
 class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufSettings> {
     private val panel: JPanel
-    private val importRootsModel = ListTableModel<ProtobufSettings.ImportRootEntry>(PathColumnInfo)
+    private val importRootsModel = ListTableModel<ProtobufSettings.ImportRootEntry>(PathColumnInfo, CommonColumnInfo)
 
     init {
         val tablePanel = BorderLayoutPanel()
@@ -28,7 +36,10 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
         decorator.setAddAction {
             val selectedFile =
                 FileChooser.chooseFile(protobufRootChooserDescriptor(), project, null) ?: return@setAddAction
-            importRootsModel.addRow(ProtobufSettings.ImportRootEntry(selectedFile.url))
+            val file = VirtualFileManager.getInstance().findFileByUrl(selectedFile.url) ?: return@setAddAction
+            val contentRoot = ProjectRootManagerEx.getInstanceEx(project).fileIndex.getContentRootForFile(file)
+            val sourceRoot = ProjectRootManagerEx.getInstanceEx(project).fileIndex.getSourceRootForFile(file)
+            importRootsModel.addRow(ProtobufSettings.ImportRootEntry(selectedFile.url, contentRoot == null && sourceRoot == null))
         }
         decorator.setEditAction {
             tableView.editCellAt(tableView.selectedRow, tableView.selectedColumn)
@@ -78,6 +89,39 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
 
         override fun isCellEditable(item: ProtobufSettings.ImportRootEntry?): Boolean {
             return true
+        }
+    }
+
+    object CommonColumnInfo : ColumnInfo<ProtobufSettings.ImportRootEntry, Boolean>("Common") {
+        override fun valueOf(item: ProtobufSettings.ImportRootEntry?): Boolean? {
+            return item?.common
+        }
+
+        override fun setValue(item: ProtobufSettings.ImportRootEntry?, value: Boolean?) {
+            value?.let { item?.common = it }
+        }
+
+        override fun isCellEditable(item: ProtobufSettings.ImportRootEntry?): Boolean {
+            return true
+        }
+
+        override fun getEditor(item: ProtobufSettings.ImportRootEntry?): TableCellEditor? {
+            return BooleanTableCellEditor()
+        }
+
+        override fun getWidth(table: JTable?): Int {
+            return 64
+        }
+
+        override fun getCustomizedRenderer(
+            o: ProtobufSettings.ImportRootEntry?,
+            renderer: TableCellRenderer?
+        ): TableCellRenderer {
+            return BooleanTableCellRenderer()
+        }
+
+        override fun getColumnClass(): Class<*> {
+            return Boolean::class.java
         }
     }
 }

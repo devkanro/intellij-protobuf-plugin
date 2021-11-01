@@ -11,16 +11,17 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.patterns.PlatformPatterns
+import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import io.kanro.idea.plugin.protobuf.lang.file.RootsFileResolver
 
 class GoRootResolver : RootsFileResolver() {
-    override fun getRoots(project: Project): Iterable<VirtualFile> {
+    override fun getRoots(project: Project, element: PsiElement): Iterable<VirtualFile> {
         return GoRootsProvider.EP_NAME.extensionList.flatMap { it.getGoPathSourcesRoots(project, null) }
     }
 
-    override fun getRoots(module: Module): Iterable<VirtualFile> {
+    override fun getRoots(module: Module, element: PsiElement): Iterable<VirtualFile> {
         return GoRootsProvider.EP_NAME.extensionList.flatMap { it.getGoPathSourcesRoots(module.project, module) }
     }
 }

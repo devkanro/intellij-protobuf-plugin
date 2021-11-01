@@ -98,7 +98,7 @@ object DecompiledFileManager {
 
     fun findFile(element: PsiElement, file: ByteArray): VirtualFile {
         val descriptor = DescriptorProtos.FileDescriptorProto.parseFrom(file)
-        FileResolver.findFile(descriptor.name, element.project).firstOrNull()?.let { return it }
+        FileResolver.findFile(descriptor.name, element.project, element).firstOrNull()?.let { return it }
         val proto = buildString {
             appendLine("// Decompiled by intellij protobuf plugin")
             appendLine("// source: ${element.containingFile.virtualFile.path}")

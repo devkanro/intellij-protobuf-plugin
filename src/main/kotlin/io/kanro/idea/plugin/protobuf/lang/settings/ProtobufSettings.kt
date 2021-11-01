@@ -19,7 +19,7 @@ class ProtobufSettings : PersistentStateComponent<ProtobufSettings.State> {
         currentState = state
     }
 
-    data class ImportRootEntry(var path: String = "")
+    data class ImportRootEntry(var path: String = "", var common: Boolean = true)
 
     data class State(
         var importRoots: List<ImportRootEntry> = listOf()

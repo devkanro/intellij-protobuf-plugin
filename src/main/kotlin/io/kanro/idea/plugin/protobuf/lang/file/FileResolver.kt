@@ -16,22 +16,22 @@ interface FileResolver {
         fun getImportPath(file: VirtualFile, element: PsiElement): String? {
             val module = ModuleUtil.findModuleForPsiElement(element)
             return if (module != null) {
-                getImportPath(file, module)
+                getImportPath(file, module, element)
             } else {
-                getImportPath(file, element.project)
+                getImportPath(file, element.project, element)
             }
         }
 
-        override fun getImportPath(file: VirtualFile, module: Module): String? {
+        override fun getImportPath(file: VirtualFile, module: Module, element: PsiElement): String? {
             extensionPoint.extensionList.forEach {
-                it.getImportPath(file, module)?.let { return it }
+                it.getImportPath(file, module, element)?.let { return it }
             }
             return null
         }
 
-        override fun getImportPath(file: VirtualFile, project: Project): String? {
+        override fun getImportPath(file: VirtualFile, project: Project, element: PsiElement): String? {
             extensionPoint.extensionList.forEach {
-                it.getImportPath(file, project)?.let { return it }
+                it.getImportPath(file, project, element)?.let { return it }
             }
             return null
         }
@@ -39,55 +39,55 @@ interface FileResolver {
         fun resolveFile(path: String, element: PsiElement): Iterable<VirtualFile> {
             val module = ModuleUtil.findModuleForPsiElement(element)
             return if (module != null) {
-                findFile(path, module)
+                findFile(path, module, element)
             } else {
-                findFile(path, element.project)
+                findFile(path, element.project, element)
             }
         }
 
-        override fun findFile(path: String, project: Project): Iterable<VirtualFile> {
+        override fun findFile(path: String, project: Project, element: PsiElement): Iterable<VirtualFile> {
             return extensionPoint.extensionList.asSequence().flatMap {
-                it.findFile(path, project).asSequence()
+                it.findFile(path, project, element).asSequence()
             }.asIterable()
         }
 
-        override fun findFile(path: String, module: Module): Iterable<VirtualFile> {
+        override fun findFile(path: String, module: Module, element: PsiElement): Iterable<VirtualFile> {
             return extensionPoint.extensionList.asSequence().flatMap {
-                it.findFile(path, module).asSequence()
+                it.findFile(path, module, element).asSequence()
             }.asIterable()
         }
 
         fun collectProtobuf(path: String, element: PsiElement): Iterable<VirtualFile> {
             val module = ModuleUtil.findModuleForPsiElement(element)
             return if (module != null) {
-                collectProtobuf(path, module)
+                collectProtobuf(path, module, element)
             } else {
-                collectProtobuf(path, element.project)
+                collectProtobuf(path, element.project, element)
             }
         }
 
-        override fun collectProtobuf(path: String, module: Module): Iterable<VirtualFile> {
+        override fun collectProtobuf(path: String, module: Module, element: PsiElement): Iterable<VirtualFile> {
             return extensionPoint.extensionList.asSequence().flatMap {
-                it.collectProtobuf(path, module).asSequence()
+                it.collectProtobuf(path, module, element).asSequence()
             }.asIterable()
         }
 
-        override fun collectProtobuf(path: String, project: Project): Iterable<VirtualFile> {
+        override fun collectProtobuf(path: String, project: Project, element: PsiElement): Iterable<VirtualFile> {
             return extensionPoint.extensionList.asSequence().flatMap {
-                it.collectProtobuf(path, project).asSequence()
+                it.collectProtobuf(path, project, element).asSequence()
             }.asIterable()
         }
 
-        override fun searchScope(project: Project): GlobalSearchScope {
+        override fun searchScope(project: Project, element: PsiElement): GlobalSearchScope {
             val scopes = extensionPoint.extensionList.map {
-                it.searchScope(project)
+                it.searchScope(project, element)
             }
             return GlobalSearchScope.union(scopes)
         }
 
-        override fun searchScope(module: Module): GlobalSearchScope {
+        override fun searchScope(module: Module, element: PsiElement): GlobalSearchScope {
             val scopes = extensionPoint.extensionList.map {
-                it.searchScope(module)
+                it.searchScope(module, element)
             }
             return GlobalSearchScope.union(scopes)
         }
@@ -95,26 +95,26 @@ interface FileResolver {
         fun searchScope(element: PsiElement): GlobalSearchScope {
             val module = ModuleUtil.findModuleForPsiElement(element)
             return if (module != null) {
-                searchScope(module)
+                searchScope(module, element)
             } else {
-                searchScope(element.project)
+                searchScope(element.project, element)
             }
         }
     }
 
-    fun getImportPath(file: VirtualFile, project: Project): String?
+    fun getImportPath(file: VirtualFile, project: Project, element: PsiElement): String?
 
-    fun getImportPath(file: VirtualFile, module: Module): String?
+    fun getImportPath(file: VirtualFile, module: Module, element: PsiElement): String?
 
-    fun findFile(path: String, project: Project): Iterable<VirtualFile>
+    fun findFile(path: String, project: Project, element: PsiElement): Iterable<VirtualFile>
 
-    fun findFile(path: String, module: Module): Iterable<VirtualFile>
+    fun findFile(path: String, module: Module, element: PsiElement): Iterable<VirtualFile>
 
-    fun collectProtobuf(path: String, project: Project): Iterable<VirtualFile>
+    fun collectProtobuf(path: String, project: Project, element: PsiElement): Iterable<VirtualFile>
 
-    fun collectProtobuf(path: String, module: Module): Iterable<VirtualFile>
+    fun collectProtobuf(path: String, module: Module, element: PsiElement): Iterable<VirtualFile>
 
-    fun searchScope(project: Project): GlobalSearchScope
+    fun searchScope(project: Project, element: PsiElement): GlobalSearchScope
 
-    fun searchScope(module: Module): GlobalSearchScope
+    fun searchScope(module: Module, element: PsiElement): GlobalSearchScope
 }
