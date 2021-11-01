@@ -4,22 +4,18 @@
 
 ## [Unreleased]
 
+## [1.4.4]
 ### Added
-
 - :sparkles: Support mark root path as non-common root
 
 ## [1.4.3]
-
 ### Added
-
 - Support multi field name in options #42
 - Support `returns` keyword auto-completion #47
 - Add more `extend` checks
 
 ## [1.4.2]
-
 ### Added
-
 - gRPC endpoints support
 - Decompile proto source from generated go code
 - Resolve proto in go src root
@@ -27,33 +23,25 @@
 - Implementing navigation for golang
 
 ### Fixed
-
 - Fix rename proto file exception
 
 ## [1.4.1]
-
 ### Added
-
 - Java navigation and find usage support
 - Quick fix for resource name
 
 ### Fixed
-
 - Fix rename quick fix
 
 ## [1.4.0]
-
 ### Added
-
 - Sisyphus navigation support
 
 ### Changed
-
 - Support array in protobuf options
 - Upgrade to IntelliJ platform 212 EAP
 
 ## [1.3.1]
-
 ### Added
 - Auto suggest field number when pick suggested field name
 
@@ -72,6 +60,7 @@
 ### Added
 - Add quick fix for unimported symbols in string
 - Colorful symbols
+
 ### Fixed
 - Fix hex int parsing in field definition (#12)
 
@@ -85,6 +74,7 @@
 - Add quick document with commonmark
 - Add 'json_name' option support
 - Add 'allow_alias' option support
+
 ### Fixed
 - 'default' option value type annotation
 
@@ -115,6 +105,7 @@
 - Add icons for stream method
 - Add method auto-completion
 - Add cache for collect proto in archive
+
 ### Changed
 - Change logo
 
@@ -137,6 +128,7 @@
 - Import optimizer
 - Auto-completion for import
 - Custom import root
+
 ### Changed
 - Fix some keywords highlight in typename(etc. 'rpc')
 - Refactor psi structure by default implementation
