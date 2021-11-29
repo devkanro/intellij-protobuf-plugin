@@ -41,7 +41,7 @@ intellij {
 }
 
 dependencies {
-    implementation("org.commonmark:commonmark:0.18.0")
+    implementation("org.commonmark:commonmark:0.18.1")
     implementation("org.commonmark:commonmark-ext-gfm-tables:0.18.0")
     implementation("org.commonmark:commonmark-ext-autolink:0.18.0")
 }
