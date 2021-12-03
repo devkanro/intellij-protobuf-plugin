@@ -132,7 +132,7 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
     }
 
     override fun addImport(path: String): Boolean {
-        if(this.importPath(this) == path) return false
+        if (this.importPath(this) == path) return false
 
         val imports = imports()
         imports.forEach {

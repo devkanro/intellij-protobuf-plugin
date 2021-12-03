@@ -17,14 +17,14 @@ enum class BuiltInType {
     SFIXED32,
     SFIXED64;
 
-    private val value = name.toLowerCase()
+    private val value = name.lowercase()
 
     fun value(): String {
         return value
     }
 
     companion object {
-        private val types: Map<String, BuiltInType> = values().associateBy { it.name.toLowerCase() }
+        private val types: Map<String, BuiltInType> = values().associateBy { it.name.lowercase() }
 
         fun isBuiltInType(name: String): Boolean {
             return types[name] != null
