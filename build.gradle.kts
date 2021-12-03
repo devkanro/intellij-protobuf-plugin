@@ -14,7 +14,7 @@ plugins {
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "1.3.1"
 
-    id("org.jetbrains.grammarkit") version "2021.1.3"
+    id("org.jetbrains.grammarkit") version "2021.2.1"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
@@ -25,6 +25,11 @@ version = properties("pluginVersion")
 // Configure project's dependencies
 repositories {
     mavenCentral()
+    maven { setUrl("https://www.jitpack.io") }
+}
+
+grammarKit {
+    grammarKitRelease.set("2021.1.2")
 }
 
 // Configure gradle-intellij-plugin plugin.
@@ -41,9 +46,9 @@ intellij {
 }
 
 dependencies {
-    implementation("org.commonmark:commonmark:0.18.0")
-    implementation("org.commonmark:commonmark-ext-gfm-tables:0.18.0")
-    implementation("org.commonmark:commonmark-ext-autolink:0.18.0")
+    implementation("org.commonmark:commonmark:0.18.1")
+    implementation("org.commonmark:commonmark-ext-gfm-tables:0.18.1")
+    implementation("org.commonmark:commonmark-ext-autolink:0.18.1")
 }
 
 // Configure gradle-changelog-plugin plugin.
@@ -51,21 +56,6 @@ dependencies {
 changelog {
     version.set(properties("pluginVersion"))
     groups.set(emptyList())
-}
-
-val generateProtobufLexer = task<org.jetbrains.grammarkit.tasks.GenerateLexer>("generateProtobufLexer") {
-    source = "src/main/grammar/protobuf.flex"
-    targetDir = buildDir.resolve("generated/sources/grammar/io/kanro/idea/plugin/protobuf/lang/lexer")
-    targetClass = "_ProtobufLexer"
-    purgeOldFiles = true
-}
-
-val generateProtobufParser = task<org.jetbrains.grammarkit.tasks.GenerateParser>("generateProtobufParser") {
-    source = "src/main/grammar/protobuf.bnf"
-    targetRoot = buildDir.resolve("generated/sources/grammar")
-    purgeOldFiles = true
-    pathToParser = "io/kanro/idea/plugin/protobuf/lang/parser/ProtobufParser.java"
-    pathToPsiRoot = "io/kanro/idea/plugin/protobuf/lang/psi"
 }
 
 sourceSets {
@@ -79,14 +69,29 @@ sourceSets {
 tasks {
     // Set the compatibility versions to 1.8
     withType<JavaCompile> {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
     }
 
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
         kotlinOptions.freeCompilerArgs += "-Xjvm-default=all"
-        dependsOn(generateProtobufLexer, generateProtobufParser)
+        dependsOn(named("generateLexer"), named("generateParser"))
+    }
+
+    generateLexer {
+        source.set("src/main/grammar/protobuf.flex")
+        targetDir.set(buildDir.resolve("generated/sources/grammar/io/kanro/idea/plugin/protobuf/lang/lexer").path)
+        targetClass.set("_ProtobufLexer")
+        purgeOldFiles.set(true)
+    }
+
+    generateParser {
+        source.set("src/main/grammar/protobuf.bnf")
+        targetRoot.set(buildDir.resolve("generated/sources/grammar").path)
+        purgeOldFiles.set(true)
+        pathToParser.set("io/kanro/idea/plugin/protobuf/lang/parser/ProtobufParser.java")
+        pathToPsiRoot.set("io/kanro/idea/plugin/protobuf/lang/psi")
     }
 
     prepareSandbox {
