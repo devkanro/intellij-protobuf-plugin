@@ -3,8 +3,11 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+
+## [1.4.5]
 ### Fixed
 - Fix recursive importing for auto import
+
 ### Changed
 - Target to intellij 2021.3
 
