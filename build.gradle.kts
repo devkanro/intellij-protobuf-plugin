@@ -16,7 +16,7 @@ plugins {
 
     id("org.jetbrains.grammarkit") version "2021.2.1"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
 }
 
 group = properties("pluginGroup")
