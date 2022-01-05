@@ -238,7 +238,7 @@ class ProtobufAnnotator : Annotator {
                     BuiltInType.BOOL.value() -> if (o.booleanValue == null) {
                         "Field \"${field.name()}\" required a boolean value"
                     } else null
-                    BuiltInType.STRING.value() -> if (o.stringValue == null) {
+                    BuiltInType.STRING.value() -> if (o.stringValueList.isEmpty()) {
                         "Field \"${field.name()}\" required a string value"
                     } else null
                     BuiltInType.FLOAT.value(),

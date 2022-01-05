@@ -6,6 +6,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.public
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
+import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import java.util.Stack
@@ -37,7 +38,7 @@ object AipResourceResolver {
         resourceName: String
     ): ProtobufElement? {
         file.resourceDefinitions().forEach {
-            if (it.value(AipOptions.resourceTypeField)?.stringValue?.value() == resourceName) {
+            if (it.value(AipOptions.resourceTypeField)?.stringValue() == resourceName) {
                 return it
             }
         }
@@ -75,7 +76,7 @@ object AipResourceResolver {
         result: MutableList<ProtobufElement> = mutableListOf()
     ): ProtobufElement? {
         file.resourceDefinitions().forEach {
-            if (it.value(AipOptions.resourceTypeField)?.stringValue?.value() != null) {
+            if (it.value(AipOptions.resourceTypeField)?.stringValue() != null) {
                 result += it
             }
         }

@@ -288,6 +288,11 @@ fun ProtobufBooleanValue.value(): Boolean {
     return textMatches("true")
 }
 
+fun ProtobufConstant.stringValue(): String? {
+    if (stringValueList.isEmpty()) return null
+    return stringValueList.joinToString("") { it.value() ?: "" }
+}
+
 fun ProtobufRpcIO.stream(): Boolean {
     this.walkChildren<PsiElement>(false) {
         if (it.elementType is ProtobufKeywordToken && it.textMatches("stream")) {
@@ -299,7 +304,7 @@ fun ProtobufRpcIO.stream(): Boolean {
 
 fun ProtobufFieldLike.jsonName(): String? {
     if (this is ProtobufOptionOwner) {
-        options("json_name").lastOrNull()?.value()?.stringValue?.value()?.let {
+        options("json_name").lastOrNull()?.value()?.stringValue()?.let {
             return it
         }
     }

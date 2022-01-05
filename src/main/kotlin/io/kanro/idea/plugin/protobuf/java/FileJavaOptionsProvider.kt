@@ -5,6 +5,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubExte
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubSupport
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
+import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufFileStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.primitive.ProtobufFieldLikeStub
@@ -36,7 +37,7 @@ class FileJavaOptionsProvider : ProtobufStubExternalProvider {
 
 fun ProtobufFieldLike.jsonName(): String? {
     return if (this is ProtobufOptionOwner) {
-        options("json_name").lastOrNull()?.value()?.stringValue?.value()
+        options("json_name").lastOrNull()?.value()?.stringValue()
     } else null
 }
 
@@ -47,11 +48,11 @@ fun ProtobufFieldLikeStub.jsonName(): String? {
 }
 
 fun ProtobufFile.javaPackage(): String? {
-    return options("java_package").lastOrNull()?.value()?.stringValue?.value()
+    return options("java_package").lastOrNull()?.value()?.stringValue()
 }
 
 fun ProtobufFile.javaOuterClassname(): String? {
-    return options("java_outer_classname").lastOrNull()?.value()?.stringValue?.value()
+    return options("java_outer_classname").lastOrNull()?.value()?.stringValue()
 }
 
 fun ProtobufFile.javaMultipleFiles(): Boolean? {

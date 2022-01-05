@@ -47,8 +47,8 @@ class AipResourceReferenceProvider : PsiReferenceProvider() {
     private fun getReference(element: ProtobufStringValue): PsiReference? {
         val hover = element.parentOfType<ProtobufOptionHover>() ?: return null
         if (!hover.isOption(AipOptions.resourceReferenceOption)) return null
-        if (hover.value(AipOptions.resourceTypeField)?.stringValue == element) return AipResourceReference(element)
-        if (hover.value(AipOptions.resourceChildTypeField)?.stringValue == element) return AipResourceReference(element)
+        if (hover.value(AipOptions.resourceTypeField)?.stringValueList?.firstOrNull() == element) return AipResourceReference(element)
+        if (hover.value(AipOptions.resourceChildTypeField)?.stringValueList?.firstOrNull() == element) return AipResourceReference(element)
         return null
     }
 }

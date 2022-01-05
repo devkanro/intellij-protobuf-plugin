@@ -9,6 +9,7 @@ import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
+import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 import javax.swing.Icon
 
@@ -35,7 +36,7 @@ interface ProtobufMessageDefinition : ProtobufNumberScope, ProtobufDefinition {
         if (this !is ProtobufOptionOwner) return null
         return CachedValuesManager.getCachedValue(this) {
             options(AipOptions.resourceOption).forEach {
-                it.value(AipOptions.resourceTypeField)?.stringValue?.value()?.let {
+                it.value(AipOptions.resourceTypeField)?.stringValue()?.let {
                     return@getCachedValue CachedValueProvider.Result.create(
                         it,
                         PsiModificationTracker.MODIFICATION_COUNT

@@ -412,7 +412,7 @@ ExtendBody ::=  '{' ExtendElement* '}' {
 
 private ExtendElement ::= GroupDefinition | FieldDefinition | ';' {recoverWhile=ExtendElementRecovery}
 private ExtendElementRecovery ::= !(FieldLabel | group | TypeName | ';' | '}')
-Constant ::= StringValue | NumberValue | BooleanValue | MessageValue | EnumValue | ArrayValue {
+Constant ::= (StringValue+) | NumberValue | BooleanValue | MessageValue | EnumValue | ArrayValue {
     implements=["io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufStatement"]
 }
 

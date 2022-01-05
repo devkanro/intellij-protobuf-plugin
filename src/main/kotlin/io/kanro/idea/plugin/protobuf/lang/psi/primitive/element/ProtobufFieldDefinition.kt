@@ -11,6 +11,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.jsonName
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufMultiNameDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 import javax.swing.Icon
 
@@ -25,7 +26,7 @@ interface ProtobufFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefiniti
         if (this !is ProtobufOptionOwner) return null
         return CachedValuesManager.getCachedValue(this) {
             options(AipOptions.resourceReferenceOption).forEach {
-                it.value(AipOptions.resourceTypeField)?.stringValue?.value()?.let {
+                it.value(AipOptions.resourceTypeField)?.stringValue()?.let {
                     return@getCachedValue CachedValueProvider.Result.create(
                         it,
                         PsiModificationTracker.MODIFICATION_COUNT

@@ -18,6 +18,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
+import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ResourceTypeIndex
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 
@@ -84,7 +85,7 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
             }
             is ProtobufFileOption -> {
                 val resourceName =
-                    element.value(AipOptions.resourceTypeField)?.stringValue?.value() ?: return null
+                    element.value(AipOptions.resourceTypeField)?.stringValue() ?: return null
                 LookupElementBuilder.create(
                     resourceName
                 ).withLookupString(resourceName.substringAfterLast('/'))
