@@ -7,7 +7,19 @@ fun String.toQualifiedName(): QualifiedName {
 }
 
 fun QualifiedName.removeCommonPrefix(other: QualifiedName?): QualifiedName {
-    return removeCommonPrefix(other ?: return this, 0)
+    other ?: return this
+    var prefix = 0
+    while (true) {
+        if (prefix >= this.componentCount) break
+        if (prefix >= other.componentCount) break
+
+        if (this.components[prefix] == other.components[prefix]) {
+            prefix++
+        } else {
+            break
+        }
+    }
+    return this.removeHead(prefix)
 }
 
 fun QualifiedName.matchesSuffix(suffix: QualifiedName): Boolean {
@@ -20,15 +32,6 @@ fun QualifiedName.matchesSuffix(suffix: QualifiedName): Boolean {
         }
     }
     return true
-}
-
-private fun QualifiedName.removeCommonPrefix(other: QualifiedName, index: Int): QualifiedName {
-    if (index >= this.componentCount) return this.removeHead(index - 1)
-    if (index >= other.componentCount) return this.removeHead(index - 1)
-    if (this.components[index] == other.components[index]) {
-        return removeCommonPrefix(other, index + 1)
-    }
-    return this.removeHead(index)
 }
 
 fun <T> List<T>.contentEquals(other: List<T>): Boolean {

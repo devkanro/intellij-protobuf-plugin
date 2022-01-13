@@ -10,8 +10,11 @@ import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtensionStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.prev
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.forEachPrev
+import io.kanro.idea.plugin.protobuf.lang.psi.range
 import io.kanro.idea.plugin.protobuf.lang.support.BuiltInType
 import io.kanro.idea.plugin.protobuf.string.case.CommonWordSplitter
 import io.kanro.idea.plugin.protobuf.string.case.SnakeCaseFormatter
@@ -63,8 +66,18 @@ object FieldNameProvider : CompletionProvider<CompletionParameters>() {
     }
 
     private fun prevFieldNumber(context: PsiElement): Long {
-        val current = context.parentOfType<ProtobufFieldDefinition>() ?: return 0
-        return current.prev<ProtobufFieldDefinition>()?.number() ?: 0
+        context.parentOfType<ProtobufFieldDefinition>()?.forEachPrev {
+            when (it) {
+                is ProtobufFieldDefinition -> return it.number() ?: 0
+                is ProtobufReservedStatement -> return it.reservedRangeList.maxOf {
+                    it.range()?.last?.takeIf { it != Long.MAX_VALUE } ?: 0
+                }.takeIf { it != 0L } ?: return@forEachPrev
+                is ProtobufExtensionStatement -> return it.reservedRangeList.maxOf {
+                    it.range()?.last?.takeIf { it != Long.MAX_VALUE } ?: 0
+                }.takeIf { it != 0L } ?: return@forEachPrev
+            }
+        }
+        return 0
     }
 
     private fun fieldNumberInserter(number: Long): InsertHandler<LookupElement> {
