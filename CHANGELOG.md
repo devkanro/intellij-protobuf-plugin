@@ -3,6 +3,8 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+
+## [1.4.6]
 ### Added
 - Support repeated string value for constant
 
