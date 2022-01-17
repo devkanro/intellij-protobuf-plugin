@@ -172,7 +172,7 @@ object ProtobufSymbolResolver {
     ): List<ProtobufElement> {
         val fileScope = file.scope()
         if (fileScope != null) {
-            if (!fileScope.matchesPrefix(scope)) return result
+            if (!fileScope.matchesPrefix(scope) && !scope.matchesPrefix(fileScope)) return result
             if (fileScope.componentCount > scope.componentCount) {
                 val packagePart = file.packageParts()[scope.componentCount]
                 if (filter.isAccepted(packagePart)) {
