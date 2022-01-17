@@ -3,6 +3,8 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Fixed
+-  Fix sub message resolving with cross file
 
 ## [1.4.6]
 ### Added
