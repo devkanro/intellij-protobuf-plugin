@@ -10,7 +10,7 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.5.31"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "1.2.1"
+    id("org.jetbrains.intellij") version "1.4.0"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "1.3.1"
 
@@ -46,9 +46,9 @@ intellij {
 }
 
 dependencies {
-    implementation("org.commonmark:commonmark:0.18.1")
-    implementation("org.commonmark:commonmark-ext-gfm-tables:0.18.1")
-    implementation("org.commonmark:commonmark-ext-autolink:0.18.1")
+    implementation("org.commonmark:commonmark:0.18.2")
+    implementation("org.commonmark:commonmark-ext-gfm-tables:0.18.2")
+    implementation("org.commonmark:commonmark-ext-autolink:0.18.2")
 }
 
 // Configure gradle-changelog-plugin plugin.
