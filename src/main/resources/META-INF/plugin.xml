@@ -128,4 +128,33 @@
         <completion.contributor language="protobuf"
                                 implementationClass="io.kanro.idea.plugin.protobuf.aip.completion.AipCompletionContributor"/>
     </extensions>
+
+    <actions>
+        <group id="io.kanro.idea.plugin.Protobuf" text="Protobuf" popup="true"
+               icon="/io/kanro/idea/plugin/protobuf/icon/logo.svg"
+               class="io.kanro.idea.plugin.protobuf.lang.actions.ProtobufActionGroup">
+            <add-to-group group-id="EditMenu" anchor="last"/>
+
+            <action icon="/io/kanro/idea/plugin/protobuf/icon/arrangeFromMin.svg"
+                    id="io.kanro.idea.plugin.protobuf.ArrangeFieldsNumberFromMin"
+                    class="io.kanro.idea.plugin.protobuf.lang.actions.ArrangeFieldsNumberFromMinAction"
+                    text="Arrange Field Numbers From Min">
+                <keyboard-shortcut keymap="$default" first-keystroke="alt A"/>
+            </action>
+
+            <action icon="/io/kanro/idea/plugin/protobuf/icon/arrangeToMax.svg"
+                    id="io.kanro.idea.plugin.protobuf.ArrangeFieldsNumberToMax"
+                    class="io.kanro.idea.plugin.protobuf.lang.actions.ArrangeFieldsNumberToMaxAction"
+                    text="Arrange Field Numbers To Max">
+                <keyboard-shortcut keymap="$default" first-keystroke="alt D"/>
+            </action>
+        </group>
+
+        <group id="io.kanro.idea.plugin.Protobuf.Popup" popup="false">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorToggleColumnMode"/>
+
+            <separator/>
+            <reference ref="io.kanro.idea.plugin.Protobuf"/>
+        </group>
+    </actions>
 </idea-plugin>

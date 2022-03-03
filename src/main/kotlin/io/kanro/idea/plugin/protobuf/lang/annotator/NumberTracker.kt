@@ -5,6 +5,7 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedRange
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumbered
@@ -12,7 +13,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeI
 import io.kanro.idea.plugin.protobuf.lang.psi.range
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 
-open class NumberTracker(scope: ProtobufNumberScope) {
+open class NumberTracker(scope: ProtobufNumberScope, val minValue: Long) {
     private val numberMap = mutableMapOf<Long, MutableList<ProtobufNumbered>>()
     private val reservedNameMap = mutableMapOf<LongRange, ProtobufReservedRange>()
     private val allowAlias = scope.allowAlias()
@@ -38,6 +39,8 @@ open class NumberTracker(scope: ProtobufNumberScope) {
     open fun visit(numbered: ProtobufNumbered, holder: AnnotationHolder) {
         val number = numbered.number() ?: return
         createError(numbered, buildMessage(number, numbered) ?: return, holder)
+        if (number < minValue) {
+        }
     }
 
     open fun visit(reserved: ProtobufReservedRange, holder: AnnotationHolder) {
@@ -49,6 +52,7 @@ open class NumberTracker(scope: ProtobufNumberScope) {
         number: Long,
         numbered: ProtobufNumbered
     ): String? {
+        if (number < minValue) return "Wrong number, the min value is $minValue"
         reservedNameMap.forEach { (range, element) ->
             if (range.contains(number)) {
                 return "Number reserved: \"${element.text}\""
@@ -92,8 +96,11 @@ open class NumberTracker(scope: ProtobufNumberScope) {
     companion object {
         fun tracker(scope: ProtobufNumberScope): NumberTracker {
             return CachedValuesManager.getCachedValue(scope) {
+                val minValue = if (scope is ProtobufMessageDefinition) {
+                    1L
+                } else 0L
                 CachedValueProvider.Result.create(
-                    NumberTracker(scope), PsiModificationTracker.MODIFICATION_COUNT
+                    NumberTracker(scope, minValue), PsiModificationTracker.MODIFICATION_COUNT
                 )
             }
         }

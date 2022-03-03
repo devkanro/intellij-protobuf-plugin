@@ -3,10 +3,13 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Added
+- Add more rule for code formatting
+- Add arrange field numbers actions
 
 ## [1.4.7]
 ### Fixed
--  Fix sub message resolving with cross file
+- Fix sub message resolving with cross file
 
 ## [1.4.6]
 ### Added
