@@ -3,6 +3,8 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+
+## [1.4.8]
 ### Added
 - Add more rule for code formatting
 - Add arrange field numbers actions
