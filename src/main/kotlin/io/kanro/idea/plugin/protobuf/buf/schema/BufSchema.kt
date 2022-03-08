@@ -1,0 +1,108 @@
+package io.kanro.idea.plugin.protobuf.buf.schema
+
+import com.intellij.psi.util.QualifiedName
+import io.kanro.idea.plugin.protobuf.buf.schema.common.BufVersionFieldSchema
+import io.kanro.idea.plugin.protobuf.buf.schema.v1.BufYaml
+import org.jetbrains.yaml.psi.YAMLDocument
+import org.jetbrains.yaml.psi.YAMLKeyValue
+import org.jetbrains.yaml.psi.YAMLMapping
+import org.jetbrains.yaml.psi.YAMLPsiElement
+import org.jetbrains.yaml.psi.YAMLScalar
+import org.jetbrains.yaml.psi.YAMLSequence
+import org.jetbrains.yaml.psi.YAMLValue
+
+sealed interface BufSchema<T : YAMLPsiElement> {
+    fun validate(document: T) {
+    }
+
+    fun find(name: QualifiedName, index: Int = 0): BufSchema<*>?
+}
+
+interface BufRootSchema : BufSchema<YAMLDocument> {
+    val name: String
+    val type: BufSchemaValueType<out YAMLValue>
+
+    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+        return type.find(name, index)
+    }
+}
+
+open class BufObjectSchema(
+    val fields: List<BufFieldSchema>
+) : BufSchemaValueType<YAMLMapping> {
+    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+        if (index == name.componentCount) return this
+        if (index > name.componentCount) return null
+
+        fields.forEach {
+            return it.find(name, index) ?: return@forEach
+        }
+        return null
+    }
+}
+
+open class BufArraySchema(
+    val itemType: BufSchemaValueType<out YAMLValue>
+) : BufSchemaValueType<YAMLSequence> {
+    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+        if (index >= name.componentCount) return null
+        name.components[index]?.toIntOrNull() ?: return null
+        if (index + 1 >= name.componentCount) return this
+        return itemType.find(name, index + 1)
+    }
+}
+
+open class BufFieldSchema(
+    val name: String,
+    val document: String,
+    val valueType: BufSchemaValueType<out YAMLValue>,
+    val optional: Boolean
+) : BufSchema<YAMLKeyValue> {
+    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+        if (index >= name.componentCount) return null
+        if (name.components[index] != this.name) return null
+        if (index + 1 >= name.componentCount) return this
+
+        return valueType.find(name, index + 1)
+    }
+}
+
+sealed interface BufSchemaValueType<T : YAMLValue> : BufSchema<T>
+
+open class BufEnumTypeSchema(val values: List<BufEnumValueSchema>) : BufSchemaValueType<YAMLScalar> {
+    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+        return null
+    }
+}
+
+open class BufEnumValueSchema(val name: String, val document: String) : BufSchema<YAMLScalar> {
+    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+        return null
+    }
+}
+
+enum class BufSchemaScalarType : BufSchemaValueType<YAMLScalar> {
+    STRING, IDENTIFIER, NUMBER, BOOL;
+
+    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+        return null
+    }
+}
+
+object BufEmptyYaml : BufRootSchema {
+    override val name: String = "buf.yaml"
+
+    override val type = BufObjectSchema(
+        listOf(
+            BufVersionFieldSchema
+        )
+    )
+}
+
+fun bufSchema(version: String?): BufRootSchema? {
+    return when (version) {
+        "v1" -> BufYaml
+        null -> BufEmptyYaml
+        else -> null
+    }
+}

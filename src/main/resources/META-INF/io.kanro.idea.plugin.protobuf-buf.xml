@@ -1,0 +1,7 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <completion.contributor language="yaml" implementationClass="io.kanro.idea.plugin.protobuf.buf.completion.BufYamlCompletionContributor"/>
+        <lang.documentationProvider language="yaml"
+                                    implementationClass="io.kanro.idea.plugin.protobuf.buf.ui.BufDocumentationProvider"/>
+    </extensions>
+</idea-plugin>

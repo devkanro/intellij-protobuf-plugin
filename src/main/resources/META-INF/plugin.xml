@@ -13,6 +13,9 @@
         com.intellij.modules.microservices
     </depends>
     <depends optional="true" config-file="io.kanro.idea.plugin.protobuf-go.xml">org.jetbrains.plugins.go</depends>
+    <depends optional="true" config-file="io.kanro.idea.plugin.protobuf-buf.xml">
+        org.jetbrains.plugins.yaml
+    </depends>
 
     <extensionPoints>
         <extensionPoint

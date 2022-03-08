@@ -1,5 +1,6 @@
 package io.kanro.idea.plugin.protobuf.aip.reference
 
+import com.intellij.codeInsight.completion.CompletionUtilCore
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.util.TextRange
@@ -47,8 +48,8 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
         result: MutableList<Any>,
         elements: MutableSet<ProtobufElement>
     ): Array<Any> {
-        if (!pattern.endsWith("IntellijIdeaRulezzz")) return arrayOf()
-        val searchName = pattern.substringBefore("IntellijIdeaRulezzz")
+        if (!pattern.endsWith(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) return arrayOf()
+        val searchName = pattern.substringBefore(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)
         val scope = FileResolver.searchScope(element)
         val matcher = PlatformPatterns.string().contains(searchName)
         return StubIndex.getInstance().getAllKeys(ResourceTypeIndex.key, element.project).asSequence().filter {
