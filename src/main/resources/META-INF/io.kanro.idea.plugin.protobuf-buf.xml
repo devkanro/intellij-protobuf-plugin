@@ -1,7 +1,9 @@
 <idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
-        <completion.contributor language="yaml" implementationClass="io.kanro.idea.plugin.protobuf.buf.completion.BufYamlCompletionContributor"/>
+        <completion.contributor language="yaml"
+                                implementationClass="io.kanro.idea.plugin.protobuf.buf.completion.BufYamlCompletionContributor"/>
         <lang.documentationProvider language="yaml"
                                     implementationClass="io.kanro.idea.plugin.protobuf.buf.ui.BufDocumentationProvider"/>
+        <fileTypeDetector implementation="io.kanro.idea.plugin.protobuf.buf.BufLockFileTypeDetector"/>
     </extensions>
 </idea-plugin>

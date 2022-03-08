@@ -1,7 +1,7 @@
 package io.kanro.idea.plugin.protobuf.buf.schema
 
 import com.intellij.psi.util.QualifiedName
-import io.kanro.idea.plugin.protobuf.buf.schema.common.BufVersionFieldSchema
+import io.kanro.idea.plugin.protobuf.buf.schema.common.BufEmptyYaml
 import io.kanro.idea.plugin.protobuf.buf.schema.v1.BufYaml
 import org.jetbrains.yaml.psi.YAMLDocument
 import org.jetbrains.yaml.psi.YAMLKeyValue
@@ -87,16 +87,6 @@ enum class BufSchemaScalarType : BufSchemaValueType<YAMLScalar> {
     override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
         return null
     }
-}
-
-object BufEmptyYaml : BufRootSchema {
-    override val name: String = "buf.yaml"
-
-    override val type = BufObjectSchema(
-        listOf(
-            BufVersionFieldSchema
-        )
-    )
 }
 
 fun bufSchema(version: String?): BufRootSchema? {
