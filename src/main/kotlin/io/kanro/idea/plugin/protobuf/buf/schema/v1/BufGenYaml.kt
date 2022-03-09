@@ -5,10 +5,12 @@ import io.kanro.idea.plugin.protobuf.buf.schema.BufObjectSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.BufRootSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.BufSchemaScalarType
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufGenManagedCcEnableArenasFieldSchema
+import io.kanro.idea.plugin.protobuf.buf.schema.common.BufGenManagedGoPackagePrefixFieldSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufGenManagedJavaMultipleFilesFieldSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufGenManagedJavaPackagePrefixFieldSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufGenManagedJavaStringCheckUtf8FieldSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufGenManagedOptimizeForFieldSchema
+import io.kanro.idea.plugin.protobuf.buf.schema.common.BufGenManagedOverrideFieldSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufGenPluginsFieldSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufVersionFieldSchema
 
@@ -19,11 +21,12 @@ object BufGenYaml : BufRootSchema {
         listOf(
             BufVersionFieldSchema,
             BufGenPluginsFieldSchema,
+            BufGenManagedFieldSchema
         )
     )
 }
 
-object BufGenPluginsFieldSchema : BufFieldSchema(
+object BufGenManagedFieldSchema : BufFieldSchema(
     "managed",
     "The `managed` key is used to configure [managed mode](https://docs.buf.build/generate/managed-mode) and is an advanced feature.",
     BufGenManagedSchema,
@@ -37,7 +40,9 @@ object BufGenManagedSchema : BufObjectSchema(
         BufGenManagedJavaMultipleFilesFieldSchema,
         BufGenManagedJavaPackagePrefixFieldSchema,
         BufGenManagedJavaStringCheckUtf8FieldSchema,
-        BufGenManagedOptimizeForFieldSchema
+        BufGenManagedOptimizeForFieldSchema,
+        BufGenManagedGoPackagePrefixFieldSchema,
+        BufGenManagedOverrideFieldSchema,
     )
 )
 

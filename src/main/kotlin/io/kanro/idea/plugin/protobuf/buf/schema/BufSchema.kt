@@ -1,7 +1,13 @@
 package io.kanro.idea.plugin.protobuf.buf.schema
 
 import com.intellij.psi.util.QualifiedName
+import io.kanro.idea.plugin.protobuf.buf.schema.common.BufEmptyGenYaml
+import io.kanro.idea.plugin.protobuf.buf.schema.common.BufEmptyLock
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufEmptyYaml
+import io.kanro.idea.plugin.protobuf.buf.schema.common.BufLock
+import io.kanro.idea.plugin.protobuf.buf.schema.v1.BufEmptyWorkYaml
+import io.kanro.idea.plugin.protobuf.buf.schema.v1.BufGenYaml
+import io.kanro.idea.plugin.protobuf.buf.schema.v1.BufWorkYaml
 import io.kanro.idea.plugin.protobuf.buf.schema.v1.BufYaml
 import org.jetbrains.yaml.psi.YAMLDocument
 import org.jetbrains.yaml.psi.YAMLKeyValue
@@ -93,6 +99,40 @@ fun bufSchema(version: String?): BufRootSchema? {
     return when (version) {
         "v1" -> BufYaml
         null -> BufEmptyYaml
+        else -> null
+    }
+}
+
+fun bufLockSchema(version: String?): BufRootSchema? {
+    return when (version) {
+        "v1" -> BufLock
+        null -> BufEmptyLock
+        else -> null
+    }
+}
+
+fun bufGenSchema(version: String?): BufRootSchema? {
+    return when (version) {
+        "v1" -> BufGenYaml
+        null -> BufEmptyGenYaml
+        else -> null
+    }
+}
+
+fun bufWorkSchema(version: String?): BufRootSchema? {
+    return when (version) {
+        "v1" -> BufWorkYaml
+        null -> BufEmptyWorkYaml
+        else -> null
+    }
+}
+
+fun bufSchema(file: String, version: String?): BufRootSchema? {
+    return when (file.lowercase()) {
+        "buf.yaml", "buf.yml" -> bufSchema(version)
+        "buf.lock" -> bufLockSchema(version)
+        "buf.gen.yaml", "buf.gen.yml" -> bufGenSchema(version)
+        "buf.work.yaml", "buf.work.yml" -> bufGenSchema(version)
         else -> null
     }
 }

@@ -5,5 +5,9 @@
         <lang.documentationProvider language="yaml"
                                     implementationClass="io.kanro.idea.plugin.protobuf.buf.ui.BufDocumentationProvider"/>
         <fileTypeDetector implementation="io.kanro.idea.plugin.protobuf.buf.BufLockFileTypeDetector"/>
+        <projectConfigurable groupId="language"
+                             instance="io.kanro.idea.plugin.protobuf.buf.settings.BufSettingsConfigurable"/>
+        <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.settings.BufSettings"/>
+        <editorNotificationProvider implementation="io.kanro.idea.plugin.protobuf.buf.BufNotConfiguredNotificationProvider"/>
     </extensions>
 </idea-plugin>

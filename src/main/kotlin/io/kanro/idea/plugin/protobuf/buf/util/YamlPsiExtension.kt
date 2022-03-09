@@ -34,15 +34,13 @@ fun PsiElement.yamlPath(): QualifiedName? {
 }
 
 fun PsiElement.rootSchema(): BufSchema<out YAMLPsiElement>? {
-    if (containingFile.virtualFile?.name?.lowercase() != "buf.yaml") {
-        return null
-    }
+    val name = containingFile.originalFile.virtualFile?.name ?: return null
     val document = parentOfType<YAMLDocument>(false) ?: return null
     val rootMapping = document.topLevelValue as? YAMLMapping
     val version = rootMapping?.keyValues?.firstOrNull { it.keyText == "version" }?.valueText?.takeIf {
         !it.contains(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)
     }
-    return bufSchema(version)
+    return bufSchema(name, version)
 }
 
 fun PsiElement.elementSchema(): BufSchema<out YAMLPsiElement>? {
