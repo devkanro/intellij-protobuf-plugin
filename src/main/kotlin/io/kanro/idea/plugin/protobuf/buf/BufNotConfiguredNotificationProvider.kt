@@ -3,6 +3,7 @@ package io.kanro.idea.plugin.protobuf.buf
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.options.ShowSettingsUtil
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
@@ -13,7 +14,7 @@ import io.kanro.idea.plugin.protobuf.buf.settings.BufSettingsConfigurable
 import java.nio.file.Files
 import kotlin.io.path.Path
 
-class BufNotConfiguredNotificationProvider : EditorNotifications.Provider<EditorNotificationPanel>() {
+class BufNotConfiguredNotificationProvider : EditorNotifications.Provider<EditorNotificationPanel>(), DumbAware {
     override fun getKey(): Key<EditorNotificationPanel> {
         return KEY
     }
@@ -24,7 +25,7 @@ class BufNotConfiguredNotificationProvider : EditorNotifications.Provider<Editor
         project: Project
     ): EditorNotificationPanel? {
         when (file.name.lowercase()) {
-            "buf.yaml", "buf.yml", "buf.work.yaml", "buf.work.yml", "buf.gen.yaml", "buf.gen.yaml", "buf.lock" -> {}
+            "buf.yaml", "buf.yml", "buf.work.yaml", "buf.work.yml", "buf.gen.yaml", "buf.gen.yml", "buf.lock" -> {}
             else -> return null
         }
 

@@ -1,10 +1,13 @@
 package io.kanro.idea.plugin.protobuf.buf.schema.v1
 
+import io.kanro.idea.plugin.protobuf.buf.schema.BufArraySchema
 import io.kanro.idea.plugin.protobuf.buf.schema.BufEnumTypeSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.BufEnumValueSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.BufFieldSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.BufObjectSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.BufRootSchema
+import io.kanro.idea.plugin.protobuf.buf.schema.BufSchemaScalarType
+import io.kanro.idea.plugin.protobuf.buf.schema.BufSchemaValueType
 
 object BufWorkYaml : BufRootSchema {
     override val name: String = "buf.work.yaml"
@@ -37,6 +40,6 @@ object BufWorkVersionFieldSchema : BufFieldSchema(
 object BufWorkDirectoriesFieldSchema : BufFieldSchema(
     "directories",
     "The `directories` key is **required**, and lists the directories that define modules to be included in the workspace. The directory paths must be relative to the `buf.work.yaml`, and cannot point to a location outside of your `buf.work.yaml`. For example, `../external` is invalid.",
-    BufEnumTypeSchema(listOf(BufEnumValueSchema("v1", ""))),
+    BufArraySchema(BufSchemaScalarType.IDENTIFIER),
     false
 )

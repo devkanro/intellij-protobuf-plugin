@@ -1,5 +1,14 @@
 <idea-plugin>
+    <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
+        <fileResolver implementation="io.kanro.idea.plugin.protobuf.buf.BufRootResolver"/>
+        <fileResolver implementation="io.kanro.idea.plugin.protobuf.buf.BufDepRootsResolver"/>
+    </extensions>
+
     <extensions defaultExtensionNs="com.intellij">
+        <fileBasedIndex implementation="io.kanro.idea.plugin.protobuf.buf.BufDepIndex"/>
+        <fileBasedIndex implementation="io.kanro.idea.plugin.protobuf.buf.BufModuleIndex"/>
+        <fileBasedIndex implementation="io.kanro.idea.plugin.protobuf.buf.BufWorkspaceIndex"/>
+        <fileBasedIndex implementation="io.kanro.idea.plugin.protobuf.buf.BufLockIndex"/>
         <completion.contributor language="yaml"
                                 implementationClass="io.kanro.idea.plugin.protobuf.buf.completion.BufYamlCompletionContributor"/>
         <lang.documentationProvider language="yaml"

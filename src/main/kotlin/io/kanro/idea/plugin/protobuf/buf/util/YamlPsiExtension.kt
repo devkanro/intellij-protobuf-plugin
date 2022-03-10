@@ -47,3 +47,49 @@ fun PsiElement.elementSchema(): BufSchema<out YAMLPsiElement>? {
     val root = rootSchema() ?: return null
     return root.find(yamlPath() ?: return null)
 }
+
+fun isBufConfiguration(name: String): Boolean {
+    return isBufYaml(name) || isBufGenYaml(name) || isBufWorkYaml(name) || isBufLock(name)
+}
+
+const val BUF_YAML = "buf.yaml"
+
+const val BUF_YML = "buf.yml"
+
+fun isBufYaml(name: String): Boolean {
+    return when (name.lowercase()) {
+        BUF_YAML, BUF_YML -> true
+        else -> false
+    }
+}
+
+const val BUF_GEN_YAML = "buf.gen.yaml"
+
+const val BUF_GEN_YML = "buf.gen.yml"
+
+fun isBufGenYaml(name: String): Boolean {
+    return when (name.lowercase()) {
+        BUF_GEN_YAML, BUF_GEN_YML -> true
+        else -> false
+    }
+}
+
+const val BUF_WORK_YAML = "buf.work.yaml"
+
+const val BUF_WORK_YML = "buf.work.yml"
+
+fun isBufWorkYaml(name: String): Boolean {
+    return when (name.lowercase()) {
+        BUF_WORK_YAML, BUF_WORK_YML -> true
+        else -> false
+    }
+}
+
+const val BUF_LOCK = "buf.lock"
+
+fun isBufLock(name: String): Boolean {
+    return when (name.lowercase()) {
+        BUF_LOCK -> true
+        else -> false
+    }
+}

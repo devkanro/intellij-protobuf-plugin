@@ -9,6 +9,10 @@ import io.kanro.idea.plugin.protobuf.buf.schema.v1.BufEmptyWorkYaml
 import io.kanro.idea.plugin.protobuf.buf.schema.v1.BufGenYaml
 import io.kanro.idea.plugin.protobuf.buf.schema.v1.BufWorkYaml
 import io.kanro.idea.plugin.protobuf.buf.schema.v1.BufYaml
+import io.kanro.idea.plugin.protobuf.buf.util.isBufGenYaml
+import io.kanro.idea.plugin.protobuf.buf.util.isBufLock
+import io.kanro.idea.plugin.protobuf.buf.util.isBufWorkYaml
+import io.kanro.idea.plugin.protobuf.buf.util.isBufYaml
 import org.jetbrains.yaml.psi.YAMLDocument
 import org.jetbrains.yaml.psi.YAMLKeyValue
 import org.jetbrains.yaml.psi.YAMLMapping
@@ -128,11 +132,12 @@ fun bufWorkSchema(version: String?): BufRootSchema? {
 }
 
 fun bufSchema(file: String, version: String?): BufRootSchema? {
-    return when (file.lowercase()) {
-        "buf.yaml", "buf.yml" -> bufSchema(version)
-        "buf.lock" -> bufLockSchema(version)
-        "buf.gen.yaml", "buf.gen.yml" -> bufGenSchema(version)
-        "buf.work.yaml", "buf.work.yml" -> bufGenSchema(version)
+    val name = file.lowercase()
+    return when {
+        isBufYaml(name) -> bufSchema(version)
+        isBufLock(name) -> bufLockSchema(version)
+        isBufGenYaml(name) -> bufGenSchema(version)
+        isBufWorkYaml(name) -> bufWorkSchema(version)
         else -> null
     }
 }
