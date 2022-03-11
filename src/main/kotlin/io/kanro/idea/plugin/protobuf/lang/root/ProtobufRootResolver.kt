@@ -1,59 +1,68 @@
-package io.kanro.idea.plugin.protobuf.lang.file
+package io.kanro.idea.plugin.protobuf.lang.root
 
-import com.intellij.openapi.module.Module
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
 import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
 
-abstract class RootsFileResolver : FileResolver {
-    protected abstract fun getRoots(project: Project, element: PsiElement): Iterable<VirtualFile>
+object ProtobufRootResolver {
+    private fun Sequence<Pair<String?, List<ProtobufRoot>>>.distinctRoots(): List<VirtualFile> {
+        val registeredRootsSet = mutableSetOf<String>()
+        val registeredRootSet = mutableSetOf<String>()
 
-    protected abstract fun getRoots(module: Module, element: PsiElement): Iterable<VirtualFile>
-
-    override fun searchScope(project: Project, element: PsiElement): GlobalSearchScope {
-        return GlobalSearchScope.filesScope(project, getRoots(project, element).toList())
+        return this.filter {
+            it.second.isNotEmpty()
+        }.filter { (name, _) ->
+            if (name == null) return@filter true
+            (name !in registeredRootsSet).apply {
+                registeredRootsSet += name
+            }
+        }.flatMap { it.second }.filter {
+            if (it.name == null) return@filter true
+            (it.name !in registeredRootSet).apply {
+                registeredRootSet += it.name
+            }
+        }.map {
+            it.root
+        }.toList()
     }
 
-    override fun searchScope(module: Module, element: PsiElement): GlobalSearchScope {
-        return GlobalSearchScope.filesScope(module.project, getRoots(module, element).toList())
+    private fun getAvailableRoots(context: PsiElement): List<VirtualFile> {
+        val file = context.containingFile
+        return CachedValuesManager.getManager(context.project).getCachedValue(file) {
+            val providers = ProtobufRootProvider.extensionPoint.extensionList.toTypedArray()
+            val roots = providers.asSequence().map {
+                it.id() to it.getProtobufRoots(file)
+            }.distinctRoots()
+            CachedValueProvider.Result.create(roots, *providers.map { it.modificationTracker(file) }.toTypedArray())
+        }
     }
 
-    override fun getImportPath(file: VirtualFile, project: Project, element: PsiElement): String? {
-        getRoots(project, element).forEach {
+    fun getImportPath(file: VirtualFile, context: PsiElement): String? {
+        getAvailableRoots(context).forEach {
             VfsUtilCore.getRelativePath(file, it)?.let { return it }
         }
         return null
     }
 
-    override fun getImportPath(file: VirtualFile, module: Module, element: PsiElement): String? {
-        getRoots(module, element).forEach {
-            VfsUtilCore.getRelativePath(file, it)?.let { return it }
-        }
-        return null
+    fun findFile(path: String, context: PsiElement): Iterable<VirtualFile> {
+        return findFile(path, getAvailableRoots(context))
     }
 
-    override fun findFile(path: String, project: Project, element: PsiElement): Iterable<VirtualFile> {
-        return findFile(path, getRoots(project, element))
+    fun collectProtobuf(path: String, context: PsiElement): Iterable<VirtualFile> {
+        return collectProtobuf(path, getAvailableRoots(context))
     }
 
-    override fun findFile(path: String, module: Module, element: PsiElement): Iterable<VirtualFile> {
-        return findFile(path, getRoots(module, element))
+    fun searchScope(context: PsiElement): GlobalSearchScope {
+        return GlobalSearchScope.filesScope(context.project, getAvailableRoots(context).toList())
     }
 
-    override fun collectProtobuf(path: String, project: Project, element: PsiElement): Iterable<VirtualFile> {
-        return collectProtobuf(path, project, getRoots(project, element))
-    }
-
-    override fun collectProtobuf(path: String, module: Module, element: PsiElement): Iterable<VirtualFile> {
-        return collectProtobuf(path, module.project, getRoots(module, element))
-    }
-
-    protected open fun findFile(path: String, roots: Iterable<VirtualFile>): Iterable<VirtualFile> {
+    private fun findFile(path: String, roots: Iterable<VirtualFile>): Iterable<VirtualFile> {
         return roots.mapNotNull {
             it.findFileByRelativePath(path)?.takeIf {
                 it.exists() && it.fileType is ProtobufFileType
@@ -61,9 +70,8 @@ abstract class RootsFileResolver : FileResolver {
         }
     }
 
-    protected open fun collectProtobuf(
+    private fun collectProtobuf(
         path: String,
-        project: Project,
         roots: Iterable<VirtualFile>
     ): Iterable<VirtualFile> {
         val result = mutableListOf<VirtualFile>()

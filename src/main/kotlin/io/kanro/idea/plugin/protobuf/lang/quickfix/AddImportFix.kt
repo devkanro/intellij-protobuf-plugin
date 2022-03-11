@@ -8,12 +8,12 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.stubs.StubIndex
-import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHover
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex
+import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import io.kanro.idea.plugin.protobuf.lang.util.matchesSuffix
 
 class AddImportFix(
@@ -37,7 +37,7 @@ class AddImportFix(
         if (hover.absolutely() || parts.size > 1) {
             this.elements = StubIndex.getElements(
                 ShortNameIndex.key, name.lastComponent!!,
-                project, FileResolver.searchScope(host),
+                project, ProtobufRootResolver.searchScope(host),
                 ProtobufElement::class.java
             ).filterIsInstance<ProtobufDefinition>().filter {
                 it.qualifiedName()?.matchesSuffix(name) == true
@@ -45,7 +45,7 @@ class AddImportFix(
         } else {
             this.elements = StubIndex.getElements(
                 ShortNameIndex.key, name.lastComponent!!,
-                project, FileResolver.searchScope(host),
+                project, ProtobufRootResolver.searchScope(host),
                 ProtobufElement::class.java
             ).filterIsInstance<ProtobufDefinition>().toTypedArray()
         }

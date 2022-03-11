@@ -1,6 +1,6 @@
 <idea-plugin>
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
-        <fileResolver implementation="io.kanro.idea.plugin.protobuf.golang.GoRootResolver"/>
+        <rootProvider implementation="io.kanro.idea.plugin.protobuf.golang.GoRootProvider"/>
         <indexProvider implementation="io.kanro.idea.plugin.protobuf.golang.GoIndexProvider"/>
     </extensions>
 

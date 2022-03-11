@@ -1,10 +1,7 @@
 package io.kanro.idea.plugin.protobuf.buf
 
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.roots.FileIndex
-import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.CachedValueProvider
@@ -73,14 +70,18 @@ class BufModuleIndex : ScalarIndexExtension<String>() {
 
                 getAllModules(project).forEach {
                     FileBasedIndex.getInstance()
-                        .processValues(NAME, it, null, FileBasedIndex.ValueProcessor { file, _ ->
-                            if (fileUrl.startsWith(file.parent.url)) {
-                                target = file
-                                false
-                            } else {
-                                true
-                            }
-                        }, GlobalSearchScope.projectScope(project))
+                        .processValues(
+                            NAME, it, null,
+                            FileBasedIndex.ValueProcessor { file, _ ->
+                                if (fileUrl.startsWith(file.parent.url)) {
+                                    target = file
+                                    false
+                                } else {
+                                    true
+                                }
+                            },
+                            GlobalSearchScope.projectScope(project)
+                        )
                 }
 
                 target ?: return@getCachedValue CachedValueProvider.Result.create(null)
@@ -89,4 +90,3 @@ class BufModuleIndex : ScalarIndexExtension<String>() {
         }
     }
 }
-

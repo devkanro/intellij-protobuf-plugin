@@ -13,4 +13,3 @@ class GoNameIndex : StringStubIndexExtension<ProtobufElement>() {
         val key = StubIndexKey.createIndexKey<String, ProtobufElement>("protobuf.go_name")
     }
 }
-

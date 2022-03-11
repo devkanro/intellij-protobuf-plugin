@@ -7,7 +7,6 @@ import io.kanro.idea.plugin.protobuf.buf.schema.BufFieldSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.BufObjectSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.BufRootSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.BufSchemaScalarType
-import io.kanro.idea.plugin.protobuf.buf.schema.BufSchemaValueType
 
 object BufWorkYaml : BufRootSchema {
     override val name: String = "buf.work.yaml"

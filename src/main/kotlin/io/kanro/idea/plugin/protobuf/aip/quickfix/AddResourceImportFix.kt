@@ -8,7 +8,6 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.stubs.StubIndex
-import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost
@@ -16,6 +15,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefini
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ResourceTypeIndex
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 import io.kanro.idea.plugin.protobuf.lang.quickfix.ProtobufAddImportAction
+import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 
 class AddResourceImportFix(
     private val host: ProtobufStringValue
@@ -34,7 +34,7 @@ class AddResourceImportFix(
         val resourceType = host.value() ?: return false
         this.elements = StubIndex.getElements(
             ResourceTypeIndex.key, resourceType,
-            project, FileResolver.searchScope(host),
+            project, ProtobufRootResolver.searchScope(host),
             ProtobufElement::class.java
         ).filterIsInstance<ProtobufDefinition>().toTypedArray()
 

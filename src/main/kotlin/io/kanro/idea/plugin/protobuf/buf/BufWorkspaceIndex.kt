@@ -2,7 +2,6 @@ package io.kanro.idea.plugin.protobuf.buf
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.indexing.DataIndexer
 import com.intellij.util.indexing.FileBasedIndex
@@ -11,6 +10,8 @@ import com.intellij.util.indexing.ID
 import com.intellij.util.indexing.ScalarIndexExtension
 import com.intellij.util.io.EnumeratorStringDescriptor
 import com.intellij.util.io.KeyDescriptor
+import io.kanro.idea.plugin.protobuf.buf.util.BUF_YAML
+import io.kanro.idea.plugin.protobuf.buf.util.BUF_YML
 import io.kanro.idea.plugin.protobuf.buf.util.isBufWorkYaml
 import org.jetbrains.yaml.psi.YAMLFile
 import org.jetbrains.yaml.psi.YAMLMapping
@@ -65,41 +66,30 @@ class BufWorkspaceIndex : ScalarIndexExtension<String>() {
             var target: VirtualFile? = null
 
             getAllModules(project).forEach {
-                FileBasedIndex.getInstance().processValues(NAME, it, null, FileBasedIndex.ValueProcessor { file, _ ->
-                    if (file.parent.findFileByRelativePath(it)?.url == bufRoot.url) {
-                        target = file
-                        false
-                    } else {
-                        true
-                    }
-                }, GlobalSearchScope.projectScope(project))
+                FileBasedIndex.getInstance().processValues(
+                    NAME, it, null,
+                    FileBasedIndex.ValueProcessor { file, _ ->
+                        if (file.parent.findFileByRelativePath(it)?.url == bufRoot.url) {
+                            target = file
+                            false
+                        } else {
+                            true
+                        }
+                    },
+                    GlobalSearchScope.projectScope(project)
+                )
             }
 
             return target
         }
 
-        fun getBufLocalDepRoots(project: Project, psiElement: PsiElement): List<VirtualFile> {
-            val bufRoot = BufModuleIndex.getModuleBufYaml(project, psiElement)?.parent ?: return listOf()
-            val target = mutableListOf<VirtualFile>()
+        fun getBufWorkspaceModules(project: Project, work: VirtualFile): List<VirtualFile> {
+            val workRoot = work.parent ?: return listOf()
 
-            getAllModules(project).forEach {
-                FileBasedIndex.getInstance().processValues(NAME, it, null, FileBasedIndex.ValueProcessor { file, _ ->
-                    val workspaceRoot = file.parent
-                    if (workspaceRoot.findFileByRelativePath(it)?.url == bufRoot.url) {
-                        val directories = FileBasedIndex.getInstance().getFileData(NAME, file, project).keys
-                        target += directories.mapNotNull { workspaceRoot.findFileByRelativePath(it) }
-                        false
-                    } else {
-                        true
-                    }
-                }, GlobalSearchScope.projectScope(project))
+            return FileBasedIndex.getInstance().getFileData(NAME, work, project).keys.mapNotNull {
+                val moduleRoot = workRoot.findFileByRelativePath(it)
+                moduleRoot?.findChild(BUF_YAML) ?: moduleRoot?.findChild(BUF_YML)
             }
-
-            if (target.isEmpty()) {
-                target += bufRoot
-            }
-
-            return target
         }
     }
 }

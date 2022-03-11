@@ -50,7 +50,7 @@ class BufNotConfiguredNotificationProvider : EditorNotifications.Provider<Editor
             }
         }
 
-        return super.createNotificationPanel(file, fileEditor, project)
+        return null
     }
 
     companion object {

@@ -7,7 +7,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileSystem
 import com.intellij.psi.PsiElement
 import com.intellij.testFramework.LightVirtualFile
-import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
+import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import java.io.File
 
 class DecompiledFileSystem : DeprecatedVirtualFileSystem(), NonPhysicalFileSystem {
@@ -98,7 +98,7 @@ object DecompiledFileManager {
 
     fun findFile(element: PsiElement, file: ByteArray): VirtualFile {
         val descriptor = DescriptorProtos.FileDescriptorProto.parseFrom(file)
-        FileResolver.findFile(descriptor.name, element.project, element).firstOrNull()?.let { return it }
+        ProtobufRootResolver.findFile(descriptor.name, element).firstOrNull()?.let { return it }
         val proto = buildString {
             appendLine("// Decompiled by intellij protobuf plugin")
             appendLine("// source: ${element.containingFile.virtualFile.path}")

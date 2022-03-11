@@ -1,7 +1,7 @@
 <idea-plugin>
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
-        <fileResolver implementation="io.kanro.idea.plugin.protobuf.buf.BufRootResolver"/>
-        <fileResolver implementation="io.kanro.idea.plugin.protobuf.buf.BufDepRootsResolver"/>
+        <rootProvider implementation="io.kanro.idea.plugin.protobuf.buf.BufRootProvider"/>
+        <rootProvider implementation="io.kanro.idea.plugin.protobuf.buf.BufDepRootsProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -17,6 +17,12 @@
         <projectConfigurable groupId="language"
                              instance="io.kanro.idea.plugin.protobuf.buf.settings.BufSettingsConfigurable"/>
         <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.settings.BufSettings"/>
-        <editorNotificationProvider implementation="io.kanro.idea.plugin.protobuf.buf.BufNotConfiguredNotificationProvider"/>
+        <editorNotificationProvider
+                implementation="io.kanro.idea.plugin.protobuf.buf.BufNotConfiguredNotificationProvider"/>
+        <additionalLibraryRootsProvider
+                implementation="io.kanro.idea.plugin.protobuf.buf.project.BufLibraryRootsProvider"/>
+        <vfs.asyncListener implementation="io.kanro.idea.plugin.protobuf.buf.BufConfigurationChangeListener"/>
+        <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.project.BufYamlFileManager"/>
+        <startupActivity implementation="io.kanro.idea.plugin.protobuf.buf.project.BufYamlFileManager$StartActivity"/>
     </extensions>
 </idea-plugin>

@@ -1,5 +1,8 @@
 package io.kanro.idea.plugin.protobuf.lang.util
 
+import com.intellij.openapi.module.Module
+import com.intellij.openapi.module.ModuleUtilCore
+import com.intellij.psi.PsiElement
 import com.intellij.psi.util.QualifiedName
 
 fun String.toQualifiedName(): QualifiedName {
@@ -41,3 +44,6 @@ fun <T> List<T>.contentEquals(other: List<T>): Boolean {
     }
     return true
 }
+
+val PsiElement.module: Module?
+    get() = ModuleUtilCore.findModuleForPsiElement(this)

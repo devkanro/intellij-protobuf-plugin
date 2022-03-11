@@ -6,13 +6,13 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.stubs.StubIndex
-import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufDocument
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufDocumented
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex
 import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolResolver
+import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import io.kanro.idea.plugin.protobuf.lang.util.toQualifiedName
 import java.util.function.Consumer
 
@@ -45,7 +45,7 @@ class ProtobufDocumentationProvider : DocumentationProvider {
                 QualifiedNameIndex.key,
                 link,
                 context.project,
-                FileResolver.searchScope(context),
+                ProtobufRootResolver.searchScope(context),
                 ProtobufElement::class.java
             ).firstOrNull()
     }

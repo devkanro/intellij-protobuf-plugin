@@ -13,7 +13,6 @@ import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.ComposedInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
-import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFileOption
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
@@ -22,6 +21,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
 import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ResourceTypeIndex
 import io.kanro.idea.plugin.protobuf.lang.psi.value
+import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 
 class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<ProtobufStringValue>(element) {
     override fun resolve(): PsiElement? {
@@ -50,12 +50,13 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
     ): Array<Any> {
         if (!pattern.endsWith(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) return arrayOf()
         val searchName = pattern.substringBefore(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)
-        val scope = FileResolver.searchScope(element)
+        val scope = ProtobufRootResolver.searchScope(element)
         val matcher = PlatformPatterns.string().contains(searchName)
         return StubIndex.getInstance().getAllKeys(ResourceTypeIndex.key, element.project).asSequence().filter {
             matcher.accepts(it)
         }.flatMap {
-            StubIndex.getElements(ResourceTypeIndex.key, it, element.project, scope, ProtobufElement::class.java).asSequence()
+            StubIndex.getElements(ResourceTypeIndex.key, it, element.project, scope, ProtobufElement::class.java)
+                .asSequence()
         }.mapNotNull {
             if (it in elements) return@mapNotNull null
             result += lookup(it, true) ?: return@mapNotNull null
