@@ -20,7 +20,7 @@ import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.annotations.XCollection
 import io.kanro.idea.plugin.protobuf.buf.util.BUF_YAML
 import io.kanro.idea.plugin.protobuf.buf.util.BUF_YML
-import io.kanro.idea.plugin.protobuf.buf.util.isBufYaml
+import io.kanro.idea.plugin.protobuf.buf.util.BufFiles
 import io.kanro.idea.plugin.protobuf.lang.util.contentEquals
 
 @State(name = "BufYamlFileManager", storages = [Storage("protobuf.xml")])
@@ -115,7 +115,7 @@ class BufYamlFileManager(val project: Project) : PersistentStateComponent<BufYam
     }
 
     private fun validBufYaml(file: VirtualFile): Boolean {
-        return file.isValid && isBufYaml(file.name) && !file.isDirectory && ProjectFileIndex.getInstance(project)
+        return BufFiles.isValidBufYaml(file) && ProjectFileIndex.getInstance(project)
             .getContentRootForFile(file) != null
     }
 

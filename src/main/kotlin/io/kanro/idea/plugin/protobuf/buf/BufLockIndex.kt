@@ -70,23 +70,6 @@ class BufLockIndex : ScalarIndexExtension<String>() {
     companion object {
         val NAME = ID.create<String, Void>("buf.module.lock.deps.name")
 
-        private fun isWindows(): Boolean {
-            return System.getProperty("os.name").lowercase().startsWith("windows")
-        }
-
-        private fun getCacheRoot(): Path {
-            val path = System.getenv("BUF_CACHE_DIR") ?: System.getenv("XDG_CACHE_HOME") ?: if (isWindows()) {
-                System.getenv("LOCALAPPDATA")
-            } else {
-                System.getProperty("user.home") + "/.cache"
-            }
-            return Path.of(path, "buf", "v1", "module", "data")
-        }
-
-        fun getRootForDepModel(remote: String, owner: String, repo: String, commit: String): Path {
-            return getCacheRoot().resolve(Path.of(remote, owner, repo, commit))
-        }
-
         fun getBufLock(project: Project, buf: VirtualFile): VirtualFile? {
             return buf.parent.findChild(BUF_LOCK)
         }

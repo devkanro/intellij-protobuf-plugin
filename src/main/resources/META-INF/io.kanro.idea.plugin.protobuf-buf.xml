@@ -21,7 +21,7 @@
                 implementation="io.kanro.idea.plugin.protobuf.buf.BufNotConfiguredNotificationProvider"/>
         <additionalLibraryRootsProvider
                 implementation="io.kanro.idea.plugin.protobuf.buf.project.BufLibraryRootsProvider"/>
-        <vfs.asyncListener implementation="io.kanro.idea.plugin.protobuf.buf.BufConfigurationChangeListener"/>
+        <vfs.asyncListener implementation="io.kanro.idea.plugin.protobuf.buf.project.BufFileListener"/>
         <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.project.BufYamlFileManager"/>
         <startupActivity implementation="io.kanro.idea.plugin.protobuf.buf.project.BufYamlFileManager$StartActivity"/>
     </extensions>
