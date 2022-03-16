@@ -75,11 +75,12 @@ class BufLockIndex : ScalarIndexExtension<String>() {
         }
 
         fun getModuleDepModules(project: Project, lock: VirtualFile): List<VirtualFile> {
-            val cacheRoot = VirtualFileManager.getInstance().findFileByNioPath(getCacheRoot()) ?: return listOf()
-            return FileBasedIndex.getInstance().getFileData(NAME, lock, project).keys.mapNotNull {
-                val root = cacheRoot.findFileByRelativePath(it)
-                root?.findChild(BUF_YAML) ?: root?.findChild(BUF_YML)
-            }
+            return listOf()
+            // val cacheRoot = VirtualFileManager.getInstance().findFileByNioPath(getCacheRoot()) ?: return listOf()
+            // return FileBasedIndex.getInstance().getFileData(NAME, lock, project).keys.mapNotNull {
+            //     val root = cacheRoot.findFileByRelativePath(it)
+            //     root?.findChild(BUF_YAML) ?: root?.findChild(BUF_YML)
+            // }
         }
     }
 }

@@ -32,9 +32,6 @@ class BufLibraryDirectoryManager(val project: Project) : PersistentStateComponen
     }
 
     private fun onAddBufModule(yaml: VirtualFile) {
-        if (!BufYamlFileManager.isValidBufYaml(yaml)) return
-
-
     }
 
     class State() {

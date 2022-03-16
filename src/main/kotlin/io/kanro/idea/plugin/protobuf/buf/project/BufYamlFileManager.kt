@@ -28,6 +28,10 @@ class BufYamlFileManager(val project: Project) : PersistentStateComponent<BufYam
     private val tracker = SimpleModificationTracker()
     private val yamlFiles = mutableSetOf<VirtualFile>()
 
+    init {
+        detectAllBufYamlFiles()
+    }
+
     override fun getState(): State? {
         return State(
             yamlFiles.asSequence().map { it.path }.sorted().toList()
@@ -157,12 +161,6 @@ class BufYamlFileManager(val project: Project) : PersistentStateComponent<BufYam
 
         constructor(paths: List<String>) : this() {
             this.paths.addAll(paths)
-        }
-    }
-
-    class StartActivity : StartupActivity.DumbAware {
-        override fun runActivity(project: Project) {
-            project.getService(BufYamlFileManager::class.java).detectAllBufYamlFiles()
         }
     }
 
