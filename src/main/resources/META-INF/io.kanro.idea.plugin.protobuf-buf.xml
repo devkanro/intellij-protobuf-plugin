@@ -5,10 +5,6 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileBasedIndex implementation="io.kanro.idea.plugin.protobuf.buf.BufDepIndex"/>
-        <fileBasedIndex implementation="io.kanro.idea.plugin.protobuf.buf.BufModuleIndex"/>
-        <fileBasedIndex implementation="io.kanro.idea.plugin.protobuf.buf.BufWorkspaceIndex"/>
-        <fileBasedIndex implementation="io.kanro.idea.plugin.protobuf.buf.BufLockIndex"/>
         <completion.contributor language="yaml"
                                 implementationClass="io.kanro.idea.plugin.protobuf.buf.completion.BufYamlCompletionContributor"/>
         <lang.documentationProvider language="yaml"
@@ -21,7 +17,7 @@
                 implementation="io.kanro.idea.plugin.protobuf.buf.BufNotConfiguredNotificationProvider"/>
         <additionalLibraryRootsProvider
                 implementation="io.kanro.idea.plugin.protobuf.buf.project.BufLibraryRootsProvider"/>
-        
+
         <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.project.BufYamlFileManager"/>
     </extensions>
 </idea-plugin>

@@ -47,4 +47,3 @@ fun PsiElement.elementSchema(): BufSchema<out YAMLPsiElement>? {
     val root = rootSchema() ?: return null
     return root.find(yamlPath() ?: return null)
 }
-

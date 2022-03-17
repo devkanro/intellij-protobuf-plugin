@@ -31,28 +31,25 @@ fun isBufConfiguration(name: String): Boolean {
 }
 
 const val BUF_YAML = "buf.yaml"
-const val BUF_YML = "buf.yml"
 fun isBufYaml(name: String): Boolean {
     return when (name.lowercase()) {
-        BUF_YAML, BUF_YML -> true
+        BUF_YAML -> true
         else -> false
     }
 }
 
 const val BUF_GEN_YAML = "buf.gen.yaml"
-const val BUF_GEN_YML = "buf.gen.yml"
 fun isBufGenYaml(name: String): Boolean {
     return when (name.lowercase()) {
-        BUF_GEN_YAML, BUF_GEN_YML -> true
+        BUF_GEN_YAML -> true
         else -> false
     }
 }
 
 const val BUF_WORK_YAML = "buf.work.yaml"
-const val BUF_WORK_YML = "buf.work.yml"
 fun isBufWorkYaml(name: String): Boolean {
     return when (name.lowercase()) {
-        BUF_WORK_YAML, BUF_WORK_YML -> true
+        BUF_WORK_YAML -> true
         else -> false
     }
 }
