@@ -10,12 +10,10 @@ import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.ui.BooleanTableCellEditor
 import com.intellij.ui.BooleanTableCellRenderer
 import com.intellij.ui.ToolbarDecorator
-import com.intellij.ui.layout.panel
 import com.intellij.ui.table.TableView
 import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ListTableModel
 import com.intellij.util.ui.components.BorderLayoutPanel
-import io.kanro.idea.plugin.protobuf.lang.util.contentEquals
 import java.awt.BorderLayout
 import javax.swing.JComponent
 import javax.swing.JPanel
@@ -37,7 +35,12 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
             val file = VirtualFileManager.getInstance().findFileByUrl(selectedFile.url) ?: return@setAddAction
             val contentRoot = ProjectRootManagerEx.getInstanceEx(project).fileIndex.getContentRootForFile(file)
             val sourceRoot = ProjectRootManagerEx.getInstanceEx(project).fileIndex.getSourceRootForFile(file)
-            importRootsModel.addRow(ProtobufSettings.ImportRootEntry(selectedFile.url, contentRoot == null && sourceRoot == null))
+            importRootsModel.addRow(
+                ProtobufSettings.ImportRootEntry(
+                    selectedFile.url,
+                    contentRoot == null && sourceRoot == null
+                )
+            )
         }
         decorator.setEditAction {
             tableView.editCellAt(tableView.selectedRow, tableView.selectedColumn)
@@ -51,11 +54,11 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
     }
 
     override fun isModified(settings: ProtobufSettings): Boolean {
-        return !importRootsModel.items.contentEquals(settings.state.importRoots)
+        return !settings.state.importRoots.contentEquals(importRootsModel.items.toTypedArray())
     }
 
     override fun apply(settings: ProtobufSettings) {
-        settings.state.importRoots = importRootsModel.items.toList()
+        settings.state.importRoots = importRootsModel.items.toTypedArray()
         ApplicationManager.getApplication().runWriteAction {
             ProjectRootManagerEx.getInstanceEx(project).makeRootsChange({}, false, true)
         }

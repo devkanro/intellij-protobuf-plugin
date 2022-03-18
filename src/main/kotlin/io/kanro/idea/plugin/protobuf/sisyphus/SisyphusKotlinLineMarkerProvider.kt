@@ -8,10 +8,10 @@ import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import io.kanro.idea.plugin.protobuf.Icons
-import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstanceOrNull
 import org.jetbrains.uast.UClass
 import org.jetbrains.uast.UIdentifier
@@ -50,7 +50,7 @@ class SisyphusKotlinLineMarkerProvider : RelatedItemLineMarkerProvider() {
         clazz.findAnnotation("com.bybutter.sisyphus.middleware.grpc.RpcServiceImpl") ?: return null
 
         return CachedValuesManager.getCachedValue(sourceClazz) {
-            val scope = FileResolver.searchScope(sourceClazz)
+            val scope = ProtobufRootResolver.searchScope(sourceClazz)
             for (it in clazz.uastSuperTypes) {
                 val qualifiedName = it.getQualifiedName() ?: continue
                 val element = StubIndex.getElements(
@@ -73,7 +73,7 @@ class SisyphusKotlinLineMarkerProvider : RelatedItemLineMarkerProvider() {
         val clazz = method.uastParent as? UClass ?: return null
 
         return CachedValuesManager.getCachedValue(sourcePsi) {
-            val scope = FileResolver.searchScope(sourcePsi)
+            val scope = ProtobufRootResolver.searchScope(sourcePsi)
             for (it in clazz.uastSuperTypes) {
                 val methodName = "${it.getQualifiedName()}.${method.name}"
                 val element = StubIndex.getElements(

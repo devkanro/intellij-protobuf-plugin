@@ -1,5 +1,6 @@
 package io.kanro.idea.plugin.protobuf.lang.reference
 
+import com.intellij.codeInsight.completion.CompletionUtilCore
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.util.TextRange
@@ -14,7 +15,6 @@ import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
-import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtensionOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
@@ -31,6 +31,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefini
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex
+import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import io.kanro.idea.plugin.protobuf.lang.util.AnyElement
 import io.kanro.idea.plugin.protobuf.lang.util.removeCommonPrefix
 
@@ -131,9 +132,9 @@ class ProtobufTypeNameReference(
         elements: MutableSet<ProtobufElement>
     ): Array<Any> {
         if (pattern.contains('.')) return arrayOf()
-        if (!pattern.endsWith("IntellijIdeaRulezzz")) return arrayOf()
-        val searchName = pattern.substringBefore("IntellijIdeaRulezzz")
-        val scope = FileResolver.searchScope(element)
+        if (!pattern.endsWith(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) return arrayOf()
+        val searchName = pattern.substringBefore(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)
+        val scope = ProtobufRootResolver.searchScope(element)
         val matcher = PlatformPatterns.string().contains(searchName)
         val currentScope = element.parentOfType<ProtobufScope>()?.scope()
         return StubIndex.getInstance().getAllKeys(ShortNameIndex.key, element.project).asSequence().filter {

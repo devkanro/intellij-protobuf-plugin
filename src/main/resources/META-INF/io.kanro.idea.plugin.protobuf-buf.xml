@@ -1,0 +1,23 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
+        <rootProvider implementation="io.kanro.idea.plugin.protobuf.buf.BufRootProvider"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <completion.contributor language="yaml"
+                                implementationClass="io.kanro.idea.plugin.protobuf.buf.completion.BufYamlCompletionContributor"/>
+        <lang.documentationProvider language="yaml"
+                                    implementationClass="io.kanro.idea.plugin.protobuf.buf.ui.BufDocumentationProvider"/>
+        <fileTypeDetector implementation="io.kanro.idea.plugin.protobuf.buf.BufLockFileTypeDetector"/>
+        <projectConfigurable groupId="language"
+                             instance="io.kanro.idea.plugin.protobuf.buf.settings.BufSettingsConfigurable"/>
+        <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.settings.BufSettings"/>
+        <editorNotificationProvider
+                implementation="io.kanro.idea.plugin.protobuf.buf.BufNotConfiguredNotificationProvider"/>
+        <additionalLibraryRootsProvider
+                implementation="io.kanro.idea.plugin.protobuf.buf.project.BufLibraryRootsProvider"/>
+
+        <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.project.BufFileManager"/>
+        <postStartupActivity implementation="io.kanro.idea.plugin.protobuf.buf.project.BufProjectInitializer"/>
+    </extensions>
+</idea-plugin>

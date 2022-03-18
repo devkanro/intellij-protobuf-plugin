@@ -29,7 +29,9 @@ Analyzing features:
 ✅ Quick documentation  
 ✅ PSI stub  
 ✅ Java/Kotlin support  
-✅ [Sisyphus](https://github.com/ButterCam/sisyphus) framework integration
+✅ [Sisyphus](https://github.com/ButterCam/sisyphus) framework integration  
+✅ Decompile from proto descriptor for golang  
+✅ [Buf](https://buf.build) integration, auto-configure the protobuf roots from buf.yaml and buf.work.yaml
 
 Editor features:
 
@@ -38,14 +40,13 @@ Editor features:
 ✅ Import optimizing  
 ✅ [AIP](https://google.aip.dev/) spec support  
 ✅ Auto import  
-✅ Import quick fix
+✅ Import quick fix  
+✅ [Buf](https://buf.build) integration, code completion for buf configraution files
 
 <!-- Plugin description end -->
 
 Planned features:
 
-🙋 Golang code navigation  
-🙋 Decompile from proto descriptor for some language(etc. golang)  
 🙋 Proto text support  
 
 ## Screenshots

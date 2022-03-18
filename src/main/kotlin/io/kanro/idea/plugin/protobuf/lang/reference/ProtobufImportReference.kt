@@ -12,10 +12,10 @@ import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
-import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
 import io.kanro.idea.plugin.protobuf.lang.psi.value
+import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import io.kanro.idea.plugin.protobuf.lang.util.ProtobufPsiFactory
 
 class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBase<ProtobufImportStatement>(import) {
@@ -38,7 +38,7 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
     override fun getVariants(): Array<Any> {
         val imported = element.stringValue?.text?.trim('"') ?: return arrayOf()
         val parent = imported.substringBeforeLast('/', ".")
-        return FileResolver.collectProtobuf(parent, element).map {
+        return ProtobufRootResolver.collectProtobuf(parent, element).map {
             fileLookup(parent, it)
         }.toTypedArray()
     }
@@ -84,7 +84,7 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
 
         fun resolve(element: ProtobufImportStatement): PsiElement? {
             val filePath = element.stringValue?.value() ?: return null
-            val file = FileResolver.resolveFile(filePath, element).firstOrNull() ?: return null
+            val file = ProtobufRootResolver.findFile(filePath, element).firstOrNull() ?: return null
             return PsiManager.getInstance(element.project).findFile(file)
         }
     }

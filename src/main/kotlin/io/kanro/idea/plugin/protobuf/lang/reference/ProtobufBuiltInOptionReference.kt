@@ -9,7 +9,6 @@ import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
-import io.kanro.idea.plugin.protobuf.lang.file.FileResolver
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufBuiltInOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
@@ -27,6 +26,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupIt
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
+import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import io.kanro.idea.plugin.protobuf.lang.support.Options
 
 class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
@@ -92,7 +92,7 @@ class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
     }
 
     private fun descriptor(): ProtobufFile? {
-        return FileResolver.resolveFile("google/protobuf/descriptor.proto", element).firstOrNull()?.let {
+        return ProtobufRootResolver.findFile("google/protobuf/descriptor.proto", element).firstOrNull()?.let {
             PsiManager.getInstance(element.project).findFile(it) as? ProtobufFile
         }
     }

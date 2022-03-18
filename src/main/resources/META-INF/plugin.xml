@@ -13,12 +13,15 @@
         com.intellij.modules.microservices
     </depends>
     <depends optional="true" config-file="io.kanro.idea.plugin.protobuf-go.xml">org.jetbrains.plugins.go</depends>
+    <depends optional="true" config-file="io.kanro.idea.plugin.protobuf-buf.xml">
+        org.jetbrains.plugins.yaml
+    </depends>
 
     <extensionPoints>
         <extensionPoint
-                interface="io.kanro.idea.plugin.protobuf.lang.file.FileResolver"
+                interface="io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootProvider"
                 dynamic="true"
-                name="fileResolver"/>
+                name="rootProvider"/>
         <extensionPoint
                 interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceProvider"
                 dynamic="true"
@@ -34,16 +37,18 @@
     </extensionPoints>
 
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
-        <fileResolver id="module"
-                      implementation="io.kanro.idea.plugin.protobuf.lang.file.ModuleSourceProtobufFileResolver"/>
-        <fileResolver id="depModule"
-                      implementation="io.kanro.idea.plugin.protobuf.lang.file.DepModuleSourceProtobufFileResolver"/>
-        <fileResolver id="library"
-                      implementation="io.kanro.idea.plugin.protobuf.lang.file.LibraryProtobufFileResolver"/>
-        <fileResolver id="settings"
-                      implementation="io.kanro.idea.plugin.protobuf.lang.file.ImportRootsFileResolver"/>
-        <fileResolver id="decompile"
-                      implementation="io.kanro.idea.plugin.protobuf.decompile.DecompiledFileResolver"/>
+        <rootProvider id="module"
+                      implementation="io.kanro.idea.plugin.protobuf.lang.root.ModuleSourceRootProvider"/>
+        <rootProvider id="depModule"
+                      implementation="io.kanro.idea.plugin.protobuf.lang.root.DepModuleSourceRootProvider"/>
+        <rootProvider id="library"
+                      implementation="io.kanro.idea.plugin.protobuf.lang.root.LibraryRootProvider"/>
+        <rootProvider id="settings"
+                      implementation="io.kanro.idea.plugin.protobuf.lang.root.ImportRootProvider"/>
+        <rootProvider id="decompile"
+                      implementation="io.kanro.idea.plugin.protobuf.decompile.DecompiledRootProvider"/>
+        <rootProvider id="embedded"
+                      implementation="io.kanro.idea.plugin.protobuf.lang.root.EmbeddedRootProvider"/>
         <symbolReferenceProvider
                 implementation="io.kanro.idea.plugin.protobuf.aip.reference.contributor.ProtobufTypeNameInStringProvider"/>
         <stubExternalProvider

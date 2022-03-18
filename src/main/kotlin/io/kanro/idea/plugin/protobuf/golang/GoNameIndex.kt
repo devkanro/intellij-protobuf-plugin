@@ -13,13 +13,3 @@ class GoNameIndex : StringStubIndexExtension<ProtobufElement>() {
         val key = StubIndexKey.createIndexKey<String, ProtobufElement>("protobuf.go_name")
     }
 }
-
-class GoUnimplementedServerNameIndex : StringStubIndexExtension<ProtobufElement>() {
-    override fun getKey(): StubIndexKey<String, ProtobufElement> {
-        return GoUnimplementedServerNameIndex.key
-    }
-
-    companion object {
-        val key = StubIndexKey.createIndexKey<String, ProtobufElement>("protobuf.go_server_name")
-    }
-}
