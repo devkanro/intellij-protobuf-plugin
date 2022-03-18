@@ -1,7 +1,6 @@
 <idea-plugin>
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
         <rootProvider implementation="io.kanro.idea.plugin.protobuf.buf.BufRootProvider"/>
-        <rootProvider implementation="io.kanro.idea.plugin.protobuf.buf.BufDepRootsProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -18,6 +17,7 @@
         <additionalLibraryRootsProvider
                 implementation="io.kanro.idea.plugin.protobuf.buf.project.BufLibraryRootsProvider"/>
 
-        <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.project.BufYamlFileManager"/>
+        <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.project.BufFileManager"/>
+        <postStartupActivity implementation="io.kanro.idea.plugin.protobuf.buf.project.BufProjectInitializer"/>
     </extensions>
 </idea-plugin>

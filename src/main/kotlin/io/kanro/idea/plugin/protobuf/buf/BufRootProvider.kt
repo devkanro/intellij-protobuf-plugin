@@ -20,11 +20,25 @@ class BufRootProvider : ProtobufRootProvider {
 
         val module = fileManager.findModuleFromPsiElement(context) ?: return listOf()
         val workspace = fileManager.state.workspaces.firstOrNull { module.path in it.roots }
+        val contextModules = workspace?.let { fileManager.findModulesInWorkspace(it) } ?: listOf(module)
+        val localDeps = contextModules.mapNotNull { it.name }.toSet()
 
-        return (workspace?.roots ?: listOfNotNull(module.path)).mapNotNull {
-            VirtualFileManager.getInstance().findFileByNioPath(Path(it))
-        }.map {
-            ProtobufRoot(null, it)
+        val roots = contextModules.mapNotNull {
+            rootForModule(it)
+        }.toMutableList()
+
+        val remoteDeps = contextModules.flatMap { it.lockedDependencies }.filter {
+            it.nameWithoutCommit() !in localDeps
+        }
+        roots += fileManager.resolveDependencies(remoteDeps).mapNotNull { rootForModule(it) }
+        return roots
+    }
+
+    private fun rootForModule(module: BufFileManager.State.Module?): ProtobufRoot? {
+        module ?: return null
+        val path = module.path ?: return null
+        return VirtualFileManager.getInstance().findFileByNioPath(Path(path))?.let {
+            ProtobufRoot(module.reference, it)
         }
     }
 

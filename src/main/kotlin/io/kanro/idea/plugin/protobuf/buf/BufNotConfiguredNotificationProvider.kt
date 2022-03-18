@@ -1,6 +1,7 @@
 package io.kanro.idea.plugin.protobuf.buf
 
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.components.service
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.DumbAware
@@ -29,18 +30,16 @@ class BufNotConfiguredNotificationProvider : EditorNotifications.Provider<Editor
             else -> return null
         }
 
-        val bufSettings = project.getService(BufSettings::class.java) ?: return null
-        if (bufSettings.state.path.isEmpty()) {
-            return EditorNotificationPanel().apply {
+        val bufPath = project.service<BufSettings>().bufPath()
+            ?: return EditorNotificationPanel().apply {
                 text("Buf executable path not configured for sync buf.yaml/buf.work.yaml.")
                 icon(AllIcons.General.Warning)
                 this.createActionLabel("Setup buf") {
                     ShowSettingsUtil.getInstance().showSettingsDialog(project, BufSettingsConfigurable::class.java)
                 }
             }
-        }
 
-        if (!Files.exists(Path(bufSettings.state.path))) {
+        if (!Files.exists(bufPath)) {
             return EditorNotificationPanel().apply {
                 text("Wrong buf executable path configured for sync buf.yaml/buf.work.yaml.")
                 icon(AllIcons.General.Warning)

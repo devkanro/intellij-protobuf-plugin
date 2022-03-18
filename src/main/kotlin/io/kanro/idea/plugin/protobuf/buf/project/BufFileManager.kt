@@ -3,6 +3,7 @@ package io.kanro.idea.plugin.protobuf.buf.project
 import com.fasterxml.jackson.core.JacksonException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.components.BaseState
 import com.intellij.openapi.components.PersistentStateComponent
@@ -36,9 +37,9 @@ import io.kanro.idea.plugin.protobuf.buf.util.BUF_LOCK
 import io.kanro.idea.plugin.protobuf.buf.util.BUF_WORK_YAML
 import io.kanro.idea.plugin.protobuf.buf.util.BUF_YAML
 import io.kanro.idea.plugin.protobuf.buf.util.BufFiles
-import java.nio.file.Path
+import java.util.Stack
 
-@State(name = "BufYamlFileManager", storages = [Storage("protobuf.xml")])
+@State(name = "BufFileManager", storages = [Storage("protobuf.xml")])
 class BufFileManager(val project: Project) : PersistentStateComponent<BufFileManager.State> {
     private val logger = Logger.getInstance(BufFileListener::class.java)
     private val state = State()
@@ -57,7 +58,6 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
     )
 
     init {
-        VirtualFileManager.getInstance().addAsyncFileListener(BufFileListener(project, this), project)
         importProject()
     }
 
@@ -65,13 +65,11 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         return cacheRootPointer.file
     }
 
-    fun moduleChanged(oldPath: Path?, newPath: Path?) {
-        val old = oldPath?.let { path ->
-            state.modules.firstOrNull { it.path == path.toString() }
+    fun moduleChanged(oldRoot: VirtualFile?, newRoot: VirtualFile?) {
+        val old = oldRoot?.let { root ->
+            state.modules.firstOrNull { it.path == root.path }
         }
-        val new = newPath?.let {
-            VirtualFileManager.getInstance().findFileByNioPath(it)
-        }?.findChild(BUF_YAML)?.let {
+        val new = newRoot?.findChild(BUF_YAML)?.let {
             loadModule(it)
         }
         if (old == null) {
@@ -90,13 +88,11 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         }
     }
 
-    fun workspaceChanged(oldPath: Path?, newPath: Path?) {
-        val old = oldPath?.let { path ->
-            state.workspaces.firstOrNull { it.path == path.toString() }
+    fun workspaceChanged(oldRoot: VirtualFile?, newRoot: VirtualFile?) {
+        val old = oldRoot?.let { root ->
+            state.workspaces.firstOrNull { it.path == root.path }
         }
-        val new = newPath?.let { path ->
-            VirtualFileManager.getInstance().findFileByNioPath(path)?.findChild(BUF_WORK_YAML)
-        }?.let {
+        val new = newRoot?.findChild(BUF_WORK_YAML)?.let {
             loadWorkspace(it)
         }
         if (old == null) {
@@ -115,14 +111,12 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         }
     }
 
-    fun libraryChanged(oldPath: Path?, newPath: Path?) {
+    fun libraryChanged(oldRoot: VirtualFile?, newRoot: VirtualFile?) {
         val modificationCount = state.modificationCount
-        val old = oldPath?.let { path ->
-            state.libraries.firstOrNull { it.path == path.toString() }
+        val old = oldRoot?.let { root ->
+            state.libraries.firstOrNull { it.path == root.path }
         }
-        val new = newPath?.let { path ->
-            VirtualFileManager.getInstance().findFileByNioPath(path)?.findChild(BUF_YAML)
-        }?.let {
+        val new = newRoot?.findChild(BUF_YAML)?.let {
             val commit = it.parent.name
             val repo = it.parent.parent.name
             val owner = it.parent.parent.parent.name
@@ -152,6 +146,8 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
     private fun importProject() {
         ReadAction.nonBlocking {
             if (this.project.isDisposed) return@nonBlocking
+            state.modules.clear()
+            state.workspaces.clear()
 
             val yamlFiles =
                 FilenameIndex.getVirtualFilesByName(BUF_YAML, ProjectScope.getContentScope(project))
@@ -171,11 +167,13 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
     }
 
     private fun readYaml(yaml: VirtualFile?): JsonNode? {
-        return yaml?.inputStream?.use {
-            try {
-                yamlMapper.readTree(it)
-            } catch (e: JacksonException) {
-                null
+        return ApplicationManager.getApplication().runReadAction<JsonNode?> {
+            yaml?.inputStream?.use {
+                try {
+                    yamlMapper.readTree(it)
+                } catch (e: JacksonException) {
+                    null
+                }
             }
         }
     }
@@ -211,7 +209,7 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         val root = yaml.parent ?: return null
         val content = readYaml(yaml) ?: return null
         val moduleRoots = content.get(BufWorkDirectoriesFieldSchema.name)?.mapNotNull {
-            root.toNioPath().resolve(it.textValue()).toString()
+            root.findFileByRelativePath(it.textValue())?.path
         } ?: listOf()
 
         return State.Workspace().apply {
@@ -246,7 +244,11 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
     }
 
     private fun notifyLibraryRootsChanged() {
-        ProjectRootManagerEx.getInstanceEx(project).makeRootsChange(EmptyRunnable.getInstance(), false, true)
+        ApplicationManager.getApplication().invokeLater {
+            ApplicationManager.getApplication().runWriteAction {
+                ProjectRootManagerEx.getInstanceEx(project).makeRootsChange(EmptyRunnable.getInstance(), false, true)
+            }
+        }
     }
 
     override fun getState(): State {
@@ -254,9 +256,12 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
     }
 
     override fun loadState(state: State) {
+        val modificationCount = state.modificationCount
         this.state.copyFrom(state)
+        if (state.modificationCount != modificationCount) {
+            notifyLibraryRootsChanged()
+        }
     }
-
 
     fun findModule(file: VirtualFile): State.Module? {
         return state.modules.firstOrNull {
@@ -289,14 +294,40 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         return findModule(file) ?: findLibrary(file)
     }
 
+    fun findModulesInWorkspace(workspace: State.Workspace): List<State.Module> {
+        return state.modules.filter {
+            it.path in workspace.roots
+        }
+    }
+
+    fun resolveDependencies(deps: Collection<State.Dependency>): List<State.Module> {
+        val libraries = state.libraries.associateBy { it.reference }
+        val required = Stack<State.Dependency>()
+        val result = mutableListOf<State.Module>()
+        val resolved = mutableSetOf<String>()
+
+        required += deps
+        while (required.isNotEmpty()) {
+            val dep = required.pop()
+            val name = dep.name()
+            if (name in resolved) continue
+            resolved += name
+            val lib = libraries[name] ?: continue
+            required += lib.lockedDependencies
+            result += lib
+        }
+
+        return result
+    }
+
     class State : BaseState() {
-        @get:XCollection
+        @get:XCollection(propertyElementName = "modules", style = XCollection.Style.v2)
         val modules by list<Module>()
 
-        @get:XCollection
+        @get:XCollection(propertyElementName = "workspaces", style = XCollection.Style.v2)
         val workspaces by list<Workspace>()
 
-        @get:XCollection
+        @get:XCollection(propertyElementName = "libraries", style = XCollection.Style.v2)
         val libraries by list<Module>()
 
         @get:Tag
@@ -319,7 +350,7 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
             @get:Tag
             var dependencies by stringSet()
 
-            @get:XCollection
+            @get:XCollection(propertyElementName = "lockedDependencies", style = XCollection.Style.v2)
             val lockedDependencies by list<Dependency>()
         }
 
@@ -331,7 +362,7 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
             @get:Tag
             var yaml by string(null)
 
-            @get:XCollection
+            @get:XCollection(propertyElementName = "roots", elementName = "root", style = XCollection.Style.v2)
             var roots by stringSet()
         }
 

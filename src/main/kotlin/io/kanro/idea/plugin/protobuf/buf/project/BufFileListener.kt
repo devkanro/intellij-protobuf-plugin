@@ -43,14 +43,14 @@ class BufFileListener(val project: Project, val fileManager: BufFileManager) : A
 
         if (isProjectEvent(event)) {
             when (event.file.name) {
-                BUF_YAML, BUF_LOCK -> fileManager.moduleChanged(event.file.parent.toNioPath(), null)
-                BUF_WORK_YAML -> fileManager.workspaceChanged(event.file.parent.toNioPath(), null)
+                BUF_YAML, BUF_LOCK -> fileManager.moduleChanged(event.file.parent, null)
+                BUF_WORK_YAML -> fileManager.workspaceChanged(event.file.parent, null)
             }
         }
 
         if (isLibraryEvent(event)) {
             when (event.file.name) {
-                BUF_YAML, BUF_LOCK -> fileManager.libraryChanged(event.file.parent.toNioPath(), null)
+                BUF_YAML, BUF_LOCK -> fileManager.libraryChanged(event.file.parent, null)
             }
         }
     }
@@ -59,7 +59,7 @@ class BufFileListener(val project: Project, val fileManager: BufFileManager) : A
         logger.info("FILE CHANGED: ${event.path}")
 
         if (isProjectEvent(event)) {
-            val path = event.file.parent.toNioPath()
+            val path = event.file.parent
             when (event.file.name) {
                 BUF_YAML, BUF_LOCK -> fileManager.moduleChanged(path, path)
                 BUF_WORK_YAML -> fileManager.workspaceChanged(path, path)
@@ -67,7 +67,7 @@ class BufFileListener(val project: Project, val fileManager: BufFileManager) : A
         }
 
         if (isLibraryEvent(event)) {
-            val path = event.file.parent.toNioPath()
+            val path = event.file.parent
             when (event.file.name) {
                 BUF_YAML, BUF_LOCK -> fileManager.libraryChanged(path, path)
             }
@@ -78,7 +78,7 @@ class BufFileListener(val project: Project, val fileManager: BufFileManager) : A
         logger.info("FILE PROPERTY CHANGED: ${event.path}")
 
         if (isProjectEvent(event)) {
-            val path = event.file.parent.toNioPath()
+            val path = event.file.parent
             when (event.oldValue) {
                 BUF_YAML, BUF_LOCK -> fileManager.moduleChanged(path, null)
                 BUF_WORK_YAML -> fileManager.workspaceChanged(path, null)
@@ -90,7 +90,7 @@ class BufFileListener(val project: Project, val fileManager: BufFileManager) : A
         }
 
         if (isLibraryEvent(event)) {
-            val path = event.file.parent.toNioPath()
+            val path = event.file.parent
             when (event.oldValue) {
                 BUF_YAML, BUF_LOCK -> fileManager.libraryChanged(path, null)
             }
@@ -107,7 +107,7 @@ class BufFileListener(val project: Project, val fileManager: BufFileManager) : A
     private fun fileCreated(event: VFileCreateEvent) {
         logger.info("FILE CREATED: ${event.path}")
         if (isProjectEvent(event)) {
-            val path = event.parent.toNioPath()
+            val path = event.parent
             when (event.childName) {
                 BUF_YAML, BUF_LOCK -> fileManager.moduleChanged(null, path)
                 BUF_WORK_YAML -> fileManager.workspaceChanged(null, path)
@@ -115,7 +115,7 @@ class BufFileListener(val project: Project, val fileManager: BufFileManager) : A
         }
 
         if (isLibraryEvent(event)) {
-            val path = event.parent.toNioPath()
+            val path = event.parent
             when (event.childName) {
                 BUF_YAML, BUF_LOCK -> fileManager.libraryChanged(null, path)
             }
@@ -125,7 +125,7 @@ class BufFileListener(val project: Project, val fileManager: BufFileManager) : A
     private fun fileCopied(event: VFileCopyEvent) {
         logger.info("FILE COPIED: ${event.path}")
         if (isProjectEvent(event)) {
-            val path = event.newParent.toNioPath()
+            val path = event.newParent
             when (event.newChildName) {
                 BUF_YAML, BUF_LOCK -> fileManager.moduleChanged(null, path)
                 BUF_WORK_YAML -> fileManager.workspaceChanged(null, path)
@@ -133,7 +133,7 @@ class BufFileListener(val project: Project, val fileManager: BufFileManager) : A
         }
 
         if (isLibraryEvent(event)) {
-            val path = event.newParent.toNioPath()
+            val path = event.newParent
             when (event.newChildName) {
                 BUF_YAML, BUF_LOCK -> fileManager.libraryChanged(null, path)
             }

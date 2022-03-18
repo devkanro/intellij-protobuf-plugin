@@ -4,10 +4,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import java.nio.file.Path
 
 object BufFiles {
-    private fun isWindows(): Boolean {
-        return System.getProperty("os.name").lowercase().startsWith("windows")
-    }
-
     fun getCacheRoot(): Path {
         val path = System.getenv("BUF_CACHE_DIR") ?: System.getenv("XDG_CACHE_HOME") ?: if (isWindows()) {
             System.getenv("LOCALAPPDATA")
@@ -24,6 +20,10 @@ object BufFiles {
     fun isValidBufYaml(file: VirtualFile): Boolean {
         return file.isValid && isBufYaml(file.name) && !file.isDirectory
     }
+}
+
+fun isWindows(): Boolean {
+    return System.getProperty("os.name").lowercase().startsWith("windows")
 }
 
 fun isBufConfiguration(name: String): Boolean {

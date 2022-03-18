@@ -3,37 +3,43 @@ package io.kanro.idea.plugin.protobuf.buf.settings
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.Project
+import com.intellij.ui.EditorNotifications
 import com.intellij.ui.dsl.builder.panel
+import org.jetbrains.kotlin.idea.core.util.onTextChange
 import java.io.File
 import javax.swing.JComponent
 import javax.swing.JPanel
+import javax.swing.JTextField
 
 class BufSettingsComponent(val project: Project) : ConfigurableUi<BufSettings> {
     private val panel: JPanel
-    private var path = ""
+    private lateinit var textField: JTextField
 
     init {
         panel = panel {
             row {
-                label("Buf execuable:")
-                textFieldWithBrowseButton("Choose Buf Execuable Path", project, bufPathChooserDescriptor()) {
-                    path = it.path
-                    File(path).path
+                label("Buf executable:")
+                textFieldWithBrowseButton("Choose Buf Executable Path", project, bufPathChooserDescriptor()) {
+                    textField.text = it.path
+                    File(it.path).path
+                }.apply {
+                    textField = this.component.textField
                 }
             }
         }
     }
 
     override fun reset(settings: BufSettings) {
-        path = settings.state.path
+        textField.text = settings.state.path
     }
 
     override fun isModified(settings: BufSettings): Boolean {
-        return path != settings.state.path
+        return textField.text != settings.state.path
     }
 
     override fun apply(settings: BufSettings) {
-        settings.state.path = path
+        settings.state.path = textField.text
+        EditorNotifications.getInstance(project).updateAllNotifications()
     }
 
     override fun getComponent(): JComponent {
