@@ -13,7 +13,6 @@ import com.intellij.ui.EditorNotifications
 import io.kanro.idea.plugin.protobuf.buf.settings.BufSettings
 import io.kanro.idea.plugin.protobuf.buf.settings.BufSettingsConfigurable
 import java.nio.file.Files
-import kotlin.io.path.Path
 
 class BufNotConfiguredNotificationProvider : EditorNotifications.Provider<EditorNotificationPanel>(), DumbAware {
     override fun getKey(): Key<EditorNotificationPanel> {

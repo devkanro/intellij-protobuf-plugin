@@ -5,7 +5,6 @@ import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.Project
 import com.intellij.ui.EditorNotifications
 import com.intellij.ui.dsl.builder.panel
-import org.jetbrains.kotlin.idea.core.util.onTextChange
 import java.io.File
 import javax.swing.JComponent
 import javax.swing.JPanel
