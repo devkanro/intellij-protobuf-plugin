@@ -3,6 +3,14 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Added
+- Buf lint annotator
+
+## [1.5.0-EAP]
+### Added
+- Basically code completion and documentation for buf configuration files.
+- Auto config protobuf import roots from buf.yaml and buf.work.yaml, it support locked deps and workspace local module.
+- Pre-provided well-known protos.
 
 ## [1.4.8]
 ### Added
