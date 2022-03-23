@@ -1,4 +1,4 @@
-package io.kanro.idea.plugin.protobuf.buf
+package io.kanro.idea.plugin.protobuf.buf.ui
 
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.service
@@ -12,6 +12,7 @@ import com.intellij.ui.EditorNotificationPanel
 import com.intellij.ui.EditorNotifications
 import io.kanro.idea.plugin.protobuf.buf.settings.BufSettings
 import io.kanro.idea.plugin.protobuf.buf.settings.BufSettingsConfigurable
+import io.kanro.idea.plugin.protobuf.buf.util.isBufConfiguration
 import java.nio.file.Files
 
 class BufNotConfiguredNotificationProvider : EditorNotifications.Provider<EditorNotificationPanel>(), DumbAware {
@@ -24,10 +25,7 @@ class BufNotConfiguredNotificationProvider : EditorNotifications.Provider<Editor
         fileEditor: FileEditor,
         project: Project
     ): EditorNotificationPanel? {
-        when (file.name.lowercase()) {
-            "buf.yaml", "buf.yml", "buf.work.yaml", "buf.work.yml", "buf.gen.yaml", "buf.gen.yml", "buf.lock" -> {}
-            else -> return null
-        }
+        if (!isBufConfiguration(file.name)) return null
 
         val bufPath = project.service<BufSettings>().bufPath()
             ?: return EditorNotificationPanel().apply {

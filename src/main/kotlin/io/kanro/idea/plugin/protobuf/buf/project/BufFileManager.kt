@@ -19,12 +19,20 @@ import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager
+import com.intellij.openapi.wm.RegisterToolWindowTask
+import com.intellij.openapi.wm.ToolWindow
+import com.intellij.openapi.wm.ToolWindowAnchor
+import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.ProjectScope
+import com.intellij.ui.ScrollPaneFactory
+import com.intellij.ui.content.ContentFactory
+import com.intellij.ui.treeStructure.Tree
 import com.intellij.util.concurrency.NonUrgentExecutor
 import com.intellij.util.xmlb.annotations.Tag
 import com.intellij.util.xmlb.annotations.XCollection
+import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufDepsFieldSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufLockDepsCommitSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufLockDepsFieldSchema
@@ -33,10 +41,13 @@ import io.kanro.idea.plugin.protobuf.buf.schema.common.BufLockDepsRemoteSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufLockDepsRepositorySchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufNameFieldSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.v1.BufWorkDirectoriesFieldSchema
+import io.kanro.idea.plugin.protobuf.buf.ui.BufToolWindowRootElement
 import io.kanro.idea.plugin.protobuf.buf.util.BUF_LOCK
 import io.kanro.idea.plugin.protobuf.buf.util.BUF_WORK_YAML
 import io.kanro.idea.plugin.protobuf.buf.util.BUF_YAML
 import io.kanro.idea.plugin.protobuf.buf.util.BufFiles
+import io.kanro.idea.plugin.protobuf.ui.SmartTreeCellRenderer
+import io.kanro.idea.plugin.protobuf.ui.SmartTreeModel
 import java.util.Stack
 
 @State(name = "BufFileManager", storages = [Storage("protobuf.xml")])
@@ -163,6 +174,8 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
             state.modules += modules.sortedBy { it.path }
             state.workspaces += workspaces.sortedBy { it.path }
             refreshLibraries()
+
+            registerToolWindow(state.modules.isNotEmpty())
         }.inSmartMode(project).submit(NonUrgentExecutor.getInstance())
     }
 
@@ -249,6 +262,32 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
                 ProjectRootManagerEx.getInstanceEx(project).makeRootsChange(EmptyRunnable.getInstance(), false, true)
             }
         }
+    }
+
+    fun registerToolWindow(show: Boolean) {
+        if (!show) return
+        ApplicationManager.getApplication().invokeLater {
+            val manager = ToolWindowManager.getInstance(project)
+            val toolWindow = manager.registerToolWindow(
+                RegisterToolWindowTask.notClosable(
+                    "buf", Icons.BUF_LOGO, ToolWindowAnchor.RIGHT
+                )
+            )
+            createToolWindowContent(toolWindow)
+        }
+    }
+
+    fun createToolWindowContent(toolWindow: ToolWindow) {
+        val model = SmartTreeModel(BufToolWindowRootElement(project))
+        val tree = Tree(model).apply {
+            this.isRootVisible = false
+            this.cellRenderer = SmartTreeCellRenderer()
+        }
+        val panel = ScrollPaneFactory.createScrollPane(tree)
+        val content = ContentFactory.SERVICE.getInstance().createContent(
+            panel, null, false
+        )
+        toolWindow.contentManager.addContent(content)
     }
 
     override fun getState(): State {

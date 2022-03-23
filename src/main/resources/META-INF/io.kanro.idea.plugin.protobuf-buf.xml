@@ -13,7 +13,7 @@
                              instance="io.kanro.idea.plugin.protobuf.buf.settings.BufSettingsConfigurable"/>
         <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.settings.BufSettings"/>
         <editorNotificationProvider
-                implementation="io.kanro.idea.plugin.protobuf.buf.BufNotConfiguredNotificationProvider"/>
+                implementation="io.kanro.idea.plugin.protobuf.buf.ui.BufNotConfiguredNotificationProvider"/>
         <additionalLibraryRootsProvider
                 implementation="io.kanro.idea.plugin.protobuf.buf.project.BufLibraryRootsProvider"/>
 

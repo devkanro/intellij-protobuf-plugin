@@ -14,13 +14,29 @@ class BufRootProvider : ProtobufRootProvider {
         return "bufRoot"
     }
 
+    private fun getModuleContextModules(
+        fileManager: BufFileManager,
+        context: PsiElement
+    ): List<BufFileManager.State.Module>? {
+        val module = fileManager.findModuleFromPsiElement(context) ?: return null
+        val workspace = fileManager.state.workspaces.firstOrNull { module.path in it.roots }
+        return workspace?.let { fileManager.findModulesInWorkspace(it) } ?: listOf(module)
+    }
+
+    private fun getLibraryContextModules(
+        fileManager: BufFileManager,
+        context: PsiElement
+    ): List<BufFileManager.State.Module>? {
+        val library = fileManager.findLibraryFromPsiElement(context) ?: return null
+        return listOf(library)
+    }
+
     override fun getProtobufRoots(context: PsiElement): List<ProtobufRoot> {
         val project = context.project
         val fileManager = project.service<BufFileManager>()
 
-        val module = fileManager.findModuleFromPsiElement(context) ?: return listOf()
-        val workspace = fileManager.state.workspaces.firstOrNull { module.path in it.roots }
-        val contextModules = workspace?.let { fileManager.findModulesInWorkspace(it) } ?: listOf(module)
+        val contextModules = getModuleContextModules(fileManager, context)
+            ?: getLibraryContextModules(fileManager, context) ?: return listOf()
         val localDeps = contextModules.mapNotNull { it.name }.toSet()
 
         val roots = contextModules.mapNotNull {
