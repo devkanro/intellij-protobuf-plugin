@@ -31,7 +31,9 @@ Analyzing features:
 ✅ Java/Kotlin support  
 ✅ [Sisyphus](https://github.com/ButterCam/sisyphus) framework integration  
 ✅ Decompile from proto descriptor for golang  
-✅ [Buf](https://buf.build) integration, auto-configure the protobuf roots from buf.yaml and buf.work.yaml
+✅ [Buf](https://buf.build) integration, auto-configure the protobuf roots from buf.yaml and buf.work.yaml  
+✅ [Buf](https://buf.build) integration, run buf command in buf tool window  
+✅ [Buf](https://buf.build) integration, annotator by buf linter
 
 Editor features:
 
