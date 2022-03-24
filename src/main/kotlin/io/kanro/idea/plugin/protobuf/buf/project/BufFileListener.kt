@@ -177,11 +177,11 @@ class BufFileListener(val project: Project, val fileManager: BufFileManager) : A
         val root = fileManager.cacheRoot() ?: return false
         return when (event) {
             is VFileCreateEvent -> {
-                !VfsUtil.isUnder(event.parent, setOf(root))
+                VfsUtil.isUnder(event.parent, setOf(root))
             }
             else -> {
                 val file = event.file ?: return false
-                !VfsUtil.isUnder(file, setOf(root))
+                VfsUtil.isUnder(file, setOf(root))
             }
         }
     }

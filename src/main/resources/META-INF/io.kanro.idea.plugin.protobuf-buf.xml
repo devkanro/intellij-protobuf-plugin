@@ -13,12 +13,37 @@
                              instance="io.kanro.idea.plugin.protobuf.buf.settings.BufSettingsConfigurable"/>
         <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.settings.BufSettings"/>
         <editorNotificationProvider
-                implementation="io.kanro.idea.plugin.protobuf.buf.BufNotConfiguredNotificationProvider"/>
+                implementation="io.kanro.idea.plugin.protobuf.buf.ui.BufNotConfiguredNotificationProvider"/>
         <additionalLibraryRootsProvider
                 implementation="io.kanro.idea.plugin.protobuf.buf.project.BufLibraryRootsProvider"/>
 
         <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.project.BufFileManager"/>
         <postStartupActivity implementation="io.kanro.idea.plugin.protobuf.buf.project.BufProjectInitializer"/>
-        <externalAnnotator language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.buf.annotator.BufLintAnnotator"/>
+        <externalAnnotator language="protobuf"
+                           implementationClass="io.kanro.idea.plugin.protobuf.buf.annotator.BufLintAnnotator"/>
+        <configurationType implementation="io.kanro.idea.plugin.protobuf.buf.run.BufRunConfigurationType"/>
     </extensions>
+
+    <actions>
+        <group id="io.kanro.idea.plugin.Protobuf.Buf.ToolWindow">
+            <action id="io.kanro.idea.plugin.Protobuf.Buf.ToolWindow.Import"
+                    icon="AllIcons.Actions.Refresh"
+                    class="io.kanro.idea.plugin.protobuf.buf.ui.toolwindow.BufReimportAction">
+            </action>
+            <separator/>
+            <action id="io.kanro.idea.plugin.Protobuf.Buf.ToolWindow.ExpandAll"
+                    icon="AllIcons.Actions.Expandall"
+                    class="io.kanro.idea.plugin.protobuf.buf.ui.toolwindow.BufExpandAllAction">
+            </action>
+            <action id="io.kanro.idea.plugin.Protobuf.Buf.ToolWindow.CollapseAll"
+                    icon="AllIcons.Actions.Collapseall"
+                    class="io.kanro.idea.plugin.protobuf.buf.ui.toolwindow.BufCollapseAllAction">
+            </action>
+            <separator/>
+            <action id="io.kanro.idea.plugin.Protobuf.Buf.ToolWindow.OpenBufConfig"
+                    icon="AllIcons.General.Settings"
+                    class="io.kanro.idea.plugin.protobuf.buf.ui.toolwindow.BufOpenSettingsAction">
+            </action>
+        </group>
+    </actions>
 </idea-plugin>
