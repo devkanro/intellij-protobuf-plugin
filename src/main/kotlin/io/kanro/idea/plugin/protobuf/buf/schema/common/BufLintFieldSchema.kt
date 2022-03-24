@@ -49,6 +49,6 @@ object BufLintRpcAllowGoogleProtobufEmptyResponsesFieldSchema : BufFieldSchema(
 object BufLintServiceSuffixFieldSchema : BufFieldSchema(
     "service_suffix",
     "The `service_suffix` key is optional, and controls the behavior of the `SERVICE_SUFFIX` lint rule. By default, this rule verifies that all service names are suffixed with `Service`.",
-    BufSchemaScalarType.BOOL,
+    BufSchemaScalarType.IDENTIFIER,
     true
 )

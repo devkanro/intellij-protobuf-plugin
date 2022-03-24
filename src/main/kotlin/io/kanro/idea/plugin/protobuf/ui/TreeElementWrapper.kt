@@ -5,7 +5,11 @@ import java.util.Enumeration
 import javax.swing.tree.TreeNode
 
 class TreeElementWrapper(val element: TreeElement, private val parent: TreeElementWrapper?) : TreeNode {
-    private val children = element.children().map { TreeElementWrapper(it, this) }
+    private var children = element.children().map { TreeElementWrapper(it, this) }
+
+    fun reload() {
+        children = element.children().map { TreeElementWrapper(it, this) }
+    }
 
     override fun getChildAt(childIndex: Int): TreeNode {
         return children[childIndex]

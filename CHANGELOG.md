@@ -5,6 +5,8 @@
 ## [Unreleased]
 ### Added
 - Buf lint annotator
+- Run buf command configuration
+- Buf tool window support
 
 ## [1.5.0-EAP]
 ### Added
