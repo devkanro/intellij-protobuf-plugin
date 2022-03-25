@@ -17,7 +17,6 @@ import javax.swing.tree.TreePath
 class SmartTree(treeModel: SmartTreeModel) : Tree(treeModel) {
     init {
         isRootVisible = false
-        cellRenderer = SmartTreeCellRenderer()
         object : DoubleClickListener() {
             override fun onDoubleClick(e: MouseEvent): Boolean {
                 handleDoubleClickOrEnter(getClosestPathForLocation(e.x, e.y), e)

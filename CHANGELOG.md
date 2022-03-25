@@ -3,6 +3,8 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Changed
+- Target to 2022.1
 
 ## [1.5.0]
 ### Added

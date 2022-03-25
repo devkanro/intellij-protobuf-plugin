@@ -38,6 +38,8 @@ object Icons {
 
     var BUF_LOGO: Icon = loadIcon("buf.svg")
 
+    var BUF_LOGO_13: Icon = loadIcon("buf13.svg")
+
     private fun loadIcon(name: String): Icon {
         return IconLoader.getIcon("/io/kanro/idea/plugin/protobuf/icon/$name", Icons::class.java)
     }
