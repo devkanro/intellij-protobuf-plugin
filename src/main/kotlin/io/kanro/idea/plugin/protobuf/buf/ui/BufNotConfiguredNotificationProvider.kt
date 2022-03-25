@@ -6,21 +6,27 @@ import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.EditorNotificationPanel
-import com.intellij.ui.EditorNotifications
+import com.intellij.ui.EditorNotificationProvider
 import io.kanro.idea.plugin.protobuf.buf.settings.BufSettings
 import io.kanro.idea.plugin.protobuf.buf.settings.BufSettingsConfigurable
 import io.kanro.idea.plugin.protobuf.buf.util.isBufConfiguration
 import java.nio.file.Files
+import java.util.function.Function
+import javax.swing.JComponent
 
-class BufNotConfiguredNotificationProvider : EditorNotifications.Provider<EditorNotificationPanel>(), DumbAware {
-    override fun getKey(): Key<EditorNotificationPanel> {
-        return KEY
+class BufNotConfiguredNotificationProvider : EditorNotificationProvider, DumbAware {
+    override fun collectNotificationData(
+        project: Project,
+        file: VirtualFile
+    ): Function<in FileEditor, out JComponent?> {
+        return Function {
+            createNotificationPanel(file, it, project)
+        }
     }
 
-    override fun createNotificationPanel(
+    private fun createNotificationPanel(
         file: VirtualFile,
         fileEditor: FileEditor,
         project: Project
@@ -47,9 +53,5 @@ class BufNotConfiguredNotificationProvider : EditorNotifications.Provider<Editor
         }
 
         return null
-    }
-
-    companion object {
-        private val KEY = Key.create<EditorNotificationPanel>("BufNotConfiguredNotification")
     }
 }

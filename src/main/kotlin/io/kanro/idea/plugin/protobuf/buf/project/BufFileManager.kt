@@ -65,7 +65,7 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         project,
         object : VirtualFilePointerListener {
             override fun validityChanged(pointers: Array<out VirtualFilePointer>) {
-                ReadAction.nonBlocking {
+                ReadAction.nonBlocking<Unit> {
                     refreshLibraries()
                 }.inSmartMode(project).submit(NonUrgentExecutor.getInstance())
             }
@@ -179,7 +179,7 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
     }
 
     fun importProject() {
-        ReadAction.nonBlocking {
+        ReadAction.nonBlocking<Unit> {
             if (this.project.isDisposed) return@nonBlocking
             state.modules.clear()
             state.workspaces.clear()
