@@ -4,15 +4,12 @@
 
 ## [Unreleased]
 ### Added
-- Buf lint annotator
-- Run buf command configuration
-- Buf tool window support
-
-## [1.5.0-EAP]
-### Added
 - Basically code completion and documentation for buf configuration files.
 - Auto config protobuf import roots from buf.yaml and buf.work.yaml, it support locked deps and workspace local module.
 - Pre-provided well-known protos.
+- Buf lint annotator.
+- Run buf command configuration.
+- Buf tool window support.
 
 ## [1.4.8]
 ### Added
