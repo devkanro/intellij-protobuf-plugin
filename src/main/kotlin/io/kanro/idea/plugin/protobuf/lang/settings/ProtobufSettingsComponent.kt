@@ -14,7 +14,9 @@ import com.intellij.ui.table.TableView
 import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ListTableModel
 import com.intellij.util.ui.components.BorderLayoutPanel
+import io.kanro.idea.plugin.protobuf.lang.util.contentEquals
 import java.awt.BorderLayout
+import java.util.Collections
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JTable
@@ -54,11 +56,11 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
     }
 
     override fun isModified(settings: ProtobufSettings): Boolean {
-        return !settings.state.importRoots.contentEquals(importRootsModel.items.toTypedArray())
+        return !settings.state.importRoots.contentEquals(importRootsModel.items)
     }
 
     override fun apply(settings: ProtobufSettings) {
-        settings.state.importRoots = importRootsModel.items.toTypedArray()
+        settings.state.importRoots = importRootsModel.items.toMutableList()
         ApplicationManager.getApplication().runWriteAction {
             ProjectRootManagerEx.getInstanceEx(project).makeRootsChange({}, false, true)
         }

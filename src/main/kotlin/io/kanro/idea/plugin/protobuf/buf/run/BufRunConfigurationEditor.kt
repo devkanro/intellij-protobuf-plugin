@@ -53,7 +53,9 @@ class BufRunConfigurationEditor(private val project: Project) : SettingsEditor<B
             }
             row {
                 label("Command:")
-                comboBox(arrayOf("build", "lint", "generate", "break", "push", "mod")).bindItem(::command)
+                comboBox(arrayOf("build", "lint", "generate", "break", "push", "mod")).bindItem(::command).applyToComponent {
+                    this.isEditable = true
+                }
             }
             row {
                 label("Target:")

@@ -11,10 +11,11 @@ class ImportRootProvider : ProtobufRootProvider {
         val fileUrl = element.containingFile.originalFile.virtualFile?.url
 
         return settings.state.importRoots.mapNotNull {
-            val root = VirtualFileManager.getInstance().findFileByUrl(it.path) ?: return@mapNotNull null
+            val path = it.path ?: return@mapNotNull null
+            val root = VirtualFileManager.getInstance().findFileByUrl(path) ?: return@mapNotNull null
             if (it.common) return@mapNotNull ProtobufRoot(null, root)
             if (fileUrl == null) return@mapNotNull null
-            if (fileUrl.startsWith(it.path)) return@mapNotNull ProtobufRoot(null, root)
+            if (fileUrl.startsWith(path)) return@mapNotNull ProtobufRoot(null, root)
             null
         }
     }

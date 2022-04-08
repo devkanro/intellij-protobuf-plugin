@@ -34,7 +34,7 @@ fun PsiElement.yamlPath(): QualifiedName? {
 }
 
 fun PsiElement.rootSchema(): BufSchema<out YAMLPsiElement>? {
-    val name = containingFile.originalFile.virtualFile?.name ?: return null
+    val name = containingFile?.originalFile?.virtualFile?.name ?: return null
     val document = parentOfType<YAMLDocument>(false) ?: return null
     val rootMapping = document.topLevelValue as? YAMLMapping
     val version = rootMapping?.keyValues?.firstOrNull { it.keyText == "version" }?.valueText?.takeIf {
