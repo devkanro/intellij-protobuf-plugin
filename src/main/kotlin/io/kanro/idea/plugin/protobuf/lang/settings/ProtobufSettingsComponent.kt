@@ -16,7 +16,6 @@ import com.intellij.util.ui.ListTableModel
 import com.intellij.util.ui.components.BorderLayoutPanel
 import io.kanro.idea.plugin.protobuf.lang.util.contentEquals
 import java.awt.BorderLayout
-import java.util.Collections
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JTable
