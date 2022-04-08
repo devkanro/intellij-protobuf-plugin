@@ -3,6 +3,8 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+
+## [1.5.10]
 ### Fixed
 - Fix protobuf settings not being saved.
 
