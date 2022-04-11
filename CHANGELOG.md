@@ -3,6 +3,8 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+### Fixed
+- Fix buf toolwindow tree cell rendering in IU-2021.3.3
 
 ## [1.5.10]
 ### Fixed
