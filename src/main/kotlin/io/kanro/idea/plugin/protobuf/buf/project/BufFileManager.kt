@@ -53,6 +53,7 @@ import io.kanro.idea.plugin.protobuf.buf.util.BUF_WORK_YAML
 import io.kanro.idea.plugin.protobuf.buf.util.BUF_YAML
 import io.kanro.idea.plugin.protobuf.buf.util.BufFiles
 import io.kanro.idea.plugin.protobuf.ui.SmartTree
+import io.kanro.idea.plugin.protobuf.ui.SmartTreeCellRenderer
 import io.kanro.idea.plugin.protobuf.ui.SmartTreeModel
 import java.util.Stack
 
@@ -313,6 +314,7 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         toolWindow.title = "Buf"
         treeModel.reload()
         val tree = SmartTree(treeModel)
+        tree.cellRenderer = SmartTreeCellRenderer()
         val panel = SimpleToolWindowPanel(true)
         panel.toolbar = ActionManager.getInstance().createActionToolbar(
             "Protobuf.Buf",
