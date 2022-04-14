@@ -3,6 +3,8 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## [Unreleased]
+
+## [1.5.12]
 ### Fixed
 - Fix type suggestions by stub indexing.
 
