@@ -1,6 +1,7 @@
 package io.kanro.idea.plugin.protobuf.buf.project
 
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.AsyncFileListener
@@ -17,7 +18,7 @@ import io.kanro.idea.plugin.protobuf.buf.util.BUF_WORK_YAML
 import io.kanro.idea.plugin.protobuf.buf.util.BUF_YAML
 import io.kanro.idea.plugin.protobuf.buf.util.isBufConfiguration
 
-class BufFileListener(val project: Project, val fileManager: BufFileManager) : AsyncFileListener {
+class BufFileListener(val project: Project, val fileManager: BufFileManager) : AsyncFileListener, DumbAware {
     private val logger = Logger.getInstance(BufFileListener::class.java)
     override fun prepareChange(events: MutableList<out VFileEvent>): AsyncFileListener.ChangeApplier? {
         val validEvents = events.filter { isBufFileEvent(it) }

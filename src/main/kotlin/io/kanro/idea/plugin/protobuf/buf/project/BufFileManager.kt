@@ -14,6 +14,7 @@ import com.intellij.openapi.components.BaseState
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx
 import com.intellij.openapi.ui.SimpleToolWindowPanel
@@ -24,9 +25,7 @@ import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager
-import com.intellij.openapi.wm.RegisterToolWindowTask
 import com.intellij.openapi.wm.ToolWindow
-import com.intellij.openapi.wm.ToolWindowAnchor
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.FilenameIndex
@@ -38,7 +37,6 @@ import com.intellij.ui.content.ContentFactory
 import com.intellij.util.concurrency.NonUrgentExecutor
 import com.intellij.util.xmlb.annotations.Tag
 import com.intellij.util.xmlb.annotations.XCollection
-import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufDepsFieldSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufLockDepsCommitSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufLockDepsFieldSchema
@@ -58,7 +56,7 @@ import io.kanro.idea.plugin.protobuf.ui.SmartTreeModel
 import java.util.Stack
 
 @State(name = "BufFileManager", storages = [Storage("protobuf.xml")])
-class BufFileManager(val project: Project) : PersistentStateComponent<BufFileManager.State> {
+class BufFileManager(val project: Project) : PersistentStateComponent<BufFileManager.State>, DumbAware {
     private val state = State()
     private val yamlMapper = YAMLMapper()
     private val cacheRootPointer = VirtualFilePointerManager.getInstance().createDirectoryPointer(
@@ -67,7 +65,7 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         project,
         object : VirtualFilePointerListener {
             override fun validityChanged(pointers: Array<out VirtualFilePointer>) {
-                ReadAction.nonBlocking {
+                ReadAction.nonBlocking<Unit> {
                     refreshLibraries()
                 }.inSmartMode(project).submit(NonUrgentExecutor.getInstance())
             }
@@ -181,7 +179,7 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
     }
 
     fun importProject() {
-        ReadAction.nonBlocking {
+        ReadAction.nonBlocking<Unit> {
             if (this.project.isDisposed) return@nonBlocking
             state.modules.clear()
             state.workspaces.clear()
@@ -200,8 +198,7 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
             state.modules += modules.sortedBy { it.path }
             state.workspaces += workspaces.sortedBy { it.path }
             refreshLibraries()
-
-            registerToolWindow(state.modules.isNotEmpty())
+            updateToolWindow(state.modules.isNotEmpty())
         }.inSmartMode(project).submit(NonUrgentExecutor.getInstance())
     }
 
@@ -290,31 +287,11 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         }
     }
 
-    private fun registerToolWindow(show: Boolean) {
-        if (!show) return
-        ApplicationManager.getApplication().invokeLater {
-            val manager = ToolWindowManager.getInstance(project)
-            val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(TOOL_WINDOW_ID)
-            if (toolWindow == null) {
-                createToolWindowContent(
-                    manager.registerToolWindow(
-                        RegisterToolWindowTask.notClosable(
-                            TOOL_WINDOW_ID, Icons.BUF_LOGO, ToolWindowAnchor.RIGHT
-                        )
-                    )
-                )
-            } else {
-                updateToolWindow(show)
-            }
-        }
-    }
-
-    private fun createToolWindowContent(toolWindow: ToolWindow) {
-        toolWindow.stripeTitle = "Buf"
-        toolWindow.title = "Buf"
+    fun createToolWindowContent(toolWindow: ToolWindow) {
         treeModel.reload()
-        val tree = SmartTree(treeModel)
-        tree.cellRenderer = SmartTreeCellRenderer()
+        val tree = SmartTree(treeModel).apply {
+            cellRenderer = SmartTreeCellRenderer()
+        }
         val panel = SimpleToolWindowPanel(true)
         panel.toolbar = ActionManager.getInstance().createActionToolbar(
             "Protobuf.Buf",
@@ -338,8 +315,7 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
 
     private fun updateToolWindow(show: Boolean) {
         ApplicationManager.getApplication().invokeLater {
-            val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(TOOL_WINDOW_ID)
-                ?: return@invokeLater registerToolWindow(show)
+            val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(TOOL_WINDOW_ID) ?: return@invokeLater
 
             if (!show) {
                 toolWindow.hide()
