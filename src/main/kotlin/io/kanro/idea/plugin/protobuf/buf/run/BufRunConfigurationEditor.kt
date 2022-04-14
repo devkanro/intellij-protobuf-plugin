@@ -10,6 +10,7 @@ import com.intellij.ui.components.fields.ExpandableTextField
 import com.intellij.ui.dsl.builder.bindItem
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.ui.dsl.builder.toNullableProperty
 import com.intellij.util.execution.ParametersListUtil
 import io.kanro.idea.plugin.protobuf.buf.project.BufFileManager
 import javax.swing.JComponent
@@ -46,22 +47,32 @@ class BufRunConfigurationEditor(private val project: Project) : SettingsEditor<B
     override fun createEditor(): JComponent {
         dialogPanel = panel {
             row {
-                label("Buf Executable:")
+                label("Buf executable:")
                 textFieldWithBrowseButton("Buf") {
                     it.path
                 }.bindText(::bufPath)
             }
             row {
                 label("Command:")
-                comboBox(arrayOf("build", "lint", "generate", "break", "push", "mod")).bindItem(::command).applyToComponent {
+                comboBox(
+                    listOf(
+                        "build",
+                        "lint",
+                        "generate",
+                        "break",
+                        "push",
+                        "mod"
+                    )
+                ).bindItem(::command.toNullableProperty()).applyToComponent {
                     this.isEditable = true
                 }
             }
             row {
                 label("Target:")
                 val manager = project.service<BufFileManager>()
-                val t = comboBox(
-                    (manager.state.workspaces + manager.state.modules).toTypedArray(),
+                val items: List<Any> = manager.state.workspaces + manager.state.modules
+                comboBox(
+                    items,
                     BufWorkspaceAndModuleListCellRenderer
                 ).bindItem({
                     target

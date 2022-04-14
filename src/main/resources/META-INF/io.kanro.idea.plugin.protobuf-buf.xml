@@ -22,6 +22,10 @@
         <externalAnnotator language="protobuf"
                            implementationClass="io.kanro.idea.plugin.protobuf.buf.annotator.BufLintAnnotator"/>
         <configurationType implementation="io.kanro.idea.plugin.protobuf.buf.run.BufRunConfigurationType"/>
+        <toolWindow id="io.kanro.idea.plugin.protobuf.toolwindow"
+                    icon="/io/kanro/idea/plugin/protobuf/icon/buf13.svg"
+                    anchor="right"
+                    factoryClass="io.kanro.idea.plugin.protobuf.buf.ui.toolwindow.BufToolWindowFactory"/>
     </extensions>
 
     <actions>
