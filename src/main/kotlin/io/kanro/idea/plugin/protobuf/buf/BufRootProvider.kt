@@ -5,15 +5,14 @@ import com.intellij.openapi.util.ModificationTracker
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.buf.project.BufFileManager
+import io.kanro.idea.plugin.protobuf.lang.root.CachedProtobufRootProvider
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRoot
-import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootProvider
 import kotlin.io.path.Path
 
-class BufRootProvider : ProtobufRootProvider {
+class BufRootProvider : CachedProtobufRootProvider() {
     override fun id(): String {
         return "bufRoot"
     }
-
     private fun getModuleContextModules(
         fileManager: BufFileManager,
         context: PsiElement
@@ -31,7 +30,7 @@ class BufRootProvider : ProtobufRootProvider {
         return listOf(library)
     }
 
-    override fun getProtobufRoots(context: PsiElement): List<ProtobufRoot> {
+    override fun collectRoots(context: PsiElement): List<ProtobufRoot> {
         val project = context.project
         val fileManager = project.service<BufFileManager>()
 

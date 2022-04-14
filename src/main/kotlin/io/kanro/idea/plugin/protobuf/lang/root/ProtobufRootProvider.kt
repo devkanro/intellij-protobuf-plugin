@@ -1,8 +1,8 @@
 package io.kanro.idea.plugin.protobuf.lang.root
 
 import com.intellij.openapi.extensions.ExtensionPointName
-import com.intellij.openapi.util.ModificationTracker
 import com.intellij.psi.PsiElement
+import com.intellij.psi.search.GlobalSearchScope
 
 interface ProtobufRootProvider {
     companion object {
@@ -12,7 +12,9 @@ interface ProtobufRootProvider {
 
     fun id(): String?
 
-    fun getProtobufRoots(context: PsiElement): List<ProtobufRoot>
+    fun roots(context: PsiElement): List<ProtobufRoot>
 
-    fun modificationTracker(context: PsiElement): ModificationTracker
+    fun searchScope(context: PsiElement): GlobalSearchScope? {
+        return GlobalSearchScope.filesScope(context.project, roots(context).map { it.root })
+    }
 }

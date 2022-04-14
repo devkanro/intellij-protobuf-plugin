@@ -1,12 +1,12 @@
 package io.kanro.idea.plugin.protobuf.lang.root
 
-import com.intellij.openapi.util.ModificationTracker
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiElement
+import com.intellij.psi.search.GlobalSearchScope
 import io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettings
 
 class ImportRootProvider : ProtobufRootProvider {
-    override fun getProtobufRoots(element: PsiElement): List<ProtobufRoot> {
+    override fun roots(element: PsiElement): List<ProtobufRoot> {
         val settings = element.project.getService(ProtobufSettings::class.java)
         val fileUrl = element.containingFile.originalFile.virtualFile?.url
 
@@ -20,11 +20,11 @@ class ImportRootProvider : ProtobufRootProvider {
         }
     }
 
-    override fun id(): String {
-        return "settings"
+    override fun searchScope(context: PsiElement): GlobalSearchScope? {
+        return GlobalSearchScope.filesScope(context.project, roots(context).map { it.root })
     }
 
-    override fun modificationTracker(context: PsiElement): ModificationTracker {
-        return context.project.getService(ProtobufSettings::class.java)
+    override fun id(): String {
+        return "settings"
     }
 }

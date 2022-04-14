@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 ### Fixed
+- Fix type suggestions by stub indexing.
+
+## [1.5.11]
+### Fixed
 - Fix buf toolwindow tree cell rendering in IU-2021.3.3
 
 ## [1.5.10]

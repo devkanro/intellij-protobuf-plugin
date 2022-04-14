@@ -6,8 +6,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
 import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
 
 object ProtobufRootResolver {
@@ -34,13 +32,10 @@ object ProtobufRootResolver {
 
     private fun getAvailableRoots(context: PsiElement): List<VirtualFile> {
         val file = context.containingFile
-        return CachedValuesManager.getManager(context.project).getCachedValue(file) {
-            val providers = ProtobufRootProvider.extensionPoint.extensionList.toTypedArray()
-            val roots = providers.asSequence().map {
-                it.id() to it.getProtobufRoots(file)
-            }.distinctRoots()
-            CachedValueProvider.Result.create(roots, *providers.map { it.modificationTracker(file) }.toTypedArray())
-        }
+        val providers = ProtobufRootProvider.extensionPoint.extensionList.toTypedArray()
+        return providers.asSequence().map {
+            it.id() to it.roots(file)
+        }.distinctRoots()
     }
 
     fun getImportPath(file: VirtualFile, context: PsiElement): String? {
@@ -59,7 +54,9 @@ object ProtobufRootResolver {
     }
 
     fun searchScope(context: PsiElement): GlobalSearchScope {
-        return GlobalSearchScope.filesScope(context.project, getAvailableRoots(context).toList())
+        val file = context.containingFile
+        val providers = ProtobufRootProvider.extensionPoint.extensionList
+        return GlobalSearchScope.union(providers.mapNotNull { it.searchScope(file) })
     }
 
     private fun findFile(path: String, roots: Iterable<VirtualFile>): Iterable<VirtualFile> {

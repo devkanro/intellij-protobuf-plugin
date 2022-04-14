@@ -1,9 +1,10 @@
 package io.kanro.idea.plugin.protobuf.lang.root
 
 import com.intellij.openapi.roots.ModuleRootManager
-import com.intellij.openapi.roots.ProjectRootModificationTracker
-import com.intellij.openapi.util.ModificationTracker
+import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.psi.PsiElement
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.search.ProjectScope
 import io.kanro.idea.plugin.protobuf.lang.util.module
 
 class DepModuleSourceRootProvider : ProtobufRootProvider {
@@ -11,17 +12,21 @@ class DepModuleSourceRootProvider : ProtobufRootProvider {
         return "moduleDeps"
     }
 
-    override fun getProtobufRoots(context: PsiElement): List<ProtobufRoot> {
+    override fun roots(context: PsiElement): List<ProtobufRoot> {
         return context.module?.let {
             ModuleRootManager.getInstance(it).orderEntries()
                 .withoutLibraries()
                 .withoutSdk().allSourceRoots.map {
                     ProtobufRoot(null, it)
                 }
-        } ?: listOf()
+        } ?: ProjectRootManager.getInstance(context.project).orderEntries()
+            .withoutLibraries()
+            .withoutSdk().allSourceRoots.map {
+                ProtobufRoot(null, it)
+            }
     }
 
-    override fun modificationTracker(context: PsiElement): ModificationTracker {
-        return ProjectRootModificationTracker.getInstance(context.project)
+    override fun searchScope(context: PsiElement): GlobalSearchScope? {
+        return context.module?.moduleWithDependenciesScope ?: ProjectScope.getContentScope(context.project)
     }
 }
