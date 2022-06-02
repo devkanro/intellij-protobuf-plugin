@@ -32,7 +32,7 @@ interface ProtobufExtendDefinition :
         return (findChild<ProtobufTypeName>()?.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.toString()
     }
 
-    override fun lookup(): LookupElementBuilder? {
+    override fun lookup(name: String?): LookupElementBuilder? {
         return null
     }
 }

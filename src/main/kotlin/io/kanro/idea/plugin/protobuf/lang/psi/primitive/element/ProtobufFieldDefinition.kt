@@ -36,6 +36,7 @@ interface ProtobufFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefiniti
             return@getCachedValue CachedValueProvider.Result.create(null, PsiModificationTracker.MODIFICATION_COUNT)
         }
     }
+
     override fun fieldType(): String? {
         resourceType()?.let {
             return it

@@ -69,12 +69,12 @@ interface ProtobufPackageName :
         }
     }
 
-    override fun lookup(): LookupElementBuilder? {
-        val name = name() ?: return null
-        return LookupElementBuilder.create(name)
-            .withTypeText("package")
-            .withPresentableText(name)
+    override fun lookup(name: String?): LookupElementBuilder? {
+        val currentName = name() ?: return null
+        return LookupElementBuilder.create(name ?: currentName)
             .withIcon(getIcon(false))
+            .withPresentableText(currentName)
+            .withTypeText("package")
             .withPsiElement(this)
     }
 }

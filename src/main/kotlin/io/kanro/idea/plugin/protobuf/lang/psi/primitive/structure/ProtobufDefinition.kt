@@ -51,11 +51,11 @@ interface ProtobufDefinition :
         return this
     }
 
-    override fun lookup(): LookupElementBuilder? {
-        val name = name() ?: return null
-        return LookupElementBuilder.create(name)
+    override fun lookup(name: String?): LookupElementBuilder? {
+        val currentName = name() ?: return null
+        return LookupElementBuilder.create(name ?: currentName)
             .withIcon(getIcon(false))
-            .withPresentableText(name)
+            .withPresentableText(currentName)
             .withTailText(tailText(), true)
             .withTypeText(type())
             .withPsiElement(this)

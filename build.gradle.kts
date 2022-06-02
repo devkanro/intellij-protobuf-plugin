@@ -30,6 +30,7 @@ dependencies {
     implementation("org.commonmark:commonmark:0.18.2")
     implementation("org.commonmark:commonmark-ext-gfm-tables:0.18.2")
     implementation("org.commonmark:commonmark-ext-autolink:0.18.2")
+    implementation("com.bybutter.sisyphus:sisyphus-grpc:1.3.42")
 }
 
 // Configure gradle-intellij-plugin plugin.

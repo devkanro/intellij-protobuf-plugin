@@ -58,7 +58,7 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
         return "Protobuf File"
     }
 
-    override fun lookup(): LookupElementBuilder? {
+    override fun lookup(name: String?): LookupElementBuilder? {
         return null
     }
 

@@ -2,7 +2,11 @@ package io.kanro.idea.plugin.protobuf.lang.psi
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiElementFilter
+import com.intellij.psi.util.PsiModificationTracker
+import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.elementType
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
@@ -260,6 +264,44 @@ inline fun <reified T : ProtobufScopeItem> ProtobufScope.items(block: (T) -> Uni
     }
 }
 
+inline fun <reified T : ProtobufScopeItem> ProtobufScope.firstItemOrNull(block: (T) -> Boolean): T? {
+    this.items().forEach {
+        when (it) {
+            is ProtobufVirtualScope -> {
+                it.items().firstOrNull {
+                    it is T && block(it)
+                }?.let { return it as T }
+            }
+            is T -> {
+                if (block(it)) return it
+            }
+        }
+    }
+    return null
+}
+
+
+inline fun <reified T : ProtobufScopeItem> ProtobufScope.filterItem(block: (T) -> Boolean): List<T> {
+    val result = mutableListOf<T>()
+    this.items().forEach {
+        when (it) {
+            is ProtobufVirtualScope -> {
+                it.items().forEach {
+                    if (it is T && block(it)) {
+                        result += it
+                    }
+                }
+            }
+            is T -> {
+                if (block(it)) {
+                    result += it
+                }
+            }
+        }
+    }
+    return result
+}
+
 fun ProtobufScope.realItems(): Array<ProtobufScopeItem> {
     val result = mutableListOf<ProtobufScopeItem>()
     this.items<ProtobufScopeItem> {
@@ -327,10 +369,86 @@ fun ProtobufRpcIO.stream(): Boolean {
 }
 
 fun ProtobufFieldLike.jsonName(): String? {
-    if (this is ProtobufOptionOwner) {
-        options("json_name").lastOrNull()?.value()?.stringValue()?.let {
-            return it
+    return CachedValuesManager.getCachedValue(this) {
+        val option = (this as? ProtobufOptionOwner)?.options("json_name")?.lastOrNull()
+        val result = option?.value()?.stringValue()
+            ?: name()?.toCamelCase()
+        CachedValueProvider.Result.create(
+            result,
+            PsiModificationTracker.MODIFICATION_COUNT
+        )
+    }
+}
+
+/**
+ * Resolve type of qualified field for a message definition.
+ * It could be returning a [ProtobufMessageDefinition] for message field.
+ * returning a [ProtobufEnumDefinition] for enum field.
+ * returning a [ProtobufMapFieldDefinition] for map field.
+ * returning a [ProtobufGroupDefinition] for group field.
+ */
+fun ProtobufMessageDefinition.resolveFieldType(qualifiedName: QualifiedName): ProtobufElement? {
+    if (qualifiedName.components.isEmpty()) return this
+
+    val q = Stack<String>().apply {
+        addAll(qualifiedName.components.asReversed())
+    }
+
+    var scope: ProtobufScope = this
+
+    while (q.isNotEmpty()) {
+        val field = q.pop()
+        val fieldDefinition = scope.firstItemOrNull<ProtobufFieldLike> {
+            it.name() == field || it.jsonName() == field
+        } ?: return null
+
+        when (fieldDefinition) {
+            is ProtobufFieldDefinition -> {
+                val type = fieldDefinition.typeName.reference?.resolve() as? ProtobufElement ?: return null
+                if (q.isEmpty()) return type
+                scope = type as? ProtobufMessageDefinition ?: return null
+            }
+            is ProtobufMapFieldDefinition -> {
+                if (q.isEmpty()) return fieldDefinition
+                q.pop()
+                val type = fieldDefinition.typeNameList.lastOrNull()?.reference?.resolve() as? ProtobufElement
+                    ?: return null
+                if (q.isEmpty()) return type
+                scope = type as? ProtobufMessageDefinition ?: return null
+            }
+            is ProtobufGroupDefinition -> {
+                scope = fieldDefinition
+                if (q.isEmpty()) return scope
+            }
         }
     }
-    return name()?.toCamelCase()
+    return null
+}
+
+/**
+ * Resolve qualified field for a message definition.
+ * It could be returning any [ProtobufFieldLike].
+ */
+fun ProtobufMessageDefinition.resolveField(qualifiedName: QualifiedName): ProtobufFieldLike? {
+    val field = qualifiedName.lastComponent ?: return null
+    val parentField = qualifiedName.removeTail(1)
+    val parentType = resolveFieldType(parentField) ?: return null
+
+    return when (parentType) {
+        is ProtobufMessageDefinition -> {
+            parentType.firstItemOrNull { it.name() == field || it.jsonName() == field }
+        }
+        is ProtobufGroupDefinition -> {
+            parentType.firstItemOrNull { it.name() == field || it.jsonName() == field }
+        }
+        else -> null
+    }
+}
+
+fun ProtobufFieldDefinition.repeated(): Boolean {
+    return this.fieldLabel?.textMatches("repeated") == true
+}
+
+fun ProtobufGroupDefinition.repeated(): Boolean {
+    return this.fieldLabel?.textMatches("repeated") == true
 }

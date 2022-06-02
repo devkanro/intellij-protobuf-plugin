@@ -5,5 +5,5 @@ import com.intellij.navigation.NavigationItem
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 
 interface ProtobufLookupItem : ProtobufElement, NavigationItem {
-    fun lookup(): LookupElementBuilder?
+    fun lookup(name: String? = null): LookupElementBuilder?
 }

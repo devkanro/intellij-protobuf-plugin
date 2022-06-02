@@ -1,5 +1,6 @@
 package io.kanro.idea.plugin.protobuf.lang.folding
 
+import com.intellij.codeInsight.folding.CodeFoldingSettings
 import com.intellij.lang.ASTNode
 import com.intellij.lang.folding.FoldingBuilderEx
 import com.intellij.lang.folding.FoldingDescriptor
@@ -40,6 +41,7 @@ class ProtobufFoldingBuilder : FoldingBuilderEx(), DumbAware {
     private fun buildFoldingDescriptorForFile(protobufFile: ProtobufFile): List<FoldingDescriptor> {
         val result = mutableListOf<FoldingDescriptor>()
         val stack = Stack<ProtobufImportStatement>()
+        val default = CodeFoldingSettings.getInstance().COLLAPSE_IMPORTS
 
         protobufFile.children.forEach {
             when (it) {
@@ -62,7 +64,7 @@ class ProtobufFoldingBuilder : FoldingBuilderEx(), DumbAware {
                             range,
                             FoldingGroup.newGroup("import"),
                             "...",
-                            true,
+                            default,
                             setOf()
                         )
                     } else {
