@@ -12,9 +12,11 @@ interface ProtobufMapFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefin
     override fun type(): String {
         return "field"
     }
+
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.FIELD
     }
+
     override fun fieldType(): String? {
         val typeNames = findChildren<ProtobufTypeName>()
         if (typeNames.size != 2) return "map"
@@ -23,6 +25,7 @@ interface ProtobufMapFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefin
 
         return "map<$key, $value>"
     }
+
     override fun names(): Set<String> {
         return setOfNotNull(name(), jsonName())
     }

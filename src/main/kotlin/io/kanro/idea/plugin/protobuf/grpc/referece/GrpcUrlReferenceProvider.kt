@@ -9,8 +9,8 @@ import com.intellij.util.ProcessingContext
 
 class GrpcUrlReferenceProvider : PsiReferenceProvider() {
     override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
-        if (element !is HttpRequestTarget) return arrayOf()
-        val path = element.pathAbsolute ?: return arrayOf()
+        if (element !is HttpRequestTarget) return PsiReference.EMPTY_ARRAY
+        val path = element.pathAbsolute ?: return PsiReference.EMPTY_ARRAY
         val separatorIndex = path.text.withIndex().asSequence().filter { it.value == '/' }.map { it.index }.toList()
         val pathRange = path.textRangeInParent
         return when (separatorIndex.size) {
@@ -24,7 +24,7 @@ class GrpcUrlReferenceProvider : PsiReferenceProvider() {
                 val methodRange = TextRange(pathRange.startOffset + separatorIndex[1] + 1, pathRange.endOffset)
                 arrayOf(GrpcServiceReference(element, serviceRange), GrpcMethodReference(element, methodRange))
             }
-            else -> arrayOf()
+            else -> PsiReference.EMPTY_ARRAY
         }
     }
 }

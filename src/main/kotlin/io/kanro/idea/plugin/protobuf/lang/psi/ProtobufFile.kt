@@ -3,6 +3,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi
 import com.intellij.navigation.ItemPresentation
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
+import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
@@ -38,7 +39,7 @@ interface ProtobufFile :
     fun addImport(path: String): Boolean
 
     fun stubData(): Array<String> {
-        return arrayOf()
+        return ArrayUtilRt.EMPTY_STRING_ARRAY
     }
 
     fun stubExternalData(): Map<String, String> {

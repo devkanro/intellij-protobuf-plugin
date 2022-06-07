@@ -2,7 +2,6 @@ package io.kanro.idea.plugin.protobuf.grpc.schema
 
 import com.intellij.httpClient.http.request.psi.HttpMessageBody
 import com.intellij.httpClient.http.request.psi.HttpRequest
-import com.intellij.httpClient.http.request.psi.HttpRequestBody
 import com.intellij.json.psi.JsonFile
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.openapi.vfs.VirtualFile
@@ -11,8 +10,8 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.jsonSchema.extension.ContentAwareJsonSchemaFileProvider
-import io.kanro.idea.plugin.protobuf.grpc.GrpcRequestExecutionSupport
-import io.kanro.idea.plugin.protobuf.grpc.ServiceMethodIndex
+import io.kanro.idea.plugin.protobuf.grpc.index.ServiceMethodIndex
+import io.kanro.idea.plugin.protobuf.grpc.request.GrpcRequestExecutionSupport
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 

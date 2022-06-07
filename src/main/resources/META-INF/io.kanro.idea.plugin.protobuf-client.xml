@@ -1,26 +1,23 @@
 <idea-plugin>
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
-        <indexProvider implementation="io.kanro.idea.plugin.protobuf.grpc.ServiceMethodIndexProvider"/>
+        <indexProvider implementation="io.kanro.idea.plugin.protobuf.grpc.index.ServiceMethodIndexProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
         <codeInsight.lineMarkerProvider language="protobuf"
                                         implementationClass="io.kanro.idea.plugin.protobuf.grpc.gutter.GrpcRunRequestGutterProvider"/>
         <httpClient.RequestExecutionSupport
-                implementation="io.kanro.idea.plugin.protobuf.grpc.GrpcRequestExecutionSupport"/>
+                implementation="io.kanro.idea.plugin.protobuf.grpc.request.GrpcRequestExecutionSupport"/>
         <httpClient.injection.request.implicitMimeTypeProvider
-                implementation="io.kanro.idea.plugin.protobuf.grpc.GrpcMimeTypeProvider"/>
-        <stubIndex implementation="io.kanro.idea.plugin.protobuf.grpc.ServiceMethodIndex"/>
-        <stubIndex implementation="io.kanro.idea.plugin.protobuf.grpc.ServiceQualifiedNameIndex"/>
-        <stubIndex implementation="io.kanro.idea.plugin.protobuf.grpc.ServiceShortNameIndex"/>
+                implementation="io.kanro.idea.plugin.protobuf.grpc.request.GrpcMimeTypeProvider"/>
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.grpc.index.ServiceMethodIndex"/>
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.grpc.index.ServiceQualifiedNameIndex"/>
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.grpc.index.ServiceShortNameIndex"/>
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.grpc.index.MessageShortNameIndex"/>
         <psi.referenceContributor language="HTTP Request"
                                   implementation="io.kanro.idea.plugin.protobuf.grpc.referece.GrpcPsiReferenceContributor"/>
         <psi.referenceContributor language="JSON"
                                   implementation="io.kanro.idea.plugin.protobuf.grpc.referece.GrpcJsonReferenceContributor"/>
-    </extensions>
-
-    <extensions defaultExtensionNs="JavaScript.JsonSchema">
-        <ContentAwareSchemaFileProvider
-                implementation="io.kanro.idea.plugin.protobuf.grpc.schema.GrpcJsonSchemaProviderFactory"/>
+        <typedHandler implementation="io.kanro.idea.plugin.protobuf.grpc.editor.JsonFieldCompletionSuggester"/>
     </extensions>
 </idea-plugin>

@@ -7,7 +7,7 @@ import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiReferenceContributor
 import com.intellij.psi.PsiReferenceRegistrar
 import com.intellij.util.ProcessingContext
-import io.kanro.idea.plugin.protobuf.grpc.GrpcRequestExecutionSupport
+import io.kanro.idea.plugin.protobuf.grpc.request.GrpcRequestExecutionSupport
 import io.kanro.idea.plugin.protobuf.lang.psi.prev
 
 class GrpcPsiReferenceContributor : PsiReferenceContributor() {

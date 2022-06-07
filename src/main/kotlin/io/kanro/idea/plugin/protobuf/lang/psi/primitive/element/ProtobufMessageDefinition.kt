@@ -10,7 +10,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionO
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
 import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.value
 import javax.swing.Icon
 
 interface ProtobufMessageDefinition : ProtobufNumberScope, ProtobufDefinition {

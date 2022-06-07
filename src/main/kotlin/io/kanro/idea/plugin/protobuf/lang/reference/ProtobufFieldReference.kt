@@ -4,6 +4,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.tree.LeafElement
+import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldName
@@ -31,7 +32,7 @@ class ProtobufFieldReference(field: ProtobufFieldName) :
     }
 
     override fun getVariants(): Array<Any> {
-        val message = element.message() ?: return arrayOf()
+        val message = element.message() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         return message.realItems().mapNotNull {
             (it as? ProtobufFieldLike)?.lookup()?.let {
                 when (element.parent) {

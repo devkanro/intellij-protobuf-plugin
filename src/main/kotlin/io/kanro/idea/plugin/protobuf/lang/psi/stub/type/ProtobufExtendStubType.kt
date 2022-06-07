@@ -12,7 +12,11 @@ object ProtobufExtendStubType : ProtobufStubTypeBase<ProtobufExtendStub, Protobu
         return "protobuf.extend.stub"
     }
 
-    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufExtendStub {
+    override fun createStub(
+        data: Array<String>,
+        external: Map<String, String>,
+        parentStub: StubElement<*>?
+    ): ProtobufExtendStub {
         return ProtobufExtendStub(data, external, parentStub)
     }
 

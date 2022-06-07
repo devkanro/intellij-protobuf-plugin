@@ -38,7 +38,7 @@ class AipAnnotator : Annotator {
                                 holder.newAnnotation(
                                     HighlightSeverity.ERROR,
                                     "Field ${o.text} of message \"${
-                                    (it as ProtobufFieldReferenceInString).message()?.qualifiedName()
+                                        (it as ProtobufFieldReferenceInString).message()?.qualifiedName()
                                     }\" not found."
                                 )
                                     .range(o.textRange)

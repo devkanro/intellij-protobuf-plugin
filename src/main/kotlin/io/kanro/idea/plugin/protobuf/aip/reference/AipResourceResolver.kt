@@ -7,7 +7,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.public
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.value
 import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import java.util.Stack
 

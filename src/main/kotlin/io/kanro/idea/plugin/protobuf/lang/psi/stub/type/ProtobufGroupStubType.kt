@@ -12,7 +12,11 @@ object ProtobufGroupStubType : ProtobufStubTypeBase<ProtobufGroupStub, ProtobufG
         return "protobuf.group.stub"
     }
 
-    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufGroupStub {
+    override fun createStub(
+        data: Array<String>,
+        external: Map<String, String>,
+        parentStub: StubElement<*>?
+    ): ProtobufGroupStub {
         return ProtobufGroupStub(data, external, parentStub)
     }
 

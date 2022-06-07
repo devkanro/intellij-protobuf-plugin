@@ -12,8 +12,8 @@ import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
-import io.kanro.idea.plugin.protobuf.grpc.ServiceQualifiedNameIndex
-import io.kanro.idea.plugin.protobuf.grpc.ServiceShortNameIndex
+import io.kanro.idea.plugin.protobuf.grpc.index.ServiceQualifiedNameIndex
+import io.kanro.idea.plugin.protobuf.grpc.index.ServiceShortNameIndex
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement

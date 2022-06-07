@@ -9,9 +9,11 @@ interface ProtobufOneofDefinition : ProtobufVirtualScope, ProtobufDefinition {
     override fun type(): String {
         return "oneof"
     }
+
     override fun getPresentableText(): String? {
         return "oneof ${name()}"
     }
+
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.ONEOF
     }

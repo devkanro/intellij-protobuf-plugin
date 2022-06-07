@@ -1,4 +1,4 @@
-package io.kanro.idea.plugin.protobuf.grpc
+package io.kanro.idea.plugin.protobuf.grpc.request
 
 import com.intellij.httpClient.http.request.psi.HttpRequest
 import com.intellij.httpClient.injection.http.request.ImplicitMimeTypeProvider

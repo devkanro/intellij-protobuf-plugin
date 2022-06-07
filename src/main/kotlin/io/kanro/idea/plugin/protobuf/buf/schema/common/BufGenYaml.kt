@@ -141,8 +141,8 @@ object BufGenManagedGoPackagePrefixDefaultFieldSchema : BufFieldSchema(
 object BufGenManagedGoPackagePrefixExceptFieldSchema : BufFieldSchema(
     "except",
     "The `except` key is **optional**, and removes certain modules from the `go_package` file option override behavior. The `except` values **must** be valid [module names](/bsr/overview#modules).\n" +
-        "\n" +
-        "There are situations where you may want to enable [managed mode](/generate/managed-mode) for the `go_package` option in _most_ of your Protobuf files, but not necessarily for _all_ of your Protobuf files. This is particularly relevant for the `buf.build/googleapis/googleapis` module, which points its `go_package` value to an [external repository](https://github.com/googleapis/go-genproto). Popular libraries, such as [grpc-go](https://github.com/grpc/grpc-go) depend on these `go_package` values, so it's important that managed mode does not overwrite them.",
+            "\n" +
+            "There are situations where you may want to enable [managed mode](/generate/managed-mode) for the `go_package` option in _most_ of your Protobuf files, but not necessarily for _all_ of your Protobuf files. This is particularly relevant for the `buf.build/googleapis/googleapis` module, which points its `go_package` value to an [external repository](https://github.com/googleapis/go-genproto). Popular libraries, such as [grpc-go](https://github.com/grpc/grpc-go) depend on these `go_package` values, so it's important that managed mode does not overwrite them.",
     BufArraySchema(BufSchemaScalarType.IDENTIFIER),
     true
 )
@@ -150,8 +150,8 @@ object BufGenManagedGoPackagePrefixExceptFieldSchema : BufFieldSchema(
 object BufGenManagedGoPackagePrefixOverrideFieldSchema : BufFieldSchema(
     "override",
     "The `override` key is **optional**, and overrides the `go_package` file option value used for specific modules. The `override` keys **must** be valid module names. Additionally, the corresponding `override` values **must** be a valid [Go import path](https://golang.org/ref/spec#ImportPath) and **must not** jump context from the current directory. As an example, `../external` is invalid.\n" +
-        "\n" +
-        "This setting is used for [workspace](https://docs.buf.build/reference/workspaces) environments, where you have a module that imports from another module in the same workspace, and you need to generate the Go code for each module in different directories. This is particularly relevant for repositories that decouple their private API definitions from their public API definitions (as is the case for `buf`).",
+            "\n" +
+            "This setting is used for [workspace](https://docs.buf.build/reference/workspaces) environments, where you have a module that imports from another module in the same workspace, and you need to generate the Go code for each module in different directories. This is particularly relevant for repositories that decouple their private API definitions from their public API definitions (as is the case for `buf`).",
     BufObjectSchema(listOf()),
     true
 )

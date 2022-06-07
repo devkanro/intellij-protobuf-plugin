@@ -26,6 +26,7 @@ class GrpcRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
         return "Run gRpc"
     }
 
+    @Suppress("UnstableApiUsage")
     override fun collectNavigationMarkers(
         element: PsiElement,
         result: MutableCollection<in RelatedItemLineMarkerInfo<*>>

@@ -55,7 +55,8 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 val type = spec.getGoUnderlyingType(null) as? GoStructType ?: return
                 val servers = mutableListOf<ProtobufElement>()
                 GoPsiImplUtil.getAnonymousFieldDefinitions(type).forEach {
-                    val anonymousFieldType = it.typeReferenceExpression?.resolveType(null) as? GoSpecType ?: return@forEach
+                    val anonymousFieldType =
+                        it.typeReferenceExpression?.resolveType(null) as? GoSpecType ?: return@forEach
                     servers += StubIndex.getElements(
                         GoUnimplementedServerNameIndex.key,
                         anonymousFieldType.identifier.text,

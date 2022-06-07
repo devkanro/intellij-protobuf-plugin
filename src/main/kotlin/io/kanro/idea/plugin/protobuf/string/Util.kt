@@ -49,3 +49,49 @@ fun String.parseDoubleOrNull(): Double? {
         else -> toDoubleOrNull()
     }
 }
+
+fun CharSequence.lineCommentRanges(): List<TextRange> {
+    val result = mutableListOf<TextRange>()
+    var pos = 0
+    var start: Int? = null
+
+    while (pos < length) {
+        if (start == null) {
+            when (this[pos]) {
+                ' ', '\t', '\r', '\n' -> pos++
+                '/' -> {
+                    pos++
+                    if (this.getOrZero(pos) == '/') {
+                        pos++
+                        start = pos
+                    } else {
+                        start = pos
+                    }
+                }
+                else -> {
+                    start = pos
+                    pos++
+                }
+            }
+        } else {
+            when (this[pos]) {
+                '\n' -> {
+                    pos++
+                    if (start != pos) {
+                        result += TextRange(start, pos)
+                    }
+                    start = null
+                }
+                else -> {
+                    pos++
+                }
+            }
+        }
+    }
+
+    if (start != null && start != length) {
+        result += TextRange(start, length)
+    }
+
+    return result
+}

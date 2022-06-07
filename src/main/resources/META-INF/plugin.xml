@@ -19,6 +19,9 @@
     <depends optional="true" config-file="io.kanro.idea.plugin.protobuf-buf.xml">
         org.jetbrains.plugins.yaml
     </depends>
+    <depends optional="true" config-file="io.kanro.idea.plugin.protobuf-markdown.xml">
+        org.intellij.plugins.markdown
+    </depends>
 
     <extensionPoints>
         <extensionPoint
@@ -37,6 +40,10 @@
                 interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubExternalProvider"
                 dynamic="true"
                 name="stubExternalProvider"/>
+        <extensionPoint
+                interface="io.kanro.idea.plugin.protobuf.compile.ProtobufCompilerPlugin"
+                dynamic="true"
+                name="protocPlugin"/>
     </extensionPoints>
 
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
@@ -56,6 +63,16 @@
                 implementation="io.kanro.idea.plugin.protobuf.aip.reference.contributor.ProtobufTypeNameInStringProvider"/>
         <stubExternalProvider
                 implementation="io.kanro.idea.plugin.protobuf.java.FileJavaOptionsProvider"/>
+        <protocPlugin implementation="io.kanro.idea.plugin.protobuf.compile.basic.FileCompiler"/>
+        <protocPlugin implementation="io.kanro.idea.plugin.protobuf.compile.basic.MessageCompiler"/>
+        <protocPlugin implementation="io.kanro.idea.plugin.protobuf.compile.basic.MessageFieldCompiler"/>
+        <protocPlugin implementation="io.kanro.idea.plugin.protobuf.compile.basic.MessageMapEntryCompiler"/>
+        <protocPlugin implementation="io.kanro.idea.plugin.protobuf.compile.basic.MessageMapFieldCompiler"/>
+        <protocPlugin implementation="io.kanro.idea.plugin.protobuf.compile.basic.MessageOneofCompiler"/>
+        <protocPlugin implementation="io.kanro.idea.plugin.protobuf.compile.basic.EnumCompiler"/>
+        <protocPlugin implementation="io.kanro.idea.plugin.protobuf.compile.basic.EnumValueCompiler"/>
+        <protocPlugin implementation="io.kanro.idea.plugin.protobuf.compile.basic.ServiceCompiler"/>
+        <protocPlugin implementation="io.kanro.idea.plugin.protobuf.compile.basic.ServiceMethodCompiler"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">

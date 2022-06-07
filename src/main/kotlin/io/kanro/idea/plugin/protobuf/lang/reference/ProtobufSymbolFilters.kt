@@ -17,7 +17,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
-import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 import io.kanro.idea.plugin.protobuf.lang.support.Options
 import io.kanro.idea.plugin.protobuf.lang.util.and
 import io.kanro.idea.plugin.protobuf.lang.util.or
@@ -98,7 +97,8 @@ object ProtobufSymbolFilters {
     private class TargetOptionFilter(private val option: Options) : PsiElementFilter {
         override fun isAccepted(element: PsiElement): Boolean {
             val extend = element.parentOfType<ProtobufExtendDefinition>() ?: return false
-            val name = (extend.typeName?.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName() ?: return false
+            val name =
+                (extend.typeName?.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName() ?: return false
             return name == option.qualifiedName
         }
     }

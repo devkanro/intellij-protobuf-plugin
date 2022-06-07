@@ -452,3 +452,29 @@ fun ProtobufFieldDefinition.repeated(): Boolean {
 fun ProtobufGroupDefinition.repeated(): Boolean {
     return this.fieldLabel?.textMatches("repeated") == true
 }
+
+fun ProtobufFieldDefinition.required(): Boolean {
+    return this.fieldLabel?.textMatches("required") == true
+}
+
+fun ProtobufGroupDefinition.required(): Boolean {
+    return this.fieldLabel?.textMatches("required") == true
+}
+
+fun ProtobufFieldDefinition.optional(): Boolean {
+    return this.fieldLabel?.textMatches("optional") == true
+}
+
+fun ProtobufGroupDefinition.optional(): Boolean {
+    return this.fieldLabel?.textMatches("optional") == true
+}
+
+fun ProtobufMapFieldDefinition.key(): ProtobufTypeName? {
+    if (typeNameList.size < 2) return null
+    return typeNameList[0]
+}
+
+fun ProtobufMapFieldDefinition.value(): ProtobufTypeName? {
+    if (typeNameList.size < 2) return null
+    return typeNameList[1]
+}

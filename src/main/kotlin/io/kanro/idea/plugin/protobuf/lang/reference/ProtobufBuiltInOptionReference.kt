@@ -7,6 +7,7 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
+import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufBuiltInOptionName
@@ -64,12 +65,12 @@ class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
     }
 
     override fun getVariants(): Array<Any> {
-        val type = optionType() ?: return arrayOf()
-        val descriptor = descriptor() ?: return arrayOf()
+        val type = optionType() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
+        val descriptor = descriptor() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val message = ProtobufSymbolResolver.resolveInScope(
             descriptor,
             QualifiedName.fromComponents(type)
-        ) as? ProtobufMessageDefinition ?: return arrayOf()
+        ) as? ProtobufMessageDefinition ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val fields: MutableList<Any> = message.realItems().mapNotNull {
             if (it !is ProtobufFieldDefinition) return@mapNotNull null
             (it as? ProtobufLookupItem)?.lookup()?.withInsertHandler(optionInsertHandler)

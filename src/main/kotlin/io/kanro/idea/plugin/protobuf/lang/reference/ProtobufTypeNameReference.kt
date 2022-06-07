@@ -13,6 +13,7 @@ import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
+import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
@@ -95,7 +96,7 @@ class ProtobufTypeNameReference(
             is ProtobufMapFieldDefinition -> ProtobufSymbolFilters.fieldTypeNameVariants
             is ProtobufRpcIO -> ProtobufSymbolFilters.rpcTypeNameVariants
             is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendTypeNameVariants
-            else -> return arrayOf()
+            else -> return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         }
         val pattern = element.text
         getVariantsInCurrentScope(pattern, filter, result, addedElements)
@@ -131,8 +132,8 @@ class ProtobufTypeNameReference(
         result: MutableList<Any>,
         elements: MutableSet<ProtobufElement>
     ): Array<Any> {
-        if (pattern.contains('.')) return arrayOf()
-        if (!pattern.endsWith(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) return arrayOf()
+        if (pattern.contains('.')) return ArrayUtilRt.EMPTY_OBJECT_ARRAY
+        if (!pattern.endsWith(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val searchName = pattern.substringBefore(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)
         val scope = ProtobufRootResolver.searchScope(element)
         val matcher = PlatformPatterns.string().contains(searchName)

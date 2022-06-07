@@ -12,7 +12,11 @@ object ProtobufRpcStubType : ProtobufStubTypeBase<ProtobufRpcStub, ProtobufRpcDe
         return "protobuf.rpc.stub"
     }
 
-    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufRpcStub {
+    override fun createStub(
+        data: Array<String>,
+        external: Map<String, String>,
+        parentStub: StubElement<*>?
+    ): ProtobufRpcStub {
         return ProtobufRpcStub(data, external, parentStub)
     }
 

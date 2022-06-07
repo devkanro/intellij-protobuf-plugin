@@ -2,6 +2,7 @@ package io.kanro.idea.plugin.protobuf.grpc.referece
 
 import com.intellij.httpClient.http.request.psi.HttpMessageBody
 import com.intellij.httpClient.http.request.psi.HttpRequest
+import com.intellij.json.psi.JsonElement
 import com.intellij.json.psi.JsonProperty
 import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.lang.injection.InjectedLanguageManager
@@ -11,10 +12,10 @@ import com.intellij.psi.PsiReferenceContributor
 import com.intellij.psi.PsiReferenceRegistrar
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
-import io.kanro.idea.plugin.protobuf.grpc.GrpcRequestExecutionSupport
+import io.kanro.idea.plugin.protobuf.grpc.request.GrpcRequestExecutionSupport
 
-object GrpcJsonBody : PatternCondition<JsonStringLiteral>("GRPC JSON BODY") {
-    override fun accepts(t: JsonStringLiteral, context: ProcessingContext?): Boolean {
+object GrpcJsonBody : PatternCondition<JsonElement>("GRPC JSON BODY") {
+    override fun accepts(t: JsonElement, context: ProcessingContext?): Boolean {
         val host =
             InjectedLanguageManager.getInstance(t.project).getInjectionHost(t) as? HttpMessageBody
                 ?: return false
@@ -24,6 +25,10 @@ object GrpcJsonBody : PatternCondition<JsonStringLiteral>("GRPC JSON BODY") {
 }
 
 class GrpcJsonReferenceContributor : PsiReferenceContributor() {
+    init {
+        ""
+    }
+
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
         registrar.registerReferenceProvider(
             PlatformPatterns.psiElement(JsonStringLiteral::class.java).withParent(JsonProperty::class.java)
@@ -33,7 +38,7 @@ class GrpcJsonReferenceContributor : PsiReferenceContributor() {
         registrar.registerReferenceProvider(
             PlatformPatterns.psiElement(JsonStringLiteral::class.java).withParent(JsonProperty::class.java)
                 .afterLeaf(":")
-                .with(GrpcJsonBody), GrpcMessageEnumValueReferenceProvider()
+                .with(GrpcJsonBody), GrpcStringLiteralValueReferenceProvider()
         )
     }
 }

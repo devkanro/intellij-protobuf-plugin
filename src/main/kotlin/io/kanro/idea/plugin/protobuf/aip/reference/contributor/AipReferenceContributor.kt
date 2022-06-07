@@ -39,24 +39,28 @@ class AipReferenceContributor : PsiReferenceContributor() {
 
 class AipResourceReferenceProvider : PsiReferenceProvider() {
     override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
-        val stringValue = element as? ProtobufStringValue ?: return arrayOf()
-        val reference = getReference(stringValue) ?: return arrayOf()
+        val stringValue = element as? ProtobufStringValue ?: return PsiReference.EMPTY_ARRAY
+        val reference = getReference(stringValue) ?: return PsiReference.EMPTY_ARRAY
         return arrayOf(reference)
     }
 
     private fun getReference(element: ProtobufStringValue): PsiReference? {
         val hover = element.parentOfType<ProtobufOptionHover>() ?: return null
         if (!hover.isOption(AipOptions.resourceReferenceOption)) return null
-        if (hover.value(AipOptions.resourceTypeField)?.stringValueList?.firstOrNull() == element) return AipResourceReference(element)
-        if (hover.value(AipOptions.resourceChildTypeField)?.stringValueList?.firstOrNull() == element) return AipResourceReference(element)
+        if (hover.value(AipOptions.resourceTypeField)?.stringValueList?.firstOrNull() == element) return AipResourceReference(
+            element
+        )
+        if (hover.value(AipOptions.resourceChildTypeField)?.stringValueList?.firstOrNull() == element) return AipResourceReference(
+            element
+        )
         return null
     }
 }
 
 class AipFieldReferenceProvider : PsiReferenceProvider() {
     override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
-        val stringValue = element as? ProtobufStringValue ?: return arrayOf()
-        val reference = getReference(stringValue) ?: return arrayOf()
+        val stringValue = element as? ProtobufStringValue ?: return PsiReference.EMPTY_ARRAY
+        val reference = getReference(stringValue) ?: return PsiReference.EMPTY_ARRAY
         return arrayOf(reference)
     }
 

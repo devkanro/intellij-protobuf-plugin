@@ -13,6 +13,7 @@ class BufRootProvider : CachedProtobufRootProvider() {
     override fun id(): String {
         return "bufRoot"
     }
+
     private fun getModuleContextModules(
         fileManager: BufFileManager,
         context: PsiElement

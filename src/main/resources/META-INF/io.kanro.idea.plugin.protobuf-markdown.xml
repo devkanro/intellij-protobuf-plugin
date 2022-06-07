@@ -1,0 +1,6 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <multiHostInjector
+                implementation="io.kanro.idea.plugin.protobuf.lang.docs.ProtobufLineCommentsMarkdownInjector"/>
+    </extensions>
+</idea-plugin>

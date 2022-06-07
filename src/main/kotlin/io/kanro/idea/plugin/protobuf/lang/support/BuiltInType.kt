@@ -29,5 +29,9 @@ enum class BuiltInType {
         fun isBuiltInType(name: String): Boolean {
             return types[name] != null
         }
+
+        fun of(name: String): BuiltInType? {
+            return types[name]
+        }
     }
 }

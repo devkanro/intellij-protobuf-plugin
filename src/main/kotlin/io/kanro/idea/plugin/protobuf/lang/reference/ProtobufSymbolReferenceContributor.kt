@@ -28,13 +28,13 @@ object ProtobufSymbolReferenceProvider : PsiReferenceProvider() {
         return CachedValuesManager.getCachedValue(element) {
             val hover = element.referencesHover()
                 ?: return@getCachedValue CachedValueProvider.Result.create(
-                    arrayOf(),
+                    PsiReference.EMPTY_ARRAY,
                     PsiModificationTracker.MODIFICATION_COUNT
                 )
             val symbol = hover.symbol()
             if (!hover.absolutely() && symbol.componentCount == 1 && BuiltInType.isBuiltInType(symbol.firstComponent!!)) {
                 return@getCachedValue CachedValueProvider.Result.create(
-                    arrayOf(),
+                    PsiReference.EMPTY_ARRAY,
                     PsiModificationTracker.MODIFICATION_COUNT
                 )
             }

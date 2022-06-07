@@ -82,9 +82,9 @@ object ProtobufDecompiler {
                 normalizeStatementLn()
                 append(
                     "rpc ${method.name}(${stack.simpleTypeName(method.inputType)}) returns (${
-                    stack.simpleTypeName(
-                        method.outputType
-                    )
+                        stack.simpleTypeName(
+                            method.outputType
+                        )
                     });"
                 )
             }
@@ -203,7 +203,8 @@ object ProtobufDecompiler {
                     }
                     Descriptors.FieldDescriptor.Type.GROUP,
                     Descriptors.FieldDescriptor.Type.MESSAGE,
-                    Descriptors.FieldDescriptor.Type.BYTES -> {}
+                    Descriptors.FieldDescriptor.Type.BYTES -> {
+                    }
                     else -> {
                         appendLn("option ${field.name} = $value;")
                     }

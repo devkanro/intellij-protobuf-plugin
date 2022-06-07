@@ -52,6 +52,6 @@ class SmartTree(treeModel: SmartTreeModel) : Tree(treeModel) {
                 OpenSourceUtil.navigate(element)
             }
         }, ModalityState.stateForComponent(this))
-        }
     }
+}
     

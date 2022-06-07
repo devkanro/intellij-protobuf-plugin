@@ -12,7 +12,11 @@ object ProtobufMapFieldStubType : ProtobufStubTypeBase<ProtobufMapFieldStub, Pro
         return "protobuf.map_field.stub"
     }
 
-    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufMapFieldStub {
+    override fun createStub(
+        data: Array<String>,
+        external: Map<String, String>,
+        parentStub: StubElement<*>?
+    ): ProtobufMapFieldStub {
         return ProtobufMapFieldStub(data, external, parentStub)
     }
 

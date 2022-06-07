@@ -10,6 +10,7 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
+import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
@@ -36,7 +37,7 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
     }
 
     override fun getVariants(): Array<Any> {
-        val imported = element.stringValue?.text?.trim('"') ?: return arrayOf()
+        val imported = element.stringValue?.text?.trim('"') ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val parent = imported.substringBeforeLast('/', ".")
         return ProtobufRootResolver.collectProtobuf(parent, element).map {
             fileLookup(parent, it)

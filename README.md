@@ -10,10 +10,13 @@ and [intellij-protobuf-editor](https://github.com/jvolkman/intellij-protobuf-edi
 ## Descriptor
 
 <!-- Plugin description -->
-IntelliJ-based IDEs Protobuf Language Plugin that provides Protobuf language support.  
+IntelliJ-based IDEs Protobuf Language Plugin that provides Protobuf language support.
 
 > ⚠️ Attention ⚠️  
-> This plugin is not compatible with [Jetbrains Official Protobuf Plugin](https://plugins.jetbrains.com/plugin/14004-protocol-buffers) bundled in 2021.2 and later.  
+> This plugin is not compatible
+> with [Jetbrains Official Protobuf Plugin](https://plugins.jetbrains.com/plugin/14004-protocol-buffers) bundled in
+> 2021.2
+> and later.  
 > You should disable **Protocol Buffer** and **gRPC** to use this plugin.
 
 Analyzing features:
@@ -49,7 +52,7 @@ Editor features:
 
 Planned features:
 
-🙋 Proto text support  
+🙋 Proto text support
 
 ## Screenshots
 
@@ -62,7 +65,7 @@ Planned features:
 
 2. Reference  
    ![reference](resources/reference.gif)
-   
+
 3. In-place rename  
    ![rename](resources/rename.gif)
 
@@ -71,8 +74,8 @@ Planned features:
 
 5. Auto import  
    ![auto import](resources/auto_import.gif)
-   
+
 6. AIP Spec
    ![resource](resources/aip.gif)
-   
+
 More features wait for your discovering...

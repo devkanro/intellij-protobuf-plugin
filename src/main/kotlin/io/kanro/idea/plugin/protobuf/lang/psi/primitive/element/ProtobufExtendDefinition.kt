@@ -9,7 +9,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.findChild
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufDocumented
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufVirtualScope
-import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 import javax.swing.Icon
 
 interface ProtobufExtendDefinition :
@@ -29,7 +28,8 @@ interface ProtobufExtendDefinition :
     }
 
     override fun name(): String? {
-        return (findChild<ProtobufTypeName>()?.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.toString()
+        return (findChild<ProtobufTypeName>()?.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName()
+            ?.toString()
     }
 
     override fun lookup(name: String?): LookupElementBuilder? {

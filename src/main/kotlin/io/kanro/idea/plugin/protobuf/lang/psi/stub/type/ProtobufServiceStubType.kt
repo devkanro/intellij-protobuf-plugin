@@ -12,7 +12,11 @@ object ProtobufServiceStubType : ProtobufStubTypeBase<ProtobufServiceStub, Proto
         return "protobuf.service.stub"
     }
 
-    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufServiceStub {
+    override fun createStub(
+        data: Array<String>,
+        external: Map<String, String>,
+        parentStub: StubElement<*>?
+    ): ProtobufServiceStub {
         return ProtobufServiceStub(data, external, parentStub)
     }
 

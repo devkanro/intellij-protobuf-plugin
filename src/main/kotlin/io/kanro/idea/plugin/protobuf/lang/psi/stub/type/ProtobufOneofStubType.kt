@@ -12,7 +12,11 @@ object ProtobufOneofStubType : ProtobufStubTypeBase<ProtobufOneofStub, ProtobufO
         return "protobuf.oneof.stub"
     }
 
-    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufOneofStub {
+    override fun createStub(
+        data: Array<String>,
+        external: Map<String, String>,
+        parentStub: StubElement<*>?
+    ): ProtobufOneofStub {
         return ProtobufOneofStub(data, external, parentStub)
     }
 

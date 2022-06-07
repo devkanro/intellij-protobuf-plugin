@@ -1,5 +1,6 @@
 package io.kanro.idea.plugin.protobuf.string
 
+import com.intellij.util.ArrayUtilRt
 import kotlin.experimental.or
 
 private val hexArray = "0123456789ABCDEF".toCharArray()
@@ -22,7 +23,7 @@ fun ByteArray.hex(): String {
  * Decode hex string to data.
  */
 fun String.parseHex(): ByteArray {
-    if (this.isEmpty()) return byteArrayOf()
+    if (this.isEmpty()) return ArrayUtilRt.EMPTY_BYTE_ARRAY
 
     val startIndex = this.length % 2
     val result = ByteArray(this.length / 2 + startIndex)

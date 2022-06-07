@@ -14,7 +14,11 @@ object ProtobufMessageStubType : ProtobufStubTypeBase<ProtobufMessageStub, Proto
         return "protobuf.message.stub"
     }
 
-    override fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): ProtobufMessageStub {
+    override fun createStub(
+        data: Array<String>,
+        external: Map<String, String>,
+        parentStub: StubElement<*>?
+    ): ProtobufMessageStub {
         return ProtobufMessageStub(data, external, parentStub)
     }
 

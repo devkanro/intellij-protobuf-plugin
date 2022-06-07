@@ -9,6 +9,10 @@ import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
 
 class ProtobufASTFactory : DefaultASTFactoryImpl() {
     override fun createComment(type: IElementType, text: CharSequence): LeafElement {
-        return if (type == ProtobufTokens.LINE_COMMENT) ProtobufLineCommentImpl(type, text) else PsiCommentImpl(type, text)
+        return if (type == ProtobufTokens.LINE_COMMENT) {
+            ProtobufLineCommentImpl(type, text)
+        } else {
+            PsiCommentImpl(type, text)
+        }
     }
 }

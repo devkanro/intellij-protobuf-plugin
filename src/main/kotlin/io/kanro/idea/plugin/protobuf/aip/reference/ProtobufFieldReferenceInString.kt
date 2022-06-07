@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.util.parentOfType
+import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
@@ -61,7 +62,7 @@ abstract class ProtobufFieldReferenceInString(field: ProtobufStringValue) :
                     else -> it
                 }
             }
-        }?.toTypedArray() ?: arrayOf()
+        }?.toTypedArray() ?: ArrayUtilRt.EMPTY_OBJECT_ARRAY
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {

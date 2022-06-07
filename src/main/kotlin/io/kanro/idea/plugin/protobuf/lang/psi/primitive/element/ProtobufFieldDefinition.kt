@@ -12,16 +12,17 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionO
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufMultiNameDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.value
 import javax.swing.Icon
 
 interface ProtobufFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefinition {
     override fun type(): String {
         return "field"
     }
+
     override fun getIcon(unused: Boolean): Icon? {
         return Icons.FIELD
     }
+
     fun resourceType(): String? {
         if (this !is ProtobufOptionOwner) return null
         return CachedValuesManager.getCachedValue(this) {
@@ -43,6 +44,7 @@ interface ProtobufFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefiniti
         }
         return findChild<ProtobufTypeName>()?.symbolNameList?.lastOrNull()?.text
     }
+
     override fun names(): Set<String> {
         return setOfNotNull(name(), jsonName())
     }

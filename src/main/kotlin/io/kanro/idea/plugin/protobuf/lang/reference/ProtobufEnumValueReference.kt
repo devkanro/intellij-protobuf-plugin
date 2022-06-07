@@ -4,6 +4,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.tree.LeafElement
+import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.enum
@@ -30,7 +31,7 @@ class ProtobufEnumValueReference(field: ProtobufEnumValue) :
         return element.enum()?.realItems()?.mapNotNull {
             if (it !is ProtobufEnumValueDefinition) return@mapNotNull null
             (it as? ProtobufLookupItem)?.lookup()
-        }?.toTypedArray() ?: arrayOf()
+        }?.toTypedArray() ?: ArrayUtilRt.EMPTY_OBJECT_ARRAY
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {

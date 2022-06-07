@@ -8,6 +8,7 @@ interface ProtobufBody : ProtobufFolding {
     fun owner(): ProtobufBodyOwner {
         return parentOfType() ?: throw IllegalStateException()
     }
+
     override fun folding(): FoldingDescriptor? {
         val start = node.firstChildNode
         val end = node.lastChildNode

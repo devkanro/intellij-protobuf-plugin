@@ -8,8 +8,9 @@ import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
-import io.kanro.idea.plugin.protobuf.grpc.ServiceMethodIndex
-import io.kanro.idea.plugin.protobuf.grpc.ServiceQualifiedNameIndex
+import com.intellij.util.ArrayUtilRt
+import io.kanro.idea.plugin.protobuf.grpc.index.ServiceMethodIndex
+import io.kanro.idea.plugin.protobuf.grpc.index.ServiceQualifiedNameIndex
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 
@@ -44,7 +45,7 @@ class GrpcMethodReference(element: HttpRequestTarget, range: TextRange) :
             element.project,
             GlobalSearchScope.allScope(element.project),
             ProtobufServiceDefinition::class.java
-        ).firstOrNull() ?: return arrayOf()
+        ).firstOrNull() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
 
         val methods = serviceDefinition.items().filterIsInstance<ProtobufRpcDefinition>()
         return methods.mapNotNull { it.lookup() }.toTypedArray()

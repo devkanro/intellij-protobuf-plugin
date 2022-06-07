@@ -8,6 +8,7 @@ import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.stubs.StubIndex
+import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.Icons
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
@@ -36,7 +37,7 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
     override fun getVariants(): Array<Any> {
         val result = mutableListOf<Any>()
         val addedElements = mutableSetOf<ProtobufElement>()
-        val pattern = element.value()?.trim() ?: return arrayOf()
+        val pattern = element.value()?.trim() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
 
         getVariantsInCurrent(result, addedElements)
         getVariantsInStubIndex(pattern, result, addedElements)
@@ -48,7 +49,7 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
         result: MutableList<Any>,
         elements: MutableSet<ProtobufElement>
     ): Array<Any> {
-        if (!pattern.endsWith(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) return arrayOf()
+        if (!pattern.endsWith(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val searchName = pattern.substringBefore(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)
         val scope = ProtobufRootResolver.searchScope(element)
         val matcher = PlatformPatterns.string().contains(searchName)
