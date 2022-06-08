@@ -11,8 +11,11 @@ class ProtobufLineCommentsMarkdownInjector : MultiHostInjector {
     override fun getLanguagesToInject(registrar: MultiHostRegistrar, context: PsiElement) {
         if (context !is ProtobufLineCommentImpl) return
 
+        val ranges = context.text.lineCommentRanges()
+        if (ranges.isEmpty()) return
+
         registrar.startInjecting(MarkdownLanguage.INSTANCE)
-        context.text.lineCommentRanges().forEach {
+        ranges.forEach {
             registrar.addPlace("", "", context, it)
         }
         registrar.doneInjecting()
