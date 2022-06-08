@@ -1,5 +1,6 @@
 package io.kanro.idea.plugin.protobuf.lang.settings
 
+import com.intellij.codeInspection.javaDoc.JavadocUIUtil.bindCheckbox
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
@@ -10,6 +11,10 @@ import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.ui.BooleanTableCellEditor
 import com.intellij.ui.BooleanTableCellRenderer
 import com.intellij.ui.ToolbarDecorator
+import com.intellij.ui.dsl.builder.MAX_LINE_LENGTH_WORD_WRAP
+import com.intellij.ui.dsl.builder.panel
+import com.intellij.ui.dsl.gridLayout.HorizontalAlign
+import com.intellij.ui.dsl.gridLayout.VerticalAlign
 import com.intellij.ui.table.TableView
 import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ListTableModel
@@ -24,6 +29,7 @@ import javax.swing.table.TableCellRenderer
 
 class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufSettings> {
     private val panel: JPanel
+    private var autoDecompile: Boolean = true
     private val importRootsModel = ListTableModel<ProtobufSettings.ImportRootEntry>(PathColumnInfo, CommonColumnInfo)
 
     init {
@@ -47,19 +53,40 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
             tableView.editCellAt(tableView.selectedRow, tableView.selectedColumn)
         }
         tablePanel.add(decorator.createPanel(), BorderLayout.CENTER)
-        panel = tablePanel
+        panel = panel {
+            row {
+                checkBox("Auto-detect and decompile from binary descriptor")
+                    .comment("Decompile proto from descriptor of some generated code(etc. GO) when open project, enabling this feature may make opening project slower.")
+                    .bindCheckbox(::autoDecompile)
+            }
+            separator("External Import Roots")
+            row {
+                resizableRow()
+                cell(tablePanel).horizontalAlign(HorizontalAlign.FILL)
+                    .verticalAlign(VerticalAlign.FILL)
+                    .comment(
+                        "Marking a root as 'common' means that it will be used in file resolving in all proto file, otherwise only files under this path will use this root, it is especially useful when there are multiple sets of independent protos in one project.",
+                        MAX_LINE_LENGTH_WORD_WRAP
+                    )
+            }
+        }
     }
 
     override fun reset(settings: ProtobufSettings) {
         importRootsModel.items = settings.state.importRoots.toMutableList()
+        autoDecompile = settings.state.autoDecompile
     }
 
     override fun isModified(settings: ProtobufSettings): Boolean {
-        return !settings.state.importRoots.contentEquals(importRootsModel.items)
+        if (!settings.state.importRoots.contentEquals(importRootsModel.items)) return true
+        if (settings.state.autoDecompile != autoDecompile) return true
+        return false
     }
 
     override fun apply(settings: ProtobufSettings) {
         settings.state.importRoots = importRootsModel.items.toMutableList()
+        settings.state.autoDecompile = autoDecompile
+
         ApplicationManager.getApplication().runWriteAction {
             ProjectRootManagerEx.getInstanceEx(project).makeRootsChange({}, false, true)
         }

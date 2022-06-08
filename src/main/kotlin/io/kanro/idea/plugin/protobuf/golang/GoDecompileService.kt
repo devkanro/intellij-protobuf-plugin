@@ -10,9 +10,12 @@ import com.intellij.openapi.startup.StartupActivity
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
+import io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettings
 
 class GoDecompileService : StartupActivity.RequiredForSmartMode {
     override fun runActivity(project: Project) {
+        if (!project.getService(ProtobufSettings::class.java).state.autoDecompile) return
+
         runBackgroundableTask("Decompiling proto from descriptor", project, true) {
             it.isIndeterminate = true
             val pattern = PlatformPatterns.string().endsWith("_proto_rawDesc")

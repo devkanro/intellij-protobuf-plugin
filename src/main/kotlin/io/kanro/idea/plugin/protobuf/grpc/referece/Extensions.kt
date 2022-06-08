@@ -71,7 +71,8 @@ internal fun JsonProperty.resolveParentType(): PsiElement? {
         val contextMessage = contextMessage() ?: return@getCachedValue null
         val qualifiedName = qualifiedName() ?: return@getCachedValue null
         CachedValueProvider.Result.create(
-            contextMessage.resolveFieldType(qualifiedName.removeTail(1)), PsiModificationTracker.MODIFICATION_COUNT
+            contextMessage.resolveFieldType(qualifiedName.removeTail(1), true),
+            PsiModificationTracker.MODIFICATION_COUNT
         )
     }
 }
@@ -81,7 +82,7 @@ internal fun JsonProperty.resolve(): PsiElement? {
         val contextMessage = contextMessage() ?: return@getCachedValue null
         val qualifiedName = qualifiedName() ?: return@getCachedValue null
         CachedValueProvider.Result.create(
-            contextMessage.resolveField(qualifiedName), PsiModificationTracker.MODIFICATION_COUNT
+            contextMessage.resolveField(qualifiedName, true), PsiModificationTracker.MODIFICATION_COUNT
         )
     }
 }

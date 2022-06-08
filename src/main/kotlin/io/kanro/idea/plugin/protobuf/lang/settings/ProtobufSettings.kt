@@ -35,5 +35,7 @@ class ProtobufSettings : SimplePersistentStateComponent<ProtobufSettings.State>(
     class State : BaseState() {
         @get:XCollection(propertyElementName = "roots", style = XCollection.Style.v2)
         var importRoots by list<ImportRootEntry>()
+
+        var autoDecompile by property(true)
     }
 }

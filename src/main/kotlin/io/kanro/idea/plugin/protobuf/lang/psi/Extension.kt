@@ -18,6 +18,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeI
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItemContainer
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufVirtualScope
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufKeywordToken
+import io.kanro.idea.plugin.protobuf.lang.support.WellknownTypes
 import io.kanro.idea.plugin.protobuf.string.parseDoubleOrNull
 import io.kanro.idea.plugin.protobuf.string.parseLongOrNull
 import io.kanro.idea.plugin.protobuf.string.toCamelCase
@@ -387,7 +388,10 @@ fun ProtobufFieldLike.jsonName(): String? {
  * returning a [ProtobufMapFieldDefinition] for map field.
  * returning a [ProtobufGroupDefinition] for group field.
  */
-fun ProtobufMessageDefinition.resolveFieldType(qualifiedName: QualifiedName): ProtobufElement? {
+fun ProtobufMessageDefinition.resolveFieldType(
+    qualifiedName: QualifiedName,
+    jsonSpec: Boolean = false
+): ProtobufElement? {
     if (qualifiedName.components.isEmpty()) return this
 
     val q = Stack<String>().apply {
@@ -398,6 +402,20 @@ fun ProtobufMessageDefinition.resolveFieldType(qualifiedName: QualifiedName): Pr
 
     while (q.isNotEmpty()) {
         val field = q.pop()
+
+        if (jsonSpec) {
+            if (scope is ProtobufMessageDefinition) {
+                val message = scope.qualifiedName().toString()
+                if (message == WellknownTypes.ANY && field == "@type") {
+                    return scope.firstItemOrNull<ProtobufFieldLike> {
+                        it.name() == "type_url"
+                    }
+                } else if (message in WellknownTypes.types) {
+                    return null
+                }
+            }
+        }
+
         val fieldDefinition = scope.firstItemOrNull<ProtobufFieldLike> {
             it.name() == field || it.jsonName() == field
         } ?: return null
@@ -429,10 +447,26 @@ fun ProtobufMessageDefinition.resolveFieldType(qualifiedName: QualifiedName): Pr
  * Resolve qualified field for a message definition.
  * It could be returning any [ProtobufFieldLike].
  */
-fun ProtobufMessageDefinition.resolveField(qualifiedName: QualifiedName): ProtobufFieldLike? {
+fun ProtobufMessageDefinition.resolveField(
+    qualifiedName: QualifiedName,
+    jsonSpec: Boolean = false
+): ProtobufFieldLike? {
     val field = qualifiedName.lastComponent ?: return null
     val parentField = qualifiedName.removeTail(1)
-    val parentType = resolveFieldType(parentField) ?: return null
+    val parentType = resolveFieldType(parentField, jsonSpec) ?: return null
+
+    if (jsonSpec) {
+        if (parentType is ProtobufMessageDefinition) {
+            val message = parentType.qualifiedName().toString()
+            if (message == WellknownTypes.ANY && field == "@type") {
+                return parentType.firstItemOrNull<ProtobufFieldLike> {
+                    it.name() == "type_url"
+                }
+            } else if (message in WellknownTypes.types) {
+                return null
+            }
+        }
+    }
 
     return when (parentType) {
         is ProtobufMessageDefinition -> {
