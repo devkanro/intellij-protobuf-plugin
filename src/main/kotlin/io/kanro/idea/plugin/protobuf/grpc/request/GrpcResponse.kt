@@ -1,5 +1,6 @@
 package io.kanro.idea.plugin.protobuf.grpc.request
 
+import com.bybutter.sisyphus.security.base64
 import com.intellij.httpClient.execution.common.CommonClientResponse
 import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.json.JsonFileType
@@ -19,20 +20,29 @@ data class GrpcResponse(
         get() = status?.code?.name ?: "EXECUTING"
 
     override val presentationHeader: String
-        get() = header?.let { h ->
-            h.keys().joinToString("\n") {
-                val value = h[Metadata.Key.of(it, Metadata.ASCII_STRING_MARSHALLER)]
-                "$it: $value"
-            }
-        } ?: ""
+        get() = printMetadata(header)
 
     override val presentationFooter: String
-        get() = trailer?.let { h ->
-            h.keys().joinToString("\n") {
-                val value = h[Metadata.Key.of(it, Metadata.ASCII_STRING_MARSHALLER)]
-                "$it: $value"
+        get() = printMetadata(trailer)
+
+    private fun printMetadata(metadata: Metadata?): String {
+        metadata ?: return ""
+
+        return buildString {
+            metadata.keys().forEach {
+                val value = if (it.endsWith("-bin")) {
+                    val key = Metadata.Key.of(it, Metadata.BINARY_BYTE_MARSHALLER)
+                    metadata[key]?.base64()
+                } else {
+                    val key = Metadata.Key.of(it, Metadata.ASCII_STRING_MARSHALLER)
+                    metadata[key]
+                }
+                append(it)
+                append(": ")
+                appendLine(value)
             }
-        } ?: ""
+        }
+    }
 
     override fun suggestFileTypeForPresentation(): FileType? {
         return JsonFileType.INSTANCE

@@ -1,40 +1,58 @@
 package io.kanro.idea.plugin.protobuf.aip.reference.contributor
 
 import com.intellij.openapi.util.TextRange
+import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHover
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceProvider
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufValueAssign
+import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolFilters
 import io.kanro.idea.plugin.protobuf.string.splitToRange
 
 class ProtobufTypeNameInStringProvider : ProtobufSymbolReferenceProvider {
     override fun hovers(element: ProtobufSymbolReferenceHost): ProtobufSymbolReferenceHover? {
         if (element !is ProtobufStringValue) return null
-        val assign = element.parentOfType<ProtobufValueAssign>() ?: return null
-        val targetField = assign.field()?.qualifiedName()
-        if (targetField == AipOptions.lroMetadataName) return getHover(element)
-        if (targetField == AipOptions.lroResponseName) return getHover(element)
-        return null
-    }
-
-    private fun getHover(element: ProtobufStringValue): ProtobufSymbolReferenceHover {
         return CachedValuesManager.getCachedValue(element) {
-            CachedValueProvider.Result.create(
-                StringProtobufSymbolReferenceHover(element),
-                PsiModificationTracker.MODIFICATION_COUNT
-            )
+            val assign = element.parentOfType<ProtobufValueAssign>() ?: return@getCachedValue null
+            val targetField = assign.field()?.qualifiedName()
+            return@getCachedValue when {
+                targetField == AipOptions.lroMetadataName -> {
+                    CachedValueProvider.Result.create(
+                        StringProtobufSymbolReferenceHover(
+                            element,
+                            ProtobufSymbolFilters.rpcTypeNameVariants
+                        ),
+                        PsiModificationTracker.MODIFICATION_COUNT
+                    )
+                }
+                targetField == AipOptions.lroResponseName -> {
+                    CachedValueProvider.Result.create(
+                        StringProtobufSymbolReferenceHover(
+                            element,
+                            ProtobufSymbolFilters.rpcTypeNameVariants
+                        ),
+                        PsiModificationTracker.MODIFICATION_COUNT
+                    )
+                }
+                else -> null
+            }
         }
     }
 }
 
-class StringProtobufSymbolReferenceHover(val element: ProtobufStringValue) : ProtobufSymbolReferenceHover {
+class StringProtobufSymbolReferenceHover(
+    val element: ProtobufStringValue,
+    private val filter: PsiElementFilter
+) : ProtobufSymbolReferenceHover {
     private var text = element.text
     private val range: TextRange
     private val parts: List<ProtobufSymbolReferenceHover.SymbolPart>
@@ -92,5 +110,9 @@ class StringProtobufSymbolReferenceHover(val element: ProtobufStringValue) : Pro
 
     override fun absolutely(): Boolean {
         return absolutely
+    }
+
+    override fun variantFilter(): PsiElementFilter {
+        return filter
     }
 }

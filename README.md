@@ -15,8 +15,7 @@ IntelliJ-based IDEs Protobuf Language Plugin that provides Protobuf language sup
 > ⚠️ Attention ⚠️  
 > This plugin is not compatible
 > with [Jetbrains Official Protobuf Plugin](https://plugins.jetbrains.com/plugin/14004-protocol-buffers) bundled in
-> 2021.2
-> and later.  
+> 2021.2 and later.  
 > You should disable **Protocol Buffer** and **gRPC** to use this plugin.
 
 Analyzing features:
@@ -36,7 +35,9 @@ Analyzing features:
 ✅ Decompile from proto descriptor for golang  
 ✅ [Buf](https://buf.build) integration, auto-configure the protobuf roots from buf.yaml and buf.work.yaml  
 ✅ [Buf](https://buf.build) integration, run buf command in buf tool window  
-✅ [Buf](https://buf.build) integration, annotator by buf linter
+✅ [Buf](https://buf.build) integration, annotator by buf linter  
+✅ Send gRPC requests via [Http Client](https://plugins.jetbrains.com/plugin/13121-http-client)  
+✅ Explore gRPC APIs via [Endpoints](https://plugins.jetbrains.com/plugin/16890-endpoints)
 
 Editor features:
 
@@ -46,7 +47,8 @@ Editor features:
 ✅ [AIP](https://google.aip.dev/) spec support  
 ✅ Auto import  
 ✅ Import quick fix  
-✅ [Buf](https://buf.build) integration, code completion for buf configraution files
+✅ [Buf](https://buf.build) integration, code completion for buf configraution files  
+✅ Edit protobuf line comments as markdown
 
 <!-- Plugin description end -->
 

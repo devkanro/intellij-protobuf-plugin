@@ -2,6 +2,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature
 
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.util.TextRange
+import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 
@@ -43,6 +44,8 @@ interface ProtobufSymbolReferenceHover {
     fun rename(newName: String)
 
     fun absolutely(): Boolean
+
+    fun variantFilter(): PsiElementFilter
 
     data class SymbolPart(val startOffset: Int, val value: String)
 }

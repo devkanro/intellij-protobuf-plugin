@@ -34,6 +34,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 @Suppress("UnstableApiUsage")
 object GrpcRequestHandler : RequestHandler<GrpcRequest> {
@@ -79,7 +82,7 @@ object GrpcRequestHandler : RequestHandler<GrpcRequest> {
         val inputSupport = types.findMessageSupport(request.inputType)
         val outputSupport = types.findMessageSupport(request.outputType)
         val requests = types.invoke {
-            request.requests.mapNotNull {
+            request.requests.map {
                 val reader = JacksonReader(Json.mapper.createParser(it))
                 reader.next()
                 inputSupport.newMutable().apply {
@@ -107,6 +110,8 @@ object GrpcRequestHandler : RequestHandler<GrpcRequest> {
         val flow = MutableSharedFlow<CommonClientResponseBody.TextStream.Message>(
             replay = 5, onBufferOverflow = BufferOverflow.DROP_OLDEST
         )
+        val lock = ReentrantLock()
+        val condition = lock.newCondition()
 
         val response =
             GrpcResponse(CommonClientResponseBody.TextStream(flow, jsonBodyFileHint("grpc")), null, null, null, 0)
@@ -120,7 +125,7 @@ object GrpcRequestHandler : RequestHandler<GrpcRequest> {
                 flow.tryEmit(
                     CommonClientResponseBody.TextStream.Message.Chunk(
                         Json.mapper.writerWithDefaultPrettyPrinter()
-                            .writeValueAsString(Json.mapper.readTree(result))
+                            .writeValueAsString(Json.mapper.readTree(result)) + "\n\n"
                     )
                 )
                 call.request(1)
@@ -141,6 +146,9 @@ object GrpcRequestHandler : RequestHandler<GrpcRequest> {
                 }
 
                 response.executionTime = System.currentTimeMillis() - start
+                lock.withLock {
+                    condition.signal()
+                }
             }
         }, request.metadata)
 
@@ -149,6 +157,12 @@ object GrpcRequestHandler : RequestHandler<GrpcRequest> {
         }
         call.halfClose()
         call.request(1)
+
+        lock.withLock {
+            // We wait here for 1 second to collect gRPC response header and trailer
+            // When a request executing over 1 second, the header and trailer may not visible
+            condition.await(1, TimeUnit.SECONDS)
+        }
 
         return response
     }

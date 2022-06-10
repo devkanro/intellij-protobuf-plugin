@@ -94,6 +94,8 @@ object ProtobufSymbolFilters {
 
     val extendTypeNameVariants = packagePart or extendTypeName
 
+    val alwaysFalse = PsiElementFilter { false }
+
     private class TargetOptionFilter(private val option: Options) : PsiElementFilter {
         override fun isAccepted(element: PsiElement): Boolean {
             val extend = element.parentOfType<ProtobufExtendDefinition>() ?: return false

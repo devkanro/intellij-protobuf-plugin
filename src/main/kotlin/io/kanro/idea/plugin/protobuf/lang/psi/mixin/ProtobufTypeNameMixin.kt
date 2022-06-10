@@ -5,10 +5,18 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiReference
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry
 import com.intellij.psi.impl.source.tree.LeafElement
+import com.intellij.psi.util.PsiElementFilter
+import com.intellij.psi.util.parentOfType
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtensionOptionName
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcIO
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSymbolName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElementBase
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHover
+import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolFilters
 import io.kanro.idea.plugin.protobuf.lang.util.ProtobufPsiFactory
 
 abstract class ProtobufTypeNameMixin(node: ASTNode) : ProtobufElementBase(node), ProtobufTypeName {
@@ -33,6 +41,17 @@ abstract class ProtobufTypeNameMixin(node: ASTNode) : ProtobufElementBase(node),
 
         override fun absolutely(): Boolean {
             return firstChild !is ProtobufSymbolName
+        }
+
+        override fun variantFilter(): PsiElementFilter {
+            return when (parent) {
+                is ProtobufExtensionOptionName -> ProtobufSymbolFilters.extensionOptionNameVariants(parentOfType())
+                is ProtobufFieldDefinition,
+                is ProtobufMapFieldDefinition -> ProtobufSymbolFilters.fieldTypeNameVariants
+                is ProtobufRpcIO -> ProtobufSymbolFilters.rpcTypeNameVariants
+                is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendTypeNameVariants
+                else -> ProtobufSymbolFilters.alwaysFalse
+            }
         }
     }
 

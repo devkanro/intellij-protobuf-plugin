@@ -90,14 +90,7 @@ class ProtobufTypeNameReference(
     override fun getVariants(): Array<Any> {
         val result = mutableListOf<Any>()
         val addedElements = mutableSetOf<ProtobufElement>()
-        val filter = when (element.parent) {
-            is ProtobufExtensionOptionName -> ProtobufSymbolFilters.extensionOptionNameVariants(element.parentOfType())
-            is ProtobufFieldDefinition,
-            is ProtobufMapFieldDefinition -> ProtobufSymbolFilters.fieldTypeNameVariants
-            is ProtobufRpcIO -> ProtobufSymbolFilters.rpcTypeNameVariants
-            is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendTypeNameVariants
-            else -> return ArrayUtilRt.EMPTY_OBJECT_ARRAY
-        }
+        val filter = element.referencesHover()?.variantFilter() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val pattern = element.text
         getVariantsInCurrentScope(pattern, filter, result, addedElements)
         getVariantsInStubIndex(pattern, filter, result, addedElements)
