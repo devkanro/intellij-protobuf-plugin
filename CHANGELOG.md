@@ -4,14 +4,23 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix plugin setting page on non-IDEA IDEs
+
 ## [1.6.0]
+
 ### Added
-- Support send gRPC request via HTTP client plugin [#102](https://github.com/devkanro/intellij-protobuf-plugin/issues/102)
-- Use the common folding setting to config import folding [#100](https://github.com/devkanro/intellij-protobuf-plugin/issues/100)
+
+- Support send gRPC request via HTTP client
+  plugin [#102](https://github.com/devkanro/intellij-protobuf-plugin/issues/102)
+- Use the common folding setting to config import
+  folding [#100](https://github.com/devkanro/intellij-protobuf-plugin/issues/100)
 - Inject Markdown to Protobuf line comment blocks
 - Support disable decompile from go descriptor [#99](https://github.com/devkanro/intellij-protobuf-plugin/issues/99)
 
 ## [1.5.12]
+
 ### Fixed
 - Fix type suggestions by stub indexing.
 

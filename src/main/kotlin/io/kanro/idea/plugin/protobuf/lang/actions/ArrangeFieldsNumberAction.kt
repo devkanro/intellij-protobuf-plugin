@@ -14,8 +14,6 @@ import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumbered
-import org.jetbrains.kotlin.psi.psiUtil.endOffset
-import org.jetbrains.kotlin.psi.psiUtil.startOffset
 
 abstract class ArrangeFieldsNumberActionHandler : EditorActionHandler() {
     private fun findItemsToSort(editor: Editor, caret: Caret, dataContext: DataContext?): List<ProtobufNumbered> {
@@ -33,7 +31,8 @@ abstract class ArrangeFieldsNumberActionHandler : EditorActionHandler() {
             if (startScope != endScope) return listOf()
 
             startScope.items().filterIsInstance<ProtobufNumbered>().filter {
-                it.endOffset >= caret.selectionStart && it.startOffset <= caret.selectionEnd
+                val range = it.textRange
+                range.endOffset >= caret.selectionStart && range.startOffset <= caret.selectionEnd
             }
         } else {
             val element = file.findElementAt(caret.offset) ?: return listOf()

@@ -1,6 +1,5 @@
 package io.kanro.idea.plugin.protobuf.lang.settings
 
-import com.intellij.codeInspection.javaDoc.JavadocUIUtil.bindCheckbox
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
@@ -12,6 +11,7 @@ import com.intellij.ui.BooleanTableCellEditor
 import com.intellij.ui.BooleanTableCellRenderer
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.dsl.builder.MAX_LINE_LENGTH_WORD_WRAP
+import com.intellij.ui.dsl.builder.bindSelected
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import com.intellij.ui.dsl.gridLayout.VerticalAlign
@@ -57,7 +57,7 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
             row {
                 checkBox("Auto-detect and decompile from binary descriptor")
                     .comment("Decompile proto from descriptor of some generated code(etc. GO) when open project, enabling this feature may make opening project slower.")
-                    .bindCheckbox(::autoDecompile)
+                    .bindSelected(::autoDecompile)
             }
             separator("External Import Roots")
             row {
