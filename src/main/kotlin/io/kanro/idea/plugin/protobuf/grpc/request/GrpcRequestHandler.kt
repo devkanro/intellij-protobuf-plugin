@@ -123,7 +123,7 @@ object GrpcRequestHandler : RequestHandler<GrpcRequest> {
                     outputSupport.parse(message).toJson()
                 }
                 flow.tryEmit(
-                    CommonClientResponseBody.TextStream.Message.Chunk(
+                    CommonClientResponseBody.TextStream.Message.Content.Chunk(
                         Json.mapper.writerWithDefaultPrettyPrinter()
                             .writeValueAsString(Json.mapper.readTree(result)) + "\n\n"
                     )

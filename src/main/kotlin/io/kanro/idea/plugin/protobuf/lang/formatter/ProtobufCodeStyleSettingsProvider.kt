@@ -31,11 +31,11 @@ class ProtobufCodeStyleSettingsProvider : CodeStyleSettingsProvider() {
         settings: CodeStyleSettings,
         displayName: String
     ) : CodeStyleAbstractConfigurable(currentSettings, settings, displayName) {
-        override fun createPanel(settings: CodeStyleSettings?): CodeStyleAbstractPanel {
+        override fun createPanel(settings: CodeStyleSettings): CodeStyleAbstractPanel {
             return ProtobufCodeStyleMainPanel(currentSettings, settings)
         }
     }
 
-    class ProtobufCodeStyleMainPanel(currentSettings: CodeStyleSettings, settings: CodeStyleSettings?) :
+    class ProtobufCodeStyleMainPanel(currentSettings: CodeStyleSettings, settings: CodeStyleSettings) :
         TabbedLanguageCodeStylePanel(ProtobufLanguage, currentSettings, settings)
 }
