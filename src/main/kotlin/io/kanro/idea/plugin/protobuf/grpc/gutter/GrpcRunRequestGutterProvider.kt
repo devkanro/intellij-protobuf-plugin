@@ -8,14 +8,14 @@ import com.intellij.httpClient.actions.generation.RequestUrlContextInfo
 import com.intellij.httpClient.actions.generation.unwrap
 import com.intellij.httpClient.http.request.microservices.openInHttpRequestGutter
 import com.intellij.psi.PsiElement
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.stream
 import javax.swing.Icon
 
 class GrpcRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
     override fun getIcon(): Icon {
-        return Icons.PROCEDURE
+        return ProtobufIcons.PROCEDURE
     }
 
     override fun getId(): String {
@@ -48,6 +48,10 @@ class GrpcRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
             ),
             RequestUrlContextInfo.createNonHttp()
         )
-        result += openInHttpRequestGutter(element, listOf(request), Icons.PROCEDURE)
+        result += openInHttpRequestGutter(
+            element.identifier()?.identifierLiteral ?: element,
+            listOf(request),
+            ProtobufIcons.PROCEDURE
+        )
     }
 }

@@ -6,7 +6,7 @@ import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.searches.DirectClassInheritorsSearch
 import com.intellij.psi.search.searches.OverridingMethodsSearch
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufIdentifier
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
@@ -29,10 +29,10 @@ class ProtobufLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 } ?: listOf()
                 if (methods.isEmpty() && ktMethods.isEmpty()) return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
-                    NavigationGutterIconBuilder.create(Icons.IMPLEMENTED_RPC)
+                    NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTED_RPC)
                         .setTargets(methods + ktMethods)
                         .setTooltipText("Implemented")
-                result.add(builder.createLineMarkerInfo(element))
+                result.add(builder.createLineMarkerInfo(element.identifierLiteral ?: element))
             }
             is ProtobufServiceDefinition -> {
                 val apis = owner.toImplBaseClass()?.let {
@@ -43,10 +43,10 @@ class ProtobufLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 } ?: listOf()
                 if (apis.isEmpty() && ktApis.isEmpty()) return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
-                    NavigationGutterIconBuilder.create(Icons.IMPLEMENTED_SERVICE)
+                    NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTED_SERVICE)
                         .setTargets(apis + ktApis)
                         .setTooltipText("Implemented")
-                result.add(builder.createLineMarkerInfo(element))
+                result.add(builder.createLineMarkerInfo(element.identifierLiteral ?: element))
             }
         }
     }

@@ -1,7 +1,7 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 
 import com.intellij.psi.util.parentOfType
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcIO
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.findChild
@@ -22,15 +22,15 @@ interface ProtobufRpcDefinition : ProtobufDefinition {
 
     override fun getIcon(unused: Boolean): Icon? {
         val parameters = findChildren<ProtobufRpcIO>()
-        if (parameters.size != 2) return Icons.RPC_METHOD
+        if (parameters.size != 2) return ProtobufIcons.RPC_METHOD
         val inputStream = parameters[0].stream()
         val outputStream = parameters[1].stream()
 
         return when {
-            inputStream && outputStream -> Icons.RPC_METHOD_BISTREAM
-            outputStream -> Icons.RPC_METHOD_SERVER_STREAM
-            inputStream -> Icons.RPC_METHOD_CLIENT_STREAM
-            else -> Icons.RPC_METHOD
+            inputStream && outputStream -> ProtobufIcons.RPC_METHOD_BISTREAM
+            outputStream -> ProtobufIcons.RPC_METHOD_SERVER_STREAM
+            inputStream -> ProtobufIcons.RPC_METHOD_CLIENT_STREAM
+            else -> ProtobufIcons.RPC_METHOD
         }
     }
 

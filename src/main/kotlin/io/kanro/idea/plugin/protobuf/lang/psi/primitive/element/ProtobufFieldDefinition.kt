@@ -3,7 +3,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.findChild
@@ -20,7 +20,7 @@ interface ProtobufFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefiniti
     }
 
     override fun getIcon(unused: Boolean): Icon? {
-        return Icons.FIELD
+        return ProtobufIcons.FIELD
     }
 
     fun resourceType(): String? {

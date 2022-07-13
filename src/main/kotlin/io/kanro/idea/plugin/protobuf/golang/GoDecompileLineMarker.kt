@@ -10,7 +10,7 @@ import com.intellij.codeInsight.daemon.LineMarkerProviderDescriptor
 import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.psi.PsiElement
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import java.awt.event.MouseEvent
 
 class GoDecompileLineMarker : LineMarkerProviderDescriptor() {
@@ -31,7 +31,7 @@ class GoDecompileLineMarker : LineMarkerProviderDescriptor() {
 }
 
 class ProtobufDecompileLineMarkerInfo(element: GoVarDefinition) : LineMarkerInfo<GoVarDefinition>(
-    element, element.textRange, Icons.PROTO_DECOMPILE,
+    element, element.textRange, ProtobufIcons.PROTO_DECOMPILE,
     {
         "Decompile protobuf descriptor"
     },

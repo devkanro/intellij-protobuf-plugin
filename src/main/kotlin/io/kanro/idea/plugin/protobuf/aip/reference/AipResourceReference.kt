@@ -9,7 +9,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.util.ArrayUtilRt
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.ComposedInsertHandler
@@ -83,7 +83,7 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
                 LookupElementBuilder.create(
                     resourceName
                 ).withLookupString(resourceName.substringAfterLast('/'))
-                    .withIcon(Icons.RESOURCE_MESSAGE)
+                    .withIcon(ProtobufIcons.RESOURCE_MESSAGE)
                     .withPresentableText(resourceName)
             }
             is ProtobufFileOption -> {
@@ -92,7 +92,7 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
                 LookupElementBuilder.create(
                     resourceName
                 ).withLookupString(resourceName.substringAfterLast('/'))
-                    .withIcon(Icons.RESOURCE_MESSAGE)
+                    .withIcon(ProtobufIcons.RESOURCE_MESSAGE)
                     .withPresentableText(resourceName)
             }
             else -> return null

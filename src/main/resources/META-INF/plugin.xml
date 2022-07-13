@@ -154,6 +154,11 @@
                                 implementationClass="io.kanro.idea.plugin.protobuf.aip.completion.AipCompletionContributor"/>
     </extensions>
 
+    <applicationListeners>
+        <listener class="io.kanro.idea.plugin.protobuf.ProtobufExpUiHelper"
+                  topic="com.intellij.ide.ui.LafManagerListener"/>
+    </applicationListeners>
+
     <actions>
         <group id="io.kanro.idea.plugin.Protobuf" text="Protobuf" popup="true"
                icon="/io/kanro/idea/plugin/protobuf/icon/logo.svg"

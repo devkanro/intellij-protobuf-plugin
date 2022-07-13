@@ -14,7 +14,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.elementType
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 
 class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
@@ -45,7 +45,7 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 )
                 if (methods.isEmpty()) return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
-                    NavigationGutterIconBuilder.create(Icons.IMPLEMENTING_RPC)
+                    NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTING_RPC)
                         .setTargets(methods)
                         .setTooltipText("Implementing")
                 result.add(builder.createLineMarkerInfo(element))
@@ -67,7 +67,7 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 }
                 if (servers.isEmpty()) return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
-                    NavigationGutterIconBuilder.create(Icons.IMPLEMENTING_SERVICE)
+                    NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTING_SERVICE)
                         .setTargets(servers)
                         .setTooltipText("Implementing")
                 result.add(builder.createLineMarkerInfo(element))

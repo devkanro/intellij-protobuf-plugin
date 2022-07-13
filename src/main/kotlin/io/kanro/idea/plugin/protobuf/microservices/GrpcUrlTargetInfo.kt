@@ -4,7 +4,7 @@ import com.intellij.microservices.url.Authority
 import com.intellij.microservices.url.UrlPath
 import com.intellij.microservices.url.UrlTargetInfo
 import com.intellij.psi.PsiElement
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import javax.swing.Icon
 
@@ -17,7 +17,7 @@ class GrpcUrlTargetInfo(private val rpc: ProtobufRpcDefinition) : UrlTargetInfo 
     override val schemes: List<String>
         get() = listOf("http://", "https://")
     override val icon: Icon
-        get() = Icons.PROCEDURE
+        get() = ProtobufIcons.PROCEDURE
     override val methods: Set<String>
         get() = setOf("GRPC")
     override val documentationPsiElement: PsiElement?

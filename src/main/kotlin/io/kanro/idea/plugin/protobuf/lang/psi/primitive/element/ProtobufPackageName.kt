@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNameIdentifierOwner
 import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.util.QualifiedName
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufDocumented
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufNamedElement
@@ -35,7 +35,7 @@ interface ProtobufPackageName :
     }
 
     override fun getIcon(unused: Boolean): Icon? {
-        return Icons.PACKAGE
+        return ProtobufIcons.PACKAGE
     }
 
     override fun getPresentableText(): String? {

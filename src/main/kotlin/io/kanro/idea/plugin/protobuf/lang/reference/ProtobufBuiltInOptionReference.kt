@@ -8,7 +8,7 @@ import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ArrayUtilRt
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufBuiltInOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
@@ -78,11 +78,11 @@ class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
         if (Options.FIELD_OPTIONS.messageName == type) {
             fields += LookupElementBuilder.create("default")
                 .withTypeText("option")
-                .withIcon(Icons.FIELD)
+                .withIcon(ProtobufIcons.FIELD)
                 .withInsertHandler(optionInsertHandler)
             fields += LookupElementBuilder.create("json_name")
                 .withTypeText("option")
-                .withIcon(Icons.FIELD)
+                .withIcon(ProtobufIcons.FIELD)
                 .withInsertHandler(optionInsertHandler)
         }
         return fields.toTypedArray()

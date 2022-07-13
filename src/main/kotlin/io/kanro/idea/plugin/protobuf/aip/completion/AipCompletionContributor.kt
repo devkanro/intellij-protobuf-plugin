@@ -12,7 +12,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.editor.EditorModificationUtil
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ProcessingContext
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.aip.reference.AipResourceResolver
 import io.kanro.idea.plugin.protobuf.lang.completion.AutoPopupInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
@@ -50,12 +50,12 @@ object MethodCompletionProvider : CompletionProvider<CompletionParameters>() {
         return if (methodType.startsWith("Batch")) {
             LookupElementBuilder.create(methodType)
                 .withTypeText("batch method")
-                .withIcon(Icons.RPC_METHOD)
+                .withIcon(ProtobufIcons.RPC_METHOD)
                 .withInsertHandler(AutoPopupInsertHandler)
         } else {
             LookupElementBuilder.create(methodType)
                 .withTypeText("standard method")
-                .withIcon(Icons.RPC_METHOD)
+                .withIcon(ProtobufIcons.RPC_METHOD)
                 .withInsertHandler(AutoPopupInsertHandler)
         }
     }
@@ -97,7 +97,7 @@ object ResourceMethodCompletionProvider : CompletionProvider<CompletionParameter
         val methodName = "$method$name"
 
         return LookupElementBuilder.create(message, methodName)
-            .withIcon(Icons.RESOURCE_MESSAGE)
+            .withIcon(ProtobufIcons.RESOURCE_MESSAGE)
             .withPresentableText(name)
             .withInsertHandler(MethodInsertHandler(method))
     }

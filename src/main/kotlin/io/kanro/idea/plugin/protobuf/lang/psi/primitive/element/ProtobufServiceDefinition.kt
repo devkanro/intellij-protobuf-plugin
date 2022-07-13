@@ -1,7 +1,7 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 
 import com.intellij.psi.util.QualifiedName
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
@@ -21,6 +21,6 @@ interface ProtobufServiceDefinition : ProtobufScope, ProtobufDefinition {
     }
 
     override fun getIcon(unused: Boolean): Icon? {
-        return Icons.SERVICE
+        return ProtobufIcons.SERVICE
     }
 }

@@ -11,7 +11,7 @@ import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.util.ArrayUtilRt
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
@@ -64,7 +64,7 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
             return if (file.isDirectory) {
                 LookupElementBuilder.create(completionText)
                     .withTypeText("directory")
-                    .withIcon(Icons.FOLDER)
+                    .withIcon(ProtobufIcons.FOLDER)
                     .withPresentableText(file.name)
                     .withInsertHandler { context, item ->
                         nextImportInsert.handleInsert(context, item)
@@ -73,7 +73,7 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
             } else {
                 LookupElementBuilder.create(completionText)
                     .withTypeText("proto")
-                    .withIcon(Icons.FILE)
+                    .withIcon(ProtobufIcons.FILE)
                     .withPresentableText(file.name)
                     .withInsertHandler(completeImportInsert)
             }

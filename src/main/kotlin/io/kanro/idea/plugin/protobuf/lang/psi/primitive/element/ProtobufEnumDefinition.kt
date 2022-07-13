@@ -1,7 +1,7 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 
 import com.intellij.psi.util.QualifiedName
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
@@ -17,7 +17,7 @@ interface ProtobufEnumDefinition : ProtobufNumberScope, ProtobufDefinition, Prot
     }
 
     override fun getIcon(unused: Boolean): Icon? {
-        return Icons.ENUM
+        return ProtobufIcons.ENUM
     }
 
     override fun allowAlias(): Boolean {

@@ -1,7 +1,7 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 
 import com.intellij.psi.util.parentOfType
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumbered
 import javax.swing.Icon
@@ -16,7 +16,7 @@ interface ProtobufEnumValueDefinition : ProtobufNumbered {
     }
 
     override fun getIcon(unused: Boolean): Icon? {
-        return Icons.ENUM_VALUE
+        return ProtobufIcons.ENUM_VALUE
     }
 
     override fun tailText(): String? {

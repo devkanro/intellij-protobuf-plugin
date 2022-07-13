@@ -12,7 +12,7 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.util.QualifiedName
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
@@ -176,6 +176,6 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
     }
 
     override fun getIcon(unused: Boolean): Icon? {
-        return Icons.FILE
+        return ProtobufIcons.FILE
     }
 }

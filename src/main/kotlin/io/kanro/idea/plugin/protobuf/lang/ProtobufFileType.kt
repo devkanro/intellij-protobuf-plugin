@@ -1,7 +1,7 @@
 package io.kanro.idea.plugin.protobuf.lang
 
 import com.intellij.openapi.fileTypes.LanguageFileType
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import javax.swing.Icon
 
 class ProtobufFileType : LanguageFileType(ProtobufLanguage) {
@@ -22,6 +22,6 @@ class ProtobufFileType : LanguageFileType(ProtobufLanguage) {
     }
 
     override fun getIcon(): Icon {
-        return Icons.FILE
+        return ProtobufIcons.FILE
     }
 }

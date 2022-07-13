@@ -4,7 +4,7 @@ import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.QualifiedName
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
@@ -23,8 +23,8 @@ interface ProtobufMessageDefinition : ProtobufNumberScope, ProtobufDefinition {
     }
 
     override fun getIcon(unused: Boolean): Icon? {
-        if (resourceType() != null) return Icons.RESOURCE_MESSAGE
-        return Icons.MESSAGE
+        if (resourceType() != null) return ProtobufIcons.RESOURCE_MESSAGE
+        return ProtobufIcons.MESSAGE
     }
 
     override fun tailText(): String? {

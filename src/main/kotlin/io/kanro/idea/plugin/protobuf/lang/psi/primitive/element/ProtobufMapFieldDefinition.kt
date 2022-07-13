@@ -1,6 +1,6 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
 import io.kanro.idea.plugin.protobuf.lang.psi.jsonName
@@ -14,7 +14,7 @@ interface ProtobufMapFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefin
     }
 
     override fun getIcon(unused: Boolean): Icon? {
-        return Icons.FIELD
+        return ProtobufIcons.FIELD
     }
 
     override fun fieldType(): String? {

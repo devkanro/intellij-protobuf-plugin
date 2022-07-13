@@ -2,7 +2,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.findChild
@@ -20,7 +20,7 @@ interface ProtobufExtendDefinition :
     }
 
     override fun getIcon(unused: Boolean): Icon? {
-        return Icons.EXTEND
+        return ProtobufIcons.EXTEND
     }
 
     override fun nameElement(): PsiElement? {

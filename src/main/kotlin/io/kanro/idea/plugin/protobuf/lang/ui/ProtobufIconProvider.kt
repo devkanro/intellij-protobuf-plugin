@@ -2,7 +2,7 @@ package io.kanro.idea.plugin.protobuf.lang.ui
 
 import com.intellij.ide.IconProvider
 import com.intellij.psi.PsiElement
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
@@ -21,17 +21,17 @@ class ProtobufIconProvider : IconProvider() {
     override fun getIcon(element: PsiElement, flags: Int): Icon? {
         if (element !is ProtobufElement) return null
         return when (element) {
-            is ProtobufFile -> Icons.FILE
-            is ProtobufMessageDefinition -> Icons.MESSAGE
-            is ProtobufFieldDefinition -> Icons.FIELD
-            is ProtobufOneofDefinition -> Icons.ONEOF
-            is ProtobufGroupDefinition -> Icons.GROUP_FIELD
-            is ProtobufExtendDefinition -> Icons.EXTEND
-            is ProtobufEnumDefinition -> Icons.ENUM
-            is ProtobufEnumValueDefinition -> Icons.ENUM_VALUE
-            is ProtobufServiceDefinition -> Icons.SERVICE
-            is ProtobufRpcDefinition -> Icons.RPC_METHOD
-            is ProtobufPackageName -> Icons.PACKAGE
+            is ProtobufFile -> ProtobufIcons.FILE
+            is ProtobufMessageDefinition -> ProtobufIcons.MESSAGE
+            is ProtobufFieldDefinition -> ProtobufIcons.FIELD
+            is ProtobufOneofDefinition -> ProtobufIcons.ONEOF
+            is ProtobufGroupDefinition -> ProtobufIcons.GROUP_FIELD
+            is ProtobufExtendDefinition -> ProtobufIcons.EXTEND
+            is ProtobufEnumDefinition -> ProtobufIcons.ENUM
+            is ProtobufEnumValueDefinition -> ProtobufIcons.ENUM_VALUE
+            is ProtobufServiceDefinition -> ProtobufIcons.SERVICE
+            is ProtobufRpcDefinition -> ProtobufIcons.RPC_METHOD
+            is ProtobufPackageName -> ProtobufIcons.PACKAGE
             else -> null
         }
     }

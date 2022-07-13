@@ -16,7 +16,7 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
@@ -27,7 +27,7 @@ import io.kanro.idea.plugin.protobuf.microservices.model.ProtobufServiceModel
 class GrpcEndpointsProvider : EndpointsProvider<ProtobufServiceModel, ProtobufRpcModel> {
     override val endpointType: EndpointType = API_DEFINITION_TYPE
     override val presentation: FrameworkPresentation =
-        FrameworkPresentation("gRPC", "gRPC Specification", Icons.PROCEDURE)
+        FrameworkPresentation("gRPC", "gRPC Specification", ProtobufIcons.PROCEDURE)
 
     override fun getEndpointData(group: ProtobufServiceModel, endpoint: ProtobufRpcModel, dataId: String): Any? {
         return ValueKey.match(dataId).ifEq(EndpointsProvider.DOCUMENTATION_ELEMENT).thenGet {

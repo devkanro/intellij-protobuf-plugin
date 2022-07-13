@@ -4,6 +4,7 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.util.ModificationTracker
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiElement
+import com.intellij.util.PlatformIcons
 import io.kanro.idea.plugin.protobuf.buf.project.BufFileManager
 import io.kanro.idea.plugin.protobuf.lang.root.CachedProtobufRootProvider
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRoot
@@ -11,6 +12,7 @@ import kotlin.io.path.Path
 
 class BufRootProvider : CachedProtobufRootProvider() {
     override fun id(): String {
+        PlatformIcons.ABSTRACT_CLASS_ICON
         return "bufRoot"
     }
 

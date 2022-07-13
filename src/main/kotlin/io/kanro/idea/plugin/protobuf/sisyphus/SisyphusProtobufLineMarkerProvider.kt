@@ -6,7 +6,7 @@ import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.searches.DirectClassInheritorsSearch
 import com.intellij.psi.search.searches.OverridingMethodsSearch
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufIdentifier
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
@@ -23,19 +23,19 @@ class SisyphusProtobufLineMarkerProvider : RelatedItemLineMarkerProvider() {
             is ProtobufRpcDefinition -> {
                 val method = owner.toMethod() ?: return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
-                    NavigationGutterIconBuilder.create(Icons.IMPLEMENTED_RPC)
+                    NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTED_RPC)
                         .setTargets(OverridingMethodsSearch.search(method).toList())
                         .setTooltipText("Implemented")
-                result.add(builder.createLineMarkerInfo(element))
+                result.add(builder.createLineMarkerInfo(element.identifierLiteral ?: element))
             }
             is ProtobufServiceDefinition -> {
                 val clazz = owner.toClass() ?: return
                 val apis = DirectClassInheritorsSearch.search(clazz).findAll().toList()
                 val builder: NavigationGutterIconBuilder<PsiElement> =
-                    NavigationGutterIconBuilder.create(Icons.IMPLEMENTED_SERVICE)
+                    NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTED_SERVICE)
                         .setTargets(apis)
                         .setTooltipText("Implemented")
-                result.add(builder.createLineMarkerInfo(element))
+                result.add(builder.createLineMarkerInfo(element.identifierLiteral ?: element))
             }
         }
     }

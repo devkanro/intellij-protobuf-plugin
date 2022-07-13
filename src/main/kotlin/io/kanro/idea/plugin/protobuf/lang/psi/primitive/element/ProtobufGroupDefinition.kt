@@ -2,7 +2,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.primitive.element
 
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.util.QualifiedName
-import io.kanro.idea.plugin.protobuf.Icons
+import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufMultiNameDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
@@ -20,7 +20,7 @@ interface ProtobufGroupDefinition : ProtobufFieldLike, ProtobufNumberScope, Prot
     }
 
     override fun getIcon(unused: Boolean): Icon? {
-        return Icons.GROUP_FIELD
+        return ProtobufIcons.GROUP_FIELD
     }
 
     override fun fieldType(): String? {
