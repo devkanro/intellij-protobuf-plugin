@@ -7,7 +7,22 @@ import com.intellij.openapi.util.IconPathPatcher
 import com.intellij.ui.ExperimentalUI
 
 class ProtobufExpUiHelper : LafManagerListener {
+    private val expUiSupport: Boolean
+
+    init {
+        expUiSupport = try {
+            Class.forName("com.intellij.ui.ExperimentalUI")
+            true
+        } catch (e: ClassNotFoundException) {
+            false
+        }
+    }
+
     override fun lookAndFeelChanged(source: LafManager) {
+        if(!expUiSupport) {
+            return
+        }
+
         if (ExperimentalUI.isNewUI()) {
             IconLoader.installPathPatcher(ProtobufExpUiIconsPatcher)
         } else {

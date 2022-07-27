@@ -3,8 +3,10 @@ package io.kanro.idea.plugin.protobuf.grpc.request
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import io.grpc.Channel
+import io.grpc.HttpConnectProxiedSocketAddress
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
+import java.net.InetSocketAddress
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
@@ -15,7 +17,16 @@ class GrpcChannelPool : Disposable {
     fun getOrCreateChannel(grpcRequest: GrpcRequest): Channel {
         val id = "http${if (grpcRequest.tls) "s" else ""}://${grpcRequest.host}"
         return cache.getOrPut(id) {
-            ManagedChannelBuilder.forTarget(grpcRequest.host).apply {
+            ManagedChannelBuilder.forTarget(grpcRequest.host).proxyDetector {
+                HttpConnectProxiedSocketAddress.newBuilder()
+                    .setTargetAddress(it as InetSocketAddress)
+                    .setProxyAddress(
+                        InetSocketAddress(
+                            "127.0.0.1",
+                            8887
+                        )
+                    ).build()
+            }.apply {
                 if (!grpcRequest.tls) {
                     this.usePlaintext()
                 } else {

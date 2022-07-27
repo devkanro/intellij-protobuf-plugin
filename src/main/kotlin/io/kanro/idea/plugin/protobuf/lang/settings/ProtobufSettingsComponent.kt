@@ -1,5 +1,6 @@
 package io.kanro.idea.plugin.protobuf.lang.settings
 
+import com.intellij.codeInspection.javaDoc.JavadocUIUtil.bindCheckbox
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
@@ -10,6 +11,7 @@ import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.ui.BooleanTableCellEditor
 import com.intellij.ui.BooleanTableCellRenderer
 import com.intellij.ui.ToolbarDecorator
+import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.MAX_LINE_LENGTH_WORD_WRAP
 import com.intellij.ui.dsl.builder.bindSelected
 import com.intellij.ui.dsl.builder.panel
@@ -29,7 +31,7 @@ import javax.swing.table.TableCellRenderer
 
 class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufSettings> {
     private val panel: JPanel
-    private var autoDecompile: Boolean = true
+    private lateinit var checkBox: JBCheckBox
     private val importRootsModel = ListTableModel<ProtobufSettings.ImportRootEntry>(PathColumnInfo, CommonColumnInfo)
 
     init {
@@ -57,7 +59,9 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
             row {
                 checkBox("Auto-detect and decompile from binary descriptor")
                     .comment("Decompile proto from descriptor of some generated code(etc. GO) when open project, enabling this feature may make opening project slower.")
-                    .bindSelected(::autoDecompile)
+                    .applyToComponent {
+                        checkBox = this
+                    }
             }
             separator("External Import Roots")
             row {
@@ -74,18 +78,18 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
 
     override fun reset(settings: ProtobufSettings) {
         importRootsModel.items = settings.state.importRoots.toMutableList()
-        autoDecompile = settings.state.autoDecompile
+        checkBox.isSelected = settings.state.autoDecompile
     }
 
     override fun isModified(settings: ProtobufSettings): Boolean {
         if (!settings.state.importRoots.contentEquals(importRootsModel.items)) return true
-        if (settings.state.autoDecompile != autoDecompile) return true
+        if (settings.state.autoDecompile != checkBox.isSelected) return true
         return false
     }
 
     override fun apply(settings: ProtobufSettings) {
         settings.state.importRoots = importRootsModel.items.toMutableList()
-        settings.state.autoDecompile = autoDecompile
+        settings.state.autoDecompile = checkBox.isSelected
 
         ApplicationManager.getApplication().runWriteAction {
             ProjectRootManagerEx.getInstanceEx(project).makeRootsChange({}, false, true)

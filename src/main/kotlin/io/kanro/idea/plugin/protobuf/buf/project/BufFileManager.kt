@@ -307,7 +307,7 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
                 DefaultTreeExpander(tree)
             } else null
         }
-        val content = ContentFactory.SERVICE.getInstance().createContent(
+        val content = ContentFactory.getInstance().createContent(
             panel, null, false
         )
         toolWindow.contentManager.addContent(content)

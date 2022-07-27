@@ -6,7 +6,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <codeInsight.lineMarkerProvider language="protobuf"
                                         implementationClass="io.kanro.idea.plugin.protobuf.grpc.gutter.GrpcRunRequestGutterProvider"/>
-        <httpClient.RequestExecutionSupport
+        <httpClient.requestExecutionSupport
                 implementation="io.kanro.idea.plugin.protobuf.grpc.request.GrpcRequestExecutionSupport"/>
         <httpClient.injection.request.implicitMimeTypeProvider
                 implementation="io.kanro.idea.plugin.protobuf.grpc.request.GrpcMimeTypeProvider"/>

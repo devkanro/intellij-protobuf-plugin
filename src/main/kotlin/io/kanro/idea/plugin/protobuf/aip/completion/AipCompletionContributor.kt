@@ -94,7 +94,8 @@ object ResourceMethodCompletionProvider : CompletionProvider<CompletionParameter
 
     private fun resourceElement(method: String, message: ProtobufMessageDefinition?): LookupElement? {
         val name = message?.name() ?: return null
-        val methodName = "$method$name"
+        val pluralize = method.startsWith("Batch") || method == "List"
+        val methodName = "$method${if (pluralize) name.plural() else name}"
 
         return LookupElementBuilder.create(message, methodName)
             .withIcon(ProtobufIcons.RESOURCE_MESSAGE)

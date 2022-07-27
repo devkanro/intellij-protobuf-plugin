@@ -52,13 +52,15 @@ object ProtobufDecompiler {
             fileDescriptor.enumTypeList.forEach {
                 generate(this, stack, it)
             }
+
+            fileDescriptor.extensionList.groupBy { it.extendee }.forEach {
+                generate(this, stack, it.value)
+            }
         }
     }
 
     fun generate(
-        builder: ProtobufCodeBuilder,
-        stack: Stack<Message>,
-        service: DescriptorProtos.ServiceDescriptorProto
+        builder: ProtobufCodeBuilder, stack: Stack<Message>, service: DescriptorProtos.ServiceDescriptorProto
     ): Unit = stackWrapper(stack, service) {
         builder.apply {
             normalizeStatementLn()
@@ -73,22 +75,19 @@ object ProtobufDecompiler {
     }
 
     fun generate(
-        builder: ProtobufCodeBuilder,
-        stack: Stack<Message>,
-        method: DescriptorProtos.MethodDescriptorProto
-    ): Unit =
-        stackWrapper(stack, method) {
-            builder.apply {
-                normalizeStatementLn()
-                append(
-                    "rpc ${method.name}(${stack.simpleTypeName(method.inputType)}) returns (${
-                        stack.simpleTypeName(
-                            method.outputType
-                        )
-                    });"
-                )
-            }
+        builder: ProtobufCodeBuilder, stack: Stack<Message>, method: DescriptorProtos.MethodDescriptorProto
+    ): Unit = stackWrapper(stack, method) {
+        builder.apply {
+            normalizeStatementLn()
+            append(
+                "rpc ${method.name}(${stack.simpleTypeName(method.inputType)}) returns (${
+                    stack.simpleTypeName(
+                        method.outputType
+                    )
+                });"
+            )
         }
+    }
 
     fun generate(builder: ProtobufCodeBuilder, stack: Stack<Message>, message: DescriptorProtos.DescriptorProto): Unit =
         stackWrapper(stack, message) {
@@ -118,14 +117,16 @@ object ProtobufDecompiler {
                     message.enumTypeList.forEach {
                         generate(this, stack, it)
                     }
+
+                    message.extensionList.groupBy { it.extendee }.forEach {
+                        generate(this, stack, it.value)
+                    }
                 }
             }
         }
 
     fun generate(
-        builder: ProtobufCodeBuilder,
-        stack: Stack<Message>,
-        field: DescriptorProtos.FieldDescriptorProto
+        builder: ProtobufCodeBuilder, stack: Stack<Message>, field: DescriptorProtos.FieldDescriptorProto
     ): Unit = stackWrapper(stack, field) {
         builder.apply {
             normalizeStatementLn()
@@ -157,9 +158,7 @@ object ProtobufDecompiler {
     }
 
     fun generate(
-        builder: ProtobufCodeBuilder,
-        stack: Stack<Message>,
-        enum: DescriptorProtos.EnumDescriptorProto
+        builder: ProtobufCodeBuilder, stack: Stack<Message>, enum: DescriptorProtos.EnumDescriptorProto
     ): Unit = stackWrapper(stack, enum) {
         builder.apply {
             normalizeStatementLn()
@@ -175,9 +174,7 @@ object ProtobufDecompiler {
     }
 
     fun generate(
-        builder: ProtobufCodeBuilder,
-        stack: Stack<Message>,
-        enumValue: DescriptorProtos.EnumValueDescriptorProto
+        builder: ProtobufCodeBuilder, stack: Stack<Message>, enumValue: DescriptorProtos.EnumValueDescriptorProto
     ): Unit = stackWrapper(stack, enumValue) {
         builder.apply {
             normalizeStatementLn()
@@ -185,9 +182,22 @@ object ProtobufDecompiler {
         }
     }
 
+    fun generate(
+        builder: ProtobufCodeBuilder, stack: Stack<Message>, extensions: List<DescriptorProtos.FieldDescriptorProto>
+    ): Unit {
+        builder.apply {
+            normalizeStatementLn()
+            val extendee = extensions.first().extendee
+            block("extend ${stack.simpleTypeName(extendee) ?: "Unknown"}") {
+                extensions.forEach {
+                    generate(builder, stack, it)
+                }
+            }
+        }
+    }
+
     fun generateBlockOption(
-        builder: ProtobufCodeBuilder,
-        option: Message
+        builder: ProtobufCodeBuilder, option: Message
     ) {
         builder.apply {
             option.allFields.forEach { (field, value) ->
@@ -201,9 +211,7 @@ object ProtobufDecompiler {
                     Descriptors.FieldDescriptor.Type.BOOL -> {
                         appendLn("option ${field.name} = $value;")
                     }
-                    Descriptors.FieldDescriptor.Type.GROUP,
-                    Descriptors.FieldDescriptor.Type.MESSAGE,
-                    Descriptors.FieldDescriptor.Type.BYTES -> {
+                    Descriptors.FieldDescriptor.Type.GROUP, Descriptors.FieldDescriptor.Type.MESSAGE, Descriptors.FieldDescriptor.Type.BYTES -> {
                     }
                     else -> {
                         appendLn("option ${field.name} = $value;")
@@ -215,8 +223,9 @@ object ProtobufDecompiler {
 
     private fun Stack<Message>.fieldType(field: DescriptorProtos.FieldDescriptorProto): String? {
         return when (field.type) {
-            DescriptorProtos.FieldDescriptorProto.Type.TYPE_ENUM,
-            DescriptorProtos.FieldDescriptorProto.Type.TYPE_MESSAGE -> simpleTypeName(field.typeName)
+            DescriptorProtos.FieldDescriptorProto.Type.TYPE_ENUM, DescriptorProtos.FieldDescriptorProto.Type.TYPE_MESSAGE -> simpleTypeName(
+                field.typeName
+            )
             DescriptorProtos.FieldDescriptorProto.Type.TYPE_GROUP -> TODO()
             else -> field.type.name.lowercase().removePrefix("type_")
         }
@@ -251,8 +260,7 @@ object ProtobufDecompiler {
     }
 
     private fun findMapEntry(
-        stack: Stack<Message>,
-        field: DescriptorProtos.FieldDescriptorProto
+        stack: Stack<Message>, field: DescriptorProtos.FieldDescriptorProto
     ): DescriptorProtos.DescriptorProto? {
         if (field.label != DescriptorProtos.FieldDescriptorProto.Label.LABEL_REPEATED) return null
         val entryName = field.typeName.substringAfterLast('.')
@@ -264,8 +272,7 @@ object ProtobufDecompiler {
     }
 
     private fun findGroup(
-        stack: Stack<Message>,
-        field: DescriptorProtos.FieldDescriptorProto
+        stack: Stack<Message>, field: DescriptorProtos.FieldDescriptorProto
     ): DescriptorProtos.DescriptorProto? {
         if (field.type != DescriptorProtos.FieldDescriptorProto.Type.TYPE_GROUP) return null
         val groupLevel = stack.asReversed().indexOfFirst { it is DescriptorProtos.DescriptorProto }

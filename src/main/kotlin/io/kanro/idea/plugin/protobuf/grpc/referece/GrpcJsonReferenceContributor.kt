@@ -25,10 +25,6 @@ object GrpcJsonBody : PatternCondition<JsonElement>("GRPC JSON BODY") {
 }
 
 class GrpcJsonReferenceContributor : PsiReferenceContributor() {
-    init {
-        ""
-    }
-
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
         registrar.registerReferenceProvider(
             PlatformPatterns.psiElement(JsonStringLiteral::class.java).withParent(JsonProperty::class.java)
