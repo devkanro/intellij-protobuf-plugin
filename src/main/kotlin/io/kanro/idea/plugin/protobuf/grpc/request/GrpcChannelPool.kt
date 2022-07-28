@@ -16,17 +16,14 @@ class GrpcChannelPool : Disposable {
 
     fun getOrCreateChannel(grpcRequest: GrpcRequest): Channel {
         val id = "http${if (grpcRequest.tls) "s" else ""}://${grpcRequest.host}"
+        cache[id]?.let {
+            if (it.isShutdown) {
+                cache.remove(id)
+            }
+        }
+
         return cache.getOrPut(id) {
-            ManagedChannelBuilder.forTarget(grpcRequest.host).proxyDetector {
-                HttpConnectProxiedSocketAddress.newBuilder()
-                    .setTargetAddress(it as InetSocketAddress)
-                    .setProxyAddress(
-                        InetSocketAddress(
-                            "127.0.0.1",
-                            8887
-                        )
-                    ).build()
-            }.apply {
+            ManagedChannelBuilder.forTarget(grpcRequest.host).apply {
                 if (!grpcRequest.tls) {
                     this.usePlaintext()
                 } else {

@@ -1,6 +1,5 @@
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.internal.ensureParentDirsCreated
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
@@ -153,17 +152,6 @@ sourceSets {
     named("main") {
         java {
             srcDir(buildDir.resolve("generated/sources/grammar"))
-        }
-    }
-}
-
-kotlin {
-    sourceSets {
-        named("main") {
-            kotlin.apply {
-                // exclude("io/kanro/idea/plugin/protobuf/java/**/*.kt")
-                // exclude("io/kanro/idea/plugin/protobuf/sisyphus/**/*.kt")
-            }
         }
     }
 }
