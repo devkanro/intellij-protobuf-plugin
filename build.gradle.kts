@@ -29,7 +29,7 @@ repositories {
 dependencies {
     implementation("org.commonmark:commonmark:0.18.2")
     implementation("org.commonmark:commonmark-ext-gfm-tables:0.18.2")
-    implementation("org.commonmark:commonmark-ext-autolink:0.18.2")
+    implementation("org.commonmark:commonmark-ext-autolink:0.19.0")
     implementation("com.bybutter.sisyphus:sisyphus-grpc:1.3.42") {
         exclude("io.grpc")
         exclude("org.jetbrains.kotlin")
