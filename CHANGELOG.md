@@ -4,12 +4,29 @@
 
 ## [Unreleased]
 
-## [1.6.10]
 ### Fixed
+
+- Fix gRPC request require a proxy
+- Fix gRPC request with schema
+
+### Added
+
+- Support the grpc-status-bin header
+
+## [1.6.20]
+
+- Target to 2022.2
+
+## [1.6.10]
+
+### Fixed
+
 - Fix plugin setting page on non-IDEA IDEs
 
 ## [1.6.0]
+
 ### Added
+
 - Support send gRPC request via HTTP client
   plugin [#102](https://github.com/devkanro/intellij-protobuf-plugin/issues/102)
 - Use the common folding setting to config import

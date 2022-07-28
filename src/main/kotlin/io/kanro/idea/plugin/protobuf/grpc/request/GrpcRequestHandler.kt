@@ -135,14 +135,20 @@ object GrpcRequestHandler : RequestHandler<GrpcRequest> {
                 response.header = headers
             }
 
-            override fun onClose(status: Status, trailers: Metadata?) {
+            override fun onClose(status: Status, trailers: Metadata) {
                 response.trailer = trailers
                 response.status = status
+
+                val detail = trailers[GrpcStatusMarshaller.KEY]
 
                 if (status.isOk) {
                     flow.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.End)
                 } else {
-                    flow.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(status.asException()))
+                    flow.tryEmit(
+                        CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(
+                            GrpcStatusException(status, detail?.details)
+                        )
+                    )
                 }
 
                 response.executionTime = System.currentTimeMillis() - start
@@ -170,3 +176,4 @@ object GrpcRequestHandler : RequestHandler<GrpcRequest> {
     override fun prepareExecutionEnvironment(request: GrpcRequest, runContext: RunContext) {
     }
 }
+

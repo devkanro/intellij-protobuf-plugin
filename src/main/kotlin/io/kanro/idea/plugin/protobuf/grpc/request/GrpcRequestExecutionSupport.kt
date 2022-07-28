@@ -10,6 +10,8 @@ class GrpcRequestExecutionSupport : RequestExecutionSupport<GrpcRequest> {
     companion object {
         const val GRPC = "GRPC"
         val supportedMethod = setOf(GRPC)
+
+        val supportedSchemes = listOf("http", "https")
     }
 
     override fun canProcess(requestContext: RequestContext): Boolean {
@@ -27,5 +29,9 @@ class GrpcRequestExecutionSupport : RequestExecutionSupport<GrpcRequest> {
     override fun supportedMethods(): Collection<String> {
         return supportedMethod
     }
+
+    override val needsScheme: Boolean get() = false
+
+    override val supportedSchemes: List<String> get() = GrpcRequestExecutionSupport.supportedSchemes
 }
 
