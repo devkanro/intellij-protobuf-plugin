@@ -4,12 +4,25 @@
 
 ## [Unreleased]
 
-## [1.6.21]
 ### Fixed
+
+- Fix group extension field decompile error
+- Fix group field annotation always fail
+- Fix group extension field range check
+
+### Changed
+
+- Make auto-decompile default as disable
+
+## [1.6.21]
+
+### Fixed
+
 - Fix gRPC request require a proxy
 - Fix gRPC request with schema
 
 ### Added
+
 - Support the grpc-status-bin header
 
 ## [1.6.20]

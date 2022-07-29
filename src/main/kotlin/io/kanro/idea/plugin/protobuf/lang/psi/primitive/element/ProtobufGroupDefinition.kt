@@ -28,7 +28,7 @@ interface ProtobufGroupDefinition : ProtobufFieldLike, ProtobufNumberScope, Prot
     }
 
     override fun name(): String? {
-        return identifier()?.text?.let { StringUtil.wordsToBeginFromLowerCase(it) }
+        return identifier()?.text
     }
 
     override fun names(): Set<String> {

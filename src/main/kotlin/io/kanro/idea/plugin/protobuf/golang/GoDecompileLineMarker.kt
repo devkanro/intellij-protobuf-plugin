@@ -15,7 +15,7 @@ import java.awt.event.MouseEvent
 
 class GoDecompileLineMarker : LineMarkerProviderDescriptor() {
     override fun getName(): String? {
-        return null
+        return "Go Decompile"
     }
 
     override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
@@ -26,20 +26,18 @@ class GoDecompileLineMarker : LineMarkerProviderDescriptor() {
         val type = compositeLit.type as? GoArrayOrSliceType ?: return null
         if (!type.type.textMatches("byte")) return null
 
-        return ProtobufDecompileLineMarkerInfo(element)
+        return LineMarkerInfo(
+            element, element.textRange, ProtobufIcons.PROTO_DECOMPILE,
+            {
+                "Decompile protobuf descriptor"
+            },
+            ProtobufDecompileNavigationHandler, GutterIconRenderer.Alignment.CENTER,
+            {
+                "Decompile descriptor"
+            }
+        )
     }
 }
-
-class ProtobufDecompileLineMarkerInfo(element: GoVarDefinition) : LineMarkerInfo<GoVarDefinition>(
-    element, element.textRange, ProtobufIcons.PROTO_DECOMPILE,
-    {
-        "Decompile protobuf descriptor"
-    },
-    ProtobufDecompileNavigationHandler, GutterIconRenderer.Alignment.CENTER,
-    {
-        "Decompile descriptor"
-    }
-)
 
 object ProtobufDecompileNavigationHandler : GutterIconNavigationHandler<GoVarDefinition> {
     override fun navigate(e: MouseEvent, element: GoVarDefinition) {

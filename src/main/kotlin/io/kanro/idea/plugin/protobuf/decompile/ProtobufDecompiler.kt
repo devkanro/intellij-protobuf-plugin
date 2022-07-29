@@ -41,20 +41,30 @@ object ProtobufDecompiler {
             val stack = Stack<Message>()
             stack.add(fileDescriptor)
 
+            val groups = mutableSetOf<String>()
+
+            fileDescriptor.extensionList.forEach {
+                if (it.type == DescriptorProtos.FieldDescriptorProto.Type.TYPE_GROUP) {
+                    groups += it.typeName.substringAfterLast('.')
+                }
+            }
+
+            fileDescriptor.extensionList.groupBy { it.extendee }.forEach {
+                generate(this, stack, it.value)
+            }
+
             fileDescriptor.serviceList.forEach {
                 generate(this, stack, it)
             }
 
             fileDescriptor.messageTypeList.forEach {
+                if (it.options.mapEntry) return@forEach
+                if (it.name in groups) return@forEach
                 generate(this, stack, it)
             }
 
             fileDescriptor.enumTypeList.forEach {
                 generate(this, stack, it)
-            }
-
-            fileDescriptor.extensionList.groupBy { it.extendee }.forEach {
-                generate(this, stack, it.value)
             }
         }
     }
@@ -138,7 +148,7 @@ object ProtobufDecompiler {
             }
 
             findGroup(stack, field)?.let {
-                block("${stack.label(field)}group ${field.name} = ${field.number}") {
+                block("${stack.label(field)}group ${it.name} = ${field.number}") {
                     normalizeStatementLn()
                     generateBlockOption(this, it.options)
                     normalizeStatementLn()
@@ -275,16 +285,12 @@ object ProtobufDecompiler {
         stack: Stack<Message>, field: DescriptorProtos.FieldDescriptorProto
     ): DescriptorProtos.DescriptorProto? {
         if (field.type != DescriptorProtos.FieldDescriptorProto.Type.TYPE_GROUP) return null
-        val groupLevel = stack.asReversed().indexOfFirst { it is DescriptorProtos.DescriptorProto }
         val qName = field.typeName.toQualifiedName()
-        val subName = qName.subQualifiedName(qName.componentCount - groupLevel, qName.componentCount)
-        var message = stack.parent<DescriptorProtos.DescriptorProto>() ?: return null
-        for (component in subName.components) {
-            message = message.nestedTypeList.firstOrNull {
-                it.name == component
-            } ?: return null
+        return stack.parent<DescriptorProtos.DescriptorProto>()?.nestedTypeList?.firstOrNull {
+            it.name == qName.lastComponent
+        } ?: stack.parent<DescriptorProtos.FileDescriptorProto>()?.messageTypeList?.firstOrNull {
+            it.name == qName.lastComponent
         }
-        return message
     }
 
     private fun stackWrapper(stack: Stack<Message>, item: Message, block: () -> Unit) {

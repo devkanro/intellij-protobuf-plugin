@@ -300,6 +300,7 @@ class ProtobufAnnotator : Annotator {
             }
 
             private fun visitExtendItem(o: ProtobufElement) {
+                if (o.parentOfType<ProtobufGroupDefinition>() != null) return
                 val extendMessage =
                     o.parentOfType<ProtobufExtendDefinition>()?.typeName?.reference?.resolve() as? ProtobufMessageDefinition
                         ?: return
