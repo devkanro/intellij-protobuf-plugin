@@ -131,6 +131,8 @@ message GetMessageRequest {
                     blankLinesKeep
                 )
             }
+
+            else -> {}
         }
     }
 }

@@ -4,7 +4,7 @@ import com.bybutter.sisyphus.jackson.Json
 import com.bybutter.sisyphus.jackson.toJson
 import com.bybutter.sisyphus.protobuf.InternalProtoApi
 import com.bybutter.sisyphus.protobuf.LocalProtoReflection
-import com.bybutter.sisyphus.protobuf.booster.Booster_699DD8294CCF2D85851A4742BC8839F1
+import com.bybutter.sisyphus.protobuf.booster.Booster_4CCD27CC8C541E27D15600026AA8457F
 import com.bybutter.sisyphus.protobuf.dynamic.DynamicFileSupport
 import com.bybutter.sisyphus.protobuf.findMessageSupport
 import com.bybutter.sisyphus.protobuf.invoke
@@ -69,7 +69,7 @@ object GrpcRequestHandler : RequestHandler<GrpcRequest> {
             fileDescriptor.file.forEach {
                 register(DynamicFileSupport(it))
             }
-            Booster_699DD8294CCF2D85851A4742BC8839F1(this)
+            Booster_4CCD27CC8C541E27D15600026AA8457F(this)
         }
     }
 

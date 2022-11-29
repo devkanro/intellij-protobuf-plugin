@@ -8,9 +8,9 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.6.10"
+    id("org.jetbrains.kotlin.jvm") version "1.7.21"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.5.2"
+    id("org.jetbrains.intellij") version "1.10.0"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
     // Gradle Qodana Plugin
@@ -27,15 +27,15 @@ repositories {
 }
 
 dependencies {
-    implementation("org.commonmark:commonmark:0.18.2")
-    implementation("org.commonmark:commonmark-ext-gfm-tables:0.18.2")
-    implementation("org.commonmark:commonmark-ext-autolink:0.18.2")
-    implementation("com.bybutter.sisyphus:sisyphus-grpc:1.3.42") {
+    implementation("org.commonmark:commonmark:0.21.0")
+    implementation("org.commonmark:commonmark-ext-gfm-tables:0.21.0")
+    implementation("org.commonmark:commonmark-ext-autolink:0.21.0")
+    implementation("com.bybutter.sisyphus:sisyphus-grpc:1.5.30") {
         exclude("io.grpc")
         exclude("org.jetbrains.kotlin")
         exclude("org.jetbrains.kotlinx")
     }
-    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:1.3.42") {
+    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:1.5.30") {
         exclude("com.fasterxml.jackson.core")
         exclude("com.fasterxml.jackson.dataformat")
         exclude("com.fasterxml.jackson.module")

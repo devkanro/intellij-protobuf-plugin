@@ -10,8 +10,7 @@ import com.intellij.psi.codeStyle.CustomCodeStyleSettings
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
 
 class ProtobufCodeStyleSettingsProvider : CodeStyleSettingsProvider() {
-    override fun createCustomSettings(settings: CodeStyleSettings?): CustomCodeStyleSettings? {
-        settings ?: return null
+    override fun createCustomSettings(settings: CodeStyleSettings): CustomCodeStyleSettings? {
         return ProtobufCodeStyleSettings(settings)
     }
 
@@ -21,7 +20,7 @@ class ProtobufCodeStyleSettingsProvider : CodeStyleSettingsProvider() {
 
     override fun createConfigurable(
         settings: CodeStyleSettings,
-        modelSettings: CodeStyleSettings
+        modelSettings: CodeStyleSettings,
     ): CodeStyleConfigurable {
         return ProtobufCodeStyleConfigurable(settings, modelSettings, configurableDisplayName)
     }
@@ -29,7 +28,7 @@ class ProtobufCodeStyleSettingsProvider : CodeStyleSettingsProvider() {
     class ProtobufCodeStyleConfigurable(
         currentSettings: CodeStyleSettings,
         settings: CodeStyleSettings,
-        displayName: String
+        displayName: String,
     ) : CodeStyleAbstractConfigurable(currentSettings, settings, displayName) {
         override fun createPanel(settings: CodeStyleSettings): CodeStyleAbstractPanel {
             return ProtobufCodeStyleMainPanel(currentSettings, settings)
