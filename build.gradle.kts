@@ -35,7 +35,7 @@ dependencies {
         exclude("org.jetbrains.kotlin")
         exclude("org.jetbrains.kotlinx")
     }
-    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:1.5.30") {
+    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:1.5.31") {
         exclude("com.fasterxml.jackson.core")
         exclude("com.fasterxml.jackson.dataformat")
         exclude("com.fasterxml.jackson.module")
