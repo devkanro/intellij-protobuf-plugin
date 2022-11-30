@@ -12,11 +12,11 @@ plugins {
     // Gradle IntelliJ Plugin
     id("org.jetbrains.intellij") version "1.10.0"
     // Gradle Changelog Plugin
-    id("org.jetbrains.changelog") version "1.3.1"
+    id("org.jetbrains.changelog") version "2.0.0"
     // Gradle Qodana Plugin
     id("org.jetbrains.qodana") version "0.1.13"
 
-    id("org.jetbrains.grammarkit") version "2021.2.2"
+    id("org.jetbrains.grammarkit") version "2022.3"
 }
 
 group = properties("pluginGroup")
@@ -30,12 +30,12 @@ dependencies {
     implementation("org.commonmark:commonmark:0.21.0")
     implementation("org.commonmark:commonmark-ext-gfm-tables:0.21.0")
     implementation("org.commonmark:commonmark-ext-autolink:0.21.0")
-    implementation("com.bybutter.sisyphus:sisyphus-grpc:1.5.30") {
+    implementation("com.bybutter.sisyphus:sisyphus-grpc:1.5.31") {
         exclude("io.grpc")
         exclude("org.jetbrains.kotlin")
         exclude("org.jetbrains.kotlinx")
     }
-    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:1.5.30") {
+    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:1.5.31") {
         exclude("com.fasterxml.jackson.core")
         exclude("com.fasterxml.jackson.dataformat")
         exclude("com.fasterxml.jackson.module")
