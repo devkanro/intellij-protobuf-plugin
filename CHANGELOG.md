@@ -4,14 +4,21 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Target to intellij 2022.3
+
 ## [1.6.22]
+
 ### Fixed
+
 - Fix group extension field decompile error
 - Fix group field annotation always fail
 - Fix group extension field range check
 - Fix decompile line marker is not shown
 
 ### Changed
+
 - Make auto-decompile default as disable
 
 ## [1.6.21]
