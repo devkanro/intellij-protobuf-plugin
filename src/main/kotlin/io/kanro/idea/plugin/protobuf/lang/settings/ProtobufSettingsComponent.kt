@@ -5,6 +5,7 @@ import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.RootsChangeRescanningInfo
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.ui.BooleanTableCellEditor
@@ -91,7 +92,8 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
         settings.state.autoDecompile = checkBox.isSelected
 
         ApplicationManager.getApplication().runWriteAction {
-            ProjectRootManagerEx.getInstanceEx(project).makeRootsChange({}, false, true)
+            ProjectRootManagerEx.getInstanceEx(project)
+                .makeRootsChange({}, RootsChangeRescanningInfo.RESCAN_DEPENDENCIES_IF_NEEDED)
         }
     }
 

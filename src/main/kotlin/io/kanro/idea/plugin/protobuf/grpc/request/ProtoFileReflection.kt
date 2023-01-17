@@ -12,6 +12,15 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex
 
 class ProtoFileReflection(private val context: ProtobufElement) : LocalProtoReflection() {
+    private val wellknownProtoFiles = setOf(
+        "google/protobuf/any.proto",
+        "google/protobuf/duration.proto",
+        "google/protobuf/timestamp.proto",
+        "google/protobuf/field_mask.proto",
+        "google/protobuf/struct.proto",
+        "google/protobuf/wrappers.proto",
+    )
+
     init {
         Booster_4CCD27CC8C541E27D15600026AA8457F(this)
     }
@@ -38,6 +47,7 @@ class ProtoFileReflection(private val context: ProtobufElement) : LocalProtoRefl
         ).toList()
         val descriptorSet = Protoc.compileFiles(elements)
         descriptorSet.file.forEach {
+            if (it.name in wellknownProtoFiles) return@forEach
             register(DynamicFileSupport(it))
         }
     }

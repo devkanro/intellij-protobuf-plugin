@@ -30,7 +30,7 @@ class SmartTree(treeModel: SmartTreeModel) : Tree(treeModel) {
                 }
             }
         })
-        TreeSpeedSearch(this) {
+        TreeSpeedSearch(this, false) {
             val wrapper = (it.lastPathComponent as TreeElementWrapper)
             (wrapper.element as? ItemPresentation)?.presentableText
         }

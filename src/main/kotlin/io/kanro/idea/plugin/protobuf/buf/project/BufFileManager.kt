@@ -16,6 +16,7 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.RootsChangeRescanningInfo
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.openapi.util.EmptyRunnable
@@ -282,7 +283,10 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
     private fun notifyLibraryRootsChanged() {
         ApplicationManager.getApplication().invokeLater {
             ApplicationManager.getApplication().runWriteAction {
-                ProjectRootManagerEx.getInstanceEx(project).makeRootsChange(EmptyRunnable.getInstance(), false, true)
+                ProjectRootManagerEx.getInstanceEx(project).makeRootsChange(
+                    EmptyRunnable.getInstance(),
+                    RootsChangeRescanningInfo.RESCAN_DEPENDENCIES_IF_NEEDED
+                )
             }
         }
     }

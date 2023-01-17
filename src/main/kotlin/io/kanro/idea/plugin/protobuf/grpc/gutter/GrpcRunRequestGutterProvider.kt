@@ -6,7 +6,7 @@ import com.intellij.httpClient.actions.generation.HttpRequestUrlPathInfo
 import com.intellij.httpClient.actions.generation.HttpRequestUrlsGenerationRequest
 import com.intellij.httpClient.actions.generation.RequestUrlContextInfo
 import com.intellij.httpClient.actions.generation.unwrap
-import com.intellij.httpClient.http.request.microservices.openInHttpRequestGutter
+import com.intellij.httpClient.http.request.microservices.OpenInHttpClientLineMarkerBuilder
 import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
@@ -29,7 +29,7 @@ class GrpcRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
     @Suppress("UnstableApiUsage")
     override fun collectNavigationMarkers(
         element: PsiElement,
-        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
+        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>,
     ) {
         if (element !is ProtobufRpcDefinition) return
         if (element.input() == element.output()) return
@@ -41,17 +41,12 @@ class GrpcRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
         val request = HttpRequestUrlsGenerationRequest(
             listOfNotNull(
                 HttpRequestUrlPathInfo.create(
-                    element.project,
-                    "$serviceName/$methodName",
-                    listOf("GRPC")
+                    element.project, "$serviceName/$methodName", listOf("GRPC")
                 ).unwrap(false)
-            ),
-            RequestUrlContextInfo.createNonHttp()
+            ), RequestUrlContextInfo.createNonHttp()
         )
-        result += openInHttpRequestGutter(
-            element.identifier()?.identifierLiteral ?: element,
-            listOf(request),
-            ProtobufIcons.PROCEDURE
-        )
+
+        result += OpenInHttpClientLineMarkerBuilder.fromGenerationRequest(element.project, request)
+            .createLineMarkerInfo(element, ProtobufIcons.PROCEDURE)
     }
 }
