@@ -30,12 +30,12 @@ dependencies {
     implementation("org.commonmark:commonmark:0.21.0")
     implementation("org.commonmark:commonmark-ext-gfm-tables:0.21.0")
     implementation("org.commonmark:commonmark-ext-autolink:0.21.0")
-    implementation("com.bybutter.sisyphus:sisyphus-grpc:1.6.10") {
+    implementation("com.bybutter.sisyphus:sisyphus-grpc:1.7.10") {
         exclude("io.grpc")
         exclude("org.jetbrains.kotlin")
         exclude("org.jetbrains.kotlinx")
     }
-    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:1.6.10") {
+    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:1.7.10") {
         exclude("com.fasterxml.jackson.core")
         exclude("com.fasterxml.jackson.dataformat")
         exclude("com.fasterxml.jackson.module")

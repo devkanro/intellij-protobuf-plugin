@@ -1,0 +1,43 @@
+{
+  "io": {
+    "kanro": {
+      "idea": {
+        "plugin": {
+          "protobuf": {
+            "icon": {
+              "expui": {
+                "enum.svg": "io/kanro/idea/plugin/protobuf/icon/enum.svg",
+                "enum_dark.svg": "io/kanro/idea/plugin/protobuf/icon/enum_dark.svg",
+                "enum_value.svg": "io/kanro/idea/plugin/protobuf/icon/enum_value.svg",
+                "enum_value_dark.svg": "io/kanro/idea/plugin/protobuf/icon/enum_value_dark.svg",
+                "extend.svg": "io/kanro/idea/plugin/protobuf/icon/extend.svg",
+                "extend_dark.svg": "io/kanro/idea/plugin/protobuf/icon/extend_dark.svg",
+                "field.svg": "io/kanro/idea/plugin/protobuf/icon/field.svg",
+                "field_dark.svg": "io/kanro/idea/plugin/protobuf/icon/field_dark.svg",
+                "group_field.svg": "io/kanro/idea/plugin/protobuf/icon/group_field.svg",
+                "group_field_dark.svg": "io/kanro/idea/plugin/protobuf/icon/group_field_dark.svg",
+                "message.svg": "io/kanro/idea/plugin/protobuf/icon/message.svg",
+                "message_dark.svg": "io/kanro/idea/plugin/protobuf/icon/message_dark.svg",
+                "oneof_field.svg": "io/kanro/idea/plugin/protobuf/icon/oneof_field.svg",
+                "oneof_field_dark.svg": "io/kanro/idea/plugin/protobuf/icon/oneof_field_dark.svg",
+                "protobuf_file.svg": "io/kanro/idea/plugin/protobuf/icon/protobuf_file.svg",
+                "resource_message.svg": "io/kanro/idea/plugin/protobuf/icon/resource_message.svg",
+                "resource_message_dark.svg": "io/kanro/idea/plugin/protobuf/icon/resource_message_dark.svg",
+                "rpc_method.svg": "io/kanro/idea/plugin/protobuf/icon/rpc_method.svg",
+                "rpc_method_dark.svg": "io/kanro/idea/plugin/protobuf/icon/rpc_method_dark.svg",
+                "rpc_method_bistream.svg": "io/kanro/idea/plugin/protobuf/icon/rpc_method_bistream.svg",
+                "rpc_method_bistream_dark.svg": "io/kanro/idea/plugin/protobuf/icon/rpc_method_bistream_dark.svg",
+                "rpc_method_client_stream.svg": "io/kanro/idea/plugin/protobuf/icon/rpc_method_client_stream.svg",
+                "rpc_method_client_stream_dark.svg": "io/kanro/idea/plugin/protobuf/icon/rpc_method_client_stream_dark.svg",
+                "rpc_method_server_stream.svg": "io/kanro/idea/plugin/protobuf/icon/rpc_method_server_stream.svg",
+                "rpc_method_server_stream_dark.svg": "io/kanro/idea/plugin/protobuf/icon/rpc_method_server_stream_dark.svg",
+                "service.svg": "io/kanro/idea/plugin/protobuf/icon/service.svg",
+                "service_dark.svg": "io/kanro/idea/plugin/protobuf/icon/service_dark.svg"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

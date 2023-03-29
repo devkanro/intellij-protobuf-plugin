@@ -124,7 +124,8 @@
                                  implementationClass="io.kanro.idea.plugin.protobuf.lang.usage.ProtobufFindUsageProvider"
         />
         <usageTypeProvider implementation="io.kanro.idea.plugin.protobuf.lang.usage.ProtobufUsageTypeProvider"/>
-        <stubElementTypeHolder class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>
+        <stubElementTypeHolder externalIdPrefix="protobuf"
+                               class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>
         <lang.foldingBuilder language="protobuf"
                              implementationClass="io.kanro.idea.plugin.protobuf.lang.folding.ProtobufFoldingBuilder"/>
         <lang.refactoringSupport language="protobuf"
@@ -138,10 +139,12 @@
         <gotoSymbolContributor
                 implementation="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufGotoSymbolContributor"/>
         <psi.referenceContributor
+                language="protobuf"
                 implementation="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolReferenceContributor"/>
 
         <!-- Stub -->
-        <stubElementTypeHolder class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>
+        <stubElementTypeHolder externalIdPrefix="protobuf"
+                               class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>
         <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex"/>
         <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex"/>
         <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ResourceTypeIndex"/>
@@ -152,12 +155,9 @@
         <annotator language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.aip.annotator.AipAnnotator"/>
         <completion.contributor language="protobuf"
                                 implementationClass="io.kanro.idea.plugin.protobuf.aip.completion.AipCompletionContributor"/>
+        <iconMapper mappingFile="io/kanro/idea/plugin/protobuf/icon/expui/ProtobufIconMappings.json"/>
     </extensions>
 
-    <applicationListeners>
-        <listener class="io.kanro.idea.plugin.protobuf.ProtobufExpUiHelper"
-                  topic="com.intellij.ide.ui.LafManagerListener"/>
-    </applicationListeners>
 
     <actions>
         <group id="io.kanro.idea.plugin.Protobuf" text="Protobuf" popup="true"

@@ -2,7 +2,7 @@ package io.kanro.idea.plugin.protobuf.grpc.request
 
 import com.bybutter.sisyphus.protobuf.LocalProtoReflection
 import com.bybutter.sisyphus.protobuf.ProtoSupport
-import com.bybutter.sisyphus.protobuf.booster.Booster_4CCD27CC8C541E27D15600026AA8457F
+import com.bybutter.sisyphus.protobuf.booster.Booster_9CA43D8EC5BBFFCD4EFA836344CD0429
 import com.bybutter.sisyphus.protobuf.dynamic.DynamicFileSupport
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.psi.search.GlobalSearchScope
@@ -22,7 +22,7 @@ class ProtoFileReflection(private val context: ProtobufElement) : LocalProtoRefl
     )
 
     init {
-        Booster_4CCD27CC8C541E27D15600026AA8457F(this)
+        Booster_9CA43D8EC5BBFFCD4EFA836344CD0429(this)
     }
 
     override fun findSupport(name: String): ProtoSupport<*>? {
