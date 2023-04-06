@@ -10,6 +10,7 @@ import com.intellij.httpClient.http.request.microservices.OpenInHttpClientLineMa
 import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.firstLeaf
 import io.kanro.idea.plugin.protobuf.lang.psi.stream
 import javax.swing.Icon
 
@@ -47,6 +48,6 @@ class GrpcRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
         )
 
         result += OpenInHttpClientLineMarkerBuilder.fromGenerationRequest(element.project, request)
-            .createLineMarkerInfo(element, ProtobufIcons.PROCEDURE)
+            .createLineMarkerInfo(element.firstLeaf(), ProtobufIcons.PROCEDURE)
     }
 }

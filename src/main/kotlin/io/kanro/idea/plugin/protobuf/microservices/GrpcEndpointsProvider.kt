@@ -4,14 +4,14 @@ import com.intellij.microservices.endpoints.API_DEFINITION_TYPE
 import com.intellij.microservices.endpoints.EndpointType
 import com.intellij.microservices.endpoints.EndpointsFilter
 import com.intellij.microservices.endpoints.EndpointsProvider
+import com.intellij.microservices.endpoints.EndpointsUrlTargetProvider
 import com.intellij.microservices.endpoints.FrameworkPresentation
 import com.intellij.microservices.endpoints.SearchScopeEndpointsFilter
 import com.intellij.microservices.url.UrlTargetInfo
-import com.intellij.microservices.utils.orCheckCommonEndpointKeys
 import com.intellij.navigation.ItemPresentation
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.ModificationTracker
-import com.intellij.openapi.util.ValueKey
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.search.FileTypeIndex
@@ -24,17 +24,17 @@ import io.kanro.idea.plugin.protobuf.microservices.model.ProtobufRpcModel
 import io.kanro.idea.plugin.protobuf.microservices.model.ProtobufServiceModel
 
 @Suppress("UnstableApiUsage")
-class GrpcEndpointsProvider : EndpointsProvider<ProtobufServiceModel, ProtobufRpcModel> {
+class GrpcEndpointsProvider : EndpointsUrlTargetProvider<ProtobufServiceModel, ProtobufRpcModel> {
     override val endpointType: EndpointType = API_DEFINITION_TYPE
     override val presentation: FrameworkPresentation =
         FrameworkPresentation("gRPC", "gRPC Specification", ProtobufIcons.PROCEDURE)
 
-    override fun getEndpointData(group: ProtobufServiceModel, endpoint: ProtobufRpcModel, dataId: String): Any? {
-        return ValueKey.match(dataId).ifEq(EndpointsProvider.DOCUMENTATION_ELEMENT).thenGet {
-            endpoint.getPsi()
-        }.ifEq(EndpointsProvider.URL_TARGET_INFO).thenGet {
-            listOfNotNull<UrlTargetInfo>(endpoint.getPsi()?.let { GrpcUrlTargetInfo(it) })
-        }.orCheckCommonEndpointKeys(endpoint.getPsi())
+    override fun getDocumentationElement(group: ProtobufServiceModel, endpoint: ProtobufRpcModel): PsiElement? {
+        return endpoint.getPsi()
+    }
+
+    override fun getUrlTargetInfo(group: ProtobufServiceModel, endpoint: ProtobufRpcModel): Iterable<UrlTargetInfo> {
+        return listOfNotNull(endpoint.getPsi()?.let { GrpcUrlTargetInfo(it) })
     }
 
     override fun getEndpointGroups(project: Project, filter: EndpointsFilter): Iterable<ProtobufServiceModel> {
@@ -49,6 +49,7 @@ class GrpcEndpointsProvider : EndpointsProvider<ProtobufServiceModel, ProtobufRp
                     }
                 }
             }
+
             else -> listOf()
         }
     }

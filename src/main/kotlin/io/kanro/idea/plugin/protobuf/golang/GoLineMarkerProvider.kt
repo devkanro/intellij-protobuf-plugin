@@ -15,6 +15,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.elementType
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
+import io.kanro.idea.plugin.protobuf.lang.psi.firstLeaf
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 
 class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
@@ -48,7 +49,7 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                     NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTING_RPC)
                         .setTargets(methods)
                         .setTooltipText("Implementing")
-                result.add(builder.createLineMarkerInfo(element))
+                result.add(builder.createLineMarkerInfo(element.firstLeaf()))
             }
             is GoSpecType -> {
                 val spec = parent.parent as? GoTypeSpec ?: return
@@ -70,7 +71,7 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                     NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTING_SERVICE)
                         .setTargets(servers)
                         .setTooltipText("Implementing")
-                result.add(builder.createLineMarkerInfo(element))
+                result.add(builder.createLineMarkerInfo(element.firstLeaf()))
             }
             else -> return
         }

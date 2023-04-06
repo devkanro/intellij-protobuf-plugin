@@ -10,6 +10,7 @@ import com.intellij.psi.util.CachedValuesManager
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.firstLeaf
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstanceOrNull
@@ -32,7 +33,7 @@ class SisyphusKotlinLineMarkerProvider : RelatedItemLineMarkerProvider() {
                     NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTING_SERVICE)
                         .setTargets(service)
                         .setTooltipText("Implementing")
-                result.add(builder.createLineMarkerInfo(element))
+                result.add(builder.createLineMarkerInfo(element.firstLeaf()))
             }
             is UMethod -> {
                 val method = findMethodProtobufDefinition(parent) ?: return
@@ -40,7 +41,7 @@ class SisyphusKotlinLineMarkerProvider : RelatedItemLineMarkerProvider() {
                     NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTING_RPC)
                         .setTargets(method)
                         .setTooltipText("Implementing")
-                result.add(builder.createLineMarkerInfo(element))
+                result.add(builder.createLineMarkerInfo(element.firstLeaf()))
             }
         }
     }

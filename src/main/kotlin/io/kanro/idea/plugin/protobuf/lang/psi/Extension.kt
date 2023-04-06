@@ -24,6 +24,14 @@ import io.kanro.idea.plugin.protobuf.string.parseLongOrNull
 import io.kanro.idea.plugin.protobuf.string.toCamelCase
 import java.util.Stack
 
+fun PsiElement.firstLeaf(): PsiElement {
+    var leaf = this
+    while (leaf.firstChild != null) {
+        leaf = leaf.firstChild
+    }
+    return leaf
+}
+
 inline fun <reified T : PsiElement> PsiElement.findChild(): T? {
     var child: PsiElement? = this.firstChild ?: return null
     while (child != null) {

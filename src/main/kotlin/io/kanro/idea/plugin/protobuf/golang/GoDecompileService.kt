@@ -6,14 +6,14 @@ import com.goide.stubs.index.GoAllPrivateNamesIndex
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.runBackgroundableTask
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.startup.StartupActivity
+import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettings
 
-class GoDecompileService : StartupActivity.RequiredForSmartMode {
-    override fun runActivity(project: Project) {
+class GoDecompileService : ProjectActivity {
+    override suspend fun execute(project: Project) {
         if (!project.getService(ProtobufSettings::class.java).state.autoDecompile) return
 
         runBackgroundableTask("Decompiling proto from descriptor", project, true) {

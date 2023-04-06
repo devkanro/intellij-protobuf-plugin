@@ -124,8 +124,6 @@
                                  implementationClass="io.kanro.idea.plugin.protobuf.lang.usage.ProtobufFindUsageProvider"
         />
         <usageTypeProvider implementation="io.kanro.idea.plugin.protobuf.lang.usage.ProtobufUsageTypeProvider"/>
-        <stubElementTypeHolder externalIdPrefix="protobuf"
-                               class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>
         <lang.foldingBuilder language="protobuf"
                              implementationClass="io.kanro.idea.plugin.protobuf.lang.folding.ProtobufFoldingBuilder"/>
         <lang.refactoringSupport language="protobuf"
@@ -144,7 +142,7 @@
 
         <!-- Stub -->
         <stubElementTypeHolder externalIdPrefix="protobuf"
-                               class="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes"/>
+                               class="io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes"/>
         <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex"/>
         <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex"/>
         <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ResourceTypeIndex"/>

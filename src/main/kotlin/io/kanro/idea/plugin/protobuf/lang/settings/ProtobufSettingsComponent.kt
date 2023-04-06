@@ -12,10 +12,9 @@ import com.intellij.ui.BooleanTableCellEditor
 import com.intellij.ui.BooleanTableCellRenderer
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBCheckBox
+import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.MAX_LINE_LENGTH_WORD_WRAP
 import com.intellij.ui.dsl.builder.panel
-import com.intellij.ui.dsl.gridLayout.HorizontalAlign
-import com.intellij.ui.dsl.gridLayout.VerticalAlign
 import com.intellij.ui.table.TableView
 import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ListTableModel
@@ -65,8 +64,7 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
             group("External Import Roots") {
                 row {
                     resizableRow()
-                    cell(tablePanel).horizontalAlign(HorizontalAlign.FILL)
-                        .verticalAlign(VerticalAlign.FILL)
+                    cell(tablePanel).align(Align.FILL)
                         .comment(
                             "Marking a root as 'common' means that it will be used in file resolving in all proto file, otherwise only files under this path will use this root, it is especially useful when there are multiple sets of independent protos in one project.",
                             MAX_LINE_LENGTH_WORD_WRAP
