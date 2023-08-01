@@ -5,7 +5,7 @@ import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider
 import com.intellij.httpClient.actions.generation.HttpRequestUrlPathInfo
 import com.intellij.httpClient.actions.generation.HttpRequestUrlsGenerationRequest
 import com.intellij.httpClient.actions.generation.RequestUrlContextInfo
-import com.intellij.httpClient.actions.generation.unwrap
+import com.intellij.httpClient.executor.util.unwrap
 import com.intellij.httpClient.http.request.microservices.OpenInHttpClientLineMarkerBuilder
 import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
