@@ -242,8 +242,10 @@ class MessageMapFieldCompiler : BaseProtobufCompilerPlugin<MessageMapFieldCompil
         state.target().apply {
             this.name = name
             this.type = FieldDescriptorProto.Type.MESSAGE
+            this.label = FieldDescriptorProto.Label.REPEATED
             this.typeName = typename
             this.number = number.toInt()
+            this.jsonName = field.jsonName() ?: name
         }
     }
 }

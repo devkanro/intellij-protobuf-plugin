@@ -5,7 +5,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.pom.Navigatable
 import com.intellij.ui.DoubleClickListener
-import com.intellij.ui.TreeSpeedSearch
+import com.intellij.ui.TreeUIHelper
 import com.intellij.ui.treeStructure.Tree
 import com.intellij.util.OpenSourceUtil
 import java.awt.event.InputEvent
@@ -30,10 +30,11 @@ class SmartTree(treeModel: SmartTreeModel) : Tree(treeModel) {
                 }
             }
         })
-        TreeSpeedSearch(this, false) {
+
+        TreeUIHelper.getInstance().installTreeSpeedSearch(this, {
             val wrapper = (it.lastPathComponent as TreeElementWrapper)
             (wrapper.element as? ItemPresentation)?.presentableText
-        }
+        }, false)
     }
 
     private fun hasSingleSelection(): Boolean {

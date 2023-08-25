@@ -12,6 +12,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.components.BaseState
 import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.project.DumbAware
@@ -57,6 +58,7 @@ import io.kanro.idea.plugin.protobuf.ui.SmartTreeModel
 import java.util.Stack
 
 @State(name = "BufFileManager", storages = [Storage("protobuf.xml")])
+@Service(Service.Level.PROJECT)
 class BufFileManager(val project: Project) : PersistentStateComponent<BufFileManager.State>, DumbAware {
     private val state = State()
     private val yamlMapper = YAMLMapper()

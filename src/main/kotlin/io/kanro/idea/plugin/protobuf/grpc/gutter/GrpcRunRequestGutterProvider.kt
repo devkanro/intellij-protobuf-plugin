@@ -44,7 +44,12 @@ class GrpcRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
                 HttpRequestUrlPathInfo.create(
                     element.project, "$serviceName/$methodName", listOf("GRPC")
                 ).unwrap(false)
-            ), RequestUrlContextInfo.createNonHttp(element.project, listOf("localhost:9090")).unwrap(false) ?: return
+            ),
+            RequestUrlContextInfo.createNonHttp(
+                element.project,
+                listOf("http://", "https://"),
+                listOf("localhost:9090")
+            ).unwrap(false) ?: return
         )
 
         result += OpenInHttpClientLineMarkerBuilder.fromGenerationRequest(element.project, request)

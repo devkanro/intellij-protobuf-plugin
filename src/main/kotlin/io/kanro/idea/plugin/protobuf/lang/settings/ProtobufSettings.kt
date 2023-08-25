@@ -1,6 +1,7 @@
 package io.kanro.idea.plugin.protobuf.lang.settings
 
 import com.intellij.openapi.components.BaseState
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.SimplePersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
@@ -13,6 +14,7 @@ import com.intellij.util.xmlb.annotations.XCollection
     name = "ProtobufSettings",
     storages = [Storage("protobuf.xml")]
 )
+@Service(Service.Level.PROJECT)
 class ProtobufSettings : SimplePersistentStateComponent<ProtobufSettings.State>(State()), ModificationTracker {
     override fun getModificationCount(): Long {
         return stateModificationCount

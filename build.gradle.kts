@@ -30,20 +30,18 @@ dependencies {
     implementation("org.commonmark:commonmark:0.21.0")
     implementation("org.commonmark:commonmark-ext-gfm-tables:0.21.0")
     implementation("org.commonmark:commonmark-ext-autolink:0.21.0")
-    implementation("com.bybutter.sisyphus:sisyphus-grpc:1.7.13") {
+    implementation("com.bybutter.sisyphus:sisyphus-grpc:2.0.11") {
         exclude("io.grpc")
         exclude("org.jetbrains.kotlin")
         exclude("org.jetbrains.kotlinx")
     }
-    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:1.7.13") {
+    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:2.0.11") {
         exclude("com.fasterxml.jackson.core")
         exclude("com.fasterxml.jackson.dataformat")
         exclude("com.fasterxml.jackson.module")
         exclude("org.jetbrains.kotlin")
         exclude("org.jetbrains.kotlinx")
     }
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
 }
 
 // Configure gradle-intellij-plugin plugin.

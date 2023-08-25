@@ -133,7 +133,6 @@
 
         <projectConfigurable groupId="language"
                              instance="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettingsConfigurable"/>
-        <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettings"/>
         <gotoSymbolContributor
                 implementation="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufGotoSymbolContributor"/>
         <psi.referenceContributor

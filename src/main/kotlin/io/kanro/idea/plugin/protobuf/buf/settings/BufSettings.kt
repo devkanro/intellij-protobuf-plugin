@@ -1,6 +1,7 @@
 package io.kanro.idea.plugin.protobuf.buf.settings
 
 import com.intellij.openapi.components.BaseState
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.SimplePersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
@@ -10,6 +11,7 @@ import java.nio.file.Path
     name = "BufSettings",
     storages = [Storage("protobuf.xml")]
 )
+@Service(Service.Level.PROJECT)
 class BufSettings : SimplePersistentStateComponent<BufSettings.State>(State()) {
     fun bufPath(): Path? {
         return if (state.path.isNullOrEmpty()) {

@@ -11,13 +11,11 @@
         <fileTypeDetector implementation="io.kanro.idea.plugin.protobuf.buf.BufLockFileTypeDetector"/>
         <projectConfigurable groupId="language"
                              instance="io.kanro.idea.plugin.protobuf.buf.settings.BufSettingsConfigurable"/>
-        <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.settings.BufSettings"/>
         <editorNotificationProvider
                 implementation="io.kanro.idea.plugin.protobuf.buf.ui.BufNotConfiguredNotificationProvider"/>
         <additionalLibraryRootsProvider
                 implementation="io.kanro.idea.plugin.protobuf.buf.project.BufLibraryRootsProvider"/>
 
-        <projectService serviceImplementation="io.kanro.idea.plugin.protobuf.buf.project.BufFileManager"/>
         <postStartupActivity implementation="io.kanro.idea.plugin.protobuf.buf.project.BufProjectInitializer"/>
         <externalAnnotator language="protobuf"
                            implementationClass="io.kanro.idea.plugin.protobuf.buf.annotator.BufLintAnnotator"/>
