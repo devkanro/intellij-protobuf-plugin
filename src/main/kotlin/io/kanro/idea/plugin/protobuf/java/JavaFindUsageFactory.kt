@@ -42,7 +42,8 @@ class JavaFindUsageFactory : FindUsagesHandlerFactory() {
                         element.toImplBaseClass(),
                         element.toStubClass(),
                         element.toBlockingStubClass(),
-                        element.toFutureStubClass()
+                        element.toFutureStubClass(),
+                        element.toCoroutineStubClass(),
                     ).toTypedArray()
                 )
             }
@@ -56,7 +57,8 @@ class JavaFindUsageFactory : FindUsagesHandlerFactory() {
                         element.toImplBaseMethod(),
                         element.toStubMethod(),
                         element.toBlockingStubMethod(),
-                        element.toFutureStubMethod()
+                        element.toFutureStubMethod(),
+                        element.toCoroutineStubMethod(),
                     ).toTypedArray()
                 )
             }
