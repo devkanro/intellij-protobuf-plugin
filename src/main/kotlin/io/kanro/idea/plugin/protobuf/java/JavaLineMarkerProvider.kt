@@ -29,7 +29,9 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
         if (!isJava(element)) return
         when (val parent = identifier.uastParent) {
             is UClass -> {
-                val service = findServiceProtobufDefinition(parent) ?: return
+                val service = findServiceProtobufDefinition(parent)
+                    ?: findServiceProtobufDefinitionForStub(parent)
+                    ?: return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
                     NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTING_SERVICE)
                         .setTargets(service)
@@ -37,7 +39,9 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 result.add(builder.createLineMarkerInfo(element.firstLeaf()))
             }
             is UMethod -> {
-                val method = findMethodProtobufDefinition(parent) ?: return
+                val method = findMethodProtobufDefinition(parent)
+                    ?: findMethodProtobufDefinitionForStub(parent)
+                    ?: return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
                     NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTING_RPC)
                         .setTargets(method)
@@ -48,6 +52,7 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
     }
 
     private val javaImplBase = QualifiedName.fromDottedString("io.grpc.BindableService")
+    private val stubBase = QualifiedName.fromDottedString("io.grpc.stub.AbstractStub")
 
     fun findServiceProtobufDefinition(clazz: UClass): ProtobufServiceDefinition? {
         val sourceClazz = clazz.sourcePsi ?: return null
@@ -74,6 +79,27 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
         }
     }
 
+    fun findServiceProtobufDefinitionForStub(clazz: UClass): ProtobufServiceDefinition? {
+        val sourceClazz = clazz.sourcePsi ?: return null
+        val abstractStub = sourceClazz.findJavaClass(stubBase) ?: return null
+        if (!clazz.javaPsi.isInheritor(abstractStub, true)) return null
+
+        return CachedValuesManager.getCachedValue(sourceClazz) {
+            val scope = ProtobufRootResolver.searchScope(sourceClazz)
+            val element = clazz.getQualifiedName()?.let { qualifiedName ->
+                StubIndex.getElements(
+                    JavaNameIndex.key,
+                    qualifiedName,
+                    sourceClazz.project,
+                    scope,
+                    ProtobufElement::class.java
+                ).firstIsInstanceOrNull<ProtobufServiceDefinition>()
+            }
+
+            CachedValueProvider.Result.create(element, sourceClazz)
+        }
+    }
+
     fun findMethodProtobufDefinition(method: UMethod): ProtobufElement? {
         val sourcePsi = method.sourcePsi ?: return null
         val clazz = method.uastParent as? UClass ?: return null
@@ -96,6 +122,27 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 }
             }
             return@getCachedValue CachedValueProvider.Result.create(null, sourcePsi)
+        }
+    }
+
+    fun findMethodProtobufDefinitionForStub(method: UMethod): ProtobufElement? {
+        val sourcePsi = method.sourcePsi ?: return null
+        val clazz = method.uastParent as? UClass ?: return null
+        val abstractStub = sourcePsi.findJavaClass(stubBase) ?: return null
+        if (!clazz.javaPsi.isInheritor(abstractStub, true)) return null
+
+        return CachedValuesManager.getCachedValue(sourcePsi) {
+            val scope = ProtobufRootResolver.searchScope(sourcePsi)
+            val methodName = "${clazz.getQualifiedName()}.${method.name}"
+            val element = StubIndex.getElements(
+                JavaNameIndex.key,
+                methodName,
+                sourcePsi.project,
+                scope,
+                ProtobufElement::class.java
+            ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
+
+            CachedValueProvider.Result.create(element, sourcePsi)
         }
     }
 }
