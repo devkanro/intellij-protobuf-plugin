@@ -34,8 +34,8 @@ dependencies {
     implementation("org.commonmark:commonmark:0.21.0")
     implementation("org.commonmark:commonmark-ext-gfm-tables:0.21.0")
     implementation("org.commonmark:commonmark-ext-autolink:0.21.0")
-    implementation("com.bybutter.sisyphus:sisyphus-grpc:higan-SNAPSHOT")
-    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:higan-SNAPSHOT")
+    implementation("com.bybutter.sisyphus:sisyphus-grpc:2.1.20")
+    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:2.1.20")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.3")
     implementation("io.grpc:grpc-netty:1.59.0")
 }
