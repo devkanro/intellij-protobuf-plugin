@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+## 1.7.20 - 2023-11-13
+
 ### Added
 - Line markers to navigate from stub to the corresponding gRPC service/method
 - Find gRPC method calls through coroutine-based stubs
