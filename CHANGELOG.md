@@ -8,6 +8,9 @@
 - Line markers to navigate from stub to the corresponding gRPC service/method
 - Find gRPC method calls through coroutine-based stubs
 
+### Fixed
+- Fix crash when execute gRPC requests
+
 ## 1.6.30 - 2022-12-01
 
 ### Changed
