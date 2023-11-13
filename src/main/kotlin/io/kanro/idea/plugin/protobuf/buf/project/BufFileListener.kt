@@ -20,6 +20,7 @@ import io.kanro.idea.plugin.protobuf.buf.util.isBufConfiguration
 
 class BufFileListener(val project: Project, val fileManager: BufFileManager) : AsyncFileListener, DumbAware {
     private val logger = Logger.getInstance(BufFileListener::class.java)
+
     override fun prepareChange(events: MutableList<out VFileEvent>): AsyncFileListener.ChangeApplier? {
         val validEvents = events.filter { isBufFileEvent(it) }
         if (validEvents.isEmpty()) return null

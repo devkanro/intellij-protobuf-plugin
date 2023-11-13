@@ -12,7 +12,10 @@ import kotlin.math.min
 
 class SmartInsertHandler(val value: String, val offset: Int = 0, val autoPopup: Boolean = false) :
     InsertHandler<LookupElement> {
-    override fun handleInsert(context: InsertionContext, item: LookupElement) {
+    override fun handleInsert(
+        context: InsertionContext,
+        item: LookupElement,
+    ) {
         val editor = context.editor
         val project = editor.project ?: return
         val model = editor.caretModel

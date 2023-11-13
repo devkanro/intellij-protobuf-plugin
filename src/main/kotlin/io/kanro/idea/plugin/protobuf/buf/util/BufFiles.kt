@@ -5,15 +5,21 @@ import java.nio.file.Path
 
 object BufFiles {
     fun getCacheRoot(): Path {
-        val path = System.getenv("BUF_CACHE_DIR") ?: System.getenv("XDG_CACHE_HOME") ?: if (isWindows()) {
-            System.getenv("LOCALAPPDATA")
-        } else {
-            System.getProperty("user.home") + "/.cache"
-        }
+        val path =
+            System.getenv("BUF_CACHE_DIR") ?: System.getenv("XDG_CACHE_HOME") ?: if (isWindows()) {
+                System.getenv("LOCALAPPDATA")
+            } else {
+                System.getProperty("user.home") + "/.cache"
+            }
         return Path.of(path, "buf", "v1", "module", "data")
     }
 
-    fun getRootForBufLibrary(remote: String, owner: String, repo: String, commit: String): Path {
+    fun getRootForBufLibrary(
+        remote: String,
+        owner: String,
+        repo: String,
+        commit: String,
+    ): Path {
         return getCacheRoot().resolve(Path.of(remote, owner, repo, commit))
     }
 
@@ -31,6 +37,7 @@ fun isBufConfiguration(name: String): Boolean {
 }
 
 const val BUF_YAML = "buf.yaml"
+
 fun isBufYaml(name: String): Boolean {
     return when (name.lowercase()) {
         BUF_YAML -> true
@@ -39,6 +46,7 @@ fun isBufYaml(name: String): Boolean {
 }
 
 const val BUF_GEN_YAML = "buf.gen.yaml"
+
 fun isBufGenYaml(name: String): Boolean {
     return when (name.lowercase()) {
         BUF_GEN_YAML -> true
@@ -47,6 +55,7 @@ fun isBufGenYaml(name: String): Boolean {
 }
 
 const val BUF_WORK_YAML = "buf.work.yaml"
+
 fun isBufWorkYaml(name: String): Boolean {
     return when (name.lowercase()) {
         BUF_WORK_YAML -> true
@@ -55,6 +64,7 @@ fun isBufWorkYaml(name: String): Boolean {
 }
 
 const val BUF_LOCK = "buf.lock"
+
 fun isBufLock(name: String): Boolean {
     return when (name.lowercase()) {
         BUF_LOCK -> true

@@ -12,11 +12,12 @@ class GoRootProvider : ProtobufRootProvider {
     }
 
     override fun roots(context: PsiElement): List<ProtobufRoot> {
-        val roots = context.module?.let { module ->
-            GoRootsProvider.EP_NAME.extensionList.flatMap {
-                it.getGoPathSourcesRoots(module.project, module)
-            }
-        } ?: GoRootsProvider.EP_NAME.extensionList.flatMap { it.getGoPathSourcesRoots(context.project, null) }
+        val roots =
+            context.module?.let { module ->
+                GoRootsProvider.EP_NAME.extensionList.flatMap {
+                    it.getGoPathSourcesRoots(module.project, module)
+                }
+            } ?: GoRootsProvider.EP_NAME.extensionList.flatMap { it.getGoPathSourcesRoots(context.project, null) }
         return roots.map {
             ProtobufRoot(null, it)
         }

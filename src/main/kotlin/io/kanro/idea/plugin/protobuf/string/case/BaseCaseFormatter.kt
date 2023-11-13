@@ -1,7 +1,10 @@
 package io.kanro.idea.plugin.protobuf.string.case
 
 abstract class BaseCaseFormatter : CaseFormatter {
-    protected open fun formatWord(index: Int, word: CharSequence): CharSequence {
+    protected open fun formatWord(
+        index: Int,
+        word: CharSequence,
+    ): CharSequence {
         return word
     }
 

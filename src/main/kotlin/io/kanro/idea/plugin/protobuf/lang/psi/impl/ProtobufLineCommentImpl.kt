@@ -15,7 +15,6 @@ import io.kanro.idea.plugin.protobuf.lang.util.renderDoc
 
 class ProtobufLineCommentImpl(type: IElementType, text: CharSequence) :
     PsiCommentImpl(type, text), ProtobufDocument, ProtobufFolding {
-
     override fun getOwner(): PsiElement? {
         this.prevSibling?.let {
             if (it !is PsiWhiteSpace) return null
@@ -37,7 +36,7 @@ class ProtobufLineCommentImpl(type: IElementType, text: CharSequence) :
             startOffset,
             endOffset,
             null,
-            "//..."
+            "//...",
         )
     }
 

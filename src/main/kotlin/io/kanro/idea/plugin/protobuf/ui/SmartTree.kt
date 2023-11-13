@@ -23,13 +23,15 @@ class SmartTree(treeModel: SmartTreeModel) : Tree(treeModel) {
                 return false
             }
         }.installOn(this)
-        addKeyListener(object : KeyAdapter() {
-            override fun keyPressed(e: KeyEvent) {
-                if (e.keyCode == KeyEvent.VK_ENTER && hasSingleSelection()) {
-                    handleDoubleClickOrEnter(selectionPath, e)
+        addKeyListener(
+            object : KeyAdapter() {
+                override fun keyPressed(e: KeyEvent) {
+                    if (e.keyCode == KeyEvent.VK_ENTER && hasSingleSelection()) {
+                        handleDoubleClickOrEnter(selectionPath, e)
+                    }
                 }
-            }
-        })
+            },
+        )
 
         TreeUIHelper.getInstance().installTreeSpeedSearch(this, {
             val wrapper = (it.lastPathComponent as TreeElementWrapper)
@@ -41,7 +43,10 @@ class SmartTree(treeModel: SmartTreeModel) : Tree(treeModel) {
         return !isSelectionEmpty && selectionPaths.size == 1
     }
 
-    private fun handleDoubleClickOrEnter(treePath: TreePath, e: InputEvent) {
+    private fun handleDoubleClickOrEnter(
+        treePath: TreePath,
+        e: InputEvent,
+    ) {
         ApplicationManager.getApplication().invokeLater({
             val wrapper = treePath.lastPathComponent as? TreeElementWrapper ?: return@invokeLater
             if (!wrapper.isLeaf) return@invokeLater
@@ -55,4 +60,3 @@ class SmartTree(treeModel: SmartTreeModel) : Tree(treeModel) {
         }, ModalityState.stateForComponent(this))
     }
 }
-    

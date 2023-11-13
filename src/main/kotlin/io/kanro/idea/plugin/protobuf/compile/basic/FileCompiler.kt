@@ -15,7 +15,10 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 
 class FileCompiler : BaseProtobufCompilerPlugin<FileCompilingState>() {
-    override fun compile(context: CompileContext, state: FileCompilingState) {
+    override fun compile(
+        context: CompileContext,
+        state: FileCompilingState,
+    ) {
         val file = state.element()
         state.target().apply {
             this.name = file.importPath() ?: throw IllegalStateException("Invalid file: name missing.")
@@ -26,31 +29,34 @@ class FileCompiler : BaseProtobufCompilerPlugin<FileCompilingState>() {
             file.items().forEach {
                 when (it) {
                     is ProtobufMessageDefinition -> {
-                        this.messageType += try {
-                            DescriptorProto {
-                                context.advance(MessageCompilingState(state, this, it))
+                        this.messageType +=
+                            try {
+                                DescriptorProto {
+                                    context.advance(MessageCompilingState(state, this, it))
+                                }
+                            } catch (e: Exception) {
+                                return@forEach
                             }
-                        } catch (e: Exception) {
-                            return@forEach
-                        }
                     }
                     is ProtobufEnumDefinition -> {
-                        this.enumType += try {
-                            EnumDescriptorProto {
-                                context.advance(EnumCompilingState(state, this, it))
+                        this.enumType +=
+                            try {
+                                EnumDescriptorProto {
+                                    context.advance(EnumCompilingState(state, this, it))
+                                }
+                            } catch (e: Exception) {
+                                return@forEach
                             }
-                        } catch (e: Exception) {
-                            return@forEach
-                        }
                     }
                     is ProtobufServiceDefinition -> {
-                        this.service += try {
-                            ServiceDescriptorProto {
-                                context.advance(ServiceCompilingState(state, this, it))
+                        this.service +=
+                            try {
+                                ServiceDescriptorProto {
+                                    context.advance(ServiceCompilingState(state, this, it))
+                                }
+                            } catch (e: Exception) {
+                                return@forEach
                             }
-                        } catch (e: Exception) {
-                            return@forEach
-                        }
                     }
                 }
             }

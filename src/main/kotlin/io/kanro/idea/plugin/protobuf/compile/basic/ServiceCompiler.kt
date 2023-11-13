@@ -10,26 +10,33 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.stream
 
 class ServiceCompiler : BaseProtobufCompilerPlugin<ServiceCompilingState>() {
-    override fun compile(context: CompileContext, state: ServiceCompilingState) {
+    override fun compile(
+        context: CompileContext,
+        state: ServiceCompilingState,
+    ) {
         val service = state.element()
         state.target().apply {
             this.name = service.name() ?: throw IllegalStateException("Invalid service definition: name missing.")
-            this.method += service.items().mapNotNull {
-                if (it !is ProtobufRpcDefinition) return@mapNotNull null
-                try {
-                    MethodDescriptorProto {
-                        context.advance(ServiceMethodCompilingState(state, this, it))
+            this.method +=
+                service.items().mapNotNull {
+                    if (it !is ProtobufRpcDefinition) return@mapNotNull null
+                    try {
+                        MethodDescriptorProto {
+                            context.advance(ServiceMethodCompilingState(state, this, it))
+                        }
+                    } catch (e: Exception) {
+                        null
                     }
-                } catch (e: Exception) {
-                    null
                 }
-            }
         }
     }
 }
 
 class ServiceMethodCompiler : BaseProtobufCompilerPlugin<ServiceMethodCompilingState>() {
-    override fun compile(context: CompileContext, state: ServiceMethodCompilingState) {
+    override fun compile(
+        context: CompileContext,
+        state: ServiceMethodCompilingState,
+    ) {
         val rpc = state.element()
         state.target().apply {
             this.name = rpc.name() ?: throw IllegalStateException("Invalid rpc definition: name missing.")

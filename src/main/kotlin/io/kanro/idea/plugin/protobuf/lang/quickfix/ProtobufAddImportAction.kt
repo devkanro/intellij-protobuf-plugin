@@ -25,7 +25,7 @@ class ProtobufAddImportAction(
     private val editor: Editor,
     private val host: ProtobufSymbolReferenceHost,
     private val hover: ProtobufSymbolReferenceHover?,
-    private val elements: Array<ProtobufDefinition>
+    private val elements: Array<ProtobufDefinition>,
 ) : QuestionAction {
     private fun hintText(): String {
         return if (elements.size == 1) {
@@ -62,8 +62,8 @@ class ProtobufAddImportAction(
                                 value,
                                 index,
                                 isSelected,
-                                cellHasFocus
-                            )
+                                cellHasFocus,
+                            ),
                         )
                     }
                 }
@@ -78,7 +78,10 @@ class ProtobufAddImportAction(
 
             override fun isSpeedSearchEnabled() = true
 
-            override fun onChosen(selectedValue: ProtobufDefinition?, finalChoice: Boolean): PopupStep<String>? {
+            override fun onChosen(
+                selectedValue: ProtobufDefinition?,
+                finalChoice: Boolean,
+            ): PopupStep<String>? {
                 if (selectedValue == null || project.isDisposed) return null
                 if (finalChoice) {
                     addImport(selectedValue)
@@ -88,7 +91,9 @@ class ProtobufAddImportAction(
             }
 
             override fun hasSubstep(selectedValue: ProtobufDefinition?) = false
+
             override fun getTextFor(value: ProtobufDefinition) = value.qualifiedName().toString()
+
             override fun getIconFor(value: ProtobufDefinition) = value.getIcon(false)
         }
     }
@@ -118,7 +123,8 @@ class ProtobufAddImportAction(
                     PsiDocumentManager.getInstance(project).commitAllDocuments()
                 }
             },
-            "Import ${element.importPath(host.file())}", null
+            "Import ${element.importPath(host.file())}",
+            null,
         )
         return true
     }

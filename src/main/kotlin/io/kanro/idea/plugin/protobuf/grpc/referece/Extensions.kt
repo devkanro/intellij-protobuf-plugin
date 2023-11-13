@@ -39,8 +39,9 @@ internal fun JsonProperty.contextMessage(): ProtobufMessageDefinition? {
                     ?: return@getCachedValue null
             return@getCachedValue CachedValueProvider.Result.create(input, PsiModificationTracker.MODIFICATION_COUNT)
         }
-        val typeUrl = contextJsonObject.findProperty("@type")?.value as? JsonStringLiteral
-            ?: return@getCachedValue null
+        val typeUrl =
+            contextJsonObject.findProperty("@type")?.value as? JsonStringLiteral
+                ?: return@getCachedValue null
         val input =
             typeUrl.references.firstOrNull { it is GrpcTypeUrlReference }?.resolve() as? ProtobufMessageDefinition
                 ?: return@getCachedValue null
@@ -61,7 +62,8 @@ internal fun JsonProperty.qualifiedName(): QualifiedName? {
         q.reverse()
 
         CachedValueProvider.Result.create(
-            QualifiedName.fromComponents(q), PsiModificationTracker.MODIFICATION_COUNT
+            QualifiedName.fromComponents(q),
+            PsiModificationTracker.MODIFICATION_COUNT,
         )
     }
 }
@@ -72,7 +74,7 @@ internal fun JsonProperty.resolveParentType(): PsiElement? {
         val qualifiedName = qualifiedName() ?: return@getCachedValue null
         CachedValueProvider.Result.create(
             contextMessage.resolveFieldType(qualifiedName.removeTail(1), true),
-            PsiModificationTracker.MODIFICATION_COUNT
+            PsiModificationTracker.MODIFICATION_COUNT,
         )
     }
 }
@@ -82,7 +84,8 @@ internal fun JsonProperty.resolve(): PsiElement? {
         val contextMessage = contextMessage() ?: return@getCachedValue null
         val qualifiedName = qualifiedName() ?: return@getCachedValue null
         CachedValueProvider.Result.create(
-            contextMessage.resolveField(qualifiedName, true), PsiModificationTracker.MODIFICATION_COUNT
+            contextMessage.resolveField(qualifiedName, true),
+            PsiModificationTracker.MODIFICATION_COUNT,
         )
     }
 }

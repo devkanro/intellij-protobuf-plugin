@@ -7,13 +7,17 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufRpcStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufServiceStub
 
 class SisyphusIndexProvider : ProtobufIndexProvider {
-    override fun buildIndex(stub: ProtobufStub<*>, sink: IndexSink) {
+    override fun buildIndex(
+        stub: ProtobufStub<*>,
+        sink: IndexSink,
+    ) {
         when (stub) {
             is ProtobufServiceStub -> sink.occurrence(SisyphusNameIndex.key, stub.fullClassName().toString())
-            is ProtobufRpcStub -> sink.occurrence(
-                SisyphusNameIndex.key,
-                stub.owner()?.fullClassName()?.append(stub.methodName()).toString()
-            )
+            is ProtobufRpcStub ->
+                sink.occurrence(
+                    SisyphusNameIndex.key,
+                    stub.owner()?.fullClassName()?.append(stub.methodName()).toString(),
+                )
         }
     }
 }

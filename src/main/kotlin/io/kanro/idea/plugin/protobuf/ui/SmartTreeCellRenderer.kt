@@ -15,7 +15,7 @@ class SmartTreeCellRenderer : ColoredTreeCellRenderer() {
         expanded: Boolean,
         leaf: Boolean,
         row: Int,
-        hasFocus: Boolean
+        hasFocus: Boolean,
     ) {
         if (value !is TreeElementWrapper) return
         val element = value.element

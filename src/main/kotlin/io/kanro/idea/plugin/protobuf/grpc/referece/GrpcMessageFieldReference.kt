@@ -46,8 +46,9 @@ class GrpcMessageFieldReference(field: JsonStringLiteral) : PsiReferenceBase<Jso
         if (type is ProtobufMessageDefinition) {
             val message = type.qualifiedName().toString()
             if (message == WellknownTypes.ANY) {
-                val field = type.firstItemOrNull<ProtobufFieldLike> { it.name() == "type_url" }
-                    ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
+                val field =
+                    type.firstItemOrNull<ProtobufFieldLike> { it.name() == "type_url" }
+                        ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
                 return listOfNotNull(lookupForTypeUrl(field)).toTypedArray()
             } else if (message in WellknownTypes.types) {
                 return ArrayUtilRt.EMPTY_OBJECT_ARRAY
@@ -58,14 +59,19 @@ class GrpcMessageFieldReference(field: JsonStringLiteral) : PsiReferenceBase<Jso
             is ProtobufMessageDefinition -> {
                 type.filterItem<ProtobufFieldLike> { true }.mapNotNull { lookupFor(it, existsFields) }.toTypedArray()
             }
+
             is ProtobufGroupDefinition -> {
                 type.filterItem<ProtobufFieldLike> { true }.mapNotNull { lookupFor(it, existsFields) }.toTypedArray()
             }
+
             else -> ArrayUtilRt.EMPTY_OBJECT_ARRAY
         }
     }
 
-    private fun lookupFor(element: ProtobufFieldLike, existsFields: Set<String>): LookupElementBuilder? {
+    private fun lookupFor(
+        element: ProtobufFieldLike,
+        existsFields: Set<String>,
+    ): LookupElementBuilder? {
         val jsonName = element.jsonName() ?: return null
         if (jsonName in existsFields) return null
         if (element.name() in existsFields) return null
@@ -99,51 +105,67 @@ private class JsonFieldSmartInsertHandler(private val element: ProtobufFieldLike
         private val NUMBER_INSERT_HANDLER = SmartInsertHandler("\": ")
     }
 
-    override fun handleInsert(context: InsertionContext, item: LookupElement) {
-        val insertHandler = when (element) {
-            is ProtobufFieldDefinition -> {
-                if (element.repeated()) {
-                    LIST_INSERT_HANDLER
-                } else {
-                    when (val type = element.typeName.reference?.resolve()) {
-                        is ProtobufMessageDefinition -> {
-                            val name = type.qualifiedName().toString()
-                            if (name in WellknownTypes.types) {
-                                when (name) {
-                                    WellknownTypes.ANY, WellknownTypes.STRUCT -> OBJECT_INSERT_HANDLER
-                                    WellknownTypes.LIST_VALUE -> LIST_INSERT_HANDLER
-                                    WellknownTypes.BOOL_VALUE -> BOOLEAN_INSERT_HANDLER
-                                    WellknownTypes.TIMESTAMP -> SmartInsertHandler(
-                                        "\": \"${
-                                            Timestamp.now().string()
-                                        }\"", -1
-                                    )
-                                    WellknownTypes.DURATION -> SmartInsertHandler("\": \"1.0s\"", -1)
-                                    WellknownTypes.FIELD_MASK, WellknownTypes.STRING_VALUE, WellknownTypes.BYTES_VALUE -> STRING_INSERT_HANDLER
+    override fun handleInsert(
+        context: InsertionContext,
+        item: LookupElement,
+    ) {
+        val insertHandler =
+            when (element) {
+                is ProtobufFieldDefinition -> {
+                    if (element.repeated()) {
+                        LIST_INSERT_HANDLER
+                    } else {
+                        when (val type = element.typeName.reference?.resolve()) {
+                            is ProtobufMessageDefinition -> {
+                                val name = type.qualifiedName().toString()
+                                if (name in WellknownTypes.types) {
+                                    when (name) {
+                                        WellknownTypes.ANY, WellknownTypes.STRUCT -> OBJECT_INSERT_HANDLER
+                                        WellknownTypes.LIST_VALUE -> LIST_INSERT_HANDLER
+                                        WellknownTypes.BOOL_VALUE -> BOOLEAN_INSERT_HANDLER
+                                        WellknownTypes.TIMESTAMP ->
+                                            SmartInsertHandler(
+                                                "\": \"${
+                                                    Timestamp.now().string()
+                                                }\"",
+                                                -1,
+                                            )
+
+                                        WellknownTypes.DURATION -> SmartInsertHandler("\": \"1.0s\"", -1)
+                                        WellknownTypes.FIELD_MASK,
+                                        WellknownTypes.STRING_VALUE,
+                                        WellknownTypes.BYTES_VALUE,
+                                        -> STRING_INSERT_HANDLER
+
+                                        else -> NUMBER_INSERT_HANDLER
+                                    }
+                                } else {
+                                    OBJECT_INSERT_HANDLER
+                                }
+                            }
+
+                            is ProtobufEnumDefinition -> STRING_REF_INSERT_HANDLER
+                            else -> {
+                                when (element.typeName.text) {
+                                    "string", "bytes" -> STRING_INSERT_HANDLER
+                                    "bool" -> BOOLEAN_INSERT_HANDLER
                                     else -> NUMBER_INSERT_HANDLER
                                 }
-                            } else OBJECT_INSERT_HANDLER
-                        }
-                        is ProtobufEnumDefinition -> STRING_REF_INSERT_HANDLER
-                        else -> {
-                            when (element.typeName.text) {
-                                "string", "bytes" -> STRING_INSERT_HANDLER
-                                "bool" -> BOOLEAN_INSERT_HANDLER
-                                else -> NUMBER_INSERT_HANDLER
                             }
                         }
                     }
                 }
-            }
-            is ProtobufGroupDefinition -> {
-                if (element.repeated()) {
-                    LIST_INSERT_HANDLER
-                } else {
-                    OBJECT_INSERT_HANDLER
+
+                is ProtobufGroupDefinition -> {
+                    if (element.repeated()) {
+                        LIST_INSERT_HANDLER
+                    } else {
+                        OBJECT_INSERT_HANDLER
+                    }
                 }
+
+                else -> OBJECT_INSERT_HANDLER
             }
-            else -> OBJECT_INSERT_HANDLER
-        }
         insertHandler.handleInsert(context, item)
     }
 }

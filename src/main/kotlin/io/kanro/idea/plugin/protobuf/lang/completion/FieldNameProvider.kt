@@ -25,7 +25,7 @@ object FieldNameProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
-        result: CompletionResultSet
+        result: CompletionResultSet,
     ) {
         val element = parameters.position
         val field = element.parentOfType<ProtobufFieldDefinition>() ?: return
@@ -44,7 +44,7 @@ object FieldNameProvider : CompletionProvider<CompletionParameters>() {
         name: String,
         type: String,
         plural: Boolean,
-        inserter: InsertHandler<LookupElement>
+        inserter: InsertHandler<LookupElement>,
     ): List<LookupElement> {
         if (type.isEmpty()) return listOf()
 
@@ -56,9 +56,10 @@ object FieldNameProvider : CompletionProvider<CompletionParameters>() {
         }
 
         repeat(typeParts.size) {
-            result += LookupElementBuilder.create(SnakeCaseFormatter.format(nameParts + typeParts))
-                .withTypeText("field")
-                .withInsertHandler(inserter)
+            result +=
+                LookupElementBuilder.create(SnakeCaseFormatter.format(nameParts + typeParts))
+                    .withTypeText("field")
+                    .withInsertHandler(inserter)
             typeParts.removeFirst()
         }
 
@@ -91,11 +92,12 @@ object FieldNameProvider : CompletionProvider<CompletionParameters>() {
             "Duration" -> listOf("duration", "offset")
             "Date" -> listOf("time")
             "Status" -> listOf("status", "error")
-            else -> if (BuiltInType.isBuiltInType(type)) {
-                listOf()
-            } else {
-                listOf(type)
-            }
+            else ->
+                if (BuiltInType.isBuiltInType(type)) {
+                    listOf()
+                } else {
+                    listOf(type)
+                }
         }
     }
 }

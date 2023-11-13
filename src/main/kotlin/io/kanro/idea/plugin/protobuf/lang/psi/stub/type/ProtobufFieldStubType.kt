@@ -6,7 +6,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.impl.ProtobufFieldDefinitionImpl
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufFieldStub
 
 object ProtobufFieldStubType : ProtobufStubTypeBase<ProtobufFieldStub, ProtobufFieldDefinition>(
-    "FIELD_DEFINITION"
+    "FIELD_DEFINITION",
 ) {
     override fun getExternalId(): String {
         return "protobuf.field.stub"
@@ -15,7 +15,7 @@ object ProtobufFieldStubType : ProtobufStubTypeBase<ProtobufFieldStub, ProtobufF
     override fun createStub(
         data: Array<String>,
         external: Map<String, String>,
-        parentStub: StubElement<*>?
+        parentStub: StubElement<*>?,
     ): ProtobufFieldStub {
         return ProtobufFieldStub(data, external, parentStub)
     }

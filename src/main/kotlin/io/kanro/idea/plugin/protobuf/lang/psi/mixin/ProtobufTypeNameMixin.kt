@@ -20,40 +20,45 @@ import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolFilters
 import io.kanro.idea.plugin.protobuf.lang.util.ProtobufPsiFactory
 
 abstract class ProtobufTypeNameMixin(node: ASTNode) : ProtobufElementBase(node), ProtobufTypeName {
-    private val hover = object : ProtobufSymbolReferenceHover {
-        override fun symbolParts(): List<ProtobufSymbolReferenceHover.SymbolPart> {
-            return symbolNameList.map {
-                ProtobufSymbolReferenceHover.SymbolPart(it.startOffsetInParent, it.text)
+    private val hover =
+        object : ProtobufSymbolReferenceHover {
+            override fun symbolParts(): List<ProtobufSymbolReferenceHover.SymbolPart> {
+                return symbolNameList.map {
+                    ProtobufSymbolReferenceHover.SymbolPart(it.startOffsetInParent, it.text)
+                }
+            }
+
+            override fun textRange(): TextRange {
+                return textRange
+            }
+
+            override fun renamePart(
+                index: Int,
+                newName: String,
+            ) {
+                (symbolNameList[index].identifierLiteral?.node as? LeafElement)?.replaceWithText(newName)
+            }
+
+            override fun rename(newName: String) {
+                replace(ProtobufPsiFactory.createTypeName(project, newName))
+            }
+
+            override fun absolutely(): Boolean {
+                return firstChild !is ProtobufSymbolName
+            }
+
+            override fun variantFilter(): PsiElementFilter {
+                return when (parent) {
+                    is ProtobufExtensionOptionName -> ProtobufSymbolFilters.extensionOptionNameVariants(parentOfType())
+                    is ProtobufFieldDefinition,
+                    is ProtobufMapFieldDefinition,
+                    -> ProtobufSymbolFilters.fieldTypeNameVariants
+                    is ProtobufRpcIO -> ProtobufSymbolFilters.rpcTypeNameVariants
+                    is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendTypeNameVariants
+                    else -> ProtobufSymbolFilters.alwaysFalse
+                }
             }
         }
-
-        override fun textRange(): TextRange {
-            return textRange
-        }
-
-        override fun renamePart(index: Int, newName: String) {
-            (symbolNameList[index].identifierLiteral?.node as? LeafElement)?.replaceWithText(newName)
-        }
-
-        override fun rename(newName: String) {
-            replace(ProtobufPsiFactory.createTypeName(project, newName))
-        }
-
-        override fun absolutely(): Boolean {
-            return firstChild !is ProtobufSymbolName
-        }
-
-        override fun variantFilter(): PsiElementFilter {
-            return when (parent) {
-                is ProtobufExtensionOptionName -> ProtobufSymbolFilters.extensionOptionNameVariants(parentOfType())
-                is ProtobufFieldDefinition,
-                is ProtobufMapFieldDefinition -> ProtobufSymbolFilters.fieldTypeNameVariants
-                is ProtobufRpcIO -> ProtobufSymbolFilters.rpcTypeNameVariants
-                is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendTypeNameVariants
-                else -> ProtobufSymbolFilters.alwaysFalse
-            }
-        }
-    }
 
     override fun referencesHover(): ProtobufSymbolReferenceHover {
         return hover

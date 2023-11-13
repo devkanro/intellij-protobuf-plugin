@@ -51,7 +51,7 @@ class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
         if (element.isFieldJsonNameOption()) {
             return ProtobufSymbolResolver.resolveInScope(
                 descriptor() ?: return null,
-                QualifiedName.fromComponents("FieldDescriptorProto", "json_name")
+                QualifiedName.fromComponents("FieldDescriptorProto", "json_name"),
             )
         }
         if (element.isFieldDefaultOption()) {
@@ -60,30 +60,34 @@ class ProtobufBuiltInOptionReference(name: ProtobufBuiltInOptionName) :
 
         return ProtobufSymbolResolver.resolveInScope(
             descriptor() ?: return null,
-            QualifiedName.fromComponents(optionType(), element.text)
+            QualifiedName.fromComponents(optionType(), element.text),
         )
     }
 
     override fun getVariants(): Array<Any> {
         val type = optionType() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val descriptor = descriptor() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
-        val message = ProtobufSymbolResolver.resolveInScope(
-            descriptor,
-            QualifiedName.fromComponents(type)
-        ) as? ProtobufMessageDefinition ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
-        val fields: MutableList<Any> = message.realItems().mapNotNull {
-            if (it !is ProtobufFieldDefinition) return@mapNotNull null
-            (it as? ProtobufLookupItem)?.lookup()?.withInsertHandler(optionInsertHandler)
-        }.toMutableList()
+        val message =
+            ProtobufSymbolResolver.resolveInScope(
+                descriptor,
+                QualifiedName.fromComponents(type),
+            ) as? ProtobufMessageDefinition ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
+        val fields: MutableList<Any> =
+            message.realItems().mapNotNull {
+                if (it !is ProtobufFieldDefinition) return@mapNotNull null
+                (it as? ProtobufLookupItem)?.lookup()?.withInsertHandler(optionInsertHandler)
+            }.toMutableList()
         if (Options.FIELD_OPTIONS.messageName == type) {
-            fields += LookupElementBuilder.create("default")
-                .withTypeText("option")
-                .withIcon(ProtobufIcons.FIELD)
-                .withInsertHandler(optionInsertHandler)
-            fields += LookupElementBuilder.create("json_name")
-                .withTypeText("option")
-                .withIcon(ProtobufIcons.FIELD)
-                .withInsertHandler(optionInsertHandler)
+            fields +=
+                LookupElementBuilder.create("default")
+                    .withTypeText("option")
+                    .withIcon(ProtobufIcons.FIELD)
+                    .withInsertHandler(optionInsertHandler)
+            fields +=
+                LookupElementBuilder.create("json_name")
+                    .withTypeText("option")
+                    .withIcon(ProtobufIcons.FIELD)
+                    .withInsertHandler(optionInsertHandler)
         }
         return fields.toTypedArray()
     }

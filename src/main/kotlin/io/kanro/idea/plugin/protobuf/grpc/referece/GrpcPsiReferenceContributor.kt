@@ -14,13 +14,17 @@ class GrpcPsiReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
         registrar.registerReferenceProvider(
             PlatformPatterns.psiElement(HttpRequestTarget::class.java)
-                .with(object : PatternCondition<HttpRequestTarget>("GRPC METHOD") {
-                    override fun accepts(t: HttpRequestTarget, context: ProcessingContext?): Boolean {
-                        return t.prev<HttpMethod>()?.text in GrpcRequestExecutionSupport.supportedMethod
-                    }
-                }),
-            GrpcUrlReferenceProvider()
+                .with(
+                    object : PatternCondition<HttpRequestTarget>("GRPC METHOD") {
+                        override fun accepts(
+                            t: HttpRequestTarget,
+                            context: ProcessingContext?,
+                        ): Boolean {
+                            return t.prev<HttpMethod>()?.text in GrpcRequestExecutionSupport.supportedMethod
+                        }
+                    },
+                ),
+            GrpcUrlReferenceProvider(),
         )
     }
 }
-

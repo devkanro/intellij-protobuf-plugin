@@ -30,7 +30,7 @@ interface ProtobufFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefiniti
                 it.value(AipOptions.resourceTypeField)?.stringValue()?.let {
                     return@getCachedValue CachedValueProvider.Result.create(
                         it,
-                        PsiModificationTracker.MODIFICATION_COUNT
+                        PsiModificationTracker.MODIFICATION_COUNT,
                     )
                 }
             }

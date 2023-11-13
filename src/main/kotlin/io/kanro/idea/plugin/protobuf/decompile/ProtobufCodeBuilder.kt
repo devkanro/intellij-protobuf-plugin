@@ -59,7 +59,10 @@ class ProtobufCodeBuilder {
         return deindent().normalizeLn().appendLn("}")
     }
 
-    fun block(code: String, block: ProtobufCodeBuilder.() -> Unit) {
+    fun block(
+        code: String,
+        block: ProtobufCodeBuilder.() -> Unit,
+    ) {
         beginBlock(code).apply(block).endBlock()
     }
 
@@ -70,7 +73,10 @@ class ProtobufCodeBuilder {
     companion object {
         private val indentRegex = """^(?!\s*$)""".toRegex(RegexOption.MULTILINE)
 
-        private fun indentCode(content: String, indentation: String): String {
+        private fun indentCode(
+            content: String,
+            indentation: String,
+        ): String {
             if (indentation.isEmpty()) return content
             return indentRegex.replace(content, indentation)
         }

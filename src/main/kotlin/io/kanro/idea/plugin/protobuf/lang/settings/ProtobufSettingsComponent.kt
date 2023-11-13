@@ -45,33 +45,40 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
             importRootsModel.addRow(
                 ProtobufSettings.ImportRootEntry(
                     selectedFile.url,
-                    contentRoot == null && sourceRoot == null
-                )
+                    contentRoot == null && sourceRoot == null,
+                ),
             )
         }
         decorator.setEditAction {
             tableView.editCellAt(tableView.selectedRow, tableView.selectedColumn)
         }
         tablePanel.add(decorator.createPanel(), BorderLayout.CENTER)
-        panel = panel {
-            row {
-                checkBox("Auto-detect and decompile from binary descriptor")
-                    .comment("Decompile proto from descriptor of some generated code(etc. GO) when open project, enabling this feature may make opening project slower.")
-                    .applyToComponent {
-                        checkBox = this
-                    }
-            }
-            group("External Import Roots") {
+        panel =
+            panel {
                 row {
-                    resizableRow()
-                    cell(tablePanel).align(Align.FILL)
+                    checkBox("Auto-detect and decompile from binary descriptor")
                         .comment(
-                            "Marking a root as 'common' means that it will be used in file resolving in all proto file, otherwise only files under this path will use this root, it is especially useful when there are multiple sets of independent protos in one project.",
-                            MAX_LINE_LENGTH_WORD_WRAP
+                            "Decompile proto from descriptor of some generated code(etc. GO) when open project, " +
+                                "enabling this feature may make opening project slower.",
                         )
+                        .applyToComponent {
+                            checkBox = this
+                        }
+                }
+                group("External Import Roots") {
+                    row {
+                        resizableRow()
+                        cell(tablePanel).align(Align.FILL)
+                            .comment(
+                                "Marking a root as 'common' means that it will be used in file " +
+                                    "resolving in all proto file, otherwise only files under " +
+                                    "this path will use this root, it is especially useful when there " +
+                                    "are multiple sets of independent protos in one project.",
+                                MAX_LINE_LENGTH_WORD_WRAP,
+                            )
+                    }
                 }
             }
-        }
     }
 
     override fun reset(settings: ProtobufSettings) {
@@ -106,7 +113,7 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
             true,
             true,
             true,
-            false
+            false,
         ).withShowFileSystemRoots(true).withTitle("Choose Protobuf Path Root")
     }
 
@@ -115,7 +122,10 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
             return item?.path
         }
 
-        override fun setValue(item: ProtobufSettings.ImportRootEntry?, value: String?) {
+        override fun setValue(
+            item: ProtobufSettings.ImportRootEntry?,
+            value: String?,
+        ) {
             value?.let { item?.path = it }
         }
 
@@ -129,7 +139,10 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
             return item?.common
         }
 
-        override fun setValue(item: ProtobufSettings.ImportRootEntry?, value: Boolean?) {
+        override fun setValue(
+            item: ProtobufSettings.ImportRootEntry?,
+            value: Boolean?,
+        ) {
             value?.let { item?.common = it }
         }
 
@@ -147,7 +160,7 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
 
         override fun getCustomizedRenderer(
             o: ProtobufSettings.ImportRootEntry?,
-            renderer: TableCellRenderer?
+            renderer: TableCellRenderer?,
         ): TableCellRenderer {
             return BooleanTableCellRenderer()
         }

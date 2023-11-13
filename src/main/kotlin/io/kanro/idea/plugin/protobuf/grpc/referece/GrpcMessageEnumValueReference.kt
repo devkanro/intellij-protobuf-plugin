@@ -13,7 +13,8 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.filterItem
 import io.kanro.idea.plugin.protobuf.lang.psi.firstItemOrNull
 
-class GrpcMessageEnumValueReference(value: JsonStringLiteral) : PsiReferenceBase<JsonStringLiteral>(value),
+class GrpcMessageEnumValueReference(value: JsonStringLiteral) :
+    PsiReferenceBase<JsonStringLiteral>(value),
     GrpcReference {
     override fun calculateDefaultRangeInElement(): TextRange {
         return TextRange.create(1, element.textLength - 1)
@@ -41,4 +42,3 @@ class GrpcMessageEnumValueReference(value: JsonStringLiteral) : PsiReferenceBase
         return element
     }
 }
-

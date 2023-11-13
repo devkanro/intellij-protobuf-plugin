@@ -23,7 +23,6 @@ interface ProtobufDefinition :
     ProtobufDocumented,
     NavigatablePsiElement,
     ItemPresentation {
-
     fun type(): String
 
     fun identifier(): ProtobufIdentifier? {

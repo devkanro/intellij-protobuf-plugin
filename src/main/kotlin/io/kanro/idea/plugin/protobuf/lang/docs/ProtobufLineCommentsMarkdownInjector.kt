@@ -8,7 +8,10 @@ import io.kanro.idea.plugin.protobuf.string.lineCommentRanges
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
 
 class ProtobufLineCommentsMarkdownInjector : MultiHostInjector {
-    override fun getLanguagesToInject(registrar: MultiHostRegistrar, context: PsiElement) {
+    override fun getLanguagesToInject(
+        registrar: MultiHostRegistrar,
+        context: PsiElement,
+    ) {
         if (context !is ProtobufLineCommentImpl) return
 
         val ranges = context.text.lineCommentRanges()

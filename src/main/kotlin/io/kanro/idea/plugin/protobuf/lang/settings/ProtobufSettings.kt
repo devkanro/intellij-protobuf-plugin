@@ -12,7 +12,7 @@ import com.intellij.util.xmlb.annotations.XCollection
 
 @State(
     name = "ProtobufSettings",
-    storages = [Storage("protobuf.xml")]
+    storages = [Storage("protobuf.xml")],
 )
 @Service(Service.Level.PROJECT)
 class ProtobufSettings : SimplePersistentStateComponent<ProtobufSettings.State>(State()), ModificationTracker {

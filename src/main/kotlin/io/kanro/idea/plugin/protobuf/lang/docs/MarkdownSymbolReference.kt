@@ -38,9 +38,13 @@ class MarkdownSymbolReference(element: MarkdownShortReferenceLink) :
     }
 
     private object Resolver : ResolveCache.Resolver {
-        override fun resolve(ref: PsiReference, incompleteCode: Boolean): PsiElement? {
+        override fun resolve(
+            ref: PsiReference,
+            incompleteCode: Boolean,
+        ): PsiElement? {
             ref as MarkdownSymbolReference
-            val host = InjectedLanguageManager.getInstance(ref.element.project).getInjectionHost(ref.element)
+            val host =
+                InjectedLanguageManager.getInstance(ref.element.project).getInjectionHost(ref.element)
                     as? ProtobufElement ?: return null
             val value = ref.rangeInElement.substring(ref.element.text)
             return if (value.startsWith('.')) {
@@ -58,7 +62,8 @@ class MarkdownSymbolReference(element: MarkdownShortReferenceLink) :
 
     override fun getVariants(): Array<Any> {
         val searchName = element.text.substringBefore(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED).trimStart('[')
-        val host = InjectedLanguageManager.getInstance(element.project).getInjectionHost(element)
+        val host =
+            InjectedLanguageManager.getInstance(element.project).getInjectionHost(element)
                 as? ProtobufElement ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val result = mutableListOf<Any>()
         val addedElements = mutableSetOf<ProtobufElement>()
@@ -71,13 +76,15 @@ class MarkdownSymbolReference(element: MarkdownShortReferenceLink) :
         pattern: String,
         host: ProtobufElement,
         result: MutableList<Any>,
-        elements: MutableSet<ProtobufElement>
+        elements: MutableSet<ProtobufElement>,
     ) {
         val targetName = pattern.substringBeforeLast('.', "")
-        val targetScope = if (targetName.isEmpty())
-            QualifiedName.fromComponents()
-        else
-            QualifiedName.fromDottedString(targetName.trimStart('.'))
+        val targetScope =
+            if (targetName.isEmpty()) {
+                QualifiedName.fromComponents()
+            } else {
+                QualifiedName.fromDottedString(targetName.trimStart('.'))
+            }
         if (targetName.startsWith('.')) {
             ProtobufSymbolResolver.collectAbsolute(host, targetScope, AnyElement)
         } else {
@@ -93,7 +100,7 @@ class MarkdownSymbolReference(element: MarkdownShortReferenceLink) :
         pattern: String,
         host: ProtobufElement,
         result: MutableList<Any>,
-        elements: MutableSet<ProtobufElement>
+        elements: MutableSet<ProtobufElement>,
     ) {
         if (pattern.contains('.')) return
         val scope = ProtobufRootResolver.searchScope(host)
@@ -111,7 +118,10 @@ class MarkdownSymbolReference(element: MarkdownShortReferenceLink) :
         }
     }
 
-    private fun lookupFor(element: ProtobufElement, scope: QualifiedName): LookupElement? {
+    private fun lookupFor(
+        element: ProtobufElement,
+        scope: QualifiedName,
+    ): LookupElement? {
         if (element !is ProtobufLookupItem) return null
         return if (element is ProtobufPackageName) {
             element.lookup()?.withLookupString(scope.append(element.name).toString())
@@ -121,12 +131,18 @@ class MarkdownSymbolReference(element: MarkdownShortReferenceLink) :
         }
     }
 
-    private fun lookupForStub(element: ProtobufElement, currentScope: QualifiedName?): LookupElement? {
+    private fun lookupForStub(
+        element: ProtobufElement,
+        currentScope: QualifiedName?,
+    ): LookupElement? {
         if (element !is ProtobufDefinition) return null
         val qualifiedName = element.qualifiedName() ?: return null
-        val targetName = if (currentScope != null) {
-            qualifiedName.removeCommonPrefix(currentScope)
-        } else qualifiedName
+        val targetName =
+            if (currentScope != null) {
+                qualifiedName.removeCommonPrefix(currentScope)
+            } else {
+                qualifiedName
+            }
         return LookupElementBuilder.create(targetName)
             .withLookupString(qualifiedName.lastComponent!!)
             .withPresentableText(qualifiedName.lastComponent!!)

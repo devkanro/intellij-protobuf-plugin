@@ -25,22 +25,31 @@ sealed interface BufSchema<T : YAMLPsiElement> {
     fun validate(document: T) {
     }
 
-    fun find(name: QualifiedName, index: Int = 0): BufSchema<*>?
+    fun find(
+        name: QualifiedName,
+        index: Int = 0,
+    ): BufSchema<*>?
 }
 
 interface BufRootSchema : BufSchema<YAMLDocument> {
     val name: String
     val type: BufSchemaValueType<out YAMLValue>
 
-    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+    override fun find(
+        name: QualifiedName,
+        index: Int,
+    ): BufSchema<*>? {
         return type.find(name, index)
     }
 }
 
 open class BufObjectSchema(
-    val fields: List<BufFieldSchema>
+    val fields: List<BufFieldSchema>,
 ) : BufSchemaValueType<YAMLMapping> {
-    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+    override fun find(
+        name: QualifiedName,
+        index: Int,
+    ): BufSchema<*>? {
         if (index == name.componentCount) return this
         if (index > name.componentCount) return null
 
@@ -52,9 +61,12 @@ open class BufObjectSchema(
 }
 
 open class BufArraySchema(
-    val itemType: BufSchemaValueType<out YAMLValue>
+    val itemType: BufSchemaValueType<out YAMLValue>,
 ) : BufSchemaValueType<YAMLSequence> {
-    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+    override fun find(
+        name: QualifiedName,
+        index: Int,
+    ): BufSchema<*>? {
         if (index >= name.componentCount) return null
         name.components[index]?.toIntOrNull() ?: return null
         if (index + 1 >= name.componentCount) return this
@@ -66,9 +78,12 @@ open class BufFieldSchema(
     val name: String,
     val document: String,
     val valueType: BufSchemaValueType<out YAMLValue>,
-    val optional: Boolean
+    val optional: Boolean,
 ) : BufSchema<YAMLKeyValue> {
-    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+    override fun find(
+        name: QualifiedName,
+        index: Int,
+    ): BufSchema<*>? {
         if (index >= name.componentCount) return null
         if (name.components[index] != this.name) return null
         if (index + 1 >= name.componentCount) return this
@@ -80,21 +95,34 @@ open class BufFieldSchema(
 sealed interface BufSchemaValueType<T : YAMLValue> : BufSchema<T>
 
 open class BufEnumTypeSchema(val values: List<BufEnumValueSchema>) : BufSchemaValueType<YAMLScalar> {
-    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+    override fun find(
+        name: QualifiedName,
+        index: Int,
+    ): BufSchema<*>? {
         return null
     }
 }
 
 open class BufEnumValueSchema(val name: String, val document: String) : BufSchema<YAMLScalar> {
-    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+    override fun find(
+        name: QualifiedName,
+        index: Int,
+    ): BufSchema<*>? {
         return null
     }
 }
 
 enum class BufSchemaScalarType : BufSchemaValueType<YAMLScalar> {
-    STRING, IDENTIFIER, NUMBER, BOOL;
+    STRING,
+    IDENTIFIER,
+    NUMBER,
+    BOOL,
+    ;
 
-    override fun find(name: QualifiedName, index: Int): BufSchema<*>? {
+    override fun find(
+        name: QualifiedName,
+        index: Int,
+    ): BufSchema<*>? {
         return null
     }
 }
@@ -131,7 +159,10 @@ fun bufWorkSchema(version: String?): BufRootSchema? {
     }
 }
 
-fun bufSchema(file: String, version: String?): BufRootSchema? {
+fun bufSchema(
+    file: String,
+    version: String?,
+): BufRootSchema? {
     val name = file.lowercase()
     return when {
         isBufYaml(name) -> bufSchema(version)

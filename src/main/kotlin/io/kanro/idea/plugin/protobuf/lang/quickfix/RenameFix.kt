@@ -19,11 +19,19 @@ class RenameFix(private val newName: String) : PsiElementBaseIntentionAction() {
         return "Rename"
     }
 
-    override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
+    override fun isAvailable(
+        project: Project,
+        editor: Editor?,
+        element: PsiElement,
+    ): Boolean {
         return element.parentOfType<ProtobufDefinition>() != null
     }
 
-    override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
+    override fun invoke(
+        project: Project,
+        editor: Editor?,
+        element: PsiElement,
+    ) {
         DumbService.getInstance(project).smartInvokeLater {
             val namedElement = element.parentOfType<ProtobufNamedElement>(true) ?: return@smartInvokeLater
             RefactoringFactory.getInstance(project).createRename(namedElement, newName).run()

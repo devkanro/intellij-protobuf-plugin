@@ -19,7 +19,11 @@ import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import java.util.Stack
 
 class ProtobufFoldingBuilder : FoldingBuilderEx(), DumbAware {
-    override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean): Array<FoldingDescriptor> {
+    override fun buildFoldRegions(
+        root: PsiElement,
+        document: Document,
+        quick: Boolean,
+    ): Array<FoldingDescriptor> {
         val result = mutableListOf<FoldingDescriptor>()
         val file = (root.containingFile as? ProtobufFile) ?: return arrayOf()
         result += buildFoldingDescriptorForFile(file)
@@ -47,26 +51,29 @@ class ProtobufFoldingBuilder : FoldingBuilderEx(), DumbAware {
             when (it) {
                 is ProtobufImportStatement -> stack.push(it)
                 is PsiWhiteSpace,
-                is PsiComment -> {
+                is PsiComment,
+                -> {
                 }
                 else -> {
                     if (stack.size >= 2) {
                         val start = stack.firstElement()
                         val end = stack.lastElement()
                         stack.clear()
-                        val range = TextRange.create(
-                            start.stringValue?.startOffset ?: return@forEach,
-                            end.startOffset + end.textLength
-                        )
+                        val range =
+                            TextRange.create(
+                                start.stringValue?.startOffset ?: return@forEach,
+                                end.startOffset + end.textLength,
+                            )
 
-                        result += FoldingDescriptor(
-                            protobufFile.node,
-                            range,
-                            FoldingGroup.newGroup("import"),
-                            "...",
-                            default,
-                            setOf()
-                        )
+                        result +=
+                            FoldingDescriptor(
+                                protobufFile.node,
+                                range,
+                                FoldingGroup.newGroup("import"),
+                                "...",
+                                default,
+                                setOf(),
+                            )
                     } else {
                         stack.clear()
                     }

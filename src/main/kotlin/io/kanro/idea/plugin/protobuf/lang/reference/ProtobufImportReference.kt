@@ -21,7 +21,10 @@ import io.kanro.idea.plugin.protobuf.lang.util.ProtobufPsiFactory
 
 class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBase<ProtobufImportStatement>(import) {
     private object Resolver : ResolveCache.Resolver {
-        override fun resolve(ref: PsiReference, incompleteCode: Boolean): PsiElement? {
+        override fun resolve(
+            ref: PsiReference,
+            incompleteCode: Boolean,
+        ): PsiElement? {
             return resolve(ref.element as ProtobufImportStatement)
         }
     }
@@ -54,12 +57,16 @@ class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBas
     }
 
     companion object {
-        private fun fileLookup(parent: String, file: VirtualFile): LookupElement {
-            val completionText = if (parent == ".") {
-                file.name
-            } else {
-                "$parent/${file.name}"
-            }
+        private fun fileLookup(
+            parent: String,
+            file: VirtualFile,
+        ): LookupElement {
+            val completionText =
+                if (parent == ".") {
+                    file.name
+                } else {
+                    "$parent/${file.name}"
+                }
 
             return if (file.isDirectory) {
                 LookupElementBuilder.create(completionText)

@@ -10,7 +10,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufRpcStubType
 class ProtobufRpcStub(
     data: Array<String>,
     external: Map<String, String>,
-    parent: StubElement<*>?
+    parent: StubElement<*>?,
 ) : ProtobufStubBase<ProtobufRpcDefinition>(data, external, parent, ProtobufRpcStubType),
     ProtobufStub<ProtobufRpcDefinition>,
     ProtobufDefinitionStub {

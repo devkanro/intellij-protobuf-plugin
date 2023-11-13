@@ -24,9 +24,9 @@ class ProtobufFormattingModelBuilder : FormattingModelBuilder {
                 formattingContext.node,
                 Wrap.createWrap(WrapType.NONE, false),
                 null,
-                spacingBuilder(formattingContext.codeStyleSettings)
+                spacingBuilder(formattingContext.codeStyleSettings),
             ),
-            FormattingDocumentModelImpl.createOn(file)
+            FormattingDocumentModelImpl.createOn(file),
         )
     }
 

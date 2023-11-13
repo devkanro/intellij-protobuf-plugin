@@ -47,7 +47,7 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
     private fun getVariantsInStubIndex(
         pattern: String,
         result: MutableList<Any>,
-        elements: MutableSet<ProtobufElement>
+        elements: MutableSet<ProtobufElement>,
     ): Array<Any> {
         if (!pattern.endsWith(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val searchName = pattern.substringBefore(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)
@@ -67,7 +67,7 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
 
     private fun getVariantsInCurrent(
         result: MutableList<Any>,
-        elements: MutableSet<ProtobufElement>
+        elements: MutableSet<ProtobufElement>,
     ) {
         AipResourceResolver.collectAbsolutely(element.file()).forEach {
             if (it in elements) return@forEach
@@ -76,36 +76,42 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
         }
     }
 
-    private fun lookup(element: ProtobufElement, needImport: Boolean): LookupElement? {
-        val builder = when (element) {
-            is ProtobufMessageDefinition -> {
-                val resourceName = element.resourceType() ?: return null
-                LookupElementBuilder.create(
-                    resourceName
-                ).withLookupString(resourceName.substringAfterLast('/'))
-                    .withIcon(ProtobufIcons.RESOURCE_MESSAGE)
-                    .withPresentableText(resourceName)
+    private fun lookup(
+        element: ProtobufElement,
+        needImport: Boolean,
+    ): LookupElement? {
+        val builder =
+            when (element) {
+                is ProtobufMessageDefinition -> {
+                    val resourceName = element.resourceType() ?: return null
+                    LookupElementBuilder.create(
+                        resourceName,
+                    ).withLookupString(resourceName.substringAfterLast('/'))
+                        .withIcon(ProtobufIcons.RESOURCE_MESSAGE)
+                        .withPresentableText(resourceName)
+                }
+
+                is ProtobufFileOption -> {
+                    val resourceName =
+                        element.value(AipOptions.resourceTypeField)?.stringValue() ?: return null
+                    LookupElementBuilder.create(
+                        resourceName,
+                    ).withLookupString(resourceName.substringAfterLast('/'))
+                        .withIcon(ProtobufIcons.RESOURCE_MESSAGE)
+                        .withPresentableText(resourceName)
+                }
+
+                else -> return null
             }
-            is ProtobufFileOption -> {
-                val resourceName =
-                    element.value(AipOptions.resourceTypeField)?.stringValue() ?: return null
-                LookupElementBuilder.create(
-                    resourceName
-                ).withLookupString(resourceName.substringAfterLast('/'))
-                    .withIcon(ProtobufIcons.RESOURCE_MESSAGE)
-                    .withPresentableText(resourceName)
-            }
-            else -> return null
-        }
 
         return if (needImport) {
             builder.withTailText("(${element.file().name()})")
                 .withInsertHandler(
-                    ComposedInsertHandler(stringValueInsertHandler, AddImportInsertHandler(element))
+                    ComposedInsertHandler(stringValueInsertHandler, AddImportInsertHandler(element)),
                 )
         } else {
             builder.withInsertHandler(
-                ComposedInsertHandler(stringValueInsertHandler, AddImportInsertHandler(element))
+                ComposedInsertHandler(stringValueInsertHandler, AddImportInsertHandler(element)),
             )
         }
     }

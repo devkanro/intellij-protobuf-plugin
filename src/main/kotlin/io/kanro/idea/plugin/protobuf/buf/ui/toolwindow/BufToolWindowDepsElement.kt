@@ -8,7 +8,7 @@ import javax.swing.Icon
 
 class BufToolWindowDepsElement(
     val manager: BufFileManager,
-    val module: BufFileManager.State.Module
+    val module: BufFileManager.State.Module,
 ) : TreeElement, ItemPresentation {
     override fun children(): Array<TreeElement> {
         val locked = module.lockedDependencies.associateBy { it.nameWithoutCommit() }

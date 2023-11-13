@@ -11,20 +11,27 @@ class ProtobufPairedBraceMatcher : PairedBraceMatcher {
         return Companion.pairs
     }
 
-    override fun isPairedBracesAllowedBeforeType(lbraceType: IElementType, contextType: IElementType?): Boolean {
+    override fun isPairedBracesAllowedBeforeType(
+        lbraceType: IElementType,
+        contextType: IElementType?,
+    ): Boolean {
         return true
     }
 
-    override fun getCodeConstructStart(file: PsiFile?, openingBraceOffset: Int): Int {
+    override fun getCodeConstructStart(
+        file: PsiFile?,
+        openingBraceOffset: Int,
+    ): Int {
         return 0
     }
 
     companion object {
-        private val pairs = arrayOf(
-            BracePair(ProtobufTokens.LBRACE, ProtobufTokens.RBRACE, false),
-            BracePair(ProtobufTokens.LBRACK, ProtobufTokens.RBRACK, false),
-            BracePair(ProtobufTokens.LPAREN, ProtobufTokens.RPAREN, false),
-            BracePair(ProtobufTokens.LT, ProtobufTokens.GT, false)
-        )
+        private val pairs =
+            arrayOf(
+                BracePair(ProtobufTokens.LBRACE, ProtobufTokens.RBRACE, false),
+                BracePair(ProtobufTokens.LBRACK, ProtobufTokens.RBRACK, false),
+                BracePair(ProtobufTokens.LPAREN, ProtobufTokens.RPAREN, false),
+                BracePair(ProtobufTokens.LT, ProtobufTokens.GT, false),
+            )
     }
 }

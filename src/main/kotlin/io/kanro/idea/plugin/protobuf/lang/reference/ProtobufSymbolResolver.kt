@@ -17,7 +17,7 @@ object ProtobufSymbolResolver {
     fun resolveAbsolutely(
         element: ProtobufElement,
         symbol: QualifiedName,
-        filter: PsiElementFilter = AnyElement
+        filter: PsiElementFilter = AnyElement,
     ): ProtobufElement? {
         resolveAbsolutelyInFile(element.file(), symbol, filter)?.let { return it }
 
@@ -41,7 +41,7 @@ object ProtobufSymbolResolver {
     fun resolveAbsolutelyInFile(
         file: ProtobufFile,
         symbol: QualifiedName,
-        filter: PsiElementFilter = AnyElement
+        filter: PsiElementFilter = AnyElement,
     ): ProtobufElement? {
         val scope = file.scope()
         return if (scope != null) {
@@ -55,7 +55,7 @@ object ProtobufSymbolResolver {
     fun resolveRelatively(
         element: ProtobufElement,
         symbol: QualifiedName,
-        filter: PsiElementFilter = AnyElement
+        filter: PsiElementFilter = AnyElement,
     ): ProtobufElement? {
         val currentFile = element.file()
         val currentScope = currentFile.scope()
@@ -82,7 +82,7 @@ object ProtobufSymbolResolver {
     fun resolveInCurrent(
         element: ProtobufElement,
         symbol: QualifiedName,
-        filter: PsiElementFilter = AnyElement
+        filter: PsiElementFilter = AnyElement,
     ): ProtobufElement? {
         var scope = element.parentOfType<ProtobufScope>() ?: return null
         while (true) {
@@ -95,7 +95,7 @@ object ProtobufSymbolResolver {
         file: ProtobufFile,
         relativeScope: QualifiedName?,
         symbol: QualifiedName,
-        filter: PsiElementFilter = AnyElement
+        filter: PsiElementFilter = AnyElement,
     ): ProtobufElement? {
         val fileScope = file.scope()
         if (fileScope == null || relativeScope == null) {
@@ -112,7 +112,7 @@ object ProtobufSymbolResolver {
                 resolveInScope(
                     file,
                     realScope.subQualifiedName(fileScope.componentCount, realScope.componentCount),
-                    filter
+                    filter,
                 )?.let {
                     return it
                 }
@@ -124,7 +124,7 @@ object ProtobufSymbolResolver {
     fun resolveInScope(
         scope: ProtobufScope,
         symbol: QualifiedName,
-        filter: PsiElementFilter = AnyElement
+        filter: PsiElementFilter = AnyElement,
     ): ProtobufElement? {
         scope.items<ProtobufDefinition> {
             if (it.name() == symbol.firstComponent) {
@@ -144,7 +144,7 @@ object ProtobufSymbolResolver {
         element: ProtobufElement,
         scope: QualifiedName,
         filter: PsiElementFilter = AnyElement,
-        result: MutableList<ProtobufElement> = mutableListOf()
+        result: MutableList<ProtobufElement> = mutableListOf(),
     ): List<ProtobufElement> {
         collectAbsoluteInFile(element.file(), scope, filter, result)
 
@@ -168,7 +168,7 @@ object ProtobufSymbolResolver {
         file: ProtobufFile,
         scope: QualifiedName,
         filter: PsiElementFilter = AnyElement,
-        result: MutableList<ProtobufElement> = mutableListOf()
+        result: MutableList<ProtobufElement> = mutableListOf(),
     ): List<ProtobufElement> {
         val fileScope = file.scope()
         if (fileScope != null) {
@@ -184,7 +184,7 @@ object ProtobufSymbolResolver {
                 file,
                 scope.subQualifiedName(fileScope.componentCount, scope.componentCount),
                 filter,
-                result
+                result,
             )
         } else {
             collectInScope(file, scope, filter, result)
@@ -196,7 +196,7 @@ object ProtobufSymbolResolver {
         element: ProtobufElement,
         scope: QualifiedName,
         filter: PsiElementFilter = AnyElement,
-        result: MutableList<ProtobufElement> = mutableListOf()
+        result: MutableList<ProtobufElement> = mutableListOf(),
     ): List<ProtobufElement> {
         val currentFile = element.file()
         if (scope.componentCount == 0) {
@@ -230,7 +230,7 @@ object ProtobufSymbolResolver {
         element: ProtobufElement,
         scope: QualifiedName,
         filter: PsiElementFilter = AnyElement,
-        result: MutableList<ProtobufElement> = mutableListOf()
+        result: MutableList<ProtobufElement> = mutableListOf(),
     ): List<ProtobufElement> {
         var parentScope = element.parentOfType<ProtobufScope>() ?: return result
         while (true) {
@@ -244,7 +244,7 @@ object ProtobufSymbolResolver {
         relativeScope: QualifiedName?,
         scope: QualifiedName,
         filter: PsiElementFilter = AnyElement,
-        result: MutableList<ProtobufElement> = mutableListOf()
+        result: MutableList<ProtobufElement> = mutableListOf(),
     ): List<ProtobufElement> {
         val fileScope = file.scope()
         if (fileScope == null || relativeScope == null) {
@@ -268,7 +268,7 @@ object ProtobufSymbolResolver {
         scope: ProtobufScope,
         targetScope: QualifiedName,
         filter: PsiElementFilter = AnyElement,
-        result: MutableList<ProtobufElement> = mutableListOf()
+        result: MutableList<ProtobufElement> = mutableListOf(),
     ): List<ProtobufElement> {
         if (targetScope.componentCount == 0) {
             scope.items<ProtobufDefinition> {

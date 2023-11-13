@@ -31,6 +31,8 @@ abstract class ProtobufElementBase(node: ASTNode) : ASTWrapperPsiElement(node) {
     override fun getNavigationElement(): PsiElement {
         return if (this is PsiNameIdentifierOwner) {
             this.nameIdentifier ?: this
-        } else this
+        } else {
+            this
+        }
     }
 }

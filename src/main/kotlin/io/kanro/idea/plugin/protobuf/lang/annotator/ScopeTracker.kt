@@ -43,19 +43,25 @@ open class ScopeTracker(scope: ProtobufScope) {
         }.add(reserved)
     }
 
-    open fun visit(definition: ProtobufDefinition, holder: AnnotationHolder) {
+    open fun visit(
+        definition: ProtobufDefinition,
+        holder: AnnotationHolder,
+    ) {
         val name = definition.name() ?: return
         createError(definition, buildMessage(name, definition) ?: return, holder)
     }
 
-    open fun visit(reserved: ProtobufReservedName, holder: AnnotationHolder) {
+    open fun visit(
+        reserved: ProtobufReservedName,
+        holder: AnnotationHolder,
+    ) {
         val name = reserved.identifierLiteral?.text ?: return
         createError(reserved, buildMessage(name, reserved) ?: return, holder)
     }
 
     protected open fun buildMessage(
         name: String,
-        definition: ProtobufScopeItem
+        definition: ProtobufScopeItem,
     ): String? {
         val reserves = reservedNameMap[name] ?: listOf()
         if (reserves.isNotEmpty()) {
@@ -71,7 +77,7 @@ open class ScopeTracker(scope: ProtobufScope) {
 
     protected open fun buildMessage(
         name: String,
-        reserved: ProtobufReservedName
+        reserved: ProtobufReservedName,
     ): String? {
         val reserves = reservedNameMap[name] ?: listOf()
         if (reserves.size > 1) {
@@ -80,17 +86,25 @@ open class ScopeTracker(scope: ProtobufScope) {
         return null
     }
 
-    protected open fun createError(definition: ProtobufDefinition, message: String, holder: AnnotationHolder) {
+    protected open fun createError(
+        definition: ProtobufDefinition,
+        message: String,
+        holder: AnnotationHolder,
+    ) {
         holder.newAnnotation(
             HighlightSeverity.ERROR,
-            message
+            message,
         ).range(definition.nameElement()?.textRange ?: definition.textRange).create()
     }
 
-    protected open fun createError(reserved: ProtobufReservedName, message: String, holder: AnnotationHolder) {
+    protected open fun createError(
+        reserved: ProtobufReservedName,
+        message: String,
+        holder: AnnotationHolder,
+    ) {
         holder.newAnnotation(
             HighlightSeverity.ERROR,
-            message
+            message,
         ).range(reserved.textRange).create()
     }
 
@@ -98,7 +112,8 @@ open class ScopeTracker(scope: ProtobufScope) {
         fun tracker(scope: ProtobufScope): ScopeTracker {
             return CachedValuesManager.getCachedValue(scope) {
                 CachedValueProvider.Result.create(
-                    ScopeTracker(scope), PsiModificationTracker.MODIFICATION_COUNT
+                    ScopeTracker(scope),
+                    PsiModificationTracker.MODIFICATION_COUNT,
                 )
             }
         }

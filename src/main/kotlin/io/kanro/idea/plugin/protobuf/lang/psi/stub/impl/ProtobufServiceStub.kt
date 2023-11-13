@@ -13,7 +13,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufServiceStubType
 class ProtobufServiceStub(
     data: Array<String>,
     external: Map<String, String>,
-    parent: StubElement<*>?
+    parent: StubElement<*>?,
 ) : ProtobufStubBase<ProtobufServiceDefinition>(data, external, parent, ProtobufServiceStubType),
     ProtobufStub<ProtobufServiceDefinition>,
     ProtobufDefinitionStub,

@@ -53,16 +53,18 @@ fun ProtobufRpcDefinition.toClientMethod(): PsiMethod? {
 
 fun ProtobufFieldLike.toGetters(): Array<PsiMethod> {
     return when (val owner = owner()) {
-        is ProtobufMessageDefinition -> owner.toMutableClass()?.findMethodsByName(getterName(), true)
-            ?: PsiMethod.EMPTY_ARRAY
+        is ProtobufMessageDefinition ->
+            owner.toMutableClass()?.findMethodsByName(getterName(), true)
+                ?: PsiMethod.EMPTY_ARRAY
         else -> PsiMethod.EMPTY_ARRAY
     }
 }
 
 fun ProtobufFieldLike.toSetters(): Array<PsiMethod> {
     return when (val owner = owner()) {
-        is ProtobufMessageDefinition -> owner.toMutableClass()?.findMethodsByName(getterName(), true)
-            ?: PsiMethod.EMPTY_ARRAY
+        is ProtobufMessageDefinition ->
+            owner.toMutableClass()?.findMethodsByName(getterName(), true)
+                ?: PsiMethod.EMPTY_ARRAY
         else -> PsiMethod.EMPTY_ARRAY
     }
 }

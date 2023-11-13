@@ -62,33 +62,37 @@ import java.util.Stack
 class BufFileManager(val project: Project) : PersistentStateComponent<BufFileManager.State>, DumbAware {
     private val state = State()
     private val yamlMapper = YAMLMapper()
-    private val cacheRootPointer = VirtualFilePointerManager.getInstance().createDirectoryPointer(
-        VfsUtil.pathToUrl(BufFiles.getCacheRoot().toString()),
-        true,
-        project,
-        object : VirtualFilePointerListener {
-            override fun validityChanged(pointers: Array<out VirtualFilePointer>) {
-                ReadAction.nonBlocking<Unit> {
-                    refreshLibraries()
-                }.inSmartMode(project).submit(NonUrgentExecutor.getInstance())
-            }
-        }
-    )
+    private val cacheRootPointer =
+        VirtualFilePointerManager.getInstance().createDirectoryPointer(
+            VfsUtil.pathToUrl(BufFiles.getCacheRoot().toString()),
+            true,
+            project,
+            object : VirtualFilePointerListener {
+                override fun validityChanged(pointers: Array<out VirtualFilePointer>) {
+                    ReadAction.nonBlocking<Unit> {
+                        refreshLibraries()
+                    }.inSmartMode(project).submit(NonUrgentExecutor.getInstance())
+                }
+            },
+        )
     private val libraryLookup: Map<String, State.Module>
-        get() = CachedValuesManager.getManager(project).getCachedValue(project) {
-            val result = state.libraries.associateBy { it.reference ?: "unknown" }
-            CachedValueProvider.Result.create(result, state)
-        }
+        get() =
+            CachedValuesManager.getManager(project).getCachedValue(project) {
+                val result = state.libraries.associateBy { it.reference ?: "unknown" }
+                CachedValueProvider.Result.create(result, state)
+            }
     private val moduleLookup: Map<String, State.Module>
-        get() = CachedValuesManager.getManager(project).getCachedValue(project) {
-            val result = state.modules.associateBy { it.path ?: "unknown" }
-            CachedValueProvider.Result.create(result, state)
-        }
+        get() =
+            CachedValuesManager.getManager(project).getCachedValue(project) {
+                val result = state.modules.associateBy { it.path ?: "unknown" }
+                CachedValueProvider.Result.create(result, state)
+            }
     private val workspaceLookup: Map<String, State.Workspace>
-        get() = CachedValuesManager.getManager(project).getCachedValue(project) {
-            val result = state.workspaces.associateBy { it.path ?: "unknown" }
-            CachedValueProvider.Result.create(result, state)
-        }
+        get() =
+            CachedValuesManager.getManager(project).getCachedValue(project) {
+                val result = state.workspaces.associateBy { it.path ?: "unknown" }
+                CachedValueProvider.Result.create(result, state)
+            }
     private val treeModel by lazy {
         SmartTreeModel(BufToolWindowRootElement(this))
     }
@@ -101,13 +105,18 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         return cacheRootPointer.file
     }
 
-    fun moduleChanged(oldRoot: VirtualFile?, newRoot: VirtualFile?) {
-        val old = oldRoot?.let { root ->
-            state.modules.firstOrNull { it.path == root.path }
-        }
-        val new = newRoot?.findChild(BUF_YAML)?.let {
-            loadModule(it)
-        }
+    fun moduleChanged(
+        oldRoot: VirtualFile?,
+        newRoot: VirtualFile?,
+    ) {
+        val old =
+            oldRoot?.let { root ->
+                state.modules.firstOrNull { it.path == root.path }
+            }
+        val new =
+            newRoot?.findChild(BUF_YAML)?.let {
+                loadModule(it)
+            }
         if (old == null) {
             new?.let {
                 state.modules += it
@@ -126,13 +135,18 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         updateToolWindow(state.modules.isNotEmpty())
     }
 
-    fun workspaceChanged(oldRoot: VirtualFile?, newRoot: VirtualFile?) {
-        val old = oldRoot?.let { root ->
-            state.workspaces.firstOrNull { it.path == root.path }
-        }
-        val new = newRoot?.findChild(BUF_WORK_YAML)?.let {
-            loadWorkspace(it)
-        }
+    fun workspaceChanged(
+        oldRoot: VirtualFile?,
+        newRoot: VirtualFile?,
+    ) {
+        val old =
+            oldRoot?.let { root ->
+                state.workspaces.firstOrNull { it.path == root.path }
+            }
+        val new =
+            newRoot?.findChild(BUF_WORK_YAML)?.let {
+                loadWorkspace(it)
+            }
         if (old == null) {
             new?.let {
                 state.workspaces += it
@@ -149,18 +163,23 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         }
     }
 
-    fun libraryChanged(oldRoot: VirtualFile?, newRoot: VirtualFile?) {
+    fun libraryChanged(
+        oldRoot: VirtualFile?,
+        newRoot: VirtualFile?,
+    ) {
         val modificationCount = state.modificationCount
-        val old = oldRoot?.let { root ->
-            state.libraries.firstOrNull { it.path == root.path }
-        }
-        val new = newRoot?.findChild(BUF_YAML)?.let {
-            val commit = it.parent.name
-            val repo = it.parent.parent.name
-            val owner = it.parent.parent.parent.name
-            val remote = it.parent.parent.parent.parent.name
-            loadModule(it, "$remote/$owner/$repo:$commit")
-        }
+        val old =
+            oldRoot?.let { root ->
+                state.libraries.firstOrNull { it.path == root.path }
+            }
+        val new =
+            newRoot?.findChild(BUF_YAML)?.let {
+                val commit = it.parent.name
+                val repo = it.parent.parent.name
+                val owner = it.parent.parent.parent.name
+                val remote = it.parent.parent.parent.parent.name
+                loadModule(it, "$remote/$owner/$repo:$commit")
+            }
         if (old == null) {
             new?.let {
                 state.libraries += it
@@ -191,12 +210,14 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
                 FilenameIndex.getVirtualFilesByName(BUF_YAML, ProjectScope.getContentScope(project))
             val workYamlFiles =
                 FilenameIndex.getVirtualFilesByName(BUF_WORK_YAML, ProjectScope.getContentScope(project))
-            val modules = (yamlFiles).mapNotNull {
-                loadModule(it)
-            }.distinctBy { it.path }
-            val workspaces = (workYamlFiles).mapNotNull {
-                loadWorkspace(it)
-            }.distinctBy { it.path }
+            val modules =
+                (yamlFiles).mapNotNull {
+                    loadModule(it)
+                }.distinctBy { it.path }
+            val workspaces =
+                (workYamlFiles).mapNotNull {
+                    loadWorkspace(it)
+                }.distinctBy { it.path }
 
             state.modules += modules.sortedBy { it.path }
             state.workspaces += workspaces.sortedBy { it.path }
@@ -217,7 +238,10 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
         }
     }
 
-    private fun loadModule(yaml: VirtualFile, reference: String? = null): State.Module? {
+    private fun loadModule(
+        yaml: VirtualFile,
+        reference: String? = null,
+    ): State.Module? {
         val content = readYaml(yaml) ?: return null
         val module = State.Module()
         module.reference = reference
@@ -247,9 +271,10 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
     private fun loadWorkspace(yaml: VirtualFile): State.Workspace? {
         val root = yaml.parent ?: return null
         val content = readYaml(yaml) ?: return null
-        val moduleRoots = content.get(BufWorkDirectoriesFieldSchema.name)?.mapNotNull {
-            root.findFileByRelativePath(it.textValue())?.path
-        } ?: listOf()
+        val moduleRoots =
+            content.get(BufWorkDirectoriesFieldSchema.name)?.mapNotNull {
+                root.findFileByRelativePath(it.textValue())?.path
+            } ?: listOf()
 
         return State.Workspace().apply {
             this.path = yaml.parent.path
@@ -287,7 +312,7 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
             ApplicationManager.getApplication().runWriteAction {
                 ProjectRootManagerEx.getInstanceEx(project).makeRootsChange(
                     EmptyRunnable.getInstance(),
-                    RootsChangeRescanningInfo.RESCAN_DEPENDENCIES_IF_NEEDED
+                    RootsChangeRescanningInfo.RESCAN_DEPENDENCIES_IF_NEEDED,
                 )
             }
         }
@@ -295,27 +320,34 @@ class BufFileManager(val project: Project) : PersistentStateComponent<BufFileMan
 
     fun createToolWindowContent(toolWindow: ToolWindow) {
         treeModel.reload()
-        val tree = SmartTree(treeModel).apply {
-            cellRenderer = SmartTreeCellRenderer()
-        }
+        val tree =
+            SmartTree(treeModel).apply {
+                cellRenderer = SmartTreeCellRenderer()
+            }
         val panel = SimpleToolWindowPanel(true)
-        panel.toolbar = ActionManager.getInstance().createActionToolbar(
-            "Protobuf.Buf",
-            ActionManager.getInstance().getAction("io.kanro.idea.plugin.Protobuf.Buf.ToolWindow") as ActionGroup,
-            true
-        ).let {
-            it.targetComponent = tree
-            it.component
-        }
+        panel.toolbar =
+            ActionManager.getInstance().createActionToolbar(
+                "Protobuf.Buf",
+                ActionManager.getInstance().getAction("io.kanro.idea.plugin.Protobuf.Buf.ToolWindow") as ActionGroup,
+                true,
+            ).let {
+                it.targetComponent = tree
+                it.component
+            }
         panel.setContent(ScrollPaneFactory.createScrollPane(tree, true))
         DataManager.registerDataProvider(panel) {
             if (it == PlatformDataKeys.TREE_EXPANDER.name) {
                 DefaultTreeExpander(tree)
-            } else null
+            } else {
+                null
+            }
         }
-        val content = ContentFactory.getInstance().createContent(
-            panel, null, false
-        )
+        val content =
+            ContentFactory.getInstance().createContent(
+                panel,
+                null,
+                false,
+            )
         toolWindow.contentManager.addContent(content)
     }
 

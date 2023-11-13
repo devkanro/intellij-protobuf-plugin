@@ -9,7 +9,10 @@ import com.intellij.usageView.UsageViewTypeLocation
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
 
 class ProtobufElementDescriptionProvider : ElementDescriptionProvider {
-    override fun getElementDescription(element: PsiElement, location: ElementDescriptionLocation): String? {
+    override fun getElementDescription(
+        element: PsiElement,
+        location: ElementDescriptionLocation,
+    ): String? {
         val definition = element as? ProtobufDefinition ?: return null
         return when (location) {
             is UsageViewLongNameLocation -> definition.qualifiedName()?.toString()

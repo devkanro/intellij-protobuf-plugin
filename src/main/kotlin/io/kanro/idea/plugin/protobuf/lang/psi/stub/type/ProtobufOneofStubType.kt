@@ -6,7 +6,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.impl.ProtobufOneofDefinitionImpl
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufOneofStub
 
 object ProtobufOneofStubType : ProtobufStubTypeBase<ProtobufOneofStub, ProtobufOneofDefinition>(
-    "ONEOF_DEFINITION"
+    "ONEOF_DEFINITION",
 ) {
     override fun getExternalId(): String {
         return "protobuf.oneof.stub"
@@ -15,7 +15,7 @@ object ProtobufOneofStubType : ProtobufStubTypeBase<ProtobufOneofStub, ProtobufO
     override fun createStub(
         data: Array<String>,
         external: Map<String, String>,
-        parentStub: StubElement<*>?
+        parentStub: StubElement<*>?,
     ): ProtobufOneofStub {
         return ProtobufOneofStub(data, external, parentStub)
     }

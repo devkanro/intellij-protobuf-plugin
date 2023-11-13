@@ -6,7 +6,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.impl.ProtobufServiceDefinitionImpl
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufServiceStub
 
 object ProtobufServiceStubType : ProtobufStubTypeBase<ProtobufServiceStub, ProtobufServiceDefinition>(
-    "SERVICE_DEFINITION"
+    "SERVICE_DEFINITION",
 ) {
     override fun getExternalId(): String {
         return "protobuf.service.stub"
@@ -15,7 +15,7 @@ object ProtobufServiceStubType : ProtobufStubTypeBase<ProtobufServiceStub, Proto
     override fun createStub(
         data: Array<String>,
         external: Map<String, String>,
-        parentStub: StubElement<*>?
+        parentStub: StubElement<*>?,
     ): ProtobufServiceStub {
         return ProtobufServiceStub(data, external, parentStub)
     }

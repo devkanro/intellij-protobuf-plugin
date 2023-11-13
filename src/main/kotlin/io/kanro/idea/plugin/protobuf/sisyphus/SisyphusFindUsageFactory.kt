@@ -16,7 +16,10 @@ class SisyphusFindUsageFactory : FindUsagesHandlerFactory() {
         return element is ProtobufDefinition
     }
 
-    override fun createFindUsagesHandler(element: PsiElement, forHighlightUsages: Boolean): FindUsagesHandler? {
+    override fun createFindUsagesHandler(
+        element: PsiElement,
+        forHighlightUsages: Boolean,
+    ): FindUsagesHandler? {
         if (forHighlightUsages) return null
         if (element !is ProtobufDefinition) return null
         if (!isSisyphus(element)) return null
@@ -31,7 +34,7 @@ class SisyphusFindUsageFactory : FindUsagesHandlerFactory() {
             is ProtobufServiceDefinition -> {
                 ProtoDefinitionFindUsage(
                     element,
-                    listOfNotNull(element.toClass(), element.toClientClass()).toTypedArray()
+                    listOfNotNull(element.toClass(), element.toClientClass()).toTypedArray(),
                 )
             }
             is ProtobufEnumValueDefinition -> {
@@ -40,13 +43,13 @@ class SisyphusFindUsageFactory : FindUsagesHandlerFactory() {
             is ProtobufRpcDefinition -> {
                 ProtoDefinitionFindUsage(
                     element,
-                    listOfNotNull(element.toMethod(), element.toClientMethod()).toTypedArray()
+                    listOfNotNull(element.toMethod(), element.toClientMethod()).toTypedArray(),
                 )
             }
             is ProtobufFieldLike -> {
                 ProtoDefinitionFindUsage(
                     element,
-                    (element.toGetters() + element.toSetters()) as Array<PsiElement>
+                    (element.toGetters() + element.toSetters()) as Array<PsiElement>,
                 )
             }
             else -> null

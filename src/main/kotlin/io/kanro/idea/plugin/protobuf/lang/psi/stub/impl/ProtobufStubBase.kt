@@ -13,7 +13,7 @@ abstract class ProtobufStubBase<T : PsiElement>(
     private val data: Array<String>,
     private val externalData: Map<String, String>,
     parent: StubElement<*>?,
-    type: IStubElementType<*, *>
+    type: IStubElementType<*, *>,
 ) : StubBase<T>(parent, type), ProtobufStub<T> {
     override fun data(index: Int): String {
         return data[index]

@@ -14,7 +14,7 @@ data class GrpcResponse(
     var header: Metadata?,
     var status: Status?,
     var trailer: Metadata?,
-    override var executionTime: Long?
+    override var executionTime: Long?,
 ) : CommonClientResponse {
     override val statusPresentation: String
         get() = status?.code?.name ?: "EXECUTING"
@@ -30,13 +30,14 @@ data class GrpcResponse(
 
         return buildString {
             metadata.keys().forEach {
-                val value = if (it.endsWith("-bin")) {
-                    val key = Metadata.Key.of(it, Metadata.BINARY_BYTE_MARSHALLER)
-                    metadata[key]?.base64()
-                } else {
-                    val key = Metadata.Key.of(it, Metadata.ASCII_STRING_MARSHALLER)
-                    metadata[key]
-                }
+                val value =
+                    if (it.endsWith("-bin")) {
+                        val key = Metadata.Key.of(it, Metadata.BINARY_BYTE_MARSHALLER)
+                        metadata[key]?.base64()
+                    } else {
+                        val key = Metadata.Key.of(it, Metadata.ASCII_STRING_MARSHALLER)
+                        metadata[key]
+                    }
                 append(it)
                 append(": ")
                 appendLine(value)

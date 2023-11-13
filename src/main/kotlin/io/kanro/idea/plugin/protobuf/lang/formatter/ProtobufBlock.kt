@@ -16,7 +16,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufCommentToken
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
 
 enum class BlockType {
-    BODY, STATEMENT, FRAGMENT
+    BODY,
+    STATEMENT,
+    FRAGMENT,
 }
 
 class ProtobufBlock(
@@ -24,11 +26,16 @@ class ProtobufBlock(
     node: ASTNode,
     warp: Wrap?,
     alignment: Alignment?,
-    protected val spacingBuilder: SpacingBuilder
+    protected val spacingBuilder: SpacingBuilder,
 ) : AbstractBlock(
-    node, warp, alignment
-) {
-    override fun getSpacing(child1: Block?, child2: Block): Spacing? {
+        node,
+        warp,
+        alignment,
+    ) {
+    override fun getSpacing(
+        child1: Block?,
+        child2: Block,
+    ): Spacing? {
         return spacingBuilder.getSpacing(this, child1, child2)
     }
 
@@ -58,7 +65,8 @@ class ProtobufBlock(
                     ProtobufTokens.LBRACK,
                     ProtobufTokens.RBRACK,
                     ProtobufTokens.LT,
-                    ProtobufTokens.GT -> Indent.getNoneIndent()
+                    ProtobufTokens.GT,
+                    -> Indent.getNoneIndent()
                     else -> Indent.getContinuationWithoutFirstIndent()
                 }
             }

@@ -13,15 +13,16 @@ class BuiltInTypeProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
-        result: CompletionResultSet
+        result: CompletionResultSet,
     ) {
         result.addAllElements(builtInTypes)
     }
 
     companion object {
-        private val builtInTypes = BuiltInType.values().map {
-            builtInTypeElement(it.value())
-        }
+        private val builtInTypes =
+            BuiltInType.values().map {
+                builtInTypeElement(it.value())
+            }
 
         fun builtInTypeElement(keyword: String): LookupElement {
             return LookupElementBuilder.create(keyword).withTypeText("built-in")

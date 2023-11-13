@@ -9,10 +9,13 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex
 
 class ProtobufGotoSymbolContributor : ChooseByNameContributor {
-    override fun getNames(project: Project, includeNonProjectItems: Boolean): Array<String> {
+    override fun getNames(
+        project: Project,
+        includeNonProjectItems: Boolean,
+    ): Array<String> {
         return StubIndex.getInstance().getAllKeys(
             QualifiedNameIndex.key,
-            project
+            project,
         ).toTypedArray()
     }
 
@@ -20,16 +23,20 @@ class ProtobufGotoSymbolContributor : ChooseByNameContributor {
         name: String,
         pattern: String?,
         project: Project,
-        includeNonProjectItems: Boolean
+        includeNonProjectItems: Boolean,
     ): Array<NavigationItem> {
-        val scope = if (includeNonProjectItems)
-            GlobalSearchScope.allScope(project)
-        else
-            GlobalSearchScope.projectScope(project)
+        val scope =
+            if (includeNonProjectItems) {
+                GlobalSearchScope.allScope(project)
+            } else {
+                GlobalSearchScope.projectScope(project)
+            }
         return StubIndex.getElements(
-            QualifiedNameIndex.key, name,
-            project, scope,
-            ProtobufElement::class.java
+            QualifiedNameIndex.key,
+            name,
+            project,
+            scope,
+            ProtobufElement::class.java,
         ).filterIsInstance<NavigationItem>().toTypedArray()
     }
 }

@@ -17,13 +17,18 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 class GrpcMethodReference(element: HttpRequestTarget, range: TextRange) :
     PsiReferenceBase<HttpRequestTarget>(element, range) {
     private object Resolver : ResolveCache.Resolver {
-        override fun resolve(ref: PsiReference, incompleteCode: Boolean): PsiElement? {
+        override fun resolve(
+            ref: PsiReference,
+            incompleteCode: Boolean,
+        ): PsiElement? {
             ref as GrpcMethodReference
             val methodName = ref.element.pathAbsolute?.text?.trim('/') ?: return null
             return StubIndex.getElements(
-                ServiceMethodIndex.key, methodName,
-                ref.element.project, GlobalSearchScope.allScope(ref.element.project),
-                ProtobufRpcDefinition::class.java
+                ServiceMethodIndex.key,
+                methodName,
+                ref.element.project,
+                GlobalSearchScope.allScope(ref.element.project),
+                ProtobufRpcDefinition::class.java,
             ).firstOrNull()
         }
     }
@@ -39,13 +44,14 @@ class GrpcMethodReference(element: HttpRequestTarget, range: TextRange) :
         val start = text.lastIndexOf('/', rangeInElement.startOffset - 2)
         val service = TextRange(start + 1, rangeInElement.startOffset - 1).substring(text)
 
-        val serviceDefinition = StubIndex.getElements(
-            ServiceQualifiedNameIndex.key,
-            service,
-            element.project,
-            GlobalSearchScope.allScope(element.project),
-            ProtobufServiceDefinition::class.java
-        ).firstOrNull() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
+        val serviceDefinition =
+            StubIndex.getElements(
+                ServiceQualifiedNameIndex.key,
+                service,
+                element.project,
+                GlobalSearchScope.allScope(element.project),
+                ProtobufServiceDefinition::class.java,
+            ).firstOrNull() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
 
         val methods = serviceDefinition.items().filterIsInstance<ProtobufRpcDefinition>()
         return methods.mapNotNull { it.lookup() }.toTypedArray()

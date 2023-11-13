@@ -9,19 +9,20 @@ import io.kanro.idea.plugin.protobuf.buf.schema.BufSchemaScalarType
 object BufLock : BufRootSchema {
     override val name: String = "buf.lock"
 
-    override val type = BufObjectSchema(
-        listOf(
-            BufVersionFieldSchema,
-            BufLockDepsFieldSchema
+    override val type =
+        BufObjectSchema(
+            listOf(
+                BufVersionFieldSchema,
+                BufLockDepsFieldSchema,
+            ),
         )
-    )
 }
 
 object BufLockDepsFieldSchema : BufFieldSchema(
     "deps",
     "",
     BufArraySchema(BufLockDepsSchema),
-    true
+    true,
 )
 
 object BufLockDepsSchema : BufObjectSchema(
@@ -29,34 +30,34 @@ object BufLockDepsSchema : BufObjectSchema(
         BufLockDepsRemoteSchema,
         BufLockDepsOwnerSchema,
         BufLockDepsRepositorySchema,
-        BufLockDepsCommitSchema
-    )
+        BufLockDepsCommitSchema,
+    ),
 )
 
 object BufLockDepsRemoteSchema : BufFieldSchema(
     "remote",
     "",
     BufSchemaScalarType.IDENTIFIER,
-    false
+    false,
 )
 
 object BufLockDepsOwnerSchema : BufFieldSchema(
     "owner",
     "",
     BufSchemaScalarType.IDENTIFIER,
-    false
+    false,
 )
 
 object BufLockDepsRepositorySchema : BufFieldSchema(
     "repository",
     "",
     BufSchemaScalarType.IDENTIFIER,
-    false
+    false,
 )
 
 object BufLockDepsCommitSchema : BufFieldSchema(
     "commit",
     "",
     BufSchemaScalarType.IDENTIFIER,
-    false
+    false,
 )

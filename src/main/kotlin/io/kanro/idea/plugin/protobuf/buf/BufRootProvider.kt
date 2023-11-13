@@ -18,7 +18,7 @@ class BufRootProvider : CachedProtobufRootProvider() {
 
     private fun getModuleContextModules(
         fileManager: BufFileManager,
-        context: PsiElement
+        context: PsiElement,
     ): List<BufFileManager.State.Module>? {
         val module = fileManager.findModuleFromPsiElement(context) ?: return null
         val workspace = fileManager.state.workspaces.firstOrNull { module.path in it.roots }
@@ -27,7 +27,7 @@ class BufRootProvider : CachedProtobufRootProvider() {
 
     private fun getLibraryContextModules(
         fileManager: BufFileManager,
-        context: PsiElement
+        context: PsiElement,
     ): List<BufFileManager.State.Module>? {
         val library = fileManager.findLibraryFromPsiElement(context) ?: return null
         return listOf(library)
@@ -37,17 +37,20 @@ class BufRootProvider : CachedProtobufRootProvider() {
         val project = context.project
         val fileManager = project.service<BufFileManager>()
 
-        val contextModules = getModuleContextModules(fileManager, context)
-            ?: getLibraryContextModules(fileManager, context) ?: return listOf()
+        val contextModules =
+            getModuleContextModules(fileManager, context)
+                ?: getLibraryContextModules(fileManager, context) ?: return listOf()
         val localDeps = contextModules.mapNotNull { it.name }.toSet()
 
-        val roots = contextModules.mapNotNull {
-            rootForModule(it)
-        }.toMutableList()
+        val roots =
+            contextModules.mapNotNull {
+                rootForModule(it)
+            }.toMutableList()
 
-        val remoteDeps = contextModules.flatMap { it.lockedDependencies }.filter {
-            it.nameWithoutCommit() !in localDeps
-        }
+        val remoteDeps =
+            contextModules.flatMap { it.lockedDependencies }.filter {
+                it.nameWithoutCommit() !in localDeps
+            }
         roots += fileManager.resolveDependencies(remoteDeps).mapNotNull { rootForModule(it) }
         return roots
     }

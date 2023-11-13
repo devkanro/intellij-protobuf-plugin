@@ -25,12 +25,14 @@ class GoDecompileService : ProjectActivity {
                 keys.forEachIndexed { index, s ->
                     it.fraction = index.toDouble() / keys.count()
                     if (!pattern.accepts(s)) return@forEachIndexed
-                    val elements = StubIndex.getElements(
-                        GoAllPrivateNamesIndex.ALL_PRIVATE_NAMES, s,
-                        project,
-                        GlobalSearchScope.allScope(project),
-                        GoNamedElement::class.java
-                    )
+                    val elements =
+                        StubIndex.getElements(
+                            GoAllPrivateNamesIndex.ALL_PRIVATE_NAMES,
+                            s,
+                            project,
+                            GlobalSearchScope.allScope(project),
+                            GoNamedElement::class.java,
+                        )
                     elements.firstOrNull()?.let {
                         (it.parent as? GoVarSpec)?.decompile()
                     }

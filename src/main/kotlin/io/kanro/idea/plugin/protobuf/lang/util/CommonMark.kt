@@ -33,12 +33,18 @@ class ProtoDocInlineParserContext(private val context: ProtobufElement, private 
             return it
         }
         val path =
-            "${DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL}$label${DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL_REF_SEPARATOR}$label"
+            DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL +
+                label +
+                DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL_REF_SEPARATOR +
+                label
         return LinkReferenceDefinition(label, path, label)
     }
 }
 
-fun renderDoc(context: ProtobufElement, doc: String): String {
+fun renderDoc(
+    context: ProtobufElement,
+    doc: String,
+): String {
     val parser =
         Parser.builder().extensions(extensions).inlineParserFactory(ProtoDocInlineParserFactory(context)).build()
     return renderer.render(parser.parse(doc))

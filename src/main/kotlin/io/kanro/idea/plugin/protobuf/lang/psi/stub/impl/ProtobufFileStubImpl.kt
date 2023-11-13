@@ -11,11 +11,10 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.writeStringArray
 class ProtobufFileStubImpl(
     file: ProtobufFile?,
     private val data: Array<String> = file?.stubData() ?: arrayOf(),
-    private val external: Map<String, String> = file?.stubExternalData() ?: mapOf()
+    private val external: Map<String, String> = file?.stubExternalData() ?: mapOf(),
 ) :
     PsiFileStubImpl<ProtobufFile>(file),
-    ProtobufFileStub {
-
+        ProtobufFileStub {
     override fun scope(): QualifiedName {
         return QualifiedName.fromComponents(childrenStubs.filterIsInstance<ProtobufPackageNameStub>().map { it.name() })
     }

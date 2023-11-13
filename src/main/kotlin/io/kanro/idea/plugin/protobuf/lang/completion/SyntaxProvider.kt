@@ -11,19 +11,19 @@ class SyntaxProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
-        result: CompletionResultSet
+        result: CompletionResultSet,
     ) {
         result.addElement(
             LookupElementBuilder.create("proto2")
                 .withTypeText("syntax")
                 .withInsertHandler(completeSyntaxInsert)
-                .withAutoCompletionPolicy(AutoCompletionPolicy.ALWAYS_AUTOCOMPLETE)
+                .withAutoCompletionPolicy(AutoCompletionPolicy.ALWAYS_AUTOCOMPLETE),
         )
         result.addElement(
             LookupElementBuilder.create("proto3")
                 .withTypeText("syntax")
                 .withInsertHandler(completeSyntaxInsert)
-                .withAutoCompletionPolicy(AutoCompletionPolicy.ALWAYS_AUTOCOMPLETE)
+                .withAutoCompletionPolicy(AutoCompletionPolicy.ALWAYS_AUTOCOMPLETE),
         )
     }
 

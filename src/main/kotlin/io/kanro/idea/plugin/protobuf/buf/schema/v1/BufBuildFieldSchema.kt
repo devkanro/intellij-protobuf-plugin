@@ -6,5 +6,5 @@ object BufBuildFieldSchema : BufFieldSchema(
     "build",
     "The `build` key is optional, and is used to control how buf builds modules.",
     BufBuildSchema,
-    true
+    true,
 )

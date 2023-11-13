@@ -44,9 +44,12 @@ object Protoc {
             val context = CompileContext(ProtobufCompilerPlugin.extensionPoint.extensionList)
 
             try {
-                CachedValueProvider.Result.create(FileDescriptorProto {
-                    context.advance(FileCompilingState(this, file))
-                }, PsiModificationTracker.MODIFICATION_COUNT)
+                CachedValueProvider.Result.create(
+                    FileDescriptorProto {
+                        context.advance(FileCompilingState(this, file))
+                    },
+                    PsiModificationTracker.MODIFICATION_COUNT,
+                )
             } catch (e: Exception) {
                 null
             }
@@ -57,7 +60,10 @@ object Protoc {
 interface ProtobufCompilerPlugin<T : ProtobufCompilingState<*, *>> {
     fun accept(state: T): Boolean
 
-    fun compile(context: CompileContext, state: T)
+    fun compile(
+        context: CompileContext,
+        state: T,
+    )
 
     companion object {
         var extensionPoint: ExtensionPointName<ProtobufCompilerPlugin<in ProtobufCompilingState<*, *>>> =

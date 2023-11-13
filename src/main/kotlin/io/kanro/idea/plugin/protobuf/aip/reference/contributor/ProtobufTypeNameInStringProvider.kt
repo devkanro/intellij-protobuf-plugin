@@ -1,7 +1,6 @@
 package io.kanro.idea.plugin.protobuf.aip.reference.contributor
 
 import com.intellij.openapi.util.TextRange
-import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
@@ -9,7 +8,6 @@ import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHover
@@ -29,18 +27,18 @@ class ProtobufTypeNameInStringProvider : ProtobufSymbolReferenceProvider {
                     CachedValueProvider.Result.create(
                         StringProtobufSymbolReferenceHover(
                             element,
-                            ProtobufSymbolFilters.rpcTypeNameVariants
+                            ProtobufSymbolFilters.rpcTypeNameVariants,
                         ),
-                        PsiModificationTracker.MODIFICATION_COUNT
+                        PsiModificationTracker.MODIFICATION_COUNT,
                     )
                 }
                 targetField == AipOptions.lroResponseName -> {
                     CachedValueProvider.Result.create(
                         StringProtobufSymbolReferenceHover(
                             element,
-                            ProtobufSymbolFilters.rpcTypeNameVariants
+                            ProtobufSymbolFilters.rpcTypeNameVariants,
                         ),
-                        PsiModificationTracker.MODIFICATION_COUNT
+                        PsiModificationTracker.MODIFICATION_COUNT,
                     )
                 }
                 else -> null
@@ -51,7 +49,7 @@ class ProtobufTypeNameInStringProvider : ProtobufSymbolReferenceProvider {
 
 class StringProtobufSymbolReferenceHover(
     val element: ProtobufStringValue,
-    private val filter: PsiElementFilter
+    private val filter: PsiElementFilter,
 ) : ProtobufSymbolReferenceHover {
     private var text = element.text
     private val range: TextRange
@@ -80,10 +78,11 @@ class StringProtobufSymbolReferenceHover(
         }
         this.range = range
 
-        parts = text.splitToRange('.').map {
-            val realRange = it.shiftRight(offset)
-            ProtobufSymbolReferenceHover.SymbolPart(realRange.startOffset, realRange.substring(element.text))
-        }
+        parts =
+            text.splitToRange('.').map {
+                val realRange = it.shiftRight(offset)
+                ProtobufSymbolReferenceHover.SymbolPart(realRange.startOffset, realRange.substring(element.text))
+            }
     }
 
     override fun textRange(): TextRange {
@@ -94,7 +93,10 @@ class StringProtobufSymbolReferenceHover(
         return parts
     }
 
-    override fun renamePart(index: Int, newName: String) {
+    override fun renamePart(
+        index: Int,
+        newName: String,
+    ) {
         val leaf = (element.stringLiteral.node as LeafElement)
         val value = element.text
         val part = symbolParts()[index]

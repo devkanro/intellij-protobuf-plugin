@@ -44,4 +44,3 @@ object ProtobufIcons {
         return IconLoader.getIcon("/io/kanro/idea/plugin/protobuf/icon/$name", ProtobufIcons::class.java)
     }
 }
-

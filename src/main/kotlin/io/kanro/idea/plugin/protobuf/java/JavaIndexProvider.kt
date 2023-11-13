@@ -7,7 +7,10 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufRpcStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufServiceStub
 
 class JavaIndexProvider : ProtobufIndexProvider {
-    override fun buildIndex(stub: ProtobufStub<*>, sink: IndexSink) {
+    override fun buildIndex(
+        stub: ProtobufStub<*>,
+        sink: IndexSink,
+    ) {
         when (stub) {
             is ProtobufServiceStub -> {
                 // impls
@@ -25,28 +28,28 @@ class JavaIndexProvider : ProtobufIndexProvider {
                 // impls
                 sink.occurrence(
                     JavaNameIndex.key,
-                    stub.owner()?.fullImplBaseName()?.append(methodName).toString()
+                    stub.owner()?.fullImplBaseName()?.append(methodName).toString(),
                 )
                 sink.occurrence(
                     JavaNameIndex.key,
-                    stub.owner()?.fullCoroutineImplBaseName()?.append(methodName).toString()
+                    stub.owner()?.fullCoroutineImplBaseName()?.append(methodName).toString(),
                 )
                 // stubs
                 sink.occurrence(
                     JavaNameIndex.key,
-                    stub.owner()?.fullStubName()?.append(methodName).toString()
+                    stub.owner()?.fullStubName()?.append(methodName).toString(),
                 )
                 sink.occurrence(
                     JavaNameIndex.key,
-                    stub.owner()?.fullBlockingStubName()?.append(methodName).toString()
+                    stub.owner()?.fullBlockingStubName()?.append(methodName).toString(),
                 )
                 sink.occurrence(
                     JavaNameIndex.key,
-                    stub.owner()?.fullFutureStubName()?.append(methodName).toString()
+                    stub.owner()?.fullFutureStubName()?.append(methodName).toString(),
                 )
                 sink.occurrence(
                     JavaNameIndex.key,
-                    stub.owner()?.fullCoroutineStubName()?.append(methodName).toString()
+                    stub.owner()?.fullCoroutineStubName()?.append(methodName).toString(),
                 )
             }
         }

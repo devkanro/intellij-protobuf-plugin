@@ -98,7 +98,10 @@ interface CompositeXmlElement : XmlElement {
         }
     }
 
-    fun img(url: String, block: XmlChunk.() -> Unit = {}) {
+    fun img(
+        url: String,
+        block: XmlChunk.() -> Unit = {},
+    ) {
         tag("img") {
             attr("src", url)
             block()
@@ -111,7 +114,10 @@ interface CompositeXmlElement : XmlElement {
         }
     }
 
-    fun color(color: String, block: XmlChunk.() -> Unit) {
+    fun color(
+        color: String,
+        block: XmlChunk.() -> Unit,
+    ) {
         tag("font") {
             attr("color", color)
             block()
@@ -149,27 +155,36 @@ interface CompositeXmlElement : XmlElement {
         }
     }
 
-    fun link(content: String, url: String = "") {
+    fun link(
+        content: String,
+        url: String = "",
+    ) {
         tag("a") {
             attr("href", url)
             text(content)
         }
     }
 
-    fun link(url: String = "", block: XmlChunk.() -> Unit) {
+    fun link(
+        url: String = "",
+        block: XmlChunk.() -> Unit,
+    ) {
         tag("a") {
             attr("href", url)
             block()
         }
     }
 
-    fun tag(tag: String, block: XmlChunk.() -> Unit) {
+    fun tag(
+        tag: String,
+        block: XmlChunk.() -> Unit,
+    ) {
         addChild(XmlChunk(tag).apply { this.block() })
     }
 }
 
 class TextChunk(
-    val content: String
+    val content: String,
 ) : XmlElement {
     override fun buildString(builder: StringBuilder) {
         builder.append(content.xmlContentEscape())
@@ -179,10 +194,12 @@ class TextChunk(
 class XmlChunk(
     val tag: String,
     val attributes: MutableMap<String, String> = mutableMapOf(),
-    val children: MutableList<XmlElement> = mutableListOf()
+    val children: MutableList<XmlElement> = mutableListOf(),
 ) : CompositeXmlElement {
-
-    fun attr(name: String, value: String) {
+    fun attr(
+        name: String,
+        value: String,
+    ) {
         attributes[name] = value
     }
 
@@ -217,7 +234,7 @@ class XmlDocument(val children: MutableList<XmlElement> = mutableListOf()) : Com
             XmlChunk("div").apply {
                 attr("class", "definition")
                 block()
-            }
+            },
         )
     }
 
@@ -226,7 +243,7 @@ class XmlDocument(val children: MutableList<XmlElement> = mutableListOf()) : Com
             XmlChunk("div").apply {
                 attr("class", "content")
                 block()
-            }
+            },
         )
     }
 
@@ -235,7 +252,7 @@ class XmlDocument(val children: MutableList<XmlElement> = mutableListOf()) : Com
             XmlChunk("table").apply {
                 attr("class", "sections")
                 block()
-            }
+            },
         )
     }
 

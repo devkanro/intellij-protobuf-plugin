@@ -17,26 +17,39 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.readMap
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.readStringArray
 
 abstract class ProtobufStubTypeBase<TStub : ProtobufStubBase<TPsi>, TPsi : PsiElement>(
-    name: String
+    name: String,
 ) : IStubElementType<TStub, TPsi>(
-    name, ProtobufLanguage
-) {
-    override fun serialize(stub: TStub, dataStream: StubOutputStream) {
+        name,
+        ProtobufLanguage,
+    ) {
+    override fun serialize(
+        stub: TStub,
+        dataStream: StubOutputStream,
+    ) {
         stub.writeTo(dataStream)
     }
 
-    override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): TStub {
+    override fun deserialize(
+        dataStream: StubInputStream,
+        parentStub: StubElement<*>?,
+    ): TStub {
         return createStub(dataStream.readStringArray(), dataStream.readMap(), parentStub)
     }
 
-    override fun createStub(psi: TPsi, parentStub: StubElement<out PsiElement>?): TStub {
+    override fun createStub(
+        psi: TPsi,
+        parentStub: StubElement<out PsiElement>?,
+    ): TStub {
         if (psi !is ProtobufStubSupport<*, *>) {
             throw IllegalStateException("Psi must implement ProtobufStubSupport")
         }
         return createStub(psi.stubData(), psi.stubExternalData(), parentStub)
     }
 
-    override fun indexStub(stub: TStub, sink: IndexSink) {
+    override fun indexStub(
+        stub: TStub,
+        sink: IndexSink,
+    ) {
         if (stub is ProtobufDefinitionStub) {
             stub.name()?.let {
                 sink.occurrence(ShortNameIndex.key, it)
@@ -49,5 +62,9 @@ abstract class ProtobufStubTypeBase<TStub : ProtobufStubBase<TPsi>, TPsi : PsiEl
         ProtobufIndexProvider.buildIndex(stub, sink)
     }
 
-    abstract fun createStub(data: Array<String>, external: Map<String, String>, parentStub: StubElement<*>?): TStub
+    abstract fun createStub(
+        data: Array<String>,
+        external: Map<String, String>,
+        parentStub: StubElement<*>?,
+    ): TStub
 }

@@ -13,7 +13,7 @@ data class GrpcRequest(
     val inputType: String,
     val outputStreaming: Boolean,
     val outputType: String,
-    val requests: List<String>
+    val requests: List<String>,
 ) : CommonClientRequest {
     override val httpMethod: String
         get() = GrpcRequestExecutionSupport.GRPC

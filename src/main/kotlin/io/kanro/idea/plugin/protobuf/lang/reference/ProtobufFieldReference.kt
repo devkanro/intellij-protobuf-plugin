@@ -16,7 +16,6 @@ import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 
 class ProtobufFieldReference(field: ProtobufFieldName) :
     PsiReferenceBase<ProtobufFieldName>(field) {
-
     override fun resolve(): PsiElement? {
         val message = element.message() ?: return null
         message.items<ProtobufFieldLike> {

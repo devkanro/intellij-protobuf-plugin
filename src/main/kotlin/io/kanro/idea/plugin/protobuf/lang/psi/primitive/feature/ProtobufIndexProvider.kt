@@ -9,12 +9,18 @@ interface ProtobufIndexProvider {
         var extensionPoint: ExtensionPointName<ProtobufIndexProvider> =
             ExtensionPointName.create("io.kanro.idea.plugin.protobuf.indexProvider")
 
-        fun buildIndex(stub: ProtobufStub<*>, sink: IndexSink) {
+        fun buildIndex(
+            stub: ProtobufStub<*>,
+            sink: IndexSink,
+        ) {
             extensionPoint.extensionList.forEach {
                 it.buildIndex(stub, sink)
             }
         }
     }
 
-    fun buildIndex(stub: ProtobufStub<*>, sink: IndexSink)
+    fun buildIndex(
+        stub: ProtobufStub<*>,
+        sink: IndexSink,
+    )
 }

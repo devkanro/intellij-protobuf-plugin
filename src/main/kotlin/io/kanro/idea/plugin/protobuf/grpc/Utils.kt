@@ -24,7 +24,7 @@ fun HttpRequest.isGrpcRequest(): Boolean {
     return CachedValuesManager.getCachedValue(this) {
         CachedValueProvider.Result.create(
             method?.text in GrpcRequestExecutionSupport.supportedMethod,
-            PsiModificationTracker.MODIFICATION_COUNT
+            PsiModificationTracker.MODIFICATION_COUNT,
         )
     }
 }
@@ -32,18 +32,19 @@ fun HttpRequest.isGrpcRequest(): Boolean {
 fun HttpRequest.grpcMethod(): ProtobufRpcDefinition? {
     if (!isGrpcRequest()) return null
     return CachedValuesManager.getCachedValue(this) {
-        val result = requestTarget?.pathAbsolute?.text?.trim('/')?.let {
-            StubIndex.getElements(
-                ServiceMethodIndex.key,
-                it,
-                project,
-                GlobalSearchScope.allScope(project),
-                ProtobufRpcDefinition::class.java
-            ).firstOrNull()
-        }
+        val result =
+            requestTarget?.pathAbsolute?.text?.trim('/')?.let {
+                StubIndex.getElements(
+                    ServiceMethodIndex.key,
+                    it,
+                    project,
+                    GlobalSearchScope.allScope(project),
+                    ProtobufRpcDefinition::class.java,
+                ).firstOrNull()
+            }
         CachedValueProvider.Result.create(
             result,
-            PsiModificationTracker.MODIFICATION_COUNT
+            PsiModificationTracker.MODIFICATION_COUNT,
         )
     }
 }

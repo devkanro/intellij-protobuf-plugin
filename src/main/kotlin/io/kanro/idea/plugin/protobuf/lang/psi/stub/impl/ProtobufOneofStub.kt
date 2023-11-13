@@ -10,7 +10,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufOneofStubType
 class ProtobufOneofStub(
     data: Array<String>,
     external: Map<String, String>,
-    parent: StubElement<*>?
+    parent: StubElement<*>?,
 ) : ProtobufStubBase<ProtobufOneofDefinition>(data, external, parent, ProtobufOneofStubType),
     ProtobufStub<ProtobufOneofDefinition>,
     ProtobufDefinitionStub,

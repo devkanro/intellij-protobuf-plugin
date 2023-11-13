@@ -21,7 +21,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
     override fun collectNavigationMarkers(
         element: PsiElement,
-        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
+        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>,
     ) {
         if (element.elementType != GoTypes.IDENTIFIER) return
         when (val parent = element.parent) {
@@ -29,21 +29,23 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 val type = parent.resolveTypeSpec() ?: return
                 val shadowedMethod =
                     type.allMethods.firstOrNull {
-                        it != parent && GoPsiUtil.isSameNamedMethod(
-                            parent,
-                            it,
-                            true
-                        )
+                        it != parent &&
+                            GoPsiUtil.isSameNamedMethod(
+                                parent,
+                                it,
+                                true,
+                            )
                     } as? GoMethodDeclaration ?: return
                 val unimplementedServerName = shadowedMethod.receiverType?.text ?: return
                 val indexName = "$unimplementedServerName.${parent.name}"
-                val methods = StubIndex.getElements(
-                    GoUnimplementedServerNameIndex.key,
-                    indexName,
-                    parent.project,
-                    GlobalSearchScope.allScope(parent.project),
-                    ProtobufElement::class.java
-                )
+                val methods =
+                    StubIndex.getElements(
+                        GoUnimplementedServerNameIndex.key,
+                        indexName,
+                        parent.project,
+                        GlobalSearchScope.allScope(parent.project),
+                        ProtobufElement::class.java,
+                    )
                 if (methods.isEmpty()) return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
                     NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTING_RPC)
@@ -58,13 +60,14 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 GoPsiImplUtil.getAnonymousFieldDefinitions(type).forEach {
                     val anonymousFieldType =
                         it.typeReferenceExpression?.resolveType(null) as? GoSpecType ?: return@forEach
-                    servers += StubIndex.getElements(
-                        GoUnimplementedServerNameIndex.key,
-                        anonymousFieldType.identifier.text,
-                        parent.project,
-                        GlobalSearchScope.allScope(parent.project),
-                        ProtobufElement::class.java
-                    )
+                    servers +=
+                        StubIndex.getElements(
+                            GoUnimplementedServerNameIndex.key,
+                            anonymousFieldType.identifier.text,
+                            parent.project,
+                            GlobalSearchScope.allScope(parent.project),
+                            ProtobufElement::class.java,
+                        )
                 }
                 if (servers.isEmpty()) return
                 val builder: NavigationGutterIconBuilder<PsiElement> =

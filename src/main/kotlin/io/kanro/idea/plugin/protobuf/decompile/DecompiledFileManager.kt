@@ -11,15 +11,19 @@ import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import java.io.File
 
 class DecompiledFileSystem : DeprecatedVirtualFileSystem(), NonPhysicalFileSystem {
-    private val root = object : DecompiledFile() {
-        override fun getFileSystem(): VirtualFileSystem {
-            return this@DecompiledFileSystem
+    private val root =
+        object : DecompiledFile() {
+            override fun getFileSystem(): VirtualFileSystem {
+                return this@DecompiledFileSystem
+            }
         }
-    }
 
     fun root(): VirtualFile = root
 
-    fun file(path: String, content: String): VirtualFile {
+    fun file(
+        path: String,
+        content: String,
+    ): VirtualFile {
         var file: DecompiledFile = root
         for (component in path.replace(File.separatorChar, '/').replace('/', ':').removePrefix(":").split(':')) {
             file = file.getOrCreate(component)
@@ -96,15 +100,19 @@ class DecompiledFileSystem : DeprecatedVirtualFileSystem(), NonPhysicalFileSyste
 object DecompiledFileManager {
     private val decompiledFileSystem = DecompiledFileSystem()
 
-    fun findFile(element: PsiElement, file: ByteArray): VirtualFile {
+    fun findFile(
+        element: PsiElement,
+        file: ByteArray,
+    ): VirtualFile {
         val descriptor = DescriptorProtos.FileDescriptorProto.parseFrom(file)
         ProtobufRootResolver.findFile(descriptor.name, element).firstOrNull()?.let { return it }
-        val proto = buildString {
-            appendLine("// Decompiled by intellij protobuf plugin")
-            appendLine("// source: ${element.containingFile.virtualFile.path}")
-            appendLine()
-            append(ProtobufDecompiler.decompile(descriptor))
-        }
+        val proto =
+            buildString {
+                appendLine("// Decompiled by intellij protobuf plugin")
+                appendLine("// source: ${element.containingFile.virtualFile.path}")
+                appendLine()
+                append(ProtobufDecompiler.decompile(descriptor))
+            }
         return decompiledFileSystem.file(descriptor.name, proto).apply {
             isWritable = false
         }

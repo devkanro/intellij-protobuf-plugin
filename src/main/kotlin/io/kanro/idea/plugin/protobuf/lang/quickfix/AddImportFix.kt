@@ -17,11 +17,10 @@ import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import io.kanro.idea.plugin.protobuf.lang.util.matchesSuffix
 
 class AddImportFix(
-    private val host: ProtobufSymbolReferenceHost
+    private val host: ProtobufSymbolReferenceHost,
 ) : BaseIntentionAction(),
     HintAction,
     HighPriorityAction {
-
     private lateinit var elements: Array<ProtobufDefinition>
     private lateinit var hover: ProtobufSymbolReferenceHover
 
@@ -29,31 +28,41 @@ class AddImportFix(
         return "Import"
     }
 
-    override fun isAvailable(project: Project, editor: Editor, file: PsiFile): Boolean {
+    override fun isAvailable(
+        project: Project,
+        editor: Editor,
+        file: PsiFile,
+    ): Boolean {
         if (!host.isValid) return false
         hover = host.referencesHover() ?: return false
         val parts = hover.symbolParts()
         val name = hover.symbol()
         if (hover.absolutely() || parts.size > 1) {
-            this.elements = StubIndex.getElements(
-                ShortNameIndex.key, name.lastComponent!!,
-                project, ProtobufRootResolver.searchScope(host),
-                ProtobufElement::class.java
-            ).filterIsInstance<ProtobufDefinition>().filter {
-                it.qualifiedName()?.matchesSuffix(name) == true
-            }.toTypedArray()
+            this.elements =
+                StubIndex.getElements(
+                    ShortNameIndex.key, name.lastComponent!!,
+                    project, ProtobufRootResolver.searchScope(host),
+                    ProtobufElement::class.java,
+                ).filterIsInstance<ProtobufDefinition>().filter {
+                    it.qualifiedName()?.matchesSuffix(name) == true
+                }.toTypedArray()
         } else {
-            this.elements = StubIndex.getElements(
-                ShortNameIndex.key, name.lastComponent!!,
-                project, ProtobufRootResolver.searchScope(host),
-                ProtobufElement::class.java
-            ).filterIsInstance<ProtobufDefinition>().toTypedArray()
+            this.elements =
+                StubIndex.getElements(
+                    ShortNameIndex.key, name.lastComponent!!,
+                    project, ProtobufRootResolver.searchScope(host),
+                    ProtobufElement::class.java,
+                ).filterIsInstance<ProtobufDefinition>().toTypedArray()
         }
 
         return elements.isNotEmpty()
     }
 
-    override fun invoke(project: Project, editor: Editor, file: PsiFile?) {
+    override fun invoke(
+        project: Project,
+        editor: Editor,
+        file: PsiFile?,
+    ) {
         CommandProcessor.getInstance().runUndoTransparentAction {
             createAction(project, editor, host, hover, elements).execute()
         }
@@ -64,7 +73,7 @@ class AddImportFix(
         editor: Editor,
         host: ProtobufSymbolReferenceHost,
         hover: ProtobufSymbolReferenceHover,
-        elements: Array<ProtobufDefinition>
+        elements: Array<ProtobufDefinition>,
     ): ProtobufAddImportAction {
         return ProtobufAddImportAction(project, editor, host, hover, elements)
     }

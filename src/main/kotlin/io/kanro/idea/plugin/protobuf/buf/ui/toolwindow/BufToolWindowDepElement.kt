@@ -15,7 +15,7 @@ class BufToolWindowDepElement(
     val dependencyName: String,
     val dependency: BufFileManager.State.Dependency?,
     val library: BufFileManager.State.Module?,
-    val resolvedDeps: MutableSet<String> = mutableSetOf()
+    val resolvedDeps: MutableSet<String> = mutableSetOf(),
 ) : TreeElement, ColoredItemPresentation, TooltipPresentation {
     override fun children(): Array<TreeElement> {
         library ?: return arrayOf()

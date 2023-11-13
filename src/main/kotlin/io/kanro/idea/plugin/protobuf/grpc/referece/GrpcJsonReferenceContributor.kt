@@ -15,7 +15,10 @@ import com.intellij.util.ProcessingContext
 import io.kanro.idea.plugin.protobuf.grpc.request.GrpcRequestExecutionSupport
 
 object GrpcJsonBody : PatternCondition<JsonElement>("GRPC JSON BODY") {
-    override fun accepts(t: JsonElement, context: ProcessingContext?): Boolean {
+    override fun accepts(
+        t: JsonElement,
+        context: ProcessingContext?,
+    ): Boolean {
         val host =
             InjectedLanguageManager.getInstance(t.project).getInjectionHost(t) as? HttpMessageBody
                 ?: return false
@@ -29,12 +32,14 @@ class GrpcJsonReferenceContributor : PsiReferenceContributor() {
         registrar.registerReferenceProvider(
             PlatformPatterns.psiElement(JsonStringLiteral::class.java).withParent(JsonProperty::class.java)
                 .isFirstAcceptedChild(PlatformPatterns.not(PlatformPatterns.psiElement().whitespace()))
-                .with(GrpcJsonBody), GrpcMessageFieldReferenceProvider()
+                .with(GrpcJsonBody),
+            GrpcMessageFieldReferenceProvider(),
         )
         registrar.registerReferenceProvider(
             PlatformPatterns.psiElement(JsonStringLiteral::class.java).withParent(JsonProperty::class.java)
                 .afterLeaf(":")
-                .with(GrpcJsonBody), GrpcStringLiteralValueReferenceProvider()
+                .with(GrpcJsonBody),
+            GrpcStringLiteralValueReferenceProvider(),
         )
     }
 }

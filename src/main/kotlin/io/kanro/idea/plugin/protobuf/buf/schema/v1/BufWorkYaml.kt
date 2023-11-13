@@ -11,34 +11,40 @@ import io.kanro.idea.plugin.protobuf.buf.schema.BufSchemaScalarType
 object BufWorkYaml : BufRootSchema {
     override val name: String = "buf.work.yaml"
 
-    override val type = BufObjectSchema(
-        listOf(
-            BufWorkVersionFieldSchema,
-            BufWorkDirectoriesFieldSchema
+    override val type =
+        BufObjectSchema(
+            listOf(
+                BufWorkVersionFieldSchema,
+                BufWorkDirectoriesFieldSchema,
+            ),
         )
-    )
 }
 
 object BufEmptyWorkYaml : BufRootSchema {
     override val name: String = "buf.gen.yaml"
 
-    override val type = BufObjectSchema(
-        listOf(
-            BufWorkVersionFieldSchema
+    override val type =
+        BufObjectSchema(
+            listOf(
+                BufWorkVersionFieldSchema,
+            ),
         )
-    )
 }
 
 object BufWorkVersionFieldSchema : BufFieldSchema(
     "version",
     "The `version` key is required, and defines the current configuration version. The only accepted value is `v1`.",
     BufEnumTypeSchema(listOf(BufEnumValueSchema("v1", ""))),
-    false
+    false,
 )
 
 object BufWorkDirectoriesFieldSchema : BufFieldSchema(
     "directories",
-    "The `directories` key is **required**, and lists the directories that define modules to be included in the workspace. The directory paths must be relative to the `buf.work.yaml`, and cannot point to a location outside of your `buf.work.yaml`. For example, `../external` is invalid.",
+    "The `directories` key is **required**, " +
+        "and lists the directories that define modules to be included in the workspace. " +
+        "The directory paths must be relative to the `buf.work.yaml`, " +
+        "and cannot point to a location outside of your `buf.work.yaml`. " +
+        "For example, `../external` is invalid.",
     BufArraySchema(BufSchemaScalarType.IDENTIFIER),
-    false
+    false,
 )

@@ -9,7 +9,10 @@ fun CharSequence.getOrZero(index: Int): Char {
     return if (index in 0..lastIndex) get(index) else 0.toChar()
 }
 
-fun CharSequence.splitToRange(char: Char, skipEmpty: Boolean = false): List<TextRange> {
+fun CharSequence.splitToRange(
+    char: Char,
+    skipEmpty: Boolean = false,
+): List<TextRange> {
     var start = 0
     var end = 0
     val result = mutableListOf<TextRange>()

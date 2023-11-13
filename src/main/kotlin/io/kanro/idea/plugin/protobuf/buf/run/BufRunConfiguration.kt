@@ -18,7 +18,7 @@ import java.io.File
 
 class BufRunConfiguration(
     project: Project,
-    factory: ConfigurationFactory
+    factory: ConfigurationFactory,
 ) : LocatableConfigurationBase<BufRunConfigurationOptions>(project, factory) {
     var bufPath: String?
         get() = options.bufPath
@@ -48,21 +48,26 @@ class BufRunConfiguration(
         return super.getOptions() as BufRunConfigurationOptions
     }
 
-    override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
+    override fun getState(
+        executor: Executor,
+        environment: ExecutionEnvironment,
+    ): RunProfileState {
         return object : CommandLineState(environment) {
             override fun startProcess(): ProcessHandler {
-                val commandLine = GeneralCommandLine(
-                    listOfNotNull(
-                        options.bufPath,
-                        options.command,
-                        *ParametersListUtil.parseToArray(options.parameters ?: "")
+                val commandLine =
+                    GeneralCommandLine(
+                        listOfNotNull(
+                            options.bufPath,
+                            options.command,
+                            *ParametersListUtil.parseToArray(options.parameters ?: ""),
+                        ),
                     )
-                )
                 options.workDir?.let { File(it) }?.takeIf { it.exists() }?.let {
                     commandLine.workDirectory = it
                 }
-                val processHandler = ProcessHandlerFactory.getInstance()
-                    .createColoredProcessHandler(commandLine)
+                val processHandler =
+                    ProcessHandlerFactory.getInstance()
+                        .createColoredProcessHandler(commandLine)
                 ProcessTerminatedListener.attach(processHandler)
                 return processHandler
             }

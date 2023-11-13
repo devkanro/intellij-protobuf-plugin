@@ -19,11 +19,12 @@ object WellknownTypes {
     const val STRING_VALUE = "google.protobuf.StringValue"
     const val BYTES_VALUE = "google.protobuf.BytesValue"
 
-    val types = setOf(
-        ANY, STRUCT, VALUE, NULL_VALUE, LIST_VALUE,
-        TIMESTAMP, DURATION, FIELD_MASK,
-        DOUBLE_VALUE, FLOAT_VALUE, INT_64_VALUE,
-        UINT_64_VALUE, INT_32_VALUE, UINT_32_VALUE,
-        BOOL_VALUE, STRING_VALUE, BYTES_VALUE,
-    )
+    val types =
+        setOf(
+            ANY, STRUCT, VALUE, NULL_VALUE, LIST_VALUE,
+            TIMESTAMP, DURATION, FIELD_MASK,
+            DOUBLE_VALUE, FLOAT_VALUE, INT_64_VALUE,
+            UINT_64_VALUE, INT_32_VALUE, UINT_32_VALUE,
+            BOOL_VALUE, STRING_VALUE, BYTES_VALUE,
+        )
 }

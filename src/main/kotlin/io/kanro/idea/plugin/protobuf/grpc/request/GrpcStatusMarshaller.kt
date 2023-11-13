@@ -12,6 +12,5 @@ object GrpcStatusMarshaller : Metadata.BinaryMarshaller<Status> {
 
     override fun parseBytes(p0: ByteArray): com.bybutter.sisyphus.rpc.Status {
         return com.bybutter.sisyphus.rpc.Status.parse(p0)
-
     }
 }

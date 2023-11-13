@@ -17,19 +17,28 @@ import io.kanro.idea.plugin.protobuf.lang.util.toQualifiedName
 import java.util.function.Consumer
 
 class ProtobufDocumentationProvider : DocumentationProvider {
-    override fun getQuickNavigateInfo(element: PsiElement?, originalElement: PsiElement?): String? {
+    override fun getQuickNavigateInfo(
+        element: PsiElement?,
+        originalElement: PsiElement?,
+    ): String? {
         (originalElement as? ProtobufDocumented)?.navigateInfo()?.let { return it }
         (element as? ProtobufDocumented)?.navigateInfo()?.let { return it }
         return null
     }
 
-    override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
+    override fun generateDoc(
+        element: PsiElement?,
+        originalElement: PsiElement?,
+    ): String? {
         (originalElement as? ProtobufDocumented)?.document()?.let { return it }
         (element as? ProtobufDocumented)?.document()?.let { return it }
         return null
     }
 
-    override fun generateHoverDoc(element: PsiElement, originalElement: PsiElement?): String? {
+    override fun generateHoverDoc(
+        element: PsiElement,
+        originalElement: PsiElement?,
+    ): String? {
         (originalElement as? ProtobufDocumented)?.hoverDocument()?.let { return it }
         (element as? ProtobufDocumented)?.hoverDocument()?.let { return it }
         return null
@@ -38,7 +47,7 @@ class ProtobufDocumentationProvider : DocumentationProvider {
     override fun getDocumentationElementForLink(
         psiManager: PsiManager?,
         link: String,
-        context: PsiElement
+        context: PsiElement,
     ): PsiElement? {
         return ProtobufSymbolResolver.resolveRelatively(context as ProtobufElement, link.toQualifiedName())
             ?: StubIndex.getElements(
@@ -46,7 +55,7 @@ class ProtobufDocumentationProvider : DocumentationProvider {
                 link,
                 context.project,
                 ProtobufRootResolver.searchScope(context),
-                ProtobufElement::class.java
+                ProtobufElement::class.java,
             ).firstOrNull()
     }
 
@@ -54,7 +63,10 @@ class ProtobufDocumentationProvider : DocumentationProvider {
         return (comment as? ProtobufDocument)?.render()
     }
 
-    override fun collectDocComments(file: PsiFile, sink: Consumer<in PsiDocCommentBase>) {
+    override fun collectDocComments(
+        file: PsiFile,
+        sink: Consumer<in PsiDocCommentBase>,
+    ) {
         file.walkChildren<ProtobufDocument> {
             if (it.owner != null) {
                 sink.accept(it)

@@ -17,20 +17,21 @@ import io.kanro.idea.plugin.protobuf.buf.schema.common.BufVersionFieldSchema
 object BufGenYaml : BufRootSchema {
     override val name: String = "buf.gen.yaml"
 
-    override val type = BufObjectSchema(
-        listOf(
-            BufVersionFieldSchema,
-            BufGenPluginsFieldSchema,
-            BufGenManagedFieldSchema
+    override val type =
+        BufObjectSchema(
+            listOf(
+                BufVersionFieldSchema,
+                BufGenPluginsFieldSchema,
+                BufGenManagedFieldSchema,
+            ),
         )
-    )
 }
 
 object BufGenManagedFieldSchema : BufFieldSchema(
     "managed",
     "The `managed` key is used to configure [managed mode](https://docs.buf.build/generate/managed-mode) and is an advanced feature.",
     BufGenManagedSchema,
-    true
+    true,
 )
 
 object BufGenManagedSchema : BufObjectSchema(
@@ -43,12 +44,14 @@ object BufGenManagedSchema : BufObjectSchema(
         BufGenManagedOptimizeForFieldSchema,
         BufGenManagedGoPackagePrefixFieldSchema,
         BufGenManagedOverrideFieldSchema,
-    )
+    ),
 )
 
 object BufGenManagedEnableFieldSchema : BufFieldSchema(
     "enable",
-    "The `enabled` key is **required** if any other managed keys are set. Setting enabled equal to true enables [managed mode](https://docs.buf.build/generate/managed-mode) according to [default behavior](https://docs.buf.build/generate/managed-mode#default-behavior).",
+    "The `enabled` key is **required** if any other managed keys are set. " +
+        "Setting enabled equal to true enables [managed mode](https://docs.buf.build/generate/managed-mode) " +
+        "according to [default behavior](https://docs.buf.build/generate/managed-mode#default-behavior).",
     BufSchemaScalarType.BOOL,
-    false
+    false,
 )

@@ -90,20 +90,22 @@ fun ProtobufEnumStub.typeName(): String? {
 
 fun ProtobufEnumValueDefinition.fieldName(): String? {
     val enum = owner() ?: return null
-    val parent = when (val owner = enum.owner()) {
-        is ProtobufFile -> enum.name()
-        is ProtobufMessageDefinition -> owner.structName()
-        else -> null
-    }
+    val parent =
+        when (val owner = enum.owner()) {
+            is ProtobufFile -> enum.name()
+            is ProtobufMessageDefinition -> owner.structName()
+            else -> null
+        }
     return "${parent}_${name()}"
 }
 
 fun ProtobufEnumValueStub.fieldName(): String? {
     val enum = owner() ?: return null
-    val parent = when (val owner = enum.owner()) {
-        is ProtobufFileStub -> enum.name()
-        is ProtobufMessageStub -> owner.structName()
-        else -> null
-    }
+    val parent =
+        when (val owner = enum.owner()) {
+            is ProtobufFileStub -> enum.name()
+            is ProtobufMessageStub -> owner.structName()
+            else -> null
+        }
     return "${parent}_${name()}"
 }

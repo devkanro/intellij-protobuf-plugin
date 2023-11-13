@@ -39,7 +39,10 @@ interface ProtobufSymbolReferenceHover {
 
     fun symbolParts(): List<SymbolPart>
 
-    fun renamePart(index: Int, newName: String)
+    fun renamePart(
+        index: Int,
+        newName: String,
+    )
 
     fun rename(newName: String)
 

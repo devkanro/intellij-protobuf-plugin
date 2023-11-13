@@ -8,7 +8,10 @@ import com.intellij.psi.PsiReferenceProvider
 import com.intellij.util.ProcessingContext
 
 class GrpcStringLiteralValueReferenceProvider : PsiReferenceProvider() {
-    override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
+    override fun getReferencesByElement(
+        element: PsiElement,
+        context: ProcessingContext,
+    ): Array<PsiReference> {
         if (element !is JsonStringLiteral) return PsiReference.EMPTY_ARRAY
         val property = element.parent as? JsonProperty ?: return PsiReference.EMPTY_ARRAY
 
@@ -19,4 +22,3 @@ class GrpcStringLiteralValueReferenceProvider : PsiReferenceProvider() {
         }
     }
 }
-

@@ -13,7 +13,10 @@ class BufToolWindowFactory : ToolWindowFactory, DumbAware {
         return manager.state.modules.isNotEmpty()
     }
 
-    override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+    override fun createToolWindowContent(
+        project: Project,
+        toolWindow: ToolWindow,
+    ) {
         val manager = project.service<BufFileManager>()
         manager.createToolWindowContent(toolWindow)
     }

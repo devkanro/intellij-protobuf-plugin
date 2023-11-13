@@ -15,7 +15,8 @@ enum class BuiltInType {
     SINT32,
     SINT64,
     SFIXED32,
-    SFIXED64;
+    SFIXED64,
+    ;
 
     private val value = name.lowercase()
 

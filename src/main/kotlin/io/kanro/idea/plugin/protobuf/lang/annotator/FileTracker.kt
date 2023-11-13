@@ -31,7 +31,10 @@ open class FileTracker(file: ProtobufFile) {
         }
     }
 
-    open fun visit(statement: ProtobufImportStatement, holder: AnnotationHolder) {
+    open fun visit(
+        statement: ProtobufImportStatement,
+        holder: AnnotationHolder,
+    ) {
         val file = statement.stringValue?.stringLiteral?.text?.trim('"') ?: return
         if ((imported[file]?.size ?: 0) > 1) {
             createDuplicate(statement, file, holder)
@@ -43,7 +46,10 @@ open class FileTracker(file: ProtobufFile) {
         }
     }
 
-    open fun visit(statement: ProtobufPackageStatement, holder: AnnotationHolder) {
+    open fun visit(
+        statement: ProtobufPackageStatement,
+        holder: AnnotationHolder,
+    ) {
         if (packageStatements.size > 1) {
             createDuplicate(statement, holder)
         }
@@ -65,32 +71,47 @@ open class FileTracker(file: ProtobufFile) {
         fileReference[file] = fileReference.getOrDefault(file, 0) + 1
     }
 
-    protected open fun createDuplicate(statement: ProtobufPackageStatement, holder: AnnotationHolder) {
+    protected open fun createDuplicate(
+        statement: ProtobufPackageStatement,
+        holder: AnnotationHolder,
+    ) {
         holder.newAnnotation(
             HighlightSeverity.ERROR,
-            "Duplicate package statement: \"${statement.packageNameList.joinToString(".") { it.text }}\""
+            "Duplicate package statement: \"${statement.packageNameList.joinToString(".") { it.text }}\"",
         ).range(statement.textRange).create()
     }
 
-    protected open fun createDuplicate(statement: ProtobufImportStatement, file: String, holder: AnnotationHolder) {
+    protected open fun createDuplicate(
+        statement: ProtobufImportStatement,
+        file: String,
+        holder: AnnotationHolder,
+    ) {
         holder.newAnnotation(
             HighlightSeverity.ERROR,
-            "Duplicate import: \"$file\""
+            "Duplicate import: \"$file\"",
         ).range(statement.stringValue?.textRange ?: statement.textRange).create()
     }
 
-    protected open fun createUnknown(statement: ProtobufImportStatement, file: String, holder: AnnotationHolder) {
+    protected open fun createUnknown(
+        statement: ProtobufImportStatement,
+        file: String,
+        holder: AnnotationHolder,
+    ) {
         holder.newAnnotation(
             HighlightSeverity.ERROR,
-            "Imported file \"$file\" not found"
+            "Imported file \"$file\" not found",
         ).highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
             .range(statement.stringValue?.textRange ?: statement.textRange).create()
     }
 
-    protected open fun createUnused(statement: ProtobufImportStatement, message: String, holder: AnnotationHolder) {
+    protected open fun createUnused(
+        statement: ProtobufImportStatement,
+        message: String,
+        holder: AnnotationHolder,
+    ) {
         holder.newAnnotation(
             HighlightSeverity.INFORMATION,
-            "Imported file not be used"
+            "Imported file not be used",
         ).highlightType(ProblemHighlightType.LIKE_UNUSED_SYMBOL)
             .range(statement.stringValue?.textRange ?: statement.textRange)
             .withFix(OptimizeImportsFix())
@@ -103,7 +124,8 @@ open class FileTracker(file: ProtobufFile) {
         fun tracker(file: ProtobufFile): FileTracker {
             return CachedValuesManager.getCachedValue(file) {
                 CachedValueProvider.Result.create(
-                    FileTracker(file), PsiModificationTracker.MODIFICATION_COUNT
+                    FileTracker(file),
+                    PsiModificationTracker.MODIFICATION_COUNT,
                 )
             }
         }

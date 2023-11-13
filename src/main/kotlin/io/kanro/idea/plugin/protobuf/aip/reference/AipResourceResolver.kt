@@ -13,7 +13,7 @@ import java.util.Stack
 object AipResourceResolver {
     fun resolveAbsolutely(
         file: ProtobufFile,
-        resourceName: String
+        resourceName: String,
     ): ProtobufElement? {
         resolveAbsolutelyInFile(file, resourceName)?.let { return it }
 
@@ -34,7 +34,7 @@ object AipResourceResolver {
 
     fun resolveAbsolutelyInFile(
         file: ProtobufFile,
-        resourceName: String
+        resourceName: String,
     ): ProtobufElement? {
         file.resourceDefinitions().forEach {
             if (it.value(AipOptions.resourceTypeField)?.stringValue() == resourceName) {
@@ -51,7 +51,7 @@ object AipResourceResolver {
 
     fun collectAbsolutely(
         file: ProtobufFile,
-        result: MutableList<ProtobufElement> = mutableListOf()
+        result: MutableList<ProtobufElement> = mutableListOf(),
     ): List<ProtobufElement> {
         collectAbsolutelyInFile(file, result)
 
@@ -72,7 +72,7 @@ object AipResourceResolver {
 
     fun collectAbsolutelyInFile(
         file: ProtobufFile,
-        result: MutableList<ProtobufElement> = mutableListOf()
+        result: MutableList<ProtobufElement> = mutableListOf(),
     ): ProtobufElement? {
         file.resourceDefinitions().forEach {
             if (it.value(AipOptions.resourceTypeField)?.stringValue() != null) {

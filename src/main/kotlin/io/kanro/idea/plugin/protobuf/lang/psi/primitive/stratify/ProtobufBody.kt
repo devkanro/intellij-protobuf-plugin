@@ -18,7 +18,7 @@ interface ProtobufBody : ProtobufFolding {
             start.startOffset,
             end.startOffset + 1,
             null,
-            "${start.text}...${end.text}"
+            "${start.text}...${end.text}",
         )
     }
 }

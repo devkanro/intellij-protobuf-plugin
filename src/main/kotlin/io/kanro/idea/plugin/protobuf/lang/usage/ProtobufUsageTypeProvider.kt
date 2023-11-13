@@ -18,13 +18,14 @@ class ProtobufUsageTypeProvider : UsageTypeProvider {
         return when (element) {
             is ProtobufFieldName -> ASSIGN_USAGE_TYPE
             is ProtobufBuiltInOptionName -> OPTION_USAGE_TYPE
-            is ProtobufSymbolName -> when (element.parent.parent) {
-                is ProtobufRpcIO -> METHOD_PARAMETER_USAGE_TYPE
-                is ProtobufExtensionOptionName -> OPTION_USAGE_TYPE
-                is ProtobufFieldDefinition, is ProtobufMapFieldDefinition -> FIELD_DECLARATION_USAGE_TYPE
-                is ProtobufExtendDefinition -> EXTEND_DECLARATION_USAGE_TYPE
-                else -> null
-            }
+            is ProtobufSymbolName ->
+                when (element.parent.parent) {
+                    is ProtobufRpcIO -> METHOD_PARAMETER_USAGE_TYPE
+                    is ProtobufExtensionOptionName -> OPTION_USAGE_TYPE
+                    is ProtobufFieldDefinition, is ProtobufMapFieldDefinition -> FIELD_DECLARATION_USAGE_TYPE
+                    is ProtobufExtendDefinition -> EXTEND_DECLARATION_USAGE_TYPE
+                    else -> null
+                }
             else -> null
         }
     }

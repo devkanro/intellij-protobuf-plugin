@@ -9,7 +9,7 @@ import java.nio.file.Path
 
 @State(
     name = "BufSettings",
-    storages = [Storage("protobuf.xml")]
+    storages = [Storage("protobuf.xml")],
 )
 @Service(Service.Level.PROJECT)
 class BufSettings : SimplePersistentStateComponent<BufSettings.State>(State()) {

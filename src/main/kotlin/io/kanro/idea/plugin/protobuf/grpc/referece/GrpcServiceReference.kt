@@ -22,13 +22,18 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex
 class GrpcServiceReference(element: HttpRequestTarget, range: TextRange) :
     PsiReferenceBase<HttpRequestTarget>(element, range) {
     private object Resolver : ResolveCache.Resolver {
-        override fun resolve(ref: PsiReference, incompleteCode: Boolean): PsiElement? {
+        override fun resolve(
+            ref: PsiReference,
+            incompleteCode: Boolean,
+        ): PsiElement? {
             ref as GrpcServiceReference
             val service = ref.rangeInElement.substring(ref.element.text)
             return StubIndex.getElements(
-                QualifiedNameIndex.key, service,
-                ref.element.project, GlobalSearchScope.allScope(ref.element.project),
-                ProtobufElement::class.java
+                QualifiedNameIndex.key,
+                service,
+                ref.element.project,
+                GlobalSearchScope.allScope(ref.element.project),
+                ProtobufElement::class.java,
             ).firstOrNull()
         }
     }
@@ -50,7 +55,7 @@ class GrpcServiceReference(element: HttpRequestTarget, range: TextRange) :
     private fun getVariantsForShortName(
         pattern: String,
         result: MutableList<Any>,
-        elements: MutableSet<ProtobufElement>
+        elements: MutableSet<ProtobufElement>,
     ) {
         if (pattern.contains('.')) return
         if (!pattern.endsWith(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) return
@@ -65,7 +70,7 @@ class GrpcServiceReference(element: HttpRequestTarget, range: TextRange) :
                 it,
                 element.project,
                 scope,
-                ProtobufServiceDefinition::class.java
+                ProtobufServiceDefinition::class.java,
             )
                 .asSequence()
         }.forEach {
@@ -78,7 +83,7 @@ class GrpcServiceReference(element: HttpRequestTarget, range: TextRange) :
     private fun getVariantsForQualifiedName(
         pattern: String,
         result: MutableList<Any>,
-        elements: MutableSet<ProtobufElement>
+        elements: MutableSet<ProtobufElement>,
     ) {
         val searchName =
             pattern.substringBefore(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED).substringBeforeLast('.', "").trim('.')
@@ -92,7 +97,7 @@ class GrpcServiceReference(element: HttpRequestTarget, range: TextRange) :
                 it,
                 element.project,
                 scope,
-                ProtobufServiceDefinition::class.java
+                ProtobufServiceDefinition::class.java,
             )
                 .asSequence()
         }.forEach {

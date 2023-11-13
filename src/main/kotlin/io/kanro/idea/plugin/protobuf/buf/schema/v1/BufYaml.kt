@@ -8,16 +8,16 @@ import io.kanro.idea.plugin.protobuf.buf.schema.common.BufNameFieldSchema
 import io.kanro.idea.plugin.protobuf.buf.schema.common.BufVersionFieldSchema
 
 object BufYaml : BufRootSchema {
-
     override val name: String = "buf.yaml"
 
-    override val type = BufObjectSchema(
-        listOf(
-            BufVersionFieldSchema,
-            BufNameFieldSchema,
-            BufDepsFieldSchema,
-            BufLintFieldSchema,
-            BufBreakingFieldSchema
+    override val type =
+        BufObjectSchema(
+            listOf(
+                BufVersionFieldSchema,
+                BufNameFieldSchema,
+                BufDepsFieldSchema,
+                BufLintFieldSchema,
+                BufBreakingFieldSchema,
+            ),
         )
-    )
 }

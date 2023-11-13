@@ -12,7 +12,10 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.primitive.ProtobufFieldLikeSt
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 
 class FileJavaOptionsProvider : ProtobufStubExternalProvider {
-    override fun mergeExternalData(element: ProtobufStubSupport<*, *>, external: MutableMap<String, String>) {
+    override fun mergeExternalData(
+        element: ProtobufStubSupport<*, *>,
+        external: MutableMap<String, String>,
+    ) {
         when (element) {
             is ProtobufFieldLike -> {
                 element.jsonName()?.let {
@@ -22,7 +25,10 @@ class FileJavaOptionsProvider : ProtobufStubExternalProvider {
         }
     }
 
-    override fun mergeExternalData(file: ProtobufFile, external: MutableMap<String, String>) {
+    override fun mergeExternalData(
+        file: ProtobufFile,
+        external: MutableMap<String, String>,
+    ) {
         file.javaPackage()?.let {
             external["java_package"] = it
         }
@@ -38,13 +44,17 @@ class FileJavaOptionsProvider : ProtobufStubExternalProvider {
 fun ProtobufFieldLike.jsonName(): String? {
     return if (this is ProtobufOptionOwner) {
         options("json_name").lastOrNull()?.value()?.stringValue()
-    } else null
+    } else {
+        null
+    }
 }
 
 fun ProtobufFieldLikeStub.jsonName(): String? {
     return if (this is ProtobufStub<*>) {
         externalData("json_name")
-    } else null
+    } else {
+        null
+    }
 }
 
 fun ProtobufFile.javaPackage(): String? {

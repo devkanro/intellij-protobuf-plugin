@@ -61,9 +61,10 @@ fun ProtobufMessageStub.messageOrBuilderName(): String? {
 fun ProtobufMessageDefinition.fullClassName(): QualifiedName? {
     return when (val owner = owner()) {
         is ProtobufFile -> owner.fullOuterClassName()?.append(className()) ?: QualifiedName.fromComponents(className())
-        is ProtobufMessageDefinition -> owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
-            className()
-        )
+        is ProtobufMessageDefinition ->
+            owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
+                className(),
+            )
         else -> null
     }
 }
@@ -71,9 +72,10 @@ fun ProtobufMessageDefinition.fullClassName(): QualifiedName? {
 fun ProtobufMessageStub.fullClassName(): QualifiedName? {
     return when (val owner = owner()) {
         is ProtobufFile -> owner.fullOuterClassName()?.append(className()) ?: QualifiedName.fromComponents(className())
-        is ProtobufMessageDefinition -> owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
-            className()
-        )
+        is ProtobufMessageDefinition ->
+            owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
+                className(),
+            )
         else -> null
     }
 }
@@ -88,26 +90,30 @@ fun ProtobufMessageStub.fullBuilderName(): QualifiedName? {
 
 fun ProtobufMessageDefinition.fullMessageOrBuilderName(): QualifiedName? {
     return when (val owner = owner()) {
-        is ProtobufFile -> owner.fullOuterClassName()?.append(messageOrBuilderName()) ?: QualifiedName.fromComponents(
-            messageOrBuilderName()
-        )
-        is ProtobufMessageDefinition -> owner.fullClassName()?.append(messageOrBuilderName())
-            ?: QualifiedName.fromComponents(
-                messageOrBuilderName()
+        is ProtobufFile ->
+            owner.fullOuterClassName()?.append(messageOrBuilderName()) ?: QualifiedName.fromComponents(
+                messageOrBuilderName(),
             )
+        is ProtobufMessageDefinition ->
+            owner.fullClassName()?.append(messageOrBuilderName())
+                ?: QualifiedName.fromComponents(
+                    messageOrBuilderName(),
+                )
         else -> null
     }
 }
 
 fun ProtobufMessageStub.fullBuilderClassName(): QualifiedName? {
     return when (val owner = owner()) {
-        is ProtobufFile -> owner.fullOuterClassName()?.append(messageOrBuilderName()) ?: QualifiedName.fromComponents(
-            messageOrBuilderName()
-        )
-        is ProtobufMessageDefinition -> owner.fullClassName()?.append(messageOrBuilderName())
-            ?: QualifiedName.fromComponents(
-                messageOrBuilderName()
+        is ProtobufFile ->
+            owner.fullOuterClassName()?.append(messageOrBuilderName()) ?: QualifiedName.fromComponents(
+                messageOrBuilderName(),
             )
+        is ProtobufMessageDefinition ->
+            owner.fullClassName()?.append(messageOrBuilderName())
+                ?: QualifiedName.fromComponents(
+                    messageOrBuilderName(),
+                )
         else -> null
     }
 }
@@ -275,9 +281,10 @@ fun ProtobufEnumStub.className(): String? {
 fun ProtobufEnumDefinition.fullClassName(): QualifiedName? {
     return when (val owner = owner()) {
         is ProtobufFile -> owner.fullPackageName()?.append(className()) ?: QualifiedName.fromComponents(className())
-        is ProtobufMessageDefinition -> owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
-            className()
-        )
+        is ProtobufMessageDefinition ->
+            owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
+                className(),
+            )
         else -> null
     }
 }
@@ -285,9 +292,10 @@ fun ProtobufEnumDefinition.fullClassName(): QualifiedName? {
 fun ProtobufEnumStub.fullClassName(): QualifiedName? {
     return when (val owner = owner()) {
         is ProtobufFile -> owner.fullPackageName()?.append(className()) ?: QualifiedName.fromComponents(className())
-        is ProtobufMessageDefinition -> owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
-            className()
-        )
+        is ProtobufMessageDefinition ->
+            owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
+                className(),
+            )
         else -> null
     }
 }

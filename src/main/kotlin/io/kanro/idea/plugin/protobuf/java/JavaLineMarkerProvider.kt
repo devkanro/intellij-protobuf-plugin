@@ -23,15 +23,16 @@ import org.jetbrains.uast.toUElementOfType
 class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
     override fun collectNavigationMarkers(
         element: PsiElement,
-        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
+        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>,
     ) {
         val identifier = element.toUElementOfType<UIdentifier>() ?: return
         if (!isJava(element)) return
         when (val parent = identifier.uastParent) {
             is UClass -> {
-                val service = findServiceProtobufDefinition(parent)
-                    ?: findServiceProtobufDefinitionForStub(parent)
-                    ?: return
+                val service =
+                    findServiceProtobufDefinition(parent)
+                        ?: findServiceProtobufDefinitionForStub(parent)
+                        ?: return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
                     NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTING_SERVICE)
                         .setTargets(service)
@@ -39,9 +40,10 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 result.add(builder.createLineMarkerInfo(element.firstLeaf()))
             }
             is UMethod -> {
-                val method = findMethodProtobufDefinition(parent)
-                    ?: findMethodProtobufDefinitionForStub(parent)
-                    ?: return
+                val method =
+                    findMethodProtobufDefinition(parent)
+                        ?: findMethodProtobufDefinitionForStub(parent)
+                        ?: return
                 val builder: NavigationGutterIconBuilder<PsiElement> =
                     NavigationGutterIconBuilder.create(ProtobufIcons.IMPLEMENTING_RPC)
                         .setTargets(method)
@@ -63,13 +65,14 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
             val scope = ProtobufRootResolver.searchScope(sourceClazz)
             for (it in clazz.uastSuperTypes) {
                 val qualifiedName = it.getQualifiedName() ?: continue
-                val element = StubIndex.getElements(
-                    JavaNameIndex.key,
-                    qualifiedName,
-                    sourceClazz.project,
-                    scope,
-                    ProtobufElement::class.java
-                ).firstIsInstanceOrNull<ProtobufServiceDefinition>()
+                val element =
+                    StubIndex.getElements(
+                        JavaNameIndex.key,
+                        qualifiedName,
+                        sourceClazz.project,
+                        scope,
+                        ProtobufElement::class.java,
+                    ).firstIsInstanceOrNull<ProtobufServiceDefinition>()
 
                 if (element != null) {
                     return@getCachedValue CachedValueProvider.Result.create(element, sourceClazz)
@@ -86,15 +89,16 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
 
         return CachedValuesManager.getCachedValue(sourceClazz) {
             val scope = ProtobufRootResolver.searchScope(sourceClazz)
-            val element = clazz.getQualifiedName()?.let { qualifiedName ->
-                StubIndex.getElements(
-                    JavaNameIndex.key,
-                    qualifiedName,
-                    sourceClazz.project,
-                    scope,
-                    ProtobufElement::class.java
-                ).firstIsInstanceOrNull<ProtobufServiceDefinition>()
-            }
+            val element =
+                clazz.getQualifiedName()?.let { qualifiedName ->
+                    StubIndex.getElements(
+                        JavaNameIndex.key,
+                        qualifiedName,
+                        sourceClazz.project,
+                        scope,
+                        ProtobufElement::class.java,
+                    ).firstIsInstanceOrNull<ProtobufServiceDefinition>()
+                }
 
             CachedValueProvider.Result.create(element, sourceClazz)
         }
@@ -110,13 +114,14 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
             val scope = ProtobufRootResolver.searchScope(sourcePsi)
             for (it in clazz.uastSuperTypes) {
                 val methodName = "${it.getQualifiedName()}.${method.name}"
-                val element = StubIndex.getElements(
-                    JavaNameIndex.key,
-                    methodName,
-                    sourcePsi.project,
-                    scope,
-                    ProtobufElement::class.java
-                ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
+                val element =
+                    StubIndex.getElements(
+                        JavaNameIndex.key,
+                        methodName,
+                        sourcePsi.project,
+                        scope,
+                        ProtobufElement::class.java,
+                    ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
                 if (element != null) {
                     return@getCachedValue CachedValueProvider.Result.create(element, sourcePsi)
                 }
@@ -134,13 +139,14 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
         return CachedValuesManager.getCachedValue(sourcePsi) {
             val scope = ProtobufRootResolver.searchScope(sourcePsi)
             val methodName = "${clazz.getQualifiedName()}.${method.name}"
-            val element = StubIndex.getElements(
-                JavaNameIndex.key,
-                methodName,
-                sourcePsi.project,
-                scope,
-                ProtobufElement::class.java
-            ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
+            val element =
+                StubIndex.getElements(
+                    JavaNameIndex.key,
+                    methodName,
+                    sourcePsi.project,
+                    scope,
+                    ProtobufElement::class.java,
+                ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
 
             CachedValueProvider.Result.create(element, sourcePsi)
         }

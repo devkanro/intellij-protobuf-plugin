@@ -32,11 +32,17 @@ interface ProtobufFileStub : PsiFileStub<ProtobufFile>, ProtobufStub<ProtobufFil
             return "protobuf.file"
         }
 
-        override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): ProtobufFileStub {
+        override fun deserialize(
+            dataStream: StubInputStream,
+            parentStub: StubElement<*>?,
+        ): ProtobufFileStub {
             return ProtobufFileStubImpl(null, dataStream.readStringArray(), dataStream.readMap())
         }
 
-        override fun serialize(stub: ProtobufFileStub, dataStream: StubOutputStream) {
+        override fun serialize(
+            stub: ProtobufFileStub,
+            dataStream: StubOutputStream,
+        ) {
             stub.writeTo(dataStream)
         }
 

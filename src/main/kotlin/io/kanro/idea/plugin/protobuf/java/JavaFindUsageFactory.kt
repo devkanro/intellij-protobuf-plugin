@@ -16,7 +16,10 @@ class JavaFindUsageFactory : FindUsagesHandlerFactory() {
         return element is ProtobufDefinition
     }
 
-    override fun createFindUsagesHandler(element: PsiElement, forHighlightUsages: Boolean): FindUsagesHandler? {
+    override fun createFindUsagesHandler(
+        element: PsiElement,
+        forHighlightUsages: Boolean,
+    ): FindUsagesHandler? {
         if (forHighlightUsages) return null
         if (element !is ProtobufDefinition) return null
         if (!isJava(element)) return null
@@ -28,8 +31,8 @@ class JavaFindUsageFactory : FindUsagesHandlerFactory() {
                     listOfNotNull(
                         element.toClass(),
                         element.toMessageOrBuilderClass(),
-                        element.toBuilderClass()
-                    ).toTypedArray()
+                        element.toBuilderClass(),
+                    ).toTypedArray(),
                 )
             }
             is ProtobufEnumDefinition -> {
@@ -44,7 +47,7 @@ class JavaFindUsageFactory : FindUsagesHandlerFactory() {
                         element.toBlockingStubClass(),
                         element.toFutureStubClass(),
                         element.toCoroutineStubClass(),
-                    ).toTypedArray()
+                    ).toTypedArray(),
                 )
             }
             is ProtobufEnumValueDefinition -> {
@@ -59,13 +62,13 @@ class JavaFindUsageFactory : FindUsagesHandlerFactory() {
                         element.toBlockingStubMethod(),
                         element.toFutureStubMethod(),
                         element.toCoroutineStubMethod(),
-                    ).toTypedArray()
+                    ).toTypedArray(),
                 )
             }
             is ProtobufFieldLike -> {
                 ProtoDefinitionFindUsage(
                     element,
-                    listOfNotNull(*element.toGetters(), *element.toSetters()).toTypedArray()
+                    listOfNotNull(*element.toGetters(), *element.toSetters()).toTypedArray(),
                 )
             }
             else -> null

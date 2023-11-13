@@ -10,7 +10,8 @@ enum class Options(val messageName: String) {
     ENUM_OPTIONS("EnumOptions"),
     ENUM_VALUE_OPTIONS("EnumValueOptions"),
     SERVICE_OPTIONS("ServiceOptions"),
-    METHOD_OPTIONS("MethodOptions");
+    METHOD_OPTIONS("MethodOptions"),
+    ;
 
     val qualifiedName by lazy {
         packageName.append(messageName)

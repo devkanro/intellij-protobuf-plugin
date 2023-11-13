@@ -10,5 +10,5 @@ class BufSchemaValidationException(
     message: String,
     val range: TextRange,
     val highlightType: ProblemHighlightType? = null,
-    val fix: IntentionAction? = null
+    val fix: IntentionAction? = null,
 ) : RuntimeException(message)

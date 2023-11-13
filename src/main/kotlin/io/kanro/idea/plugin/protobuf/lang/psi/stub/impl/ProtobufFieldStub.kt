@@ -9,7 +9,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufFieldStubType
 class ProtobufFieldStub(
     data: Array<String>,
     external: Map<String, String>,
-    parent: StubElement<*>?
+    parent: StubElement<*>?,
 ) : ProtobufStubBase<ProtobufFieldDefinition>(data, external, parent, ProtobufFieldStubType),
     ProtobufStub<ProtobufFieldDefinition>,
     ProtobufFieldLikeStub {

@@ -45,7 +45,7 @@ class FileCompilingState(private val target: MutableFileDescriptorProto, private
 class MessageCompilingState(
     private val parent: ProtobufCompilingState<*, *>,
     private val target: MutableDescriptorProto,
-    private val message: ProtobufMessageDefinition
+    private val message: ProtobufMessageDefinition,
 ) : ProtobufCompilingSubState<ProtobufCompilingState<*, *>, MutableDescriptorProto, ProtobufMessageDefinition> {
     override fun parent(): ProtobufCompilingState<*, *> {
         return parent
@@ -63,7 +63,7 @@ class MessageCompilingState(
 class EnumCompilingState(
     private val parent: ProtobufCompilingState<*, *>,
     private val target: MutableEnumDescriptorProto,
-    private val enum: ProtobufEnumDefinition
+    private val enum: ProtobufEnumDefinition,
 ) : ProtobufCompilingSubState<ProtobufCompilingState<*, *>, MutableEnumDescriptorProto, ProtobufEnumDefinition> {
     override fun parent(): ProtobufCompilingState<*, *> {
         return parent
@@ -81,7 +81,7 @@ class EnumCompilingState(
 class EnumValueCompilingState(
     private val parent: ProtobufCompilingState<*, *>,
     private val target: MutableEnumValueDescriptorProto,
-    private val value: ProtobufEnumValueDefinition
+    private val value: ProtobufEnumValueDefinition,
 ) : ProtobufCompilingSubState<ProtobufCompilingState<*, *>, MutableEnumValueDescriptorProto, ProtobufEnumValueDefinition> {
     override fun parent(): ProtobufCompilingState<*, *> {
         return parent
@@ -99,7 +99,7 @@ class EnumValueCompilingState(
 class ServiceCompilingState(
     private val parent: ProtobufCompilingState<*, *>,
     private val target: MutableServiceDescriptorProto,
-    private val service: ProtobufServiceDefinition
+    private val service: ProtobufServiceDefinition,
 ) : ProtobufCompilingSubState<ProtobufCompilingState<*, *>, MutableServiceDescriptorProto, ProtobufServiceDefinition> {
     override fun parent(): ProtobufCompilingState<*, *> {
         return parent
@@ -117,7 +117,7 @@ class ServiceCompilingState(
 class ServiceMethodCompilingState(
     private val parent: ProtobufCompilingState<*, *>,
     private val target: MutableMethodDescriptorProto,
-    private val rpc: ProtobufRpcDefinition
+    private val rpc: ProtobufRpcDefinition,
 ) : ProtobufCompilingSubState<ProtobufCompilingState<*, *>, MutableMethodDescriptorProto, ProtobufRpcDefinition> {
     override fun parent(): ProtobufCompilingState<*, *> {
         return parent
@@ -135,7 +135,7 @@ class ServiceMethodCompilingState(
 class MessageFieldCompilingState(
     private val parent: ProtobufCompilingState<*, *>,
     private val target: MutableFieldDescriptorProto,
-    private val field: ProtobufFieldDefinition
+    private val field: ProtobufFieldDefinition,
 ) : ProtobufCompilingSubState<ProtobufCompilingState<*, *>, MutableFieldDescriptorProto, ProtobufFieldDefinition> {
     override fun parent(): ProtobufCompilingState<*, *> {
         return parent
@@ -153,7 +153,7 @@ class MessageFieldCompilingState(
 class MessageOneofCompilingState(
     private val parent: MessageCompilingState,
     private val target: MutableOneofDescriptorProto,
-    private val oneof: ProtobufOneofDefinition
+    private val oneof: ProtobufOneofDefinition,
 ) : ProtobufCompilingSubState<MessageCompilingState, MutableOneofDescriptorProto, ProtobufOneofDefinition> {
     override fun parent(): MessageCompilingState {
         return parent
@@ -171,7 +171,7 @@ class MessageOneofCompilingState(
 class MessageMapEntryCompilingState(
     private val parent: ProtobufCompilingState<*, *>,
     private val target: MutableDescriptorProto,
-    private val field: ProtobufMapFieldDefinition
+    private val field: ProtobufMapFieldDefinition,
 ) : ProtobufCompilingSubState<ProtobufCompilingState<*, *>, MutableDescriptorProto, ProtobufMapFieldDefinition> {
     override fun parent(): ProtobufCompilingState<*, *> {
         return parent
@@ -189,7 +189,7 @@ class MessageMapEntryCompilingState(
 class MessageMapFieldCompilingState(
     private val parent: MessageMapEntryCompilingState,
     private val target: MutableFieldDescriptorProto,
-    private val field: ProtobufMapFieldDefinition
+    private val field: ProtobufMapFieldDefinition,
 ) : ProtobufCompilingSubState<MessageMapEntryCompilingState, MutableFieldDescriptorProto, ProtobufMapFieldDefinition> {
     override fun parent(): MessageMapEntryCompilingState {
         return parent

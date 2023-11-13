@@ -22,7 +22,7 @@ class ProtobufCompletionContributor : CompletionContributor() {
             PlatformPatterns.psiElement()
                 .withParent(PsiErrorElement::class.java)
                 .withSuperParent(2, ProtobufFile::class.java),
-            KeywordsProvider.topLevelKeywords
+            KeywordsProvider.topLevelKeywords,
         )
 
         extend(
@@ -31,7 +31,7 @@ class ProtobufCompletionContributor : CompletionContributor() {
                 .inside(ProtobufFieldDefinition::class.java)
                 .inside(ProtobufTypeName::class.java)
                 .andNot(PlatformPatterns.psiElement().afterLeaf(".")),
-            KeywordsProvider.messageLevelKeywords
+            KeywordsProvider.messageLevelKeywords,
         )
 
         extend(
@@ -39,7 +39,7 @@ class ProtobufCompletionContributor : CompletionContributor() {
             PlatformPatterns.psiElement()
                 .withParent(PsiErrorElement::class.java)
                 .inside(ProtobufEnumBody::class.java),
-            KeywordsProvider.enumLevelKeywords
+            KeywordsProvider.enumLevelKeywords,
         )
 
         extend(
@@ -47,7 +47,7 @@ class ProtobufCompletionContributor : CompletionContributor() {
             PlatformPatterns.psiElement()
                 .withParent(PsiErrorElement::class.java)
                 .inside(ProtobufRpcBody::class.java),
-            KeywordsProvider.methodLevelKeywords
+            KeywordsProvider.methodLevelKeywords,
         )
 
         extend(
@@ -55,7 +55,7 @@ class ProtobufCompletionContributor : CompletionContributor() {
             PlatformPatterns.psiElement()
                 .withSuperParent(2, ProtobufServiceDefinition::class.java)
                 .afterLeaf(")"),
-            KeywordsProvider.rpcLevelKeywords
+            KeywordsProvider.rpcLevelKeywords,
         )
 
         extend(
@@ -63,7 +63,7 @@ class ProtobufCompletionContributor : CompletionContributor() {
             PlatformPatterns.psiElement()
                 .withSuperParent(3, ProtobufServiceDefinition::class.java)
                 .withParent(PsiErrorElement::class.java),
-            KeywordsProvider.serviceLevelKeywords
+            KeywordsProvider.serviceLevelKeywords,
         )
 
         extend(
@@ -71,7 +71,7 @@ class ProtobufCompletionContributor : CompletionContributor() {
             PlatformPatterns.psiElement()
                 .inside(ProtobufTypeName::class.java)
                 .andNot(PlatformPatterns.psiElement().afterLeaf(".")),
-            BuiltInTypeProvider()
+            BuiltInTypeProvider(),
         )
 
         extend(
@@ -79,7 +79,7 @@ class ProtobufCompletionContributor : CompletionContributor() {
             PlatformPatterns.psiElement()
                 .inside(ProtobufSyntaxStatement::class.java)
                 .withParent(ProtobufStringValue::class.java),
-            SyntaxProvider()
+            SyntaxProvider(),
         )
 
         extend(
@@ -87,7 +87,7 @@ class ProtobufCompletionContributor : CompletionContributor() {
             PlatformPatterns.psiElement()
                 .withSuperParent(2, ProtobufFieldDefinition::class.java)
                 .withParent(ProtobufIdentifier::class.java),
-            FieldNameProvider
+            FieldNameProvider,
         )
 
         extend(
@@ -95,7 +95,7 @@ class ProtobufCompletionContributor : CompletionContributor() {
             PlatformPatterns.psiElement()
                 .withSuperParent(2, ProtobufEnumValueDefinition::class.java)
                 .withParent(ProtobufIdentifier::class.java),
-            EnumValueNameProvider
+            EnumValueNameProvider,
         )
     }
 }

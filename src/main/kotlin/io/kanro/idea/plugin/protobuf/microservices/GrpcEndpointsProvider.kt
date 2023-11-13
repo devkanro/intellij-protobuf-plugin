@@ -29,21 +29,31 @@ class GrpcEndpointsProvider : EndpointsUrlTargetProvider<ProtobufServiceModel, P
     override val presentation: FrameworkPresentation =
         FrameworkPresentation("gRPC", "gRPC Specification", ProtobufIcons.PROCEDURE)
 
-    override fun getDocumentationElement(group: ProtobufServiceModel, endpoint: ProtobufRpcModel): PsiElement? {
+    override fun getDocumentationElement(
+        group: ProtobufServiceModel,
+        endpoint: ProtobufRpcModel,
+    ): PsiElement? {
         return endpoint.getPsi()
     }
 
-    override fun getUrlTargetInfo(group: ProtobufServiceModel, endpoint: ProtobufRpcModel): Iterable<UrlTargetInfo> {
+    override fun getUrlTargetInfo(
+        group: ProtobufServiceModel,
+        endpoint: ProtobufRpcModel,
+    ): Iterable<UrlTargetInfo> {
         return listOfNotNull(endpoint.getPsi()?.let { GrpcUrlTargetInfo(it) })
     }
 
-    override fun getEndpointGroups(project: Project, filter: EndpointsFilter): Iterable<ProtobufServiceModel> {
+    override fun getEndpointGroups(
+        project: Project,
+        filter: EndpointsFilter,
+    ): Iterable<ProtobufServiceModel> {
         return when (filter) {
             is SearchScopeEndpointsFilter -> {
                 val scope = filter.searchScope
                 FileTypeIndex.getFiles(ProtobufFileType.INSTANCE, scope).flatMap {
-                    val psi = PsiManager.getInstance(project).findFile(it) as? ProtobufFile
-                        ?: return@flatMap listOf<ProtobufServiceModel>()
+                    val psi =
+                        PsiManager.getInstance(project).findFile(it) as? ProtobufFile
+                            ?: return@flatMap listOf<ProtobufServiceModel>()
                     psi.services().map {
                         ProtobufServiceModel(SmartPointerManager.createPointer(it))
                     }
@@ -54,7 +64,10 @@ class GrpcEndpointsProvider : EndpointsUrlTargetProvider<ProtobufServiceModel, P
         }
     }
 
-    override fun getEndpointPresentation(group: ProtobufServiceModel, endpoint: ProtobufRpcModel): ItemPresentation {
+    override fun getEndpointPresentation(
+        group: ProtobufServiceModel,
+        endpoint: ProtobufRpcModel,
+    ): ItemPresentation {
         return endpoint.getPsi()!!
     }
 
@@ -76,7 +89,10 @@ class GrpcEndpointsProvider : EndpointsUrlTargetProvider<ProtobufServiceModel, P
         }
     }
 
-    override fun isValidEndpoint(group: ProtobufServiceModel, endpoint: ProtobufRpcModel): Boolean {
+    override fun isValidEndpoint(
+        group: ProtobufServiceModel,
+        endpoint: ProtobufRpcModel,
+    ): Boolean {
         return endpoint.getPsi()?.isValid == true
     }
 }

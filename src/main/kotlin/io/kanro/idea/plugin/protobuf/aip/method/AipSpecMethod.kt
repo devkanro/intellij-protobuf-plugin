@@ -6,5 +6,8 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 interface AipSpecMethod {
     val action: String
 
-    fun annotate(method: ProtobufRpcDefinition, holder: AnnotationHolder)
+    fun annotate(
+        method: ProtobufRpcDefinition,
+        holder: AnnotationHolder,
+    )
 }

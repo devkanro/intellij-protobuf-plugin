@@ -8,7 +8,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufMessageStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ResourceTypeIndex
 
 object ProtobufMessageStubType : ProtobufStubTypeBase<ProtobufMessageStub, ProtobufMessageDefinition>(
-    "MESSAGE_DEFINITION"
+    "MESSAGE_DEFINITION",
 ) {
     override fun getExternalId(): String {
         return "protobuf.message.stub"
@@ -17,7 +17,7 @@ object ProtobufMessageStubType : ProtobufStubTypeBase<ProtobufMessageStub, Proto
     override fun createStub(
         data: Array<String>,
         external: Map<String, String>,
-        parentStub: StubElement<*>?
+        parentStub: StubElement<*>?,
     ): ProtobufMessageStub {
         return ProtobufMessageStub(data, external, parentStub)
     }
@@ -26,7 +26,10 @@ object ProtobufMessageStubType : ProtobufStubTypeBase<ProtobufMessageStub, Proto
         return ProtobufMessageDefinitionImpl(stub, stub.stubType)
     }
 
-    override fun indexStub(stub: ProtobufMessageStub, sink: IndexSink) {
+    override fun indexStub(
+        stub: ProtobufMessageStub,
+        sink: IndexSink,
+    ) {
         super.indexStub(stub, sink)
         stub.resourceType()?.let {
             sink.occurrence(ResourceTypeIndex.key, it)

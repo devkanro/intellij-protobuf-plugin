@@ -8,7 +8,10 @@ import com.intellij.psi.PsiReferenceProvider
 import com.intellij.util.ProcessingContext
 
 class GrpcUrlReferenceProvider : PsiReferenceProvider() {
-    override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
+    override fun getReferencesByElement(
+        element: PsiElement,
+        context: ProcessingContext,
+    ): Array<PsiReference> {
         if (element !is HttpRequestTarget) return PsiReference.EMPTY_ARRAY
         val path = element.pathAbsolute ?: return PsiReference.EMPTY_ARRAY
         val separatorIndex = path.text.withIndex().asSequence().filter { it.value == '/' }.map { it.index }.toList()

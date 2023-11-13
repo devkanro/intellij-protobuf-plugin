@@ -5,7 +5,9 @@ import com.intellij.openapi.project.Project
 
 class BufSettingsConfigurable(val project: Project) :
     ConfigurableBase<BufSettingsComponent, BufSettings>(
-        "protobuf.buf", "Buf", null
+        "protobuf.buf",
+        "Buf",
+        null,
     ) {
     override fun getSettings(): BufSettings {
         return project.getService(BufSettings::class.java)

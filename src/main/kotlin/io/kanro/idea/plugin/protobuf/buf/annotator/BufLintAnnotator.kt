@@ -23,13 +23,18 @@ import java.nio.file.Paths
 import kotlin.io.path.relativeTo
 
 class BufLintAnnotator : ExternalAnnotator<BufLintContext, BufLintResult>() {
-    private val jackson = ObjectMapper()
-        .registerModule(KotlinModule.Builder().build())
-        .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+    private val jackson =
+        ObjectMapper()
+            .registerModule(KotlinModule.Builder().build())
+            .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
 
     private val ignoredBufLintRules = setOf("IMPORT_USED", "COMPILE")
 
-    override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): BufLintContext? {
+    override fun collectInformation(
+        file: PsiFile,
+        editor: Editor,
+        hasErrors: Boolean,
+    ): BufLintContext? {
         if (hasErrors) return null
         val bufSettings = file.project.service<BufSettings>()
         val path = bufSettings.bufPath() ?: return null
@@ -43,24 +48,30 @@ class BufLintAnnotator : ExternalAnnotator<BufLintContext, BufLintResult>() {
 
     override fun doAnnotate(collectedInfo: BufLintContext?): BufLintResult? {
         val context = collectedInfo ?: return null
-        val command = GeneralCommandLine(
-            context.bufExecutable.toString(),
-            "lint",
-            "--error-format=json",
-            "--path=${context.file}"
-        ).withWorkDirectory(context.module.path)
+        val command =
+            GeneralCommandLine(
+                context.bufExecutable.toString(),
+                "lint",
+                "--error-format=json",
+                "--path=${context.file}",
+            ).withWorkDirectory(context.module.path)
         val output = ExecUtil.execAndGetOutput(command)
-        val lints = output.stdout.lines().mapNotNull {
-            try {
-                jackson.readValue<BufLintAnnotation>(it).takeIf { it.type !in ignoredBufLintRules }
-            } catch (e: Exception) {
-                null
+        val lints =
+            output.stdout.lines().mapNotNull {
+                try {
+                    jackson.readValue<BufLintAnnotation>(it).takeIf { it.type !in ignoredBufLintRules }
+                } catch (e: Exception) {
+                    null
+                }
             }
-        }
         return BufLintResult(context.editor, lints)
     }
 
-    override fun apply(file: PsiFile, annotationResult: BufLintResult?, holder: AnnotationHolder) {
+    override fun apply(
+        file: PsiFile,
+        annotationResult: BufLintResult?,
+        holder: AnnotationHolder,
+    ) {
         annotationResult ?: return
         annotationResult.lints.forEach {
             val startOffset =
@@ -80,7 +91,7 @@ class BufLintContext(
     val editor: Editor,
     val bufExecutable: Path,
     val module: BufFileManager.State.Module,
-    val file: Path
+    val file: Path,
 )
 
 class BufLintResult(val editor: Editor, val lints: List<BufLintAnnotation>)
@@ -92,5 +103,5 @@ data class BufLintAnnotation(
     val endLine: Int,
     val endColumn: Int,
     val type: String,
-    val message: String
+    val message: String,
 )

@@ -19,7 +19,7 @@ import javax.swing.JComponent
 class BufNotConfiguredNotificationProvider : EditorNotificationProvider, DumbAware {
     override fun collectNotificationData(
         project: Project,
-        file: VirtualFile
+        file: VirtualFile,
     ): Function<in FileEditor, out JComponent?> {
         return Function {
             createNotificationPanel(file, it, project)
@@ -29,18 +29,19 @@ class BufNotConfiguredNotificationProvider : EditorNotificationProvider, DumbAwa
     private fun createNotificationPanel(
         file: VirtualFile,
         fileEditor: FileEditor,
-        project: Project
+        project: Project,
     ): EditorNotificationPanel? {
         if (!isBufConfiguration(file.name)) return null
 
-        val bufPath = project.service<BufSettings>().bufPath()
-            ?: return EditorNotificationPanel().apply {
-                text("Buf executable path not configured for sync buf.yaml/buf.work.yaml.")
-                icon(AllIcons.General.Warning)
-                this.createActionLabel("Setup buf") {
-                    ShowSettingsUtil.getInstance().showSettingsDialog(project, BufSettingsConfigurable::class.java)
+        val bufPath =
+            project.service<BufSettings>().bufPath()
+                ?: return EditorNotificationPanel().apply {
+                    text("Buf executable path not configured for sync buf.yaml/buf.work.yaml.")
+                    icon(AllIcons.General.Warning)
+                    this.createActionLabel("Setup buf") {
+                        ShowSettingsUtil.getInstance().showSettingsDialog(project, BufSettingsConfigurable::class.java)
+                    }
                 }
-            }
 
         if (!Files.exists(bufPath)) {
             return EditorNotificationPanel().apply {

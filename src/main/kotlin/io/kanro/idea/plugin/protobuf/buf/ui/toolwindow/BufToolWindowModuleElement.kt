@@ -10,12 +10,12 @@ import kotlin.io.path.name
 
 class BufToolWindowModuleElement(
     val manager: BufFileManager,
-    val module: BufFileManager.State.Module
+    val module: BufFileManager.State.Module,
 ) : TreeElement, ItemPresentation {
     override fun children(): Array<TreeElement> {
         return arrayOf(
             BufToolWindowTasksElement(manager, module),
-            BufToolWindowDepsElement(manager, module)
+            BufToolWindowDepsElement(manager, module),
         )
     }
 

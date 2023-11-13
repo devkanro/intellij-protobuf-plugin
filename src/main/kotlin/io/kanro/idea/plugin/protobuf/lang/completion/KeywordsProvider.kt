@@ -14,54 +14,69 @@ class KeywordsProvider(keywords: List<String>) : CompletionProvider<CompletionPa
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
-        result: CompletionResultSet
+        result: CompletionResultSet,
     ) {
         result.addAllElements(keywordElements)
     }
 
     companion object {
         val topLevelKeywords
-            get() = KeywordsProvider(
-                listOf(
-                    "syntax", "package", "import", "option", "message", "enum", "service", "extend"
+            get() =
+                KeywordsProvider(
+                    listOf(
+                        "syntax",
+                        "package",
+                        "import",
+                        "option",
+                        "message",
+                        "enum",
+                        "service",
+                        "extend",
+                    ),
                 )
-            )
 
         val messageLevelKeywords
-            get() = KeywordsProvider(
-                listOf(
-                    "option", "message", "enum", "extend", "oneof", "group", "extensions", "reserved",
-                    "repeated", "optional", "required"
+            get() =
+                KeywordsProvider(
+                    listOf(
+                        "option", "message", "enum", "extend", "oneof", "group", "extensions", "reserved",
+                        "repeated", "optional", "required",
+                    ),
                 )
-            )
 
         val enumLevelKeywords
-            get() = KeywordsProvider(
-                listOf(
-                    "option", "reserved"
+            get() =
+                KeywordsProvider(
+                    listOf(
+                        "option",
+                        "reserved",
+                    ),
                 )
-            )
 
         val serviceLevelKeywords
-            get() = KeywordsProvider(
-                listOf(
-                    "option", "rpc"
+            get() =
+                KeywordsProvider(
+                    listOf(
+                        "option",
+                        "rpc",
+                    ),
                 )
-            )
 
         val methodLevelKeywords
-            get() = KeywordsProvider(
-                listOf(
-                    "option"
+            get() =
+                KeywordsProvider(
+                    listOf(
+                        "option",
+                    ),
                 )
-            )
 
         val rpcLevelKeywords
-            get() = KeywordsProvider(
-                listOf(
-                    "returns"
+            get() =
+                KeywordsProvider(
+                    listOf(
+                        "returns",
+                    ),
                 )
-            )
 
         fun keywordElement(keyword: String): LookupElement {
             return LookupElementBuilder.create(keyword).withTypeText("keyword")

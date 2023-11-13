@@ -14,7 +14,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 class SisyphusProtobufLineMarkerProvider : RelatedItemLineMarkerProvider() {
     override fun collectNavigationMarkers(
         element: PsiElement,
-        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
+        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>,
     ) {
         val identifier = element as? ProtobufIdentifier ?: return
         if (!isSisyphus(element)) return

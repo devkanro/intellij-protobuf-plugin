@@ -22,7 +22,7 @@ import org.jetbrains.uast.toUElementOfType
 class SisyphusKotlinLineMarkerProvider : RelatedItemLineMarkerProvider() {
     override fun collectNavigationMarkers(
         element: PsiElement,
-        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
+        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>,
     ) {
         val identifier = element.toUElementOfType<UIdentifier>() ?: return
         if (!isSisyphus(element)) return
@@ -54,13 +54,14 @@ class SisyphusKotlinLineMarkerProvider : RelatedItemLineMarkerProvider() {
             val scope = ProtobufRootResolver.searchScope(sourceClazz)
             for (it in clazz.uastSuperTypes) {
                 val qualifiedName = it.getQualifiedName() ?: continue
-                val element = StubIndex.getElements(
-                    SisyphusNameIndex.key,
-                    qualifiedName,
-                    sourceClazz.project,
-                    scope,
-                    ProtobufElement::class.java
-                ).firstIsInstanceOrNull<ProtobufServiceDefinition>()
+                val element =
+                    StubIndex.getElements(
+                        SisyphusNameIndex.key,
+                        qualifiedName,
+                        sourceClazz.project,
+                        scope,
+                        ProtobufElement::class.java,
+                    ).firstIsInstanceOrNull<ProtobufServiceDefinition>()
                 if (element != null) {
                     return@getCachedValue CachedValueProvider.Result.create(element, sourceClazz)
                 }
@@ -77,13 +78,14 @@ class SisyphusKotlinLineMarkerProvider : RelatedItemLineMarkerProvider() {
             val scope = ProtobufRootResolver.searchScope(sourcePsi)
             for (it in clazz.uastSuperTypes) {
                 val methodName = "${it.getQualifiedName()}.${method.name}"
-                val element = StubIndex.getElements(
-                    SisyphusNameIndex.key,
-                    methodName,
-                    sourcePsi.project,
-                    scope,
-                    ProtobufElement::class.java
-                ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
+                val element =
+                    StubIndex.getElements(
+                        SisyphusNameIndex.key,
+                        methodName,
+                        sourcePsi.project,
+                        scope,
+                        ProtobufElement::class.java,
+                    ).firstIsInstanceOrNull<ProtobufRpcDefinition>()
                 if (element != null) {
                     return@getCachedValue CachedValueProvider.Result.create(element, sourcePsi)
                 }

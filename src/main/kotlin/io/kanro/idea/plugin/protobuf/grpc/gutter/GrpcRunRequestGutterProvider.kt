@@ -39,20 +39,24 @@ class GrpcRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
         val serviceName = service.qualifiedName() ?: return
         val methodName = element.name() ?: return
 
-        val request = HttpRequestUrlsGenerationRequest(
-            listOfNotNull(
-                HttpRequestUrlPathInfo.create(
-                    element.project, "$serviceName/$methodName", listOf("GRPC")
-                ).unwrap(false)
-            ),
-            RequestUrlContextInfo.createNonHttp(
-                element.project,
-                listOf("http://", "https://"),
-                listOf("localhost:9090")
-            ).unwrap(false) ?: return
-        )
+        val request =
+            HttpRequestUrlsGenerationRequest(
+                listOfNotNull(
+                    HttpRequestUrlPathInfo.create(
+                        element.project,
+                        "$serviceName/$methodName",
+                        listOf("GRPC"),
+                    ).unwrap(false),
+                ),
+                RequestUrlContextInfo.createNonHttp(
+                    element.project,
+                    listOf("http://", "https://"),
+                    listOf("localhost:9090"),
+                ).unwrap(false) ?: return,
+            )
 
-        result += OpenInHttpClientLineMarkerBuilder.fromGenerationRequest(element.project, request)
-            .createLineMarkerInfo(element.firstLeaf(), ProtobufIcons.PROCEDURE)
+        result +=
+            OpenInHttpClientLineMarkerBuilder.fromGenerationRequest(element.project, request)
+                .createLineMarkerInfo(element.firstLeaf(), ProtobufIcons.PROCEDURE)
     }
 }

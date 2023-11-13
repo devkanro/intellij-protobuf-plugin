@@ -25,7 +25,10 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufDocument
 
 class ProtobufHighlightingAnnotator : Annotator {
-    override fun annotate(element: PsiElement, holder: AnnotationHolder) {
+    override fun annotate(
+        element: PsiElement,
+        holder: AnnotationHolder,
+    ) {
         element.accept(ProtobufHighlightingVisitor(holder))
     }
 
@@ -74,7 +77,10 @@ class ProtobufHighlightingAnnotator : Annotator {
             }
         }
 
-        private fun createHighlight(element: PsiElement, textAttributesKey: TextAttributesKey) {
+        private fun createHighlight(
+            element: PsiElement,
+            textAttributesKey: TextAttributesKey,
+        ) {
             holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
                 .range(element.textRange)
                 .textAttributes(textAttributesKey)

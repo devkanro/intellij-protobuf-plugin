@@ -18,30 +18,40 @@ import io.kanro.idea.plugin.protobuf.lang.quickfix.ProtobufAddImportAction
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 
 class AddResourceImportFix(
-    private val host: ProtobufStringValue
+    private val host: ProtobufStringValue,
 ) : BaseIntentionAction(),
     HintAction,
     HighPriorityAction {
-
     private lateinit var elements: Array<ProtobufDefinition>
 
     override fun getFamilyName(): String {
         return "Import"
     }
 
-    override fun isAvailable(project: Project, editor: Editor, file: PsiFile): Boolean {
+    override fun isAvailable(
+        project: Project,
+        editor: Editor,
+        file: PsiFile,
+    ): Boolean {
         if (!host.isValid) return false
         val resourceType = host.value() ?: return false
-        this.elements = StubIndex.getElements(
-            ResourceTypeIndex.key, resourceType,
-            project, ProtobufRootResolver.searchScope(host),
-            ProtobufElement::class.java
-        ).filterIsInstance<ProtobufDefinition>().toTypedArray()
+        this.elements =
+            StubIndex.getElements(
+                ResourceTypeIndex.key,
+                resourceType,
+                project,
+                ProtobufRootResolver.searchScope(host),
+                ProtobufElement::class.java,
+            ).filterIsInstance<ProtobufDefinition>().toTypedArray()
 
         return elements.isNotEmpty()
     }
 
-    override fun invoke(project: Project, editor: Editor, file: PsiFile?) {
+    override fun invoke(
+        project: Project,
+        editor: Editor,
+        file: PsiFile?,
+    ) {
         CommandProcessor.getInstance().runUndoTransparentAction {
             createAction(project, editor, host, elements).execute()
         }
@@ -51,7 +61,7 @@ class AddResourceImportFix(
         project: Project,
         editor: Editor,
         host: ProtobufSymbolReferenceHost,
-        elements: Array<ProtobufDefinition>
+        elements: Array<ProtobufDefinition>,
     ): ProtobufAddImportAction {
         return ProtobufAddImportAction(project, editor, host, null, elements)
     }

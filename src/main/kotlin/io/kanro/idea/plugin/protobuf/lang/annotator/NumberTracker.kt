@@ -36,21 +36,27 @@ open class NumberTracker(scope: ProtobufNumberScope, val minValue: Long) {
         reservedNameMap[range] = reserved
     }
 
-    open fun visit(numbered: ProtobufNumbered, holder: AnnotationHolder) {
+    open fun visit(
+        numbered: ProtobufNumbered,
+        holder: AnnotationHolder,
+    ) {
         val number = numbered.number() ?: return
         createError(numbered, buildMessage(number, numbered) ?: return, holder)
         if (number < minValue) {
         }
     }
 
-    open fun visit(reserved: ProtobufReservedRange, holder: AnnotationHolder) {
+    open fun visit(
+        reserved: ProtobufReservedRange,
+        holder: AnnotationHolder,
+    ) {
         val range = reserved.range() ?: return
         createError(reserved, buildMessage(range, reserved) ?: return, holder)
     }
 
     protected open fun buildMessage(
         number: Long,
-        numbered: ProtobufNumbered
+        numbered: ProtobufNumbered,
     ): String? {
         if (number < minValue) return "Wrong number, the min value is $minValue"
         reservedNameMap.forEach { (range, element) ->
@@ -68,7 +74,7 @@ open class NumberTracker(scope: ProtobufNumberScope, val minValue: Long) {
 
     protected open fun buildMessage(
         range: LongRange,
-        reserved: ProtobufReservedRange
+        reserved: ProtobufReservedRange,
     ): String? {
         reservedNameMap.forEach { (r, element) ->
             if (element == reserved) return@forEach
@@ -79,28 +85,40 @@ open class NumberTracker(scope: ProtobufNumberScope, val minValue: Long) {
         return null
     }
 
-    protected open fun createError(numbered: ProtobufNumbered, message: String, holder: AnnotationHolder) {
+    protected open fun createError(
+        numbered: ProtobufNumbered,
+        message: String,
+        holder: AnnotationHolder,
+    ) {
         holder.newAnnotation(
             HighlightSeverity.ERROR,
-            message
+            message,
         ).range(numbered.intValue()?.textRange ?: numbered.textRange).create()
     }
 
-    protected open fun createError(reserved: ProtobufReservedRange, message: String, holder: AnnotationHolder) {
+    protected open fun createError(
+        reserved: ProtobufReservedRange,
+        message: String,
+        holder: AnnotationHolder,
+    ) {
         holder.newAnnotation(
             HighlightSeverity.ERROR,
-            message
+            message,
         ).range(reserved.textRange).create()
     }
 
     companion object {
         fun tracker(scope: ProtobufNumberScope): NumberTracker {
             return CachedValuesManager.getCachedValue(scope) {
-                val minValue = if (scope is ProtobufMessageDefinition) {
-                    1L
-                } else 0L
+                val minValue =
+                    if (scope is ProtobufMessageDefinition) {
+                        1L
+                    } else {
+                        0L
+                    }
                 CachedValueProvider.Result.create(
-                    NumberTracker(scope, minValue), PsiModificationTracker.MODIFICATION_COUNT
+                    NumberTracker(scope, minValue),
+                    PsiModificationTracker.MODIFICATION_COUNT,
                 )
             }
         }

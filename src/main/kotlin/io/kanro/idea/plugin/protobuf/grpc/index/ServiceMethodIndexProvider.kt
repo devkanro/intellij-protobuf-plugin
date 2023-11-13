@@ -8,7 +8,10 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufRpcStub
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufServiceStub
 
 class ServiceMethodIndexProvider : ProtobufIndexProvider {
-    override fun buildIndex(stub: ProtobufStub<*>, sink: IndexSink) {
+    override fun buildIndex(
+        stub: ProtobufStub<*>,
+        sink: IndexSink,
+    ) {
         when (stub) {
             is ProtobufMessageStub -> {
                 stub.name()?.let {

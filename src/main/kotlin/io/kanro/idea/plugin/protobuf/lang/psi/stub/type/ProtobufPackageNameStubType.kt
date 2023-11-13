@@ -6,7 +6,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.impl.ProtobufPackageNameImpl
 import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufPackageNameStub
 
 object ProtobufPackageNameStubType : ProtobufStubTypeBase<ProtobufPackageNameStub, ProtobufPackageName>(
-    "PACKAGE_NAME"
+    "PACKAGE_NAME",
 ) {
     override fun getExternalId(): String {
         return "protobuf.package_name.stub"
@@ -15,7 +15,7 @@ object ProtobufPackageNameStubType : ProtobufStubTypeBase<ProtobufPackageNameStu
     override fun createStub(
         data: Array<String>,
         external: Map<String, String>,
-        parentStub: StubElement<*>?
+        parentStub: StubElement<*>?,
     ): ProtobufPackageNameStub {
         return ProtobufPackageNameStub(data, external, parentStub)
     }

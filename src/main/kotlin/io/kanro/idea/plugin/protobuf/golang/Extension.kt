@@ -11,8 +11,9 @@ fun GoVarSpec.decompile(): VirtualFile? {
     val compositeLit = this.expressionList.firstOrNull() as? GoCompositeLit ?: return null
     val type = compositeLit.type as? GoArrayOrSliceType ?: return null
     if (!type.type.textMatches("byte")) return null
-    val data = compositeLit.literalValue?.elementList?.joinToString("") {
-        it.text.removePrefix("0x")
-    }?.parseHex() ?: return null
+    val data =
+        compositeLit.literalValue?.elementList?.joinToString("") {
+            it.text.removePrefix("0x")
+        }?.parseHex() ?: return null
     return DecompiledFileManager.findFile(this, data)
 }

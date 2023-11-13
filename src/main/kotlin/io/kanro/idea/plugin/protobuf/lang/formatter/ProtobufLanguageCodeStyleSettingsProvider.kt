@@ -72,13 +72,16 @@ message GetMessageRequest {
 
     override fun customizeDefaults(
         commonSettings: CommonCodeStyleSettings,
-        indentOptions: CommonCodeStyleSettings.IndentOptions
+        indentOptions: CommonCodeStyleSettings.IndentOptions,
     ) {
         commonSettings.SPACE_BEFORE_COLON = false
         commonSettings.KEEP_BLANK_LINES_BETWEEN_PACKAGE_DECLARATION_AND_HEADER = 1
     }
 
-    override fun customizeSettings(consumer: CodeStyleSettingsCustomizable, settingsType: SettingsType) {
+    override fun customizeSettings(
+        consumer: CodeStyleSettingsCustomizable,
+        settingsType: SettingsType,
+    ) {
         when (settingsType) {
             SettingsType.SPACING_SETTINGS -> {
                 consumer.showStandardOptions("SPACE_WITHIN_BRACES")
@@ -106,7 +109,7 @@ message GetMessageRequest {
                     ProtobufCodeStyleSettings::class.java,
                     ProtobufCodeStyleSettings::BLANK_LINES_AFTER_SYNTAX.name,
                     "After syntax statement",
-                    blankLines
+                    blankLines,
                 )
                 consumer.showStandardOptions("BLANK_LINES_AFTER_PACKAGE")
                 consumer.showStandardOptions("BLANK_LINES_AFTER_IMPORTS")
@@ -114,7 +117,7 @@ message GetMessageRequest {
                     ProtobufCodeStyleSettings::class.java,
                     ProtobufCodeStyleSettings::BLANK_LINES_AFTER_FILE_OPTIONS.name,
                     "After file options",
-                    blankLines
+                    blankLines,
                 )
 
                 val blankLinesKeep = CodeStyleSettingsCustomizableOptions.getInstance().BLANK_LINES_KEEP
@@ -122,13 +125,13 @@ message GetMessageRequest {
                     ProtobufCodeStyleSettings::class.java,
                     ProtobufCodeStyleSettings::KEEP_BLANK_LINES_BETWEEN_IMPORTS.name,
                     "Between imports",
-                    blankLinesKeep
+                    blankLinesKeep,
                 )
                 consumer.showCustomOption(
                     ProtobufCodeStyleSettings::class.java,
                     ProtobufCodeStyleSettings::KEEP_BLANK_LINES_BETWEEN_FILE_OPTIONS.name,
                     "Between file options",
-                    blankLinesKeep
+                    blankLinesKeep,
                 )
             }
 

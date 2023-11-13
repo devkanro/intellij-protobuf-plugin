@@ -38,18 +38,27 @@ object ProtobufRootResolver {
         }.distinctRoots()
     }
 
-    fun getImportPath(file: VirtualFile, context: PsiElement): String? {
+    fun getImportPath(
+        file: VirtualFile,
+        context: PsiElement,
+    ): String? {
         getAvailableRoots(context).forEach {
             VfsUtilCore.getRelativePath(file, it)?.let { return it }
         }
         return null
     }
 
-    fun findFile(path: String, context: PsiElement): Iterable<VirtualFile> {
+    fun findFile(
+        path: String,
+        context: PsiElement,
+    ): Iterable<VirtualFile> {
         return findFile(path, getAvailableRoots(context))
     }
 
-    fun collectProtobuf(path: String, context: PsiElement): Iterable<VirtualFile> {
+    fun collectProtobuf(
+        path: String,
+        context: PsiElement,
+    ): Iterable<VirtualFile> {
         return collectProtobuf(path, getAvailableRoots(context))
     }
 
@@ -59,7 +68,10 @@ object ProtobufRootResolver {
         return GlobalSearchScope.union(providers.mapNotNull { it.searchScope(file) })
     }
 
-    private fun findFile(path: String, roots: Iterable<VirtualFile>): Iterable<VirtualFile> {
+    private fun findFile(
+        path: String,
+        roots: Iterable<VirtualFile>,
+    ): Iterable<VirtualFile> {
         return roots.mapNotNull {
             it.findFileByRelativePath(path)?.takeIf {
                 it.exists() && it.fileType is ProtobufFileType
@@ -69,7 +81,7 @@ object ProtobufRootResolver {
 
     private fun collectProtobuf(
         path: String,
-        roots: Iterable<VirtualFile>
+        roots: Iterable<VirtualFile>,
     ): Iterable<VirtualFile> {
         val result = mutableListOf<VirtualFile>()
         roots.forEach {

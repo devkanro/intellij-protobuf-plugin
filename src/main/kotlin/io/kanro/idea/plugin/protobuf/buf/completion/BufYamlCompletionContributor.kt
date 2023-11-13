@@ -23,7 +23,10 @@ import org.jetbrains.yaml.psi.YAMLPsiElement
 import org.jetbrains.yaml.psi.YAMLValue
 
 class BufYamlCompletionContributor : CompletionContributor() {
-    override fun fillCompletionVariants(parameters: CompletionParameters, result: CompletionResultSet) {
+    override fun fillCompletionVariants(
+        parameters: CompletionParameters,
+        result: CompletionResultSet,
+    ) {
         when (val definition = parameters.position.elementSchema()) {
             is BufFieldSchema -> addSchema(parameters.position, result, definition.valueType)
             is BufArraySchema -> addSchema(parameters.position, result, definition.itemType)
@@ -35,7 +38,7 @@ class BufYamlCompletionContributor : CompletionContributor() {
     private fun addSchema(
         context: PsiElement,
         result: CompletionResultSet,
-        definition: BufSchemaValueType<out YAMLValue>
+        definition: BufSchemaValueType<out YAMLValue>,
     ) {
         when (definition) {
             is BufEnumTypeSchema -> addSchema(context, result, definition)
@@ -45,36 +48,55 @@ class BufYamlCompletionContributor : CompletionContributor() {
         }
     }
 
-    private fun addSchema(context: PsiElement, result: CompletionResultSet, definition: BufObjectSchema) {
+    private fun addSchema(
+        context: PsiElement,
+        result: CompletionResultSet,
+        definition: BufObjectSchema,
+    ) {
         result.addAllElements(definition.fields.map { lookupElement(context, it) })
     }
 
-    private fun addSchema(context: PsiElement, result: CompletionResultSet, definition: BufEnumTypeSchema) {
+    private fun addSchema(
+        context: PsiElement,
+        result: CompletionResultSet,
+        definition: BufEnumTypeSchema,
+    ) {
         result.addAllElements(definition.values.map { lookupElement(context, it) })
     }
 
-    private fun addBool(context: PsiElement, result: CompletionResultSet) {
+    private fun addBool(
+        context: PsiElement,
+        result: CompletionResultSet,
+    ) {
         result.addAllElements(listOf(lookupElement(context, "true"), lookupElement(context, "false")))
     }
 
-    private fun lookupElement(context: PsiElement, definition: BufEnumValueSchema): LookupElement {
+    private fun lookupElement(
+        context: PsiElement,
+        definition: BufEnumValueSchema,
+    ): LookupElement {
         return LookupElementBuilder.create(definition.name)
             .withTypeText("enum value")
             .withIcon(PlatformIcons.ENUM_ICON)
     }
 
-    private fun lookupElement(context: PsiElement, definition: BufFieldSchema): LookupElement {
-        val suffix = when (definition.valueType) {
-            is BufArraySchema -> smartIndentForField(context).takeIf { it.isNotEmpty() }?.let { "\n$it- " }
-            is BufObjectSchema -> smartIndentForField(context).takeIf { it.isNotEmpty() }?.let { "\n$it" }
-            BufSchemaScalarType.STRING -> "\"\""
-            else -> ""
-        }
+    private fun lookupElement(
+        context: PsiElement,
+        definition: BufFieldSchema,
+    ): LookupElement {
+        val suffix =
+            when (definition.valueType) {
+                is BufArraySchema -> smartIndentForField(context).takeIf { it.isNotEmpty() }?.let { "\n$it- " }
+                is BufObjectSchema -> smartIndentForField(context).takeIf { it.isNotEmpty() }?.let { "\n$it" }
+                BufSchemaScalarType.STRING -> "\"\""
+                else -> ""
+            }
 
-        val offset = when (definition.valueType) {
-            BufSchemaScalarType.STRING -> -1
-            else -> 0
-        }
+        val offset =
+            when (definition.valueType) {
+                BufSchemaScalarType.STRING -> -1
+                else -> 0
+            }
 
         return LookupElementBuilder.create(definition.name)
             .withTypeText("field")
@@ -82,7 +104,10 @@ class BufYamlCompletionContributor : CompletionContributor() {
             .withInsertHandler(SmartInsertHandler(": $suffix", offset, true))
     }
 
-    private fun lookupElement(context: PsiElement, keyword: String): LookupElement {
+    private fun lookupElement(
+        context: PsiElement,
+        keyword: String,
+    ): LookupElement {
         return LookupElementBuilder.create(keyword)
             .withTypeText("keyword")
     }
@@ -91,16 +116,18 @@ class BufYamlCompletionContributor : CompletionContributor() {
         val yaml = context.parentOfType<YAMLPsiElement>()
         val prev = yaml?.prevSibling
         val prevIndent = prev?.takeIf { it.elementType == YAMLTokenTypes.INDENT }
-        val prevEol = prevIndent?.prevSibling?.takeIf { it.elementType == YAMLTokenTypes.EOL }
-            ?: prev?.takeIf { it.elementType == YAMLTokenTypes.EOL }
+        val prevEol =
+            prevIndent?.prevSibling?.takeIf { it.elementType == YAMLTokenTypes.EOL }
+                ?: prev?.takeIf { it.elementType == YAMLTokenTypes.EOL }
 
         if (prev != null && prevEol == null) return ""
         return (prevIndent?.text ?: "") + buildIndent(2)
     }
 
-    private fun buildIndent(spaces: Int): String = buildString {
-        for (i in 0 until spaces) {
-            append(' ')
+    private fun buildIndent(spaces: Int): String =
+        buildString {
+            for (i in 0 until spaces) {
+                append(' ')
+            }
         }
-    }
 }

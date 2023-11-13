@@ -7,9 +7,11 @@ import com.intellij.psi.PsiReferenceProvider
 import com.intellij.util.ProcessingContext
 
 class GrpcMessageFieldReferenceProvider : PsiReferenceProvider() {
-    override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
+    override fun getReferencesByElement(
+        element: PsiElement,
+        context: ProcessingContext,
+    ): Array<PsiReference> {
         if (element !is JsonStringLiteral) return PsiReference.EMPTY_ARRAY
         return arrayOf(GrpcMessageFieldReference(element))
     }
 }
-

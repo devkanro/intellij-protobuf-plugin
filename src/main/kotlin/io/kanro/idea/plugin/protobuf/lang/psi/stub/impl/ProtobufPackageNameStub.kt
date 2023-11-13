@@ -8,7 +8,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufPackageNameStubT
 class ProtobufPackageNameStub(
     data: Array<String>,
     external: Map<String, String>,
-    parent: StubElement<*>?
+    parent: StubElement<*>?,
 ) : ProtobufStubBase<ProtobufPackageName>(data, external, parent, ProtobufPackageNameStubType),
     ProtobufStub<ProtobufPackageName> {
     fun name(): String? {

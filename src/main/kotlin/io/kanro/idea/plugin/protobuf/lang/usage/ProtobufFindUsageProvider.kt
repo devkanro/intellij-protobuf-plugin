@@ -17,7 +17,7 @@ class ProtobufFindUsageProvider : FindUsagesProvider {
             ProtobufLexer(),
             TokenSet.create(ProtobufTokens.IDENTIFIER_LITERAL),
             ProtobufParserDefinition.comments,
-            ProtobufParserDefinition.string
+            ProtobufParserDefinition.string,
         )
     }
 
@@ -40,7 +40,10 @@ class ProtobufFindUsageProvider : FindUsagesProvider {
         return getNodeText(element, true)
     }
 
-    override fun getNodeText(element: PsiElement, useFullName: Boolean): String {
+    override fun getNodeText(
+        element: PsiElement,
+        useFullName: Boolean,
+    ): String {
         if (element !is ProtobufDefinition) return ""
 
         return if (useFullName) {

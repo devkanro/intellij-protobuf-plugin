@@ -8,29 +8,45 @@ import javax.swing.Icon
 
 class BufToolWindowTasksElement(
     val manager: BufFileManager,
-    val module: BufFileManager.State.Module
+    val module: BufFileManager.State.Module,
 ) : TreeElement, ItemPresentation {
     override fun children(): Array<TreeElement> {
         return arrayOf(
             BufToolWindowTaskElement(
-                manager, module, "Sync",
-                "Run 'buf mod update' in ${module.name ?: module.path}.", "mod", "update"
+                manager,
+                module,
+                "Sync",
+                "Run 'buf mod update' in ${module.name ?: module.path}.",
+                "mod",
+                "update",
             ),
             BufToolWindowTaskElement(
-                manager, module, "Build",
-                "Run 'buf build' in ${module.name ?: module.path}.", "build"
+                manager,
+                module,
+                "Build",
+                "Run 'buf build' in ${module.name ?: module.path}.",
+                "build",
             ),
             BufToolWindowTaskElement(
-                manager, module, "Lint",
-                "Run 'buf lint' in ${module.name ?: module.path}.", "lint"
+                manager,
+                module,
+                "Lint",
+                "Run 'buf lint' in ${module.name ?: module.path}.",
+                "lint",
             ),
             BufToolWindowTaskElement(
-                manager, module, "Generate",
-                "Run 'buf generate' in ${module.name ?: module.path}.", "generate"
+                manager,
+                module,
+                "Generate",
+                "Run 'buf generate' in ${module.name ?: module.path}.",
+                "generate",
             ),
             BufToolWindowTaskElement(
-                manager, module, "Push",
-                "Run 'buf push' in ${module.name ?: module.path}.", "push"
+                manager,
+                module,
+                "Push",
+                "Run 'buf push' in ${module.name ?: module.path}.",
+                "push",
             ),
         )
     }

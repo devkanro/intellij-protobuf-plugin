@@ -18,7 +18,10 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 import javax.swing.Icon
 
 class ProtobufIconProvider : IconProvider() {
-    override fun getIcon(element: PsiElement, flags: Int): Icon? {
+    override fun getIcon(
+        element: PsiElement,
+        flags: Int,
+    ): Icon? {
         if (element !is ProtobufElement) return null
         return when (element) {
             is ProtobufFile -> ProtobufIcons.FILE

@@ -60,7 +60,10 @@ inline fun <reified T : PsiElement> PsiElement.findChildren(filter: (T) -> Boole
     return result.toTypedArray()
 }
 
-inline fun <reified T : PsiElement> PsiElement.walkChildren(childTree: Boolean = true, block: (T) -> Unit) {
+inline fun <reified T : PsiElement> PsiElement.walkChildren(
+    childTree: Boolean = true,
+    block: (T) -> Unit,
+) {
     val stack = Stack<PsiElement>()
     stack.add(this.firstChild ?: return)
 
@@ -78,7 +81,11 @@ inline fun <reified T : PsiElement> PsiElement.walkChildren(childTree: Boolean =
     }
 }
 
-inline fun PsiElement.walkChildren(filter: PsiElementFilter, childTree: Boolean = true, block: (PsiElement) -> Unit) {
+inline fun PsiElement.walkChildren(
+    filter: PsiElementFilter,
+    childTree: Boolean = true,
+    block: (PsiElement) -> Unit,
+) {
     val stack = Stack<PsiElement>()
     stack.add(this.firstChild ?: return)
 
@@ -175,43 +182,46 @@ fun ProtobufOptionName.field(): ProtobufFieldLike? {
 }
 
 fun ProtobufFieldName.message(): ProtobufScope? {
-    val parent = when (val parent = this.parent) {
-        is ProtobufArrayValue -> {
-            parent.parent.parent
+    val parent =
+        when (val parent = this.parent) {
+            is ProtobufArrayValue -> {
+                parent.parent.parent
+            }
+            else -> parent
         }
-        else -> parent
-    }
 
-    val field = when (parent) {
-        is ProtobufOptionName -> {
-            val prevField = this.prev<ProtobufFieldName>()
-            if (prevField == null) {
-                parent.extensionOptionName?.typeName?.reference?.resolve()
-            } else {
-                prevField.reference?.resolve()
-            }
-        }
-        is ProtobufFieldAssign -> {
-            val messageValue = parent.parent as? ProtobufMessageValue ?: return null
-            val assign = when (val assign = messageValue.parent.parent) {
-                is ProtobufArrayValue -> {
-                    assign.parent.parent
+    val field =
+        when (parent) {
+            is ProtobufOptionName -> {
+                val prevField = this.prev<ProtobufFieldName>()
+                if (prevField == null) {
+                    parent.extensionOptionName?.typeName?.reference?.resolve()
+                } else {
+                    prevField.reference?.resolve()
                 }
-                else -> assign
             }
+            is ProtobufFieldAssign -> {
+                val messageValue = parent.parent as? ProtobufMessageValue ?: return null
+                val assign =
+                    when (val assign = messageValue.parent.parent) {
+                        is ProtobufArrayValue -> {
+                            assign.parent.parent
+                        }
+                        else -> assign
+                    }
 
-            when (assign) {
-                is ProtobufOptionAssign -> {
-                    assign.optionName.field()
+                when (assign) {
+                    is ProtobufOptionAssign -> {
+                        assign.optionName.field()
+                    }
+                    is ProtobufFieldAssign -> {
+                        assign.fieldName.reference?.resolve() as? ProtobufDefinition
+                    }
+                    else -> null
                 }
-                is ProtobufFieldAssign -> {
-                    assign.fieldName.reference?.resolve() as? ProtobufDefinition
-                }
-                else -> null
             }
-        }
-        else -> null
-    } ?: return null
+            else -> null
+        } ?: return null
 
     return when (field) {
         is ProtobufGroupDefinition -> field
@@ -229,26 +239,28 @@ fun ProtobufBuiltInOptionName.isFieldJsonNameOption(): Boolean {
 }
 
 fun ProtobufEnumValue.enum(): ProtobufEnumDefinition? {
-    val field = when (val parent = this.parent.parent) {
-        is ProtobufOptionAssign -> {
-            parent.optionName.field() as? ProtobufFieldDefinition
-        }
-        is ProtobufFieldAssign -> {
-            parent.fieldName.reference?.resolve() as? ProtobufFieldDefinition
-        }
-        else -> null
-    } ?: return null
+    val field =
+        when (val parent = this.parent.parent) {
+            is ProtobufOptionAssign -> {
+                parent.optionName.field() as? ProtobufFieldDefinition
+            }
+            is ProtobufFieldAssign -> {
+                parent.fieldName.reference?.resolve() as? ProtobufFieldDefinition
+            }
+            else -> null
+        } ?: return null
     return field.typeName.reference?.resolve() as? ProtobufEnumDefinition
 }
 
 fun ProtobufReservedRange.range(): LongRange? {
     val numbers = integerValueList.map { it.text.toLong() }
     return when (numbers.size) {
-        1 -> if (lastChild.textMatches("max")) {
-            LongRange(numbers[0], Long.MAX_VALUE)
-        } else {
-            LongRange(numbers[0], numbers[0])
-        }
+        1 ->
+            if (lastChild.textMatches("max")) {
+                LongRange(numbers[0], Long.MAX_VALUE)
+            } else {
+                LongRange(numbers[0], numbers[0])
+            }
         2 -> LongRange(numbers[0], numbers[1])
         else -> null
     }
@@ -288,7 +300,6 @@ inline fun <reified T : ProtobufScopeItem> ProtobufScope.firstItemOrNull(block: 
     }
     return null
 }
-
 
 inline fun <reified T : ProtobufScopeItem> ProtobufScope.filterItem(block: (T) -> Boolean): List<T> {
     val result = mutableListOf<T>()
@@ -380,11 +391,12 @@ fun ProtobufRpcIO.stream(): Boolean {
 fun ProtobufFieldLike.jsonName(): String? {
     return CachedValuesManager.getCachedValue(this) {
         val option = (this as? ProtobufOptionOwner)?.options("json_name")?.lastOrNull()
-        val result = option?.value()?.stringValue()
-            ?: name()?.toCamelCase()
+        val result =
+            option?.value()?.stringValue()
+                ?: name()?.toCamelCase()
         CachedValueProvider.Result.create(
             result,
-            PsiModificationTracker.MODIFICATION_COUNT
+            PsiModificationTracker.MODIFICATION_COUNT,
         )
     }
 }
@@ -398,13 +410,14 @@ fun ProtobufFieldLike.jsonName(): String? {
  */
 fun ProtobufMessageDefinition.resolveFieldType(
     qualifiedName: QualifiedName,
-    jsonSpec: Boolean = false
+    jsonSpec: Boolean = false,
 ): ProtobufElement? {
     if (qualifiedName.components.isEmpty()) return this
 
-    val q = Stack<String>().apply {
-        addAll(qualifiedName.components.asReversed())
-    }
+    val q =
+        Stack<String>().apply {
+            addAll(qualifiedName.components.asReversed())
+        }
 
     var scope: ProtobufScope = this
 
@@ -424,9 +437,10 @@ fun ProtobufMessageDefinition.resolveFieldType(
             }
         }
 
-        val fieldDefinition = scope.firstItemOrNull<ProtobufFieldLike> {
-            it.name() == field || it.jsonName() == field
-        } ?: return null
+        val fieldDefinition =
+            scope.firstItemOrNull<ProtobufFieldLike> {
+                it.name() == field || it.jsonName() == field
+            } ?: return null
 
         when (fieldDefinition) {
             is ProtobufFieldDefinition -> {
@@ -437,8 +451,9 @@ fun ProtobufMessageDefinition.resolveFieldType(
             is ProtobufMapFieldDefinition -> {
                 if (q.isEmpty()) return fieldDefinition
                 q.pop()
-                val type = fieldDefinition.typeNameList.lastOrNull()?.reference?.resolve() as? ProtobufElement
-                    ?: return null
+                val type =
+                    fieldDefinition.typeNameList.lastOrNull()?.reference?.resolve() as? ProtobufElement
+                        ?: return null
                 if (q.isEmpty()) return type
                 scope = type as? ProtobufMessageDefinition ?: return null
             }
@@ -457,7 +472,7 @@ fun ProtobufMessageDefinition.resolveFieldType(
  */
 fun ProtobufMessageDefinition.resolveField(
     qualifiedName: QualifiedName,
-    jsonSpec: Boolean = false
+    jsonSpec: Boolean = false,
 ): ProtobufFieldLike? {
     val field = qualifiedName.lastComponent ?: return null
     val parentField = qualifiedName.removeTail(1)

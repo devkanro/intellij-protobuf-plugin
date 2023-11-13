@@ -1,3 +1,4 @@
+import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.internal.ensureParentDirsCreated
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -17,12 +18,15 @@ plugins {
     id("org.jetbrains.qodana") version "0.1.13"
 
     id("org.jetbrains.grammarkit") version "2022.3.1"
+
+    id("org.jmailen.kotlinter") version "4.0.1"
 }
 
 group = properties("pluginGroup")
 version = properties("pluginVersion")
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -30,18 +34,10 @@ dependencies {
     implementation("org.commonmark:commonmark:0.21.0")
     implementation("org.commonmark:commonmark-ext-gfm-tables:0.21.0")
     implementation("org.commonmark:commonmark-ext-autolink:0.21.0")
-    implementation("com.bybutter.sisyphus:sisyphus-grpc:2.1.10") {
-        exclude("io.grpc")
-        exclude("org.jetbrains.kotlin")
-        exclude("org.jetbrains.kotlinx")
-    }
-    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:2.1.10") {
-        exclude("com.fasterxml.jackson.core")
-        exclude("com.fasterxml.jackson.dataformat")
-        exclude("com.fasterxml.jackson.module")
-        exclude("org.jetbrains.kotlin")
-        exclude("org.jetbrains.kotlinx")
-    }
+    implementation("com.bybutter.sisyphus:sisyphus-grpc:higan-SNAPSHOT")
+    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:higan-SNAPSHOT")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.3")
+    implementation("io.grpc:grpc-netty:1.59.0")
 }
 
 // Configure gradle-intellij-plugin plugin.
@@ -99,26 +95,31 @@ tasks {
                     throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
                 }
                 subList(indexOf(start) + 1, indexOf(end))
-            }.joinToString("\n").run { markdownToHTML(this) }
+            }.joinToString("\n").run { markdownToHTML(this) },
         )
 
         // Get the latest available change notes from the changelog file
-        changeNotes.set(provider {
-            changelog.run {
-                getOrNull(properties("pluginVersion")) ?: getLatest()
-            }.toHTML()
-        })
+        changeNotes.set(
+            provider {
+                changelog.renderItem(
+                    changelog.run {
+                        getOrNull(properties("pluginVersion")) ?: getLatest()
+                    },
+                    Changelog.OutputType.HTML,
+                )
+            },
+        )
     }
 
     generateLexer {
-        source.set("src/main/grammar/protobuf.flex")
+        sourceFile.set(projectDir.resolve("src/main/grammar/protobuf.flex"))
         targetDir.set(buildDir.resolve("generated/sources/grammar/io/kanro/idea/plugin/protobuf/lang/lexer").path)
         targetClass.set("_ProtobufLexer")
         purgeOldFiles.set(true)
     }
 
     generateParser {
-        source.set("src/main/grammar/protobuf.bnf")
+        sourceFile.set(projectDir.resolve("src/main/grammar/protobuf.bnf"))
         targetRoot.set(buildDir.resolve("generated/sources/grammar").path)
         purgeOldFiles.set(true)
         pathToParser.set("io/kanro/idea/plugin/protobuf/lang/parser/ProtobufParser.java")
@@ -133,7 +134,7 @@ tasks {
                 buildString {
                     appendLine("idea.plugin.protoeditor")
                     appendLine("com.intellij.grpc")
-                }
+                },
             )
         }
     }

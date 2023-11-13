@@ -15,7 +15,7 @@ object EnumValueNameProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
-        result: CompletionResultSet
+        result: CompletionResultSet,
     ) {
         val element = parameters.position
         val name = element.parentOfType<ProtobufEnumDefinition>()?.name() ?: return
@@ -23,12 +23,12 @@ object EnumValueNameProvider : CompletionProvider<CompletionParameters>() {
         result.addElement(
             LookupElementBuilder.create("$name unspecified".toScreamingSnakeCase())
                 .withTypeText("enum value")
-                .withInsertHandler(enumValueNumberInserter(0))
+                .withInsertHandler(enumValueNumberInserter(0)),
         )
         result.addElement(
             LookupElementBuilder.create(name.toScreamingSnakeCase())
                 .withTypeText("enum value")
-                .withInsertHandler(SmartInsertHandler("_"))
+                .withInsertHandler(SmartInsertHandler("_")),
         )
     }
 

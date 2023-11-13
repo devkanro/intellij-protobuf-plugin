@@ -11,45 +11,50 @@ import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
 
 class Protobuf2Annotator : Annotator {
-    override fun annotate(element: PsiElement, holder: AnnotationHolder) {
+    override fun annotate(
+        element: PsiElement,
+        holder: AnnotationHolder,
+    ) {
         val file = (element as? ProtobufElement)?.file() ?: return
         val syntax = file.syntax()
         if (syntax != null && syntax != "proto2") return
 
-        element.accept(object : ProtobufVisitor() {
-            override fun visitFieldDefinition(o: ProtobufFieldDefinition) {
-                if (o.parent is ProtobufOneofBody) {
-                    if (o.fieldLabel?.textMatches("optional") == false) {
-                        holder.newAnnotation(
-                            HighlightSeverity.ERROR,
-                            "OneOf file only support 'optional' or none label in proto2."
-                        )
-                            .range(o.textRange)
-                            .create()
-                    }
-                } else {
-                    if (o.fieldLabel == null) {
-                        holder.newAnnotation(
-                            HighlightSeverity.ERROR,
-                            "Field must has label in proto2."
-                        )
-                            .range(o.textRange)
-                            .create()
+        element.accept(
+            object : ProtobufVisitor() {
+                override fun visitFieldDefinition(o: ProtobufFieldDefinition) {
+                    if (o.parent is ProtobufOneofBody) {
+                        if (o.fieldLabel?.textMatches("optional") == false) {
+                            holder.newAnnotation(
+                                HighlightSeverity.ERROR,
+                                "OneOf file only support 'optional' or none label in proto2.",
+                            )
+                                .range(o.textRange)
+                                .create()
+                        }
+                    } else {
+                        if (o.fieldLabel == null) {
+                            holder.newAnnotation(
+                                HighlightSeverity.ERROR,
+                                "Field must has label in proto2.",
+                            )
+                                .range(o.textRange)
+                                .create()
+                        }
                     }
                 }
-            }
 
-            override fun visitGroupDefinition(o: ProtobufGroupDefinition) {
-                val name = o.qualifiedName()?.lastComponent ?: return
-                if (name.isEmpty() && !name[0].isUpperCase()) {
-                    holder.newAnnotation(
-                        HighlightSeverity.ERROR,
-                        "'group' field name must start with a capital letter."
-                    )
-                        .range(o.textRange)
-                        .create()
+                override fun visitGroupDefinition(o: ProtobufGroupDefinition) {
+                    val name = o.qualifiedName()?.lastComponent ?: return
+                    if (name.isEmpty() && !name[0].isUpperCase()) {
+                        holder.newAnnotation(
+                            HighlightSeverity.ERROR,
+                            "'group' field name must start with a capital letter.",
+                        )
+                            .range(o.textRange)
+                            .create()
+                    }
                 }
-            }
-        })
+            },
+        )
     }
 }

@@ -36,60 +36,62 @@ class BufRunConfigurationEditor(private val project: Project) : SettingsEditor<B
     override fun applyEditorTo(s: BufRunConfiguration) {
         s.bufPath = bufPath
         s.command = command
-        s.workDir = when (val t = target) {
-            is BufFileManager.State.Module -> t.path!!
-            is BufFileManager.State.Workspace -> t.path!!
-            else -> ""
-        }
+        s.workDir =
+            when (val t = target) {
+                is BufFileManager.State.Module -> t.path!!
+                is BufFileManager.State.Workspace -> t.path!!
+                else -> ""
+            }
         s.parameters = parameters
     }
 
     override fun createEditor(): JComponent {
-        dialogPanel = panel {
-            row {
-                label("Buf executable:")
-                textFieldWithBrowseButton("Buf") {
-                    it.path
-                }.bindText(::bufPath)
-            }
-            row {
-                label("Command:")
-                comboBox(
-                    listOf(
-                        "build",
-                        "lint",
-                        "generate",
-                        "break",
-                        "push",
-                        "mod"
-                    )
-                ).bindItem(::command.toNullableProperty()).applyToComponent {
-                    this.isEditable = true
+        dialogPanel =
+            panel {
+                row {
+                    label("Buf executable:")
+                    textFieldWithBrowseButton("Buf") {
+                        it.path
+                    }.bindText(::bufPath)
+                }
+                row {
+                    label("Command:")
+                    comboBox(
+                        listOf(
+                            "build",
+                            "lint",
+                            "generate",
+                            "break",
+                            "push",
+                            "mod",
+                        ),
+                    ).bindItem(::command.toNullableProperty()).applyToComponent {
+                        this.isEditable = true
+                    }
+                }
+                row {
+                    label("Target:")
+                    val manager = project.service<BufFileManager>()
+                    val items: List<Any> = manager.state.workspaces + manager.state.modules
+                    comboBox(
+                        items,
+                        BufWorkspaceAndModuleListCellRenderer,
+                    ).bindItem({
+                        target
+                    }, {
+                        target = it
+                    })
+                }
+                row {
+                    label("Arguments:")
+                    cell(
+                        ExpandableTextField(
+                            ParametersListUtil.DEFAULT_LINE_PARSER,
+                            ParametersListUtil.DEFAULT_LINE_JOINER,
+                        ),
+                    ).bindText(this@BufRunConfigurationEditor::parameters)
                 }
             }
-            row {
-                label("Target:")
-                val manager = project.service<BufFileManager>()
-                val items: List<Any> = manager.state.workspaces + manager.state.modules
-                comboBox(
-                    items,
-                    BufWorkspaceAndModuleListCellRenderer
-                ).bindItem({
-                    target
-                }, {
-                    target = it
-                })
-            }
-            row {
-                label("Arguments:")
-                cell(
-                    ExpandableTextField(
-                        ParametersListUtil.DEFAULT_LINE_PARSER,
-                        ParametersListUtil.DEFAULT_LINE_JOINER
-                    )
-                ).bindText(this@BufRunConfigurationEditor::parameters)
-            }
-        }
         return dialogPanel
     }
 
@@ -99,7 +101,7 @@ class BufRunConfigurationEditor(private val project: Project) : SettingsEditor<B
             value: Any?,
             index: Int,
             selected: Boolean,
-            hasFocus: Boolean
+            hasFocus: Boolean,
         ) {
             when (value) {
                 is BufFileManager.State.Module -> {

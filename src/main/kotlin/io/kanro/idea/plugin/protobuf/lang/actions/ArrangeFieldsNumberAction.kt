@@ -16,7 +16,11 @@ import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumber
 import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumbered
 
 abstract class ArrangeFieldsNumberActionHandler : EditorActionHandler() {
-    private fun findItemsToSort(editor: Editor, caret: Caret, dataContext: DataContext?): List<ProtobufNumbered> {
+    private fun findItemsToSort(
+        editor: Editor,
+        caret: Caret,
+        dataContext: DataContext?,
+    ): List<ProtobufNumbered> {
         if (!editor.document.isWritable) return listOf()
         val file = dataContext?.getData(CommonDataKeys.PSI_FILE) ?: return listOf()
         if (file.fileType != ProtobufFileType.INSTANCE) return listOf()
@@ -41,11 +45,19 @@ abstract class ArrangeFieldsNumberActionHandler : EditorActionHandler() {
         }
     }
 
-    override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?): Boolean {
+    override fun isEnabledForCaret(
+        editor: Editor,
+        caret: Caret,
+        dataContext: DataContext?,
+    ): Boolean {
         return findItemsToSort(editor, caret, dataContext).size > 1
     }
 
-    override fun doExecute(editor: Editor, caret: Caret?, dataContext: DataContext?) {
+    override fun doExecute(
+        editor: Editor,
+        caret: Caret?,
+        dataContext: DataContext?,
+    ) {
         val currentCaret = caret ?: editor.caretModel.currentCaret
         val items = findItemsToSort(editor, currentCaret, dataContext)
         if (items.isEmpty()) return
@@ -53,52 +65,68 @@ abstract class ArrangeFieldsNumberActionHandler : EditorActionHandler() {
         doExecute(items, editor, currentCaret, dataContext)
     }
 
-    abstract fun doExecute(items: List<ProtobufNumbered>, editor: Editor, caret: Caret, dataContext: DataContext?)
+    abstract fun doExecute(
+        items: List<ProtobufNumbered>,
+        editor: Editor,
+        caret: Caret,
+        dataContext: DataContext?,
+    )
 }
 
 class ArrangeFieldsNumberToMaxHandler : ArrangeFieldsNumberActionHandler() {
-    override fun doExecute(items: List<ProtobufNumbered>, editor: Editor, caret: Caret, dataContext: DataContext?) {
+    override fun doExecute(
+        items: List<ProtobufNumbered>,
+        editor: Editor,
+        caret: Caret,
+        dataContext: DataContext?,
+    ) {
         val allowAlias = items.first().parentOfType<ProtobufNumberScope>()?.allowAlias() ?: false
         if (allowAlias) {
-            val numbersNeed = items.mapNotNull {
-                it.number()
-            }.distinct().size + items.count { it.number() == null }.toLong()
+            val numbersNeed =
+                items.mapNotNull {
+                    it.number()
+                }.distinct().size + items.count { it.number() == null }.toLong()
             val maxInItems = items.maxOf { it.number() ?: -1 }.takeIf { it >= numbersNeed }
 
-            var current = if (items.first() is ProtobufEnumValue) {
-                maxInItems ?: (numbersNeed - 1)
-            } else {
-                maxInItems ?: numbersNeed
-            }
+            var current =
+                if (items.first() is ProtobufEnumValue) {
+                    maxInItems ?: (numbersNeed - 1)
+                } else {
+                    maxInItems ?: numbersNeed
+                }
 
             val mappedValue = mutableMapOf<String, String>()
 
             ApplicationManager.getApplication().runWriteAction {
                 items.asReversed().forEach {
-                    val integerLiteral = it.intValue()?.integerLiteral as? LeafElement ?: kotlin.run {
-                        current--
-                        return@forEach
-                    }
-                    val target = mappedValue.getOrPut(integerLiteral.text) {
-                        (current--).toString()
-                    }
+                    val integerLiteral =
+                        it.intValue()?.integerLiteral as? LeafElement ?: kotlin.run {
+                            current--
+                            return@forEach
+                        }
+                    val target =
+                        mappedValue.getOrPut(integerLiteral.text) {
+                            (current--).toString()
+                        }
                     integerLiteral.replaceWithText(target)
                 }
             }
         } else {
             val numbersNeed = items.size.toLong()
             val maxInItems = items.maxOf { it.number() ?: -1 }.takeIf { it >= numbersNeed }
-            var current = if (items.first() is ProtobufEnumValue) {
-                maxInItems ?: (numbersNeed - 1)
-            } else {
-                maxInItems ?: numbersNeed
-            }
+            var current =
+                if (items.first() is ProtobufEnumValue) {
+                    maxInItems ?: (numbersNeed - 1)
+                } else {
+                    maxInItems ?: numbersNeed
+                }
             ApplicationManager.getApplication().runWriteAction {
                 items.asReversed().forEach {
-                    val integerLiteral = it.intValue()?.integerLiteral as? LeafElement ?: kotlin.run {
-                        current--
-                        return@forEach
-                    }
+                    val integerLiteral =
+                        it.intValue()?.integerLiteral as? LeafElement ?: kotlin.run {
+                            current--
+                            return@forEach
+                        }
                     val target = (current--).toString()
                     integerLiteral.replaceWithText(target)
                 }
@@ -108,38 +136,47 @@ class ArrangeFieldsNumberToMaxHandler : ArrangeFieldsNumberActionHandler() {
 }
 
 class ArrangeFieldsNumberFromMinHandler : ArrangeFieldsNumberActionHandler() {
-    override fun doExecute(items: List<ProtobufNumbered>, editor: Editor, caret: Caret, dataContext: DataContext?) {
+    override fun doExecute(
+        items: List<ProtobufNumbered>,
+        editor: Editor,
+        caret: Caret,
+        dataContext: DataContext?,
+    ) {
         val allowAlias = items.first().parentOfType<ProtobufNumberScope>()?.allowAlias() ?: false
         val minInItems = items.minOf { it.number() ?: -1 }.takeIf { it >= 0 }
 
-        var current = if (items.first() is ProtobufEnumValue) {
-            minInItems ?: 0
-        } else {
-            minInItems ?: 1
-        }
+        var current =
+            if (items.first() is ProtobufEnumValue) {
+                minInItems ?: 0
+            } else {
+                minInItems ?: 1
+            }
 
         if (allowAlias) {
             val mappedValue = mutableMapOf<String, String>()
 
             ApplicationManager.getApplication().runWriteAction {
                 items.forEach {
-                    val integerLiteral = it.intValue()?.integerLiteral as? LeafElement ?: kotlin.run {
-                        current++
-                        return@forEach
-                    }
-                    val target = mappedValue.getOrPut(integerLiteral.text) {
-                        (current++).toString()
-                    }
+                    val integerLiteral =
+                        it.intValue()?.integerLiteral as? LeafElement ?: kotlin.run {
+                            current++
+                            return@forEach
+                        }
+                    val target =
+                        mappedValue.getOrPut(integerLiteral.text) {
+                            (current++).toString()
+                        }
                     integerLiteral.replaceWithText(target)
                 }
             }
         } else {
             ApplicationManager.getApplication().runWriteAction {
                 items.forEach {
-                    val integerLiteral = it.intValue()?.integerLiteral as? LeafElement ?: kotlin.run {
-                        current++
-                        return@forEach
-                    }
+                    val integerLiteral =
+                        it.intValue()?.integerLiteral as? LeafElement ?: kotlin.run {
+                            current++
+                            return@forEach
+                        }
                     val target = (current++).toString()
                     integerLiteral.replaceWithText(target)
                 }
@@ -149,7 +186,11 @@ class ArrangeFieldsNumberFromMinHandler : ArrangeFieldsNumberActionHandler() {
 }
 
 class ArrangeFieldsNumberToMaxAction : EditorAction(ArrangeFieldsNumberToMaxHandler()) {
-    override fun update(editor: Editor?, presentation: Presentation?, dataContext: DataContext?) {
+    override fun update(
+        editor: Editor?,
+        presentation: Presentation?,
+        dataContext: DataContext?,
+    ) {
         super.update(editor, presentation, dataContext)
         presentation?.apply {
             isVisible = isEnabled
@@ -158,7 +199,11 @@ class ArrangeFieldsNumberToMaxAction : EditorAction(ArrangeFieldsNumberToMaxHand
 }
 
 class ArrangeFieldsNumberFromMinAction : EditorAction(ArrangeFieldsNumberFromMinHandler()) {
-    override fun update(editor: Editor?, presentation: Presentation?, dataContext: DataContext?) {
+    override fun update(
+        editor: Editor?,
+        presentation: Presentation?,
+        dataContext: DataContext?,
+    ) {
         super.update(editor, presentation, dataContext)
         presentation?.apply {
             isVisible = isEnabled

@@ -12,11 +12,16 @@ import com.intellij.psi.PsiFile
 import io.kanro.idea.plugin.protobuf.grpc.referece.GrpcReference
 
 class JsonFieldCompletionSuggester : TypedHandlerDelegate() {
-    override fun checkAutoPopup(charTyped: Char, project: Project, editor: Editor, file: PsiFile): Result {
+    override fun checkAutoPopup(
+        charTyped: Char,
+        project: Project,
+        editor: Editor,
+        file: PsiFile,
+    ): Result {
         if (file !is JsonFile) return Result.CONTINUE
         if (charTyped != '"') return Result.CONTINUE
-        //val request = file.injectedRequest() ?: return Result.CONTINUE
-        //if(!request.isGrpcRequest()) return Result.CONTINUE
+        // val request = file.injectedRequest() ?: return Result.CONTINUE
+        // if(!request.isGrpcRequest()) return Result.CONTINUE
         ApplicationManager.getApplication().invokeLater {
             val element = file.findElementAt(editor.caretModel.offset) ?: return@invokeLater
             val parent = element.parent as? JsonStringLiteral ?: return@invokeLater

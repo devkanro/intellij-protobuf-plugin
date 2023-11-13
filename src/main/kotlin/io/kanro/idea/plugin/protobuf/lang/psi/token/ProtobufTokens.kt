@@ -9,7 +9,10 @@ object ProtobufTokens {
         return put(element.toString(), element)
     }
 
-    private fun put(name: String, element: IElementType): IElementType {
+    private fun put(
+        name: String,
+        element: IElementType,
+    ): IElementType {
         return types.getOrPut(name) {
             element
         }

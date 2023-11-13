@@ -21,7 +21,7 @@ class BufToolWindowTaskElement(
     val name: String,
     val tooltip: String?,
     val command: String,
-    val parameters: String = ""
+    val parameters: String = "",
 ) : TreeActionElement, ItemPresentation, TooltipPresentation {
     override fun children(): Array<TreeElement> {
         return arrayOf()
@@ -42,15 +42,16 @@ class BufToolWindowTaskElement(
     override fun doubleClickOrEnter() {
         val moduleName = module.name ?: module.path?.let { Path(it).name }
         val runManager = RunManager.getInstance(manager.project)
-        val configuration = runManager.getConfigurationSettingsList(BufRunConfigurationType.INSTANCE).firstOrNull {
-            val buf = it.configuration as BufRunConfiguration
-            buf.command == command && buf.workDir == module.path
-        } ?: runManager.createConfiguration("$moduleName [buf $command]", BufRunConfigurationType::class.java).apply {
-            val buf = configuration as BufRunConfiguration
-            buf.command = command
-            buf.workDir = module.path
-            buf.parameters = parameters
-        }
+        val configuration =
+            runManager.getConfigurationSettingsList(BufRunConfigurationType.INSTANCE).firstOrNull {
+                val buf = it.configuration as BufRunConfiguration
+                buf.command == command && buf.workDir == module.path
+            } ?: runManager.createConfiguration("$moduleName [buf $command]", BufRunConfigurationType::class.java).apply {
+                val buf = configuration as BufRunConfiguration
+                buf.command = command
+                buf.workDir = module.path
+                buf.parameters = parameters
+            }
         ProgramRunnerUtil.executeConfiguration(configuration, DefaultRunExecutor.getRunExecutorInstance())
     }
 }

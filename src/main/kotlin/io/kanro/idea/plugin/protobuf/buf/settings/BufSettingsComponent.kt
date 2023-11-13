@@ -15,17 +15,18 @@ class BufSettingsComponent(val project: Project) : ConfigurableUi<BufSettings> {
     private lateinit var textField: JTextField
 
     init {
-        panel = panel {
-            row {
-                label("Buf executable:")
-                textFieldWithBrowseButton("Choose Buf Executable Path", project, bufPathChooserDescriptor()) {
-                    textField.text = it.path
-                    File(it.path).path
-                }.apply {
-                    textField = this.component.textField
+        panel =
+            panel {
+                row {
+                    label("Buf executable:")
+                    textFieldWithBrowseButton("Choose Buf Executable Path", project, bufPathChooserDescriptor()) {
+                        textField.text = it.path
+                        File(it.path).path
+                    }.apply {
+                        textField = this.component.textField
+                    }
                 }
             }
-        }
     }
 
     override fun reset(settings: BufSettings) {
@@ -52,7 +53,7 @@ class BufSettingsComponent(val project: Project) : ConfigurableUi<BufSettings> {
             false,
             false,
             false,
-            false
+            false,
         ).withShowFileSystemRoots(true)
     }
 }

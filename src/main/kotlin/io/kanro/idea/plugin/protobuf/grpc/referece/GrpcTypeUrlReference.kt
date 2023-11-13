@@ -29,7 +29,7 @@ class GrpcTypeUrlReference(value: JsonStringLiteral) : PsiReferenceBase<JsonStri
             type,
             element.project,
             GlobalSearchScope.allScope(element.project),
-            ProtobufElement::class.java
+            ProtobufElement::class.java,
         ).firstOrNull { it is ProtobufMessageDefinition } as? ProtobufMessageDefinition
     }
 
@@ -47,7 +47,7 @@ class GrpcTypeUrlReference(value: JsonStringLiteral) : PsiReferenceBase<JsonStri
     private fun getVariantsForShortName(
         pattern: String,
         result: MutableList<Any>,
-        elements: MutableSet<ProtobufElement>
+        elements: MutableSet<ProtobufElement>,
     ) {
         if (pattern.contains('.')) return
         val searchName = pattern.substringBefore(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)
@@ -61,7 +61,7 @@ class GrpcTypeUrlReference(value: JsonStringLiteral) : PsiReferenceBase<JsonStri
                 it,
                 element.project,
                 scope,
-                ProtobufMessageDefinition::class.java
+                ProtobufMessageDefinition::class.java,
             ).asSequence()
         }.forEach {
             if (it in elements) return@forEach
@@ -75,4 +75,3 @@ class GrpcTypeUrlReference(value: JsonStringLiteral) : PsiReferenceBase<JsonStri
         return element
     }
 }
-

@@ -16,11 +16,19 @@ class OptimizeImportsFix : BaseIntentionAction() {
         return "Cleanup"
     }
 
-    override fun isAvailable(project: Project, editor: Editor?, file: PsiFile?): Boolean {
+    override fun isAvailable(
+        project: Project,
+        editor: Editor?,
+        file: PsiFile?,
+    ): Boolean {
         return file is ProtobufFile && file.isWritable
     }
 
-    override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {
+    override fun invoke(
+        project: Project,
+        editor: Editor?,
+        file: PsiFile?,
+    ) {
         if (file !is ProtobufFile) return
         ProtobufImportOptimizer.processFile(file)
     }

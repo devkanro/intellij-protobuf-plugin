@@ -6,7 +6,10 @@ import com.intellij.execution.configurations.ConfigurationTypeBase
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 
 class BufRunConfigurationType : ConfigurationTypeBase(
-    "buf", "Buf Command", "Run buf commands", ProtobufIcons.BUF_LOGO
+    "buf",
+    "Buf Command",
+    "Run buf commands",
+    ProtobufIcons.BUF_LOGO,
 ) {
     override fun getConfigurationFactories(): Array<ConfigurationFactory> {
         return arrayOf(BufRunConfigurationFactory())

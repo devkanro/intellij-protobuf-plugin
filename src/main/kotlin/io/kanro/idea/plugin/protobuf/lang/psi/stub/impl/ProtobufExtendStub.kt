@@ -9,7 +9,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufExtendStubType
 class ProtobufExtendStub(
     data: Array<String>,
     external: Map<String, String>,
-    parent: StubElement<*>?
+    parent: StubElement<*>?,
 ) : ProtobufStubBase<ProtobufExtendDefinition>(data, external, parent, ProtobufExtendStubType),
     ProtobufStub<ProtobufExtendDefinition>,
     ProtobufVirtualScopeStub

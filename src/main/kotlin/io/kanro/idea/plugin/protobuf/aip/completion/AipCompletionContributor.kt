@@ -28,14 +28,14 @@ class AipCompletionContributor : CompletionContributor() {
             PlatformPatterns.psiElement()
                 .withParent(ProtobufIdentifier::class.java)
                 .withSuperParent(2, ProtobufRpcDefinition::class.java),
-            MethodCompletionProvider
+            MethodCompletionProvider,
         )
         extend(
             CompletionType.BASIC,
             PlatformPatterns.psiElement()
                 .withParent(ProtobufIdentifier::class.java)
                 .withSuperParent(2, ProtobufRpcDefinition::class.java),
-            ResourceMethodCompletionProvider
+            ResourceMethodCompletionProvider,
         )
     }
 }
@@ -63,7 +63,7 @@ object MethodCompletionProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
-        result: CompletionResultSet
+        result: CompletionResultSet,
     ) {
         val text = parameters.position.text
         if (methods.any { text.startsWith(it) }) {
@@ -77,22 +77,26 @@ object ResourceMethodCompletionProvider : CompletionProvider<CompletionParameter
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
-        result: CompletionResultSet
+        result: CompletionResultSet,
     ) {
         val text = parameters.position.text
-        val method = MethodCompletionProvider.methods.firstOrNull {
-            text.startsWith(it)
-        } ?: return
+        val method =
+            MethodCompletionProvider.methods.firstOrNull {
+                text.startsWith(it)
+            } ?: return
         val file = parameters.position.containingFile as? ProtobufFile ?: return
 
         result.addAllElements(
             AipResourceResolver.collectAbsolutely(file).mapNotNull {
                 resourceElement(method, it as? ProtobufMessageDefinition)
-            }
+            },
         )
     }
 
-    private fun resourceElement(method: String, message: ProtobufMessageDefinition?): LookupElement? {
+    private fun resourceElement(
+        method: String,
+        message: ProtobufMessageDefinition?,
+    ): LookupElement? {
         val name = message?.name() ?: return null
         val pluralize = method.startsWith("Batch") || method == "List"
         val methodName = "$method${if (pluralize) name.plural() else name}"
@@ -105,7 +109,10 @@ object ResourceMethodCompletionProvider : CompletionProvider<CompletionParameter
 }
 
 class MethodInsertHandler(val method: String) : InsertHandler<LookupElement> {
-    override fun handleInsert(context: InsertionContext, item: LookupElement) {
+    override fun handleInsert(
+        context: InsertionContext,
+        item: LookupElement,
+    ) {
         val message = item.`object` as? ProtobufMessageDefinition ?: return
         val editor = context.editor
         val messageName = message.name()
@@ -113,13 +120,16 @@ class MethodInsertHandler(val method: String) : InsertHandler<LookupElement> {
         val pluralize = method.startsWith("Batch") || method == "List"
         val prefix = "${method}${if (pluralize) messageName?.plural() else messageName}"
         val request = "${prefix}Request"
-        val response = when (method) {
-            "Get",
-            "Create",
-            "Update" -> messageName
-            "Delete" -> "google.protobuf.Empty"
-            else -> "${prefix}Response"
-        }
+        val response =
+            when (method) {
+                "Get",
+                "Create",
+                "Update",
+                -> messageName
+
+                "Delete" -> "google.protobuf.Empty"
+                else -> "${prefix}Response"
+            }
         EditorModificationUtil.insertStringAtCaret(editor, "($request) returns ($response)")
     }
 }

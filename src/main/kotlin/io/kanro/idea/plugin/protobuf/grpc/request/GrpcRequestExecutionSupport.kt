@@ -34,4 +34,3 @@ class GrpcRequestExecutionSupport : RequestExecutionSupport<GrpcRequest> {
 
     override val supportedSchemes: List<String> get() = GrpcRequestExecutionSupport.supportedSchemes
 }
-

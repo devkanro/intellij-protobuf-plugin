@@ -30,49 +30,60 @@ import kotlin.concurrent.withLock
 object GrpcRequestHandler : RequestHandler<GrpcRequest> {
     private fun buildProtoTypes(runContext: RunContext): LocalProtoReflection {
         val httpRequest = runContext.requestInfo.requestPointer.element ?: throw IllegalStateException()
-        val method = httpRequest.requestTarget?.references?.filterIsInstance<GrpcMethodReference>()?.firstOrNull()
-            ?.resolve() as? ProtobufRpcDefinition ?: throw IllegalStateException()
+        val method =
+            httpRequest.requestTarget?.references?.filterIsInstance<GrpcMethodReference>()?.firstOrNull()
+                ?.resolve() as? ProtobufRpcDefinition ?: throw IllegalStateException()
         return ProtoFileReflection(method)
     }
 
     @OptIn(InternalProtoApi::class)
-    override fun execute(request: GrpcRequest, runContext: RunContext): CommonClientResponse {
+    override fun execute(
+        request: GrpcRequest,
+        runContext: RunContext,
+    ): CommonClientResponse {
         if (ProtoModule::class.java.canonicalName !in Json.mapper.registeredModuleIds) {
             Json.mapper.registerModule(ProtoModule())
         }
-        val types = ApplicationManager.getApplication().runReadAction<LocalProtoReflection> {
-            buildProtoTypes(runContext)
-        }
+        val types =
+            ApplicationManager.getApplication().runReadAction<LocalProtoReflection> {
+                buildProtoTypes(runContext)
+            }
         val inputSupport = types.findMessageSupport(request.inputType)
         val outputSupport = types.findMessageSupport(request.outputType)
-        val requests = types.invoke {
-            request.requests.map {
-                val reader = JacksonReader(Json.mapper.createParser(it))
-                reader.next()
-                inputSupport.newMutable().apply {
-                    readFrom(reader)
+        val requests =
+            types.invoke {
+                request.requests.map {
+                    val reader = JacksonReader(Json.mapper.createParser(it))
+                    reader.next()
+                    inputSupport.newMutable().apply {
+                        readFrom(reader)
+                    }
                 }
             }
-        }
 
         val pool = ApplicationManager.getApplication().getService(GrpcChannelPool::class.java)
         val channel = pool.getOrCreateChannel(request)
 
-        val methodType = when {
-            request.inputStreaming && request.outputStreaming -> MethodDescriptor.MethodType.BIDI_STREAMING
-            request.inputStreaming -> MethodDescriptor.MethodType.CLIENT_STREAMING
-            request.outputStreaming -> MethodDescriptor.MethodType.SERVER_STREAMING
-            else -> MethodDescriptor.MethodType.UNARY
-        }
+        val methodType =
+            when {
+                request.inputStreaming && request.outputStreaming -> MethodDescriptor.MethodType.BIDI_STREAMING
+                request.inputStreaming -> MethodDescriptor.MethodType.CLIENT_STREAMING
+                request.outputStreaming -> MethodDescriptor.MethodType.SERVER_STREAMING
+                else -> MethodDescriptor.MethodType.UNARY
+            }
 
-        val call = channel.newCall(
-            MethodDescriptor.newBuilder(ByteArrayMarshaller, ByteArrayMarshaller).setFullMethodName(request.method)
-                .setType(methodType).build(), CallOptions.DEFAULT
-        )
+        val call =
+            channel.newCall(
+                MethodDescriptor.newBuilder(ByteArrayMarshaller, ByteArrayMarshaller).setFullMethodName(request.method)
+                    .setType(methodType).build(),
+                CallOptions.DEFAULT,
+            )
 
-        val flow = MutableSharedFlow<CommonClientResponseBody.TextStream.Message>(
-            replay = 5, onBufferOverflow = BufferOverflow.DROP_OLDEST
-        )
+        val flow =
+            MutableSharedFlow<CommonClientResponseBody.TextStream.Message>(
+                replay = 5,
+                onBufferOverflow = BufferOverflow.DROP_OLDEST,
+            )
         val lock = ReentrantLock()
         val condition = lock.newCondition()
 
@@ -80,46 +91,53 @@ object GrpcRequestHandler : RequestHandler<GrpcRequest> {
             GrpcResponse(CommonClientResponseBody.TextStream(flow, jsonBodyFileHint("grpc")), null, null, null, 0)
 
         val start = System.currentTimeMillis()
-        call.start(object : ClientCall.Listener<ByteArray>() {
-            override fun onMessage(message: ByteArray) {
-                val result = types.invoke {
-                    outputSupport.parse(message).toJson()
-                }
-                flow.tryEmit(
-                    CommonClientResponseBody.TextStream.Message.Content.Chunk(
-                        Json.mapper.writerWithDefaultPrettyPrinter()
-                            .writeValueAsString(Json.mapper.readTree(result)) + "\n\n"
-                    )
-                )
-                call.request(1)
-            }
-
-            override fun onHeaders(headers: Metadata?) {
-                response.header = headers
-            }
-
-            override fun onClose(status: Status, trailers: Metadata) {
-                response.trailer = trailers
-                response.status = status
-
-                val detail = trailers[GrpcStatusMarshaller.KEY]
-
-                if (status.isOk) {
-                    flow.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.End)
-                } else {
+        call.start(
+            object : ClientCall.Listener<ByteArray>() {
+                override fun onMessage(message: ByteArray) {
+                    val result =
+                        types.invoke {
+                            outputSupport.parse(message).toJson()
+                        }
                     flow.tryEmit(
-                        CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(
-                            GrpcStatusException(status, detail?.details)
-                        )
+                        CommonClientResponseBody.TextStream.Message.Content.Chunk(
+                            Json.mapper.writerWithDefaultPrettyPrinter()
+                                .writeValueAsString(Json.mapper.readTree(result)) + "\n\n",
+                        ),
                     )
+                    call.request(1)
                 }
 
-                response.executionTime = System.currentTimeMillis() - start
-                lock.withLock {
-                    condition.signal()
+                override fun onHeaders(headers: Metadata?) {
+                    response.header = headers
                 }
-            }
-        }, request.metadata)
+
+                override fun onClose(
+                    status: Status,
+                    trailers: Metadata,
+                ) {
+                    response.trailer = trailers
+                    response.status = status
+
+                    val detail = trailers[GrpcStatusMarshaller.KEY]
+
+                    if (status.isOk) {
+                        flow.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.End)
+                    } else {
+                        flow.tryEmit(
+                            CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(
+                                GrpcStatusException(status, detail?.details),
+                            ),
+                        )
+                    }
+
+                    response.executionTime = System.currentTimeMillis() - start
+                    lock.withLock {
+                        condition.signal()
+                    }
+                }
+            },
+            request.metadata,
+        )
 
         requests.forEach {
             call.sendMessage(it.toProto())
@@ -136,6 +154,9 @@ object GrpcRequestHandler : RequestHandler<GrpcRequest> {
         return response
     }
 
-    override fun prepareExecutionEnvironment(request: GrpcRequest, runContext: RunContext) {
+    override fun prepareExecutionEnvironment(
+        request: GrpcRequest,
+        runContext: RunContext,
+    ) {
     }
 }

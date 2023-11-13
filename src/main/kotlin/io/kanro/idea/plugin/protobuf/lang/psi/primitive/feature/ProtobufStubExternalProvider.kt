@@ -9,7 +9,13 @@ interface ProtobufStubExternalProvider {
             ExtensionPointName.create("io.kanro.idea.plugin.protobuf.stubExternalProvider")
     }
 
-    fun mergeExternalData(element: ProtobufStubSupport<*, *>, external: MutableMap<String, String>)
+    fun mergeExternalData(
+        element: ProtobufStubSupport<*, *>,
+        external: MutableMap<String, String>,
+    )
 
-    fun mergeExternalData(file: ProtobufFile, external: MutableMap<String, String>)
+    fun mergeExternalData(
+        file: ProtobufFile,
+        external: MutableMap<String, String>,
+    )
 }

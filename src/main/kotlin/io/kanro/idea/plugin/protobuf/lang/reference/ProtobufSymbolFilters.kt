@@ -22,9 +22,10 @@ import io.kanro.idea.plugin.protobuf.lang.util.and
 import io.kanro.idea.plugin.protobuf.lang.util.or
 
 object ProtobufSymbolFilters {
-    val packagePart = PsiElementFilter {
-        it is ProtobufPackageName
-    }
+    val packagePart =
+        PsiElementFilter {
+            it is ProtobufPackageName
+        }
 
     fun extensionOptionName(owner: ProtobufOptionOwner?): PsiElementFilter {
         return when (owner) {
@@ -40,9 +41,10 @@ object ProtobufSymbolFilters {
         }
     }
 
-    private val extensionOptionName = PsiElementFilter {
-        (it is ProtobufFieldDefinition || it is ProtobufGroupDefinition) && it.parent is ProtobufExtendBody
-    }
+    private val extensionOptionName =
+        PsiElementFilter {
+            (it is ProtobufFieldDefinition || it is ProtobufGroupDefinition) && it.parent is ProtobufExtendBody
+        }
     private val fileExtensionOptionName = extensionOptionName and TargetOptionFilter(Options.FILE_OPTIONS)
     private val messageExtensionOptionName = extensionOptionName and TargetOptionFilter(Options.MESSAGE_OPTIONS)
     private val fieldExtensionOptionName = extensionOptionName and TargetOptionFilter(Options.FIELD_OPTIONS)
@@ -76,21 +78,24 @@ object ProtobufSymbolFilters {
     private val serviceExtensionOptionNameVariants = serviceExtensionOptionName or packagePart
     private val methodExtensionOptionNameVariants = methodExtensionOptionName or packagePart
 
-    val fieldTypeName = PsiElementFilter {
-        it is ProtobufEnumDefinition || it is ProtobufMessageDefinition
-    }
+    val fieldTypeName =
+        PsiElementFilter {
+            it is ProtobufEnumDefinition || it is ProtobufMessageDefinition
+        }
 
     val fieldTypeNameVariants = packagePart or fieldTypeName
 
-    val rpcTypeName = PsiElementFilter {
-        it is ProtobufMessageDefinition
-    }
+    val rpcTypeName =
+        PsiElementFilter {
+            it is ProtobufMessageDefinition
+        }
 
     val rpcTypeNameVariants = packagePart or rpcTypeName
 
-    val extendTypeName = PsiElementFilter {
-        it is ProtobufMessageDefinition
-    }
+    val extendTypeName =
+        PsiElementFilter {
+            it is ProtobufMessageDefinition
+        }
 
     val extendTypeNameVariants = packagePart or extendTypeName
 

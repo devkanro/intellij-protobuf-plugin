@@ -27,20 +27,26 @@ class GoDecompileLineMarker : LineMarkerProviderDescriptor() {
         if (!type.type.textMatches("byte")) return null
 
         return LineMarkerInfo(
-            element, element.textRange, ProtobufIcons.PROTO_DECOMPILE,
+            element,
+            element.textRange,
+            ProtobufIcons.PROTO_DECOMPILE,
             {
                 "Decompile protobuf descriptor"
             },
-            ProtobufDecompileNavigationHandler, GutterIconRenderer.Alignment.CENTER,
+            ProtobufDecompileNavigationHandler,
+            GutterIconRenderer.Alignment.CENTER,
             {
                 "Decompile descriptor"
-            }
+            },
         )
     }
 }
 
 object ProtobufDecompileNavigationHandler : GutterIconNavigationHandler<GoVarDefinition> {
-    override fun navigate(e: MouseEvent, element: GoVarDefinition) {
+    override fun navigate(
+        e: MouseEvent,
+        element: GoVarDefinition,
+    ) {
         val varSpec = element.parent as? GoVarSpec ?: return
         FileEditorManager.getInstance(element.project).openFile(varSpec.decompile() ?: return, true)
     }

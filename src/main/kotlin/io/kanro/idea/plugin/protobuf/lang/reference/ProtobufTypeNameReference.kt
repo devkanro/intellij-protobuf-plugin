@@ -40,21 +40,25 @@ class ProtobufTypeNameReference(
     element: ProtobufSymbolReferenceHost,
     val hover: ProtobufSymbolReferenceHover,
     val symbolIndex: Int,
-    val child: ProtobufTypeNameReference?
+    val child: ProtobufTypeNameReference?,
 ) : PsiReferenceBase<ProtobufSymbolReferenceHost>(element) {
-
     private object Resolver : ResolveCache.Resolver {
-        override fun resolve(ref: PsiReference, incompleteCode: Boolean): PsiElement? {
+        override fun resolve(
+            ref: PsiReference,
+            incompleteCode: Boolean,
+        ): PsiElement? {
             ref as ProtobufTypeNameReference
             val resolveName = ref.hover.symbol().subQualifiedName(0, ref.symbolIndex + 1)
-            val filter = when (ref.element.parent) {
-                is ProtobufExtensionOptionName -> ProtobufSymbolFilters.extensionOptionNameVariants(ref.element.parentOfType())
-                is ProtobufFieldDefinition,
-                is ProtobufMapFieldDefinition -> ProtobufSymbolFilters.fieldTypeNameVariants
-                is ProtobufRpcIO -> ProtobufSymbolFilters.rpcTypeNameVariants
-                is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendTypeNameVariants
-                else -> AnyElement
-            }
+            val filter =
+                when (ref.element.parent) {
+                    is ProtobufExtensionOptionName -> ProtobufSymbolFilters.extensionOptionNameVariants(ref.element.parentOfType())
+                    is ProtobufFieldDefinition,
+                    is ProtobufMapFieldDefinition,
+                    -> ProtobufSymbolFilters.fieldTypeNameVariants
+                    is ProtobufRpcIO -> ProtobufSymbolFilters.rpcTypeNameVariants
+                    is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendTypeNameVariants
+                    else -> AnyElement
+                }
             return if (ref.hover.absolutely()) {
                 ProtobufSymbolResolver.resolveAbsolutely(ref.element, resolveName, filter)
             } else {
@@ -83,7 +87,7 @@ class ProtobufTypeNameReference(
         val part = hover.symbolParts()[symbolIndex]
         return TextRange.from(
             part.startOffset,
-            part.value.length
+            part.value.length,
         )
     }
 
@@ -101,13 +105,15 @@ class ProtobufTypeNameReference(
         pattern: String,
         filter: PsiElementFilter,
         result: MutableList<Any>,
-        elements: MutableSet<ProtobufElement>
+        elements: MutableSet<ProtobufElement>,
     ) {
         val targetName = pattern.substringBeforeLast('.', "").trim('.')
-        val targetScope = if (targetName.isEmpty())
-            QualifiedName.fromComponents()
-        else
-            QualifiedName.fromDottedString(targetName)
+        val targetScope =
+            if (targetName.isEmpty()) {
+                QualifiedName.fromComponents()
+            } else {
+                QualifiedName.fromDottedString(targetName)
+            }
         if (hover.absolutely()) {
             ProtobufSymbolResolver.collectAbsolute(element, targetScope, filter)
         } else {
@@ -123,7 +129,7 @@ class ProtobufTypeNameReference(
         pattern: String,
         filter: PsiElementFilter,
         result: MutableList<Any>,
-        elements: MutableSet<ProtobufElement>
+        elements: MutableSet<ProtobufElement>,
     ): Array<Any> {
         if (pattern.contains('.')) return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         if (!pattern.endsWith(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) return ArrayUtilRt.EMPTY_OBJECT_ARRAY
@@ -150,7 +156,10 @@ class ProtobufTypeNameReference(
         return element
     }
 
-    private fun lookupFor(element: ProtobufElement, scope: QualifiedName): LookupElement? {
+    private fun lookupFor(
+        element: ProtobufElement,
+        scope: QualifiedName,
+    ): LookupElement? {
         var builder = (element as? ProtobufLookupItem)?.lookup() ?: return null
         builder = builder.withLookupString(scope.append(builder.lookupString).toString())
         if (element is ProtobufPackageName) {
@@ -159,13 +168,19 @@ class ProtobufTypeNameReference(
         return builder
     }
 
-    private fun lookupForStub(element: ProtobufElement, currentScope: QualifiedName?): LookupElement? {
+    private fun lookupForStub(
+        element: ProtobufElement,
+        currentScope: QualifiedName?,
+    ): LookupElement? {
         if (element !is ProtobufDefinition) return null
         val qualifiedName = element.qualifiedName() ?: return null
 
-        val targetName = if (currentScope != null) {
-            qualifiedName.removeCommonPrefix(currentScope)
-        } else qualifiedName
+        val targetName =
+            if (currentScope != null) {
+                qualifiedName.removeCommonPrefix(currentScope)
+            } else {
+                qualifiedName
+            }
         return LookupElementBuilder.create(targetName)
             .withLookupString(qualifiedName.lastComponent!!)
             .withPresentableText(qualifiedName.lastComponent!!)

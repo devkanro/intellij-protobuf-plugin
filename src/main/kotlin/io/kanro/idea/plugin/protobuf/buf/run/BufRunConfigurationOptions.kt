@@ -7,7 +7,7 @@ class BufRunConfigurationOptions(
     bufPath: String? = null,
     command: String? = null,
     workDir: String? = null,
-    parameters: String? = null
+    parameters: String? = null,
 ) : LocatableRunConfigurationOptions() {
     @get:OptionTag("bufPath")
     var bufPath: String? by string(bufPath)
