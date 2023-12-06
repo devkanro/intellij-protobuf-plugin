@@ -37,7 +37,7 @@ dependencies {
     implementation("com.bybutter.sisyphus:sisyphus-grpc:2.1.21")
     implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:2.1.21")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.16.0")
-    implementation("io.grpc:grpc-netty:1.59.1")
+    implementation("io.grpc:grpc-netty:1.60.0")
 }
 
 // Configure gradle-intellij-plugin plugin.
