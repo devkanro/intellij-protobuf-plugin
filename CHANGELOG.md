@@ -3,6 +3,7 @@
 # IntelliJ Protobuf Language Plugin Changelog
 
 ## Unreleased
+- Support generate http transcoding requests
 
 ## 1.7.30 - 2023-12-08
 
