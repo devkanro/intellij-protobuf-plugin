@@ -12,7 +12,7 @@ import com.intellij.psi.PsiReferenceContributor
 import com.intellij.psi.PsiReferenceRegistrar
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
-import io.kanro.idea.plugin.protobuf.grpc.request.GrpcRequestExecutionSupport
+import io.kanro.idea.plugin.protobuf.grpc.isGrpcRequest
 
 object GrpcJsonBody : PatternCondition<JsonElement>("GRPC JSON BODY") {
     override fun accepts(
@@ -23,7 +23,7 @@ object GrpcJsonBody : PatternCondition<JsonElement>("GRPC JSON BODY") {
             InjectedLanguageManager.getInstance(t.project).getInjectionHost(t) as? HttpMessageBody
                 ?: return false
         val request = host.parentOfType<HttpRequest>() ?: return false
-        return request.method?.text in GrpcRequestExecutionSupport.supportedMethod
+        return request.isGrpcRequest()
     }
 }
 

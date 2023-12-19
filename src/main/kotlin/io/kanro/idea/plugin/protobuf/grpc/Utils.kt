@@ -20,7 +20,16 @@ fun JsonElement.injectedRequest(): HttpRequest? {
     return host.parentOfType()
 }
 
-fun HttpRequest.isGrpcRequest(): Boolean {
+fun HttpRequest.isTranscoding(): Boolean {
+    return CachedValuesManager.getCachedValue(this) {
+        CachedValueProvider.Result.create(
+            method?.text in GrpcRequestExecutionSupport.supportedTranscodingMethod && getHeaderField("grpc-method") != null,
+            PsiModificationTracker.MODIFICATION_COUNT,
+        )
+    }
+}
+
+fun HttpRequest.isNativeGrpc(): Boolean {
     return CachedValuesManager.getCachedValue(this) {
         CachedValueProvider.Result.create(
             method?.text in GrpcRequestExecutionSupport.supportedMethod,
@@ -29,11 +38,22 @@ fun HttpRequest.isGrpcRequest(): Boolean {
     }
 }
 
-fun HttpRequest.grpcMethod(): ProtobufRpcDefinition? {
+fun HttpRequest.isGrpcRequest(): Boolean {
+    return isNativeGrpc() || isTranscoding()
+}
+
+fun HttpRequest.resolveRpc(): ProtobufRpcDefinition? {
     if (!isGrpcRequest()) return null
     return CachedValuesManager.getCachedValue(this) {
+        val path =
+            if (method?.text in GrpcRequestExecutionSupport.supportedMethod) {
+                requestTarget?.pathAbsolute?.text?.trim('/')
+            } else {
+                getHeaderField("grpc-method")?.headerFieldValue?.text?.trim('/', ' ')
+            }
+
         val result =
-            requestTarget?.pathAbsolute?.text?.trim('/')?.let {
+            path?.let {
                 StubIndex.getElements(
                     ServiceMethodIndex.key,
                     it,

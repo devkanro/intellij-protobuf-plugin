@@ -31,6 +31,7 @@ object ProtobufIcons {
     val IMPLEMENTING_RPC: Icon = loadIcon("implementingRpc.svg")
 
     val PROCEDURE: Icon = loadIcon("procedure.svg")
+    val PROCEDURE_HTTP: Icon = loadIcon("procedureHttp.svg")
     val PROTO_DECOMPILE: Icon = loadIcon("proto_decompile.svg")
 
     val ARRANGE_FROM_MIN: Icon = loadIcon("arrangeFromMin.svg")

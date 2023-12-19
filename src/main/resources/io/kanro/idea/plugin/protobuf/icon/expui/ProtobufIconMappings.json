@@ -28,6 +28,8 @@
                 "message_dark.svg": "io/kanro/idea/plugin/protobuf/icon/message_dark.svg",
                 "oneof_field.svg": "io/kanro/idea/plugin/protobuf/icon/oneof_field.svg",
                 "oneof_field_dark.svg": "io/kanro/idea/plugin/protobuf/icon/oneof_field_dark.svg",
+                "procedure.svg": "io/kanro/idea/plugin/protobuf/icon/procedure.svg",
+                "procedureHttp.svg": "io/kanro/idea/plugin/protobuf/icon/procedureHttp.svg",
                 "protobuf_file.svg": "io/kanro/idea/plugin/protobuf/icon/protobuf_file.svg",
                 "protobuf_file_dark.svg": "io/kanro/idea/plugin/protobuf/icon/protobuf_file_dark.svg",
                 "resource_message.svg": "io/kanro/idea/plugin/protobuf/icon/resource_message.svg",

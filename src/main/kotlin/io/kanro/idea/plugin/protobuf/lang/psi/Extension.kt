@@ -187,6 +187,7 @@ fun ProtobufFieldName.message(): ProtobufScope? {
             is ProtobufArrayValue -> {
                 parent.parent.parent
             }
+
             else -> parent
         }
 
@@ -200,6 +201,7 @@ fun ProtobufFieldName.message(): ProtobufScope? {
                     prevField.reference?.resolve()
                 }
             }
+
             is ProtobufFieldAssign -> {
                 val messageValue = parent.parent as? ProtobufMessageValue ?: return null
                 val assign =
@@ -207,6 +209,7 @@ fun ProtobufFieldName.message(): ProtobufScope? {
                         is ProtobufArrayValue -> {
                             assign.parent.parent
                         }
+
                         else -> assign
                     }
 
@@ -214,12 +217,15 @@ fun ProtobufFieldName.message(): ProtobufScope? {
                     is ProtobufOptionAssign -> {
                         assign.optionName.field()
                     }
+
                     is ProtobufFieldAssign -> {
                         assign.fieldName.reference?.resolve() as? ProtobufDefinition
                     }
+
                     else -> null
                 }
             }
+
             else -> null
         } ?: return null
 
@@ -244,9 +250,11 @@ fun ProtobufEnumValue.enum(): ProtobufEnumDefinition? {
             is ProtobufOptionAssign -> {
                 parent.optionName.field() as? ProtobufFieldDefinition
             }
+
             is ProtobufFieldAssign -> {
                 parent.fieldName.reference?.resolve() as? ProtobufFieldDefinition
             }
+
             else -> null
         } ?: return null
     return field.typeName.reference?.resolve() as? ProtobufEnumDefinition
@@ -261,6 +269,7 @@ fun ProtobufReservedRange.range(): LongRange? {
             } else {
                 LongRange(numbers[0], numbers[0])
             }
+
         2 -> LongRange(numbers[0], numbers[1])
         else -> null
     }
@@ -278,6 +287,7 @@ inline fun <reified T : ProtobufScopeItem> ProtobufScope.items(block: (T) -> Uni
                     if (it is T) block(it)
                 }
             }
+
             is T -> {
                 block(it)
             }
@@ -293,6 +303,7 @@ inline fun <reified T : ProtobufScopeItem> ProtobufScope.firstItemOrNull(block: 
                     it is T && block(it)
                 }?.let { return it as T }
             }
+
             is T -> {
                 if (block(it)) return it
             }
@@ -312,6 +323,7 @@ inline fun <reified T : ProtobufScopeItem> ProtobufScope.filterItem(block: (T) -
                     }
                 }
             }
+
             is T -> {
                 if (block(it)) {
                     result += it
@@ -448,6 +460,7 @@ fun ProtobufMessageDefinition.resolveFieldType(
                 if (q.isEmpty()) return type
                 scope = type as? ProtobufMessageDefinition ?: return null
             }
+
             is ProtobufMapFieldDefinition -> {
                 if (q.isEmpty()) return fieldDefinition
                 q.pop()
@@ -457,6 +470,7 @@ fun ProtobufMessageDefinition.resolveFieldType(
                 if (q.isEmpty()) return type
                 scope = type as? ProtobufMessageDefinition ?: return null
             }
+
             is ProtobufGroupDefinition -> {
                 scope = fieldDefinition
                 if (q.isEmpty()) return scope
@@ -495,9 +509,11 @@ fun ProtobufMessageDefinition.resolveField(
         is ProtobufMessageDefinition -> {
             parentType.firstItemOrNull { it.name() == field || it.jsonName() == field }
         }
+
         is ProtobufGroupDefinition -> {
             parentType.firstItemOrNull { it.name() == field || it.jsonName() == field }
         }
+
         else -> null
     }
 }
@@ -535,3 +551,6 @@ fun ProtobufMapFieldDefinition.value(): ProtobufTypeName? {
     if (typeNameList.size < 2) return null
     return typeNameList[1]
 }
+
+fun <T> nullCachedValue(): CachedValueProvider.Result<T?> =
+    CachedValueProvider.Result.create(null, PsiModificationTracker.MODIFICATION_COUNT)

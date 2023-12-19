@@ -11,6 +11,8 @@ class GrpcRequestExecutionSupport : RequestExecutionSupport<GrpcRequest> {
         const val GRPC = "GRPC"
         val supportedMethod = setOf(GRPC)
 
+        val supportedTranscodingMethod = setOf("GET", "POST", "PUT", "DELETE", "PATCH")
+
         val supportedSchemes = listOf("http", "https")
     }
 
