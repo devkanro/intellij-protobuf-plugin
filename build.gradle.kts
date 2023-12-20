@@ -36,7 +36,6 @@ dependencies {
     implementation("org.commonmark:commonmark-ext-autolink:0.21.0")
     implementation("com.bybutter.sisyphus:sisyphus-grpc:2.1.21")
     implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:2.1.21")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.16.0")
     implementation("io.grpc:grpc-netty:1.60.0")
 }
 

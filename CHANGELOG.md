@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Remove support for buf
+
 ## 1.7.40 - 2023-12-19
 
 - Support generate http transcoding requests
