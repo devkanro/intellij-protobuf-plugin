@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+## 1.7.50 - 2023-12-25
+
 - Remove support for buf
 
 ## 1.7.40 - 2023-12-19
