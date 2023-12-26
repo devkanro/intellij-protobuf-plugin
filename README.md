@@ -33,10 +33,7 @@ Analyzing features:
 ✅ Java/Kotlin support  
 ✅ [Sisyphus](https://github.com/ButterCam/sisyphus) framework integration  
 ✅ Decompile from proto descriptor for golang  
-✅ [Buf](https://buf.build) integration, auto-configure the protobuf roots from buf.yaml and buf.work.yaml  
-✅ [Buf](https://buf.build) integration, run buf command in buf tool window  
-✅ [Buf](https://buf.build) integration, annotator by buf linter  
-✅ Send gRPC requests via [Http Client](https://plugins.jetbrains.com/plugin/13121-http-client)  
+✅ Send gRPC native/transcoding requests via [Http Client](https://plugins.jetbrains.com/plugin/13121-http-client)
 ✅ Explore gRPC APIs via [Endpoints](https://plugins.jetbrains.com/plugin/16890-endpoints)
 
 Editor features:
@@ -47,7 +44,6 @@ Editor features:
 ✅ [AIP](https://google.aip.dev/) spec support  
 ✅ Auto import  
 ✅ Import quick fix  
-✅ [Buf](https://buf.build) integration, code completion for buf configraution files  
 ✅ Edit protobuf line comments as markdown
 
 <!-- Plugin description end -->
