@@ -33,8 +33,9 @@ Analyzing features:
 ✅ Java/Kotlin support  
 ✅ [Sisyphus](https://github.com/ButterCam/sisyphus) framework integration  
 ✅ Decompile from proto descriptor for golang  
-✅ Send gRPC native/transcoding requests via [Http Client](https://plugins.jetbrains.com/plugin/13121-http-client)
-✅ Explore gRPC APIs via [Endpoints](https://plugins.jetbrains.com/plugin/16890-endpoints)
+✅ Send gRPC native/transcoding requests via [Http Client](https://plugins.jetbrains.com/plugin/13121-http-client)  
+✅ Explore gRPC APIs via [Endpoints](https://plugins.jetbrains.com/plugin/16890-endpoints)  
+✅ [Buf](https://buf.build/) support via [Buf for Protocol Buffers](https://plugins.jetbrains.com/plugin/19147-buf-for-protocol-buffers)
 
 Editor features:
 
@@ -59,21 +60,21 @@ Planned features:
 ### Highlight Features
 
 1. Import optimizer  
-   ![import](resources/import_optimizer.gif)
+   ![import](resources/import_optimizer.webp)
 
 2. Reference  
-   ![reference](resources/reference.gif)
+   ![reference](resources/reference.webp)
 
 3. In-place rename  
-   ![rename](resources/rename.gif)
+   ![rename](resources/rename.webp)
 
-4. Auto completion  
-   ![import](resources/import.gif)
+4. Import  
+   ![import](resources/import.webp)
 
 5. Auto import  
-   ![auto import](resources/auto_import.gif)
+   ![auto import](resources/auto_import.webp)
 
 6. AIP Spec
-   ![resource](resources/aip.gif)
+   ![resource](resources/aip.webp)
 
 More features wait for your discovering...
