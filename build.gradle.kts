@@ -19,7 +19,7 @@ plugins {
 
     id("org.jetbrains.grammarkit") version "2022.3.2.1"
 
-    id("org.jmailen.kotlinter") version "4.1.1"
+    id("org.jmailen.kotlinter") version "4.2.0"
 }
 
 group = properties("pluginGroup")
