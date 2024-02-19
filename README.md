@@ -12,7 +12,7 @@ and [intellij-protobuf-editor](https://github.com/jvolkman/intellij-protobuf-edi
 <!-- Plugin description -->
 IntelliJ-based IDEs Protobuf Language Plugin that provides Protobuf language support.
 
-> ⚠️ Attention ⚠️  
+> [!WARNING]
 > This plugin is not compatible
 > with [Jetbrains Official Protobuf Plugin](https://plugins.jetbrains.com/plugin/14004-protocol-buffers) bundled in
 > 2021.2 and later.  
