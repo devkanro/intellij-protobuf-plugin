@@ -17,7 +17,7 @@ plugins {
     // Gradle Qodana Plugin
     id("org.jetbrains.qodana") version "0.1.13"
 
-    id("org.jetbrains.grammarkit") version "2022.3.2.1"
+    id("org.jetbrains.grammarkit") version "2022.3.2.2"
 
     id("org.jmailen.kotlinter") version "4.2.0"
 }
@@ -112,14 +112,13 @@ tasks {
 
     generateLexer {
         sourceFile.set(projectDir.resolve("src/main/grammar/protobuf.flex"))
-        targetDir.set(buildDir.resolve("generated/sources/grammar/io/kanro/idea/plugin/protobuf/lang/lexer").path)
-        targetClass.set("_ProtobufLexer")
+        targetOutputDir.set(buildDir.resolve("generated/sources/grammar/io/kanro/idea/plugin/protobuf/lang/lexer"))
         purgeOldFiles.set(true)
     }
 
     generateParser {
         sourceFile.set(projectDir.resolve("src/main/grammar/protobuf.bnf"))
-        targetRoot.set(buildDir.resolve("generated/sources/grammar").path)
+        targetRootOutputDir.set(buildDir.resolve("generated/sources/grammar"))
         purgeOldFiles.set(true)
         pathToParser.set("io/kanro/idea/plugin/protobuf/lang/parser/ProtobufParser.java")
         pathToPsiRoot.set("io/kanro/idea/plugin/protobuf/lang/psi")

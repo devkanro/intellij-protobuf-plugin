@@ -40,8 +40,10 @@ class AddImportFix(
         if (hover.absolutely() || parts.size > 1) {
             this.elements =
                 StubIndex.getElements(
-                    ShortNameIndex.key, name.lastComponent!!,
-                    project, ProtobufRootResolver.searchScope(host),
+                    ShortNameIndex.key,
+                    name.lastComponent!!,
+                    project,
+                    ProtobufRootResolver.searchScope(host),
                     ProtobufElement::class.java,
                 ).filterIsInstance<ProtobufDefinition>().filter {
                     it.qualifiedName()?.matchesSuffix(name) == true
@@ -49,8 +51,10 @@ class AddImportFix(
         } else {
             this.elements =
                 StubIndex.getElements(
-                    ShortNameIndex.key, name.lastComponent!!,
-                    project, ProtobufRootResolver.searchScope(host),
+                    ShortNameIndex.key,
+                    name.lastComponent!!,
+                    project,
+                    ProtobufRootResolver.searchScope(host),
                     ProtobufElement::class.java,
                 ).filterIsInstance<ProtobufDefinition>().toTypedArray()
         }

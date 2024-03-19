@@ -6,10 +6,10 @@ import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider
 import com.intellij.codeInsight.template.impl.TemplateImpl
 import com.intellij.httpClient.actions.generation.HttpRequestUrlPathInfo
 import com.intellij.httpClient.actions.generation.HttpRequestUrlsGenerationRequest
+import com.intellij.httpClient.actions.generation.RequestBody
 import com.intellij.httpClient.actions.generation.RequestUrlContextInfo
 import com.intellij.httpClient.executor.util.unwrap
 import com.intellij.httpClient.http.request.microservices.OpenInHttpClientLineMarkerBuilder
-import com.intellij.httpClient.http.request.microservices.RequestContextData
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
@@ -60,13 +60,15 @@ class AipRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
                         element.project,
                         PathTemplate.create(path).withoutVars().toString(),
                         listOf(httpMethod),
+                        {
+                            computeCustomRequestBodyTemplate(it, serviceName.toString(), methodName, hasBody)
+                        },
                     ).unwrap(false),
                 ),
                 RequestUrlContextInfo.create(
                     element.project,
                     listOf("http://", "https://"),
                     listOf("localhost:8080"),
-                    buildCustomRequestBodyTemplate(serviceName.toString(), methodName, hasBody),
                 ).unwrap(false) ?: return,
             )
 
@@ -75,26 +77,36 @@ class AipRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
                 .createLineMarkerInfo(element.firstLeaf(), ProtobufIcons.PROCEDURE_HTTP)
     }
 
-    private fun buildCustomRequestBodyTemplate(
+    private fun computeCustomRequestBodyTemplate(
+        info: HttpRequestUrlPathInfo,
         serviceName: String,
         methodName: String,
         hasBody: Boolean,
-    ): RequestContextData {
+    ): HttpRequestUrlPathInfo.Computed {
+        val raw = info.compute()
         return if (hasBody) {
-            RequestContextData.CustomRequestBodyTemplate(
-                TemplateImpl(
-                    "transcodingWithBody",
-                    "\ngrpc-method: $serviceName/$methodName\ncontent-type: application/json\n\n{\n}",
-                    "grpc",
-                ),
+            HttpRequestUrlPathInfo.Computed(
+                raw.baseInfo,
+                requestBody =
+                    RequestBody.CustomRequestBodyTemplate(
+                        TemplateImpl(
+                            "transcodingWithBody",
+                            "\ngrpc-method: $serviceName/$methodName\ncontent-type: application/json\n\n{\n}",
+                            "grpc",
+                        ),
+                    ),
             )
         } else {
-            RequestContextData.CustomRequestBodyTemplate(
-                TemplateImpl(
-                    "transcodingWithoutBody",
-                    "\ngrpc-method: $serviceName/$methodName",
-                    "grpc",
-                ),
+            HttpRequestUrlPathInfo.Computed(
+                raw.baseInfo,
+                requestBody =
+                    RequestBody.CustomRequestBodyTemplate(
+                        TemplateImpl(
+                            "transcodingWithBody",
+                            "\ngrpc-method: $serviceName/$methodName",
+                            "grpc",
+                        ),
+                    ),
             )
         }
     }
