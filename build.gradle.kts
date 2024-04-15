@@ -35,7 +35,7 @@ dependencies {
     implementation("org.commonmark:commonmark-ext-gfm-tables:0.22.0")
     implementation("org.commonmark:commonmark-ext-autolink:0.22.0")
     implementation("com.bybutter.sisyphus:sisyphus-grpc:2.1.22")
-    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:2.1.21")
+    implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:2.1.22")
     implementation("io.grpc:grpc-netty:1.62.2")
 }
 
