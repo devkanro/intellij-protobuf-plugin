@@ -9,9 +9,9 @@ import io.kanro.idea.plugin.protobuf.compile.EnumCompilingState
 import io.kanro.idea.plugin.protobuf.compile.FileCompilingState
 import io.kanro.idea.plugin.protobuf.compile.MessageCompilingState
 import io.kanro.idea.plugin.protobuf.compile.ServiceCompilingState
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 
 class FileCompiler : BaseProtobufCompilerPlugin<FileCompilingState>() {

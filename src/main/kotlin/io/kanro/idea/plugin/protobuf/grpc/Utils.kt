@@ -12,7 +12,7 @@ import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.grpc.index.ServiceMethodIndex
 import io.kanro.idea.plugin.protobuf.grpc.request.GrpcRequestExecutionSupport
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 
 fun JsonElement.injectedRequest(): HttpRequest? {
     val host = InjectedLanguageManager.getInstance(project).getInjectionHost(this)

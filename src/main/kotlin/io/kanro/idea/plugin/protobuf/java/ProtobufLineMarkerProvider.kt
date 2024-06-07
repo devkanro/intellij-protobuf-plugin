@@ -7,9 +7,9 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.search.searches.DirectClassInheritorsSearch
 import com.intellij.psi.search.searches.OverridingMethodsSearch
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufIdentifier
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufIdentifier
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
 
 class ProtobufLineMarkerProvider : RelatedItemLineMarkerProvider() {
     override fun collectNavigationMarkers(

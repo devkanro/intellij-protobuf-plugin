@@ -4,8 +4,8 @@ import com.intellij.codeInsight.intention.impl.BaseIntentionAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
-import io.kanro.idea.plugin.protobuf.lang.formatter.ProtobufImportOptimizer
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.formatter.optimizeImportProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
 
 class OptimizeImportsFix : BaseIntentionAction() {
     init {
@@ -30,6 +30,6 @@ class OptimizeImportsFix : BaseIntentionAction() {
         file: PsiFile?,
     ) {
         if (file !is ProtobufFile) return
-        ProtobufImportOptimizer.processFile(file)
+        optimizeImportProtobufFile(file)
     }
 }

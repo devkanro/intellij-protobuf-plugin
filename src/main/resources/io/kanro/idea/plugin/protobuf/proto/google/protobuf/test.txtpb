@@ -1,0 +1,19 @@
+# proto-file: google/protobuf/unittest_custom_options.proto
+# proto-message: Aggregate
+
+s: 'FileAnnotation'
+i: 100
+sub { s: 'NestedFileAnnotation' }
+file {
+  [protobuf_unittest.fileopt] { s: 'FileExtensionAnnotation' }
+}
+mset {
+  [protobuf_unittest.AggregateMessageSetElement.message_set_extension] {
+    s: 'EmbeddedMessageSetElement'
+  }
+}
+any {
+  [type.googleapis.com/protobuf_unittest.AggregateMessageSetElement] {
+    s: 'EmbeddedMessageSetElement'
+  }
+}

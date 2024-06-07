@@ -4,20 +4,21 @@ import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufBuiltInOptionName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtensionStatement
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOneofBody
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.isFieldDefaultOption
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtendDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtensionStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufGroupDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufImportStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOneofBody
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypeName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.weak
 import io.kanro.idea.plugin.protobuf.lang.support.Options
 
@@ -26,6 +27,7 @@ class Protobuf3Annotator : Annotator {
         element: PsiElement,
         holder: AnnotationHolder,
     ) {
+        if (element.containingFile.originalFile !is ProtobufFile) return
         val file = (element as? ProtobufElement)?.file() ?: return
         if (file.syntax() != "proto3") return
 
@@ -95,7 +97,7 @@ class Protobuf3Annotator : Annotator {
                     }
                 }
 
-                override fun visitBuiltInOptionName(o: ProtobufBuiltInOptionName) {
+                override fun visitOptionName(o: ProtobufOptionName) {
                     if (o.isFieldDefaultOption()) {
                         holder.newAnnotation(
                             HighlightSeverity.ERROR,

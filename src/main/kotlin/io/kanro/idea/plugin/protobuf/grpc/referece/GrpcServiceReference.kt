@@ -15,9 +15,9 @@ import com.intellij.psi.stubs.StubIndex
 import io.kanro.idea.plugin.protobuf.grpc.index.ServiceQualifiedNameIndex
 import io.kanro.idea.plugin.protobuf.grpc.index.ServiceShortNameIndex
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.QualifiedNameIndex
 
 class GrpcServiceReference(element: HttpRequestTarget, range: TextRange) :
     PsiReferenceBase<HttpRequestTarget>(element, range) {

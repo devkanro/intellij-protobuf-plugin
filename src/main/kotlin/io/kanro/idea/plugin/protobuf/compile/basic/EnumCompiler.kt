@@ -5,7 +5,7 @@ import io.kanro.idea.plugin.protobuf.compile.BaseProtobufCompilerPlugin
 import io.kanro.idea.plugin.protobuf.compile.CompileContext
 import io.kanro.idea.plugin.protobuf.compile.EnumCompilingState
 import io.kanro.idea.plugin.protobuf.compile.EnumValueCompilingState
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
 
 class EnumCompiler : BaseProtobufCompilerPlugin<EnumCompilingState>() {
     override fun compile(

@@ -16,7 +16,7 @@ import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.elementType
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.firstLeaf
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 
 class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
     override fun collectNavigationMarkers(

@@ -16,22 +16,20 @@ import com.intellij.psi.util.parentOfType
 import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtensionOptionName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcIO
-import io.kanro.idea.plugin.protobuf.lang.psi.prev
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHover
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtendDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtensionFieldName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMapFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPackageName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcIO
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceHost
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceHover
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScopeItem
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.ShortNameIndex
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import io.kanro.idea.plugin.protobuf.lang.util.AnyElement
 import io.kanro.idea.plugin.protobuf.lang.util.removeCommonPrefix
@@ -51,7 +49,7 @@ class ProtobufTypeNameReference(
             val resolveName = ref.hover.symbol().subQualifiedName(0, ref.symbolIndex + 1)
             val filter =
                 when (ref.element.parent) {
-                    is ProtobufExtensionOptionName -> ProtobufSymbolFilters.extensionOptionNameVariants(ref.element.parentOfType())
+                    is ProtobufExtensionFieldName -> ProtobufSymbolFilters.extensionOptionNameVariants(ref.element.parentOfType())
                     is ProtobufFieldDefinition,
                     is ProtobufMapFieldDefinition,
                     -> ProtobufSymbolFilters.fieldTypeNameVariants
@@ -160,7 +158,7 @@ class ProtobufTypeNameReference(
         element: ProtobufElement,
         scope: QualifiedName,
     ): LookupElement? {
-        var builder = (element as? ProtobufLookupItem)?.lookup() ?: return null
+        var builder = (element as? io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupElement)?.lookup() ?: return null
         builder = builder.withLookupString(scope.append(builder.lookupString).toString())
         if (element is ProtobufPackageName) {
             builder = builder.withInsertHandler(packageInsertHandler)

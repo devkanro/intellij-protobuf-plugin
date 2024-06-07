@@ -7,8 +7,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import com.intellij.refactoring.RefactoringFactory
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufNamedElement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.NamedElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
 
 class RenameFix(private val newName: String) : PsiElementBaseIntentionAction() {
     init {
@@ -33,7 +33,7 @@ class RenameFix(private val newName: String) : PsiElementBaseIntentionAction() {
         element: PsiElement,
     ) {
         DumbService.getInstance(project).smartInvokeLater {
-            val namedElement = element.parentOfType<ProtobufNamedElement>(true) ?: return@smartInvokeLater
+            val namedElement = element.parentOfType<NamedElement>(true) ?: return@smartInvokeLater
             RefactoringFactory.getInstance(project).createRename(namedElement, newName).run()
         }
     }

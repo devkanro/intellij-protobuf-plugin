@@ -19,7 +19,7 @@ import io.grpc.Metadata
 import io.grpc.MethodDescriptor
 import io.grpc.Status
 import io.kanro.idea.plugin.protobuf.grpc.referece.GrpcMethodReference
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import java.util.concurrent.TimeUnit

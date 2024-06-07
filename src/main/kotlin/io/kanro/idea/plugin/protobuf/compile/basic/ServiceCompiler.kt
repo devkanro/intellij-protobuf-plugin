@@ -5,8 +5,8 @@ import io.kanro.idea.plugin.protobuf.compile.BaseProtobufCompilerPlugin
 import io.kanro.idea.plugin.protobuf.compile.CompileContext
 import io.kanro.idea.plugin.protobuf.compile.ServiceCompilingState
 import io.kanro.idea.plugin.protobuf.compile.ServiceMethodCompilingState
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.stream
 
 class ServiceCompiler : BaseProtobufCompilerPlugin<ServiceCompilingState>() {

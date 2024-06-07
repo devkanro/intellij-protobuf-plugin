@@ -16,11 +16,10 @@ import io.kanro.idea.plugin.protobuf.aip.resolveInput
 import io.kanro.idea.plugin.protobuf.grpc.injectedRequest
 import io.kanro.idea.plugin.protobuf.grpc.isTranscoding
 import io.kanro.idea.plugin.protobuf.grpc.resolveRpc
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.nullCachedValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.resolveField
 import io.kanro.idea.plugin.protobuf.lang.psi.resolveFieldType
-import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
 
 internal fun JsonProperty.contextJsonObject(): JsonObject? {
     return CachedValuesManager.getCachedValue(this) {
@@ -46,7 +45,7 @@ internal fun HttpRequest.grpcBodyType(): ProtobufMessageDefinition? {
                     rpcDefinition.options(AipOptions.httpOption).lastOrNull()
                         ?: return@getCachedValue nullCachedValue()
                 val body =
-                    option.value(AipOptions.httpRuleBodyField)?.stringValue() ?: return@getCachedValue nullCachedValue()
+                    option.value(AipOptions.httpRuleBodyField)?.toString() ?: return@getCachedValue nullCachedValue()
                 if (body != "*") {
                     input.resolveFieldType(QualifiedName.fromDottedString(body), true) as? ProtobufMessageDefinition
                 } else {

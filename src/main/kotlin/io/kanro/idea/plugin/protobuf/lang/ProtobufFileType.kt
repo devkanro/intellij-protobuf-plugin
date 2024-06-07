@@ -2,7 +2,7 @@ package io.kanro.idea.plugin.protobuf.lang
 
 import com.intellij.openapi.fileTypes.LanguageFileType
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.type.ProtobufStubTypes
 import javax.swing.Icon
 
 class ProtobufFileType : LanguageFileType(ProtobufLanguage) {

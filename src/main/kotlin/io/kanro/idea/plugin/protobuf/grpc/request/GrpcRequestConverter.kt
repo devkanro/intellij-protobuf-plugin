@@ -10,8 +10,8 @@ import com.intellij.openapi.project.DumbService
 import com.intellij.psi.SmartPsiElementPointer
 import io.grpc.Metadata
 import io.kanro.idea.plugin.protobuf.grpc.referece.GrpcMethodReference
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.stream
 
 @Suppress("UnstableApiUsage")

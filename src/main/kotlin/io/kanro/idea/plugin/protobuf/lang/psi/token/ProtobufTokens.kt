@@ -53,6 +53,9 @@ object ProtobufTokens {
     val MINUS = put(ProtobufToken("-"))
 
     @JvmField
+    val PLUS = put(ProtobufToken("+"))
+
+    @JvmField
     val RBRACE = put(ProtobufToken("}"))
 
     @JvmField
@@ -92,6 +95,9 @@ object ProtobufTokens {
     val LINE_COMMENT = put(ProtobufCommentToken("LINE_COMMENT"))
 
     @JvmField
+    val SHARP_LINE_COMMENT = put(ProtobufCommentToken("SHARP_LINE_COMMENT"))
+
+    @JvmField
     val SYMBOL = put(ProtobufToken("SYMBOL"))
 
     @JvmField
@@ -105,6 +111,9 @@ object ProtobufTokens {
 
     @JvmField
     val EXTENSIONS = put(ProtobufKeywordToken("extensions"))
+
+    @JvmField
+    val EDITION = put(ProtobufKeywordToken("edition"))
 
     @JvmField
     val FALSE = put(ProtobufKeywordToken("false"))

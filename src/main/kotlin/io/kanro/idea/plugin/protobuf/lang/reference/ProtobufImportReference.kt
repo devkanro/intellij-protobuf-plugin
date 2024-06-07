@@ -13,11 +13,11 @@ import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufImportStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPsiFactory
 import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
 import io.kanro.idea.plugin.protobuf.lang.psi.value
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
-import io.kanro.idea.plugin.protobuf.lang.util.ProtobufPsiFactory
 
 class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBase<ProtobufImportStatement>(import) {
     private object Resolver : ResolveCache.Resolver {

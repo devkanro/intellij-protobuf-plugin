@@ -11,9 +11,9 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.grpc.index.MessageShortNameIndex
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.QualifiedNameIndex
 
 class GrpcTypeUrlReference(value: JsonStringLiteral) : PsiReferenceBase<JsonStringLiteral>(value) {
     override fun calculateDefaultRangeInElement(): TextRange {

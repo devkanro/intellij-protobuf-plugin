@@ -1,12 +1,11 @@
 package io.kanro.idea.plugin.protobuf.aip.reference
 
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.public
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
-import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import java.util.Stack
 
@@ -37,7 +36,7 @@ object AipResourceResolver {
         resourceName: String,
     ): ProtobufElement? {
         file.resourceDefinitions().forEach {
-            if (it.value(AipOptions.resourceTypeField)?.stringValue() == resourceName) {
+            if (it.value(AipOptions.resourceTypeField)?.toString() == resourceName) {
                 return it
             }
         }
@@ -75,7 +74,7 @@ object AipResourceResolver {
         result: MutableList<ProtobufElement> = mutableListOf(),
     ): ProtobufElement? {
         file.resourceDefinitions().forEach {
-            if (it.value(AipOptions.resourceTypeField)?.stringValue() != null) {
+            if (it.value(AipOptions.resourceTypeField)?.toString() != null) {
                 result += it
             }
         }

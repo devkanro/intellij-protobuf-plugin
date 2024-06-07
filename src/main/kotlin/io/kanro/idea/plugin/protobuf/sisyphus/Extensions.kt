@@ -9,12 +9,12 @@ import com.intellij.psi.search.GlobalSearchScope
 import io.kanro.idea.plugin.protobuf.java.findJavaClass
 import io.kanro.idea.plugin.protobuf.java.fullClassName
 import io.kanro.idea.plugin.protobuf.java.getterName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 
 fun ProtobufMessageDefinition.toClass(): PsiClass? {
     return findJavaClass(fullClassName())

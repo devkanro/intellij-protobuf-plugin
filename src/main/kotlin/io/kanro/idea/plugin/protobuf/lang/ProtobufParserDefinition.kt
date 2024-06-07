@@ -13,8 +13,7 @@ import com.intellij.psi.tree.TokenSet
 import io.kanro.idea.plugin.protobuf.lang.lexer.ProtobufLexer
 import io.kanro.idea.plugin.protobuf.lang.parser.ProtobufParser
 import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes
-import io.kanro.idea.plugin.protobuf.lang.psi.impl.ProtobufFileImpl
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufFileStub
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.impl.ProtobufFileImpl
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
 
 class ProtobufParserDefinition : ParserDefinition {
@@ -27,7 +26,7 @@ class ProtobufParserDefinition : ParserDefinition {
     }
 
     override fun getFileNodeType(): IFileElementType {
-        return ProtobufFileStub.Type
+        return io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.ProtobufFileStub.Type
     }
 
     override fun getCommentTokens(): TokenSet {

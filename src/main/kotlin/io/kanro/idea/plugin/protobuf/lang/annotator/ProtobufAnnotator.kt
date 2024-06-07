@@ -8,40 +8,36 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufHighlighter
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufArrayValue
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufBuiltInOptionName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufConstant
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufExtendDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufGroupDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMapFieldDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOptionAssign
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageStatement
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedRange
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.psi.enum
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.ProtobufNumbered
 import io.kanro.idea.plugin.protobuf.lang.psi.field
 import io.kanro.idea.plugin.protobuf.lang.psi.float
 import io.kanro.idea.plugin.protobuf.lang.psi.int
 import io.kanro.idea.plugin.protobuf.lang.psi.items
-import io.kanro.idea.plugin.protobuf.lang.psi.message
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumbered
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufConstant
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtendDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufGroupDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufImportStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMapFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionAssign
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPackageStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufReservedName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufReservedRange
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypeName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufVisitor
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufNumberScope
 import io.kanro.idea.plugin.protobuf.lang.psi.range
 import io.kanro.idea.plugin.protobuf.lang.psi.uint
 import io.kanro.idea.plugin.protobuf.lang.quickfix.AddImportFix
@@ -169,11 +165,11 @@ class ProtobufAnnotator : Annotator {
                     }
                 }
 
-                override fun visitBuiltInOptionName(o: ProtobufBuiltInOptionName) {
-                    if (o.reference?.resolve() == null) {
+                override fun visitOptionName(o: ProtobufOptionName) {
+                    if (o.optionFieldNameList.firstOrNull()?.reference?.resolve() == null) {
                         holder.newAnnotation(
                             HighlightSeverity.ERROR,
-                            "Built-in option '${o.text}' not found",
+                            "Option '${o.text}' not found",
                         )
                             .range(o.textRange)
                             .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
@@ -182,12 +178,8 @@ class ProtobufAnnotator : Annotator {
                 }
 
                 override fun visitFieldName(o: ProtobufFieldName) {
-                    val message = o.message() ?: return
-                    message.items<ProtobufFieldLike> {
-                        if (it.name() == element.text) {
-                            return
-                        }
-                    }
+                    o.reference?.resolve()?.let { return }
+
                     holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
                         .range(o.textRange)
                         .textAttributes(ProtobufHighlighter.FIELD)
@@ -218,36 +210,13 @@ class ProtobufAnnotator : Annotator {
                 }
 
                 override fun visitConstant(o: ProtobufConstant) {
-                    val parent =
-                        when (val parent = o.parent) {
-                            is ProtobufArrayValue -> {
-                                parent.parent.parent
-                            }
-                            else -> parent
-                        }
-
                     val field =
-                        when (parent) {
+                        when (val parent = o.parent) {
                             is ProtobufOptionAssign -> {
                                 parent.optionName.field() as? ProtobufFieldDefinition ?: return
                             }
-                            is ProtobufFieldAssign -> {
-                                parent.fieldName.reference?.resolve() as? ProtobufFieldDefinition ?: return
-                            }
                             else -> return
                         }
-
-                    if (o.arrayValue != null) {
-                        if (field.fieldLabel?.textMatches("repeated") != true) {
-                            holder.newAnnotation(
-                                HighlightSeverity.ERROR,
-                                "Field \"${field.name()}\" is not a repeated value",
-                            )
-                                .range(o.textRange)
-                                .create()
-                        }
-                        return
-                    }
 
                     val message =
                         when (val type = field.typeName.text) {
@@ -258,7 +227,7 @@ class ProtobufAnnotator : Annotator {
                                     null
                                 }
                             BuiltInType.STRING.value() ->
-                                if (o.stringValueList.isEmpty()) {
+                                if (o.stringValue == null) {
                                     "Field \"${field.name()}\" required a string value"
                                 } else {
                                     null

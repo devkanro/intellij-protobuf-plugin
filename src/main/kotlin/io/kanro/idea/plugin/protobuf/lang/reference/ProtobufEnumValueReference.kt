@@ -5,11 +5,11 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.util.ArrayUtilRt
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.enum
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupElement
 import io.kanro.idea.plugin.protobuf.lang.psi.items
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 
 class ProtobufEnumValueReference(field: ProtobufEnumValue) :
@@ -30,7 +30,7 @@ class ProtobufEnumValueReference(field: ProtobufEnumValue) :
     override fun getVariants(): Array<Any> {
         return element.enum()?.realItems()?.mapNotNull {
             if (it !is ProtobufEnumValueDefinition) return@mapNotNull null
-            (it as? ProtobufLookupItem)?.lookup()
+            (it as? LookupElement)?.lookup()
         }?.toTypedArray() ?: ArrayUtilRt.EMPTY_OBJECT_ARRAY
     }
 

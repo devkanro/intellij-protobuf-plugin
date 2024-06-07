@@ -7,11 +7,11 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.filterItem
 import io.kanro.idea.plugin.protobuf.lang.psi.firstItemOrNull
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
 
 class GrpcMessageEnumValueReference(value: JsonStringLiteral) :
     PsiReferenceBase<JsonStringLiteral>(value),

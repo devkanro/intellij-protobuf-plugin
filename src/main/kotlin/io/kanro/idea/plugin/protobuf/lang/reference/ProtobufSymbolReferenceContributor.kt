@@ -10,7 +10,7 @@ import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.util.ProcessingContext
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceHost
 import io.kanro.idea.plugin.protobuf.lang.support.BuiltInType
 
 class ProtobufSymbolReferenceContributor : PsiReferenceContributor() {

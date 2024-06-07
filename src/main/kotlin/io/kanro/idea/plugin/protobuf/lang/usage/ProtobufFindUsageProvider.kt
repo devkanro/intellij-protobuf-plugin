@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.TokenSet
 import io.kanro.idea.plugin.protobuf.lang.ProtobufParserDefinition
 import io.kanro.idea.plugin.protobuf.lang.lexer.ProtobufLexer
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
 
 class ProtobufFindUsageProvider : FindUsagesProvider {

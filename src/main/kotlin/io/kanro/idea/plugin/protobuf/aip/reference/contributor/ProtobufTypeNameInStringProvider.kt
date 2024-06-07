@@ -1,18 +1,18 @@
 package io.kanro.idea.plugin.protobuf.aip.reference.contributor
 
 import com.intellij.openapi.util.TextRange
-import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHover
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceProvider
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufValueAssign
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueAssign
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPsiFactory
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceHost
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceHover
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceProvider
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolFilters
 import io.kanro.idea.plugin.protobuf.string.splitToRange
 
@@ -20,7 +20,7 @@ class ProtobufTypeNameInStringProvider : ProtobufSymbolReferenceProvider {
     override fun hovers(element: ProtobufSymbolReferenceHost): ProtobufSymbolReferenceHover? {
         if (element !is ProtobufStringValue) return null
         return CachedValuesManager.getCachedValue(element) {
-            val assign = element.parentOfType<ProtobufValueAssign>() ?: return@getCachedValue null
+            val assign = element.parentOfType<ValueAssign>() ?: return@getCachedValue null
             val targetField = assign.field()?.qualifiedName()
             return@getCachedValue when {
                 targetField == AipOptions.lroMetadataName -> {
@@ -32,6 +32,7 @@ class ProtobufTypeNameInStringProvider : ProtobufSymbolReferenceProvider {
                         PsiModificationTracker.MODIFICATION_COUNT,
                     )
                 }
+
                 targetField == AipOptions.lroResponseName -> {
                     CachedValueProvider.Result.create(
                         StringProtobufSymbolReferenceHover(
@@ -41,6 +42,7 @@ class ProtobufTypeNameInStringProvider : ProtobufSymbolReferenceProvider {
                         PsiModificationTracker.MODIFICATION_COUNT,
                     )
                 }
+
                 else -> null
             }
         }
@@ -97,17 +99,15 @@ class StringProtobufSymbolReferenceHover(
         index: Int,
         newName: String,
     ) {
-        val leaf = (element.stringLiteral.node as LeafElement)
-        val value = element.text
+        val value = element.value()
         val part = symbolParts()[index]
         val start = value.substring(0, part.startOffset)
         val end = value.substring(part.startOffset + part.value.length, value.length)
-        leaf.replaceWithText("$start$newName$end")
+        element.replace(ProtobufPsiFactory.createStringValue(element.project, "$start$newName$end"))
     }
 
     override fun rename(newName: String) {
-        val leaf = (element.stringLiteral.node as LeafElement)
-        leaf.replaceWithText("\"$newName\"")
+        element.replace(ProtobufPsiFactory.createStringValue(element.project, newName))
     }
 
     override fun absolutely(): Boolean {

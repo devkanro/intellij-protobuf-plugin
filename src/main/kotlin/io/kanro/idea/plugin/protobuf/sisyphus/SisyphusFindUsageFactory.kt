@@ -3,13 +3,13 @@ package io.kanro.idea.plugin.protobuf.sisyphus
 import com.intellij.find.findUsages.FindUsagesHandler
 import com.intellij.find.findUsages.FindUsagesHandlerFactory
 import com.intellij.psi.PsiElement
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 
 class SisyphusFindUsageFactory : FindUsagesHandlerFactory() {
     override fun canFindUsages(element: PsiElement): Boolean {

@@ -3,7 +3,7 @@ package io.kanro.idea.plugin.protobuf.lang.docs
 import com.intellij.lang.injection.MultiHostInjector
 import com.intellij.lang.injection.MultiHostRegistrar
 import com.intellij.psi.PsiElement
-import io.kanro.idea.plugin.protobuf.lang.psi.impl.ProtobufLineCommentImpl
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.impl.ProtobufLineCommentImpl
 import io.kanro.idea.plugin.protobuf.string.lineCommentRanges
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
 

@@ -8,11 +8,11 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.stubs.StubIndex
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHover
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceHost
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceHover
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.ShortNameIndex
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import io.kanro.idea.plugin.protobuf.lang.util.matchesSuffix
 

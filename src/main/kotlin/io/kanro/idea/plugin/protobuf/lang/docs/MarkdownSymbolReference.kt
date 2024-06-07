@@ -16,12 +16,11 @@ import com.intellij.psi.util.parentOfType
 import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufPackageName
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufLookupItem
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPackageName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.ShortNameIndex
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolResolver
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import io.kanro.idea.plugin.protobuf.lang.util.AnyElement
@@ -122,7 +121,7 @@ class MarkdownSymbolReference(element: MarkdownShortReferenceLink) :
         element: ProtobufElement,
         scope: QualifiedName,
     ): LookupElement? {
-        if (element !is ProtobufLookupItem) return null
+        if (element !is io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupElement) return null
         return if (element is ProtobufPackageName) {
             element.lookup()?.withLookupString(scope.append(element.name).toString())
                 ?.withInsertHandler(packageInsertHandler)

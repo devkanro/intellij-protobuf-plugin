@@ -2,7 +2,7 @@ package io.kanro.idea.plugin.protobuf.golang
 
 import com.intellij.psi.stubs.StringStubIndexExtension
 import com.intellij.psi.stubs.StubIndexKey
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 
 class GoNameIndex : StringStubIndexExtension<ProtobufElement>() {
     override fun getKey(): StubIndexKey<String, ProtobufElement> {

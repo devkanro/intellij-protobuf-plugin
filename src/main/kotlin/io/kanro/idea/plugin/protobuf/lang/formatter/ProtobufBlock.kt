@@ -9,11 +9,11 @@ import com.intellij.formatting.Wrap
 import com.intellij.lang.ASTNode
 import com.intellij.psi.TokenType
 import com.intellij.psi.formatter.common.AbstractBlock
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufBlock
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.type.ProtobufStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufCommentToken
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
+import io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement
+import io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement
 
 enum class BlockType {
     BODY,
@@ -103,10 +103,10 @@ class ProtobufBlock(
 
     private fun buildChild(child: ASTNode): Block {
         val psi = child.psi
-        if (psi is ProtobufBlock) {
+        if (psi is BlockElement) {
             return ProtobufBlock(BlockType.BODY, child, wrap, alignment, spacingBuilder)
         }
-        if (psi is ProtobufStatement) {
+        if (psi is StatementElement) {
             return ProtobufBlock(BlockType.STATEMENT, child, wrap, alignment, spacingBuilder)
         }
         if (child.elementType is ProtobufCommentToken) {

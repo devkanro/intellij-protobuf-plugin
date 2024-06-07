@@ -7,8 +7,8 @@ import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 import java.lang.reflect.ParameterizedType
 import java.util.Stack

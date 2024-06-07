@@ -1,7 +1,7 @@
 package io.kanro.idea.plugin.protobuf.lang.util
 
 import com.intellij.codeInsight.documentation.DocumentationManagerProtocol
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 import org.commonmark.ext.autolink.AutolinkExtension
 import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.internal.InlineParserImpl

@@ -1,20 +1,19 @@
 package io.kanro.idea.plugin.protobuf.java
 
 import com.intellij.psi.util.QualifiedName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufFileStub
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufEnumStub
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufEnumValueStub
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufMessageStub
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufRpcStub
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufServiceStub
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.primitive.ProtobufFieldLikeStub
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufEnumStub
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufEnumValueStub
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufMessageStub
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufRpcStub
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufServiceStub
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.primitive.ProtobufFieldLikeStub
 import io.kanro.idea.plugin.protobuf.lang.util.toQualifiedName
 import io.kanro.idea.plugin.protobuf.string.toCamelCase
 
@@ -22,7 +21,7 @@ fun ProtobufFile.fullPackageName(): QualifiedName? {
     return javaPackage()?.toQualifiedName() ?: scope()
 }
 
-fun ProtobufFileStub.fullPackageName(): QualifiedName? {
+fun io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.ProtobufFileStub.fullPackageName(): QualifiedName? {
     return javaPackage()?.toQualifiedName() ?: scope()
 }
 
@@ -34,7 +33,7 @@ fun ProtobufFile.fullOuterClassName(): QualifiedName? {
     }
 }
 
-fun ProtobufFileStub.fullOuterClassName(): QualifiedName? {
+fun io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.ProtobufFileStub.fullOuterClassName(): QualifiedName? {
     return if (javaMultipleFiles() == true) {
         fullPackageName()
     } else {

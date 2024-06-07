@@ -5,17 +5,19 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedRange
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumbered
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.ProtobufNumbered
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtensionRange
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufReservedRange
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufNumberScope
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScopeItem
 import io.kanro.idea.plugin.protobuf.lang.psi.range
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 
 open class NumberTracker(scope: ProtobufNumberScope, val minValue: Long) {
     private val numberMap = mutableMapOf<Long, MutableList<ProtobufNumbered>>()
-    private val reservedNameMap = mutableMapOf<LongRange, ProtobufReservedRange>()
+    private val reservedNameMap = mutableMapOf<LongRange, ProtobufElement>()
     private val allowAlias = scope.allowAlias()
 
     init {
@@ -32,6 +34,11 @@ open class NumberTracker(scope: ProtobufNumberScope, val minValue: Long) {
     }
 
     protected open fun record(reserved: ProtobufReservedRange) {
+        val range = reserved.range() ?: return
+        reservedNameMap[range] = reserved
+    }
+
+    protected open fun record(reserved: ProtobufExtensionRange) {
         val range = reserved.range() ?: return
         reservedNameMap[range] = reserved
     }

@@ -3,11 +3,12 @@ package io.kanro.idea.plugin.protobuf.lang.reference
 import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.parentOfType
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.items
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufMultiNameDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.public
 import io.kanro.idea.plugin.protobuf.lang.psi.resolve
 import io.kanro.idea.plugin.protobuf.lang.util.AnyElement
@@ -127,7 +128,13 @@ object ProtobufSymbolResolver {
         filter: PsiElementFilter = AnyElement,
     ): ProtobufElement? {
         scope.items<ProtobufDefinition> {
-            if (it.name() == symbol.firstComponent) {
+            val matched =
+                if (it is ProtobufMultiNameDefinition) {
+                    symbol.firstComponent in it.names()
+                } else {
+                    it.name() == symbol.firstComponent
+                }
+            if (matched) {
                 if (symbol.componentCount == 1) {
                     return it.takeIf { filter.isAccepted(it) }
                 }

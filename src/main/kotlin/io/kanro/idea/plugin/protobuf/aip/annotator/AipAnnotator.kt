@@ -10,9 +10,8 @@ import io.kanro.idea.plugin.protobuf.aip.reference.AipResourceReference
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufFieldReferenceInString
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcInputFieldReference
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcOutputFieldReference
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
-import io.kanro.idea.plugin.protobuf.lang.psi.value
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.quickfix.AddImportFix
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufTypeNameReference
 

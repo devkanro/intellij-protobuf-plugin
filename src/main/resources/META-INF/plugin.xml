@@ -26,15 +26,15 @@
                 dynamic="true"
                 name="rootProvider"/>
         <extensionPoint
-                interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceProvider"
+                interface="io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceProvider"
                 dynamic="true"
                 name="symbolReferenceProvider"/>
         <extensionPoint
-                interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufIndexProvider"
+                interface="io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufIndexProvider"
                 dynamic="true"
                 name="indexProvider"/>
         <extensionPoint
-                interface="io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufStubExternalProvider"
+                interface="io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufStubExternalProvider"
                 dynamic="true"
                 name="stubExternalProvider"/>
         <extensionPoint
@@ -44,6 +44,8 @@
     </extensionPoints>
 
     <extensions defaultExtensionNs="io.kanro.idea.plugin.protobuf">
+        <rootProvider id="embedded"
+                      implementation="io.kanro.idea.plugin.protobuf.lang.root.EmbeddedRootProvider"/>
         <rootProvider id="module"
                       implementation="io.kanro.idea.plugin.protobuf.lang.root.ModuleSourceRootProvider"/>
         <rootProvider id="depModule"
@@ -54,8 +56,6 @@
                       implementation="io.kanro.idea.plugin.protobuf.lang.root.ImportRootProvider"/>
         <rootProvider id="decompile"
                       implementation="io.kanro.idea.plugin.protobuf.decompile.DecompiledRootProvider"/>
-        <rootProvider id="embedded"
-                      implementation="io.kanro.idea.plugin.protobuf.lang.root.EmbeddedRootProvider"/>
         <symbolReferenceProvider
                 implementation="io.kanro.idea.plugin.protobuf.aip.reference.contributor.ProtobufTypeNameInStringProvider"/>
         <stubExternalProvider
@@ -93,7 +93,7 @@
                 implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.Protobuf2Annotator"/>
 
         <iconProvider implementation="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufIconProvider"/>
-        <lang.ast.factory implementationClass="io.kanro.idea.plugin.protobuf.lang.psi.ProtobufASTFactory"
+        <lang.ast.factory implementationClass="io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufASTFactory"
                           language="protobuf"/>
         <lang.documentationProvider language="protobuf"
                                     implementationClass="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufDocumentationProvider"/>
@@ -150,6 +150,15 @@
         <completion.contributor language="protobuf"
                                 implementationClass="io.kanro.idea.plugin.protobuf.aip.completion.AipCompletionContributor"/>
         <iconMapper mappingFile="io/kanro/idea/plugin/protobuf/icon/expui/ProtobufIconMappings.json"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="prototext" language="prototext"
+                  implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtoTextFileType" extensions="txtpb;pbtxt;textproto;textpb;protoascii;pb.txt"/>
+        <lang.parserDefinition language="prototext"
+                               implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtoTextParserDefinition"/>
+        <lang.syntaxHighlighter language="prototext"
+                                implementationClass="io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufHighlighter"/>
     </extensions>
 
 

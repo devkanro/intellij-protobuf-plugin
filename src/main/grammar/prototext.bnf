@@ -1,0 +1,187 @@
+{
+  generate=[names="long" psi="yes" tokens="no"]
+  parserClass="io.kanro.idea.plugin.protobuf.lang.parser.ProtoTextParser"
+  parserUtilClass="io.kanro.idea.plugin.protobuf.lang.parser.ProtobufParserUtil"
+  parserImports=[
+    "static io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens.*"
+  ]
+  psiClassPrefix="ProtoText"
+  psiImplClassSuffix="Impl"
+  psiPackage="io.kanro.idea.plugin.protobuf.lang.psi.text"
+  psiImplPackage="io.kanro.idea.plugin.protobuf.lang.psi.text.impl"
+
+  implements="io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
+  extends="io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElementBase"
+
+  elementTypeHolderClass="io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextTypes"
+  elementTypeClass="io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElementType"
+
+  tokens = [
+    SKIPPED_WHITESPACE = "regexp:[ \n\t\r\f]+"
+
+    LINE_COMMENT = "regexp:#[^\n]*\n?"
+    BLOCK_COMMENT = "regexp:(/\*([^*]|(\*+[^*/]))*(\*+/))"
+
+    IDENTIFIER_LITERAL = "regexp:[a-zA-Z_][a-zA-Z0-9_]*"
+
+    INTEGER_LITERAL = "regexp:(0|[1-9][0-9]*)|(0[xX][0-9a-fA-F]+)|(0[0-7]+)"
+    FLOAT_LITERAL = "regexp:(\.[0-9]+|(0|[1-9][0-9]*)\.[0-9]*|(0|[1-9][0-9]*))([eE][-+]?[0-9]+)?"
+
+    STRING_LITERAL = "regexp:('(\\.|[^'\n])*')|(\"(\\.|[^\"\n])*\")"
+
+    ASSIGN = '='
+    COMMA = ','
+    DOT = '.'
+    GT = '>'
+    LBRACE = '{'
+    LBRACK = '['
+    LPAREN = '('
+    LT = '<'
+    MINUS = '-'
+    PLUS = '+'
+    RBRACE = '}'
+    RBRACK = ']'
+    RPAREN = ')'
+    SEMI = ';'
+    SLASH = '/'
+    COLON = ':'
+
+    SYMBOL = "regexp:[!#$%&()*+,-./:;<=>?@\[\\\]^`{|}~]"
+  ]
+}
+
+File ::= Message
+
+Message ::= Field* {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
+    ]
+}
+
+Field ::= FieldName (MessageField | ScalarField) (";" | ",")? {
+    pin = 1
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyOwner"
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.feature.ProtoTextFieldAssign"
+    ]
+}
+
+private MessageField ::= ':'? ( MessageValue | MessageList )
+
+private ScalarField ::= ':' ( ScalarValue | ScalarList ) {
+    pin = 1
+}
+
+MessageList ::= '[' MessageValue (',' MessageValue)* ']' {
+    pin=1
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.ArrayValue"
+    ]
+}
+
+MessageValue ::= BraceMessageValue | PointyMessageValue {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.MessageValue"
+    ]
+}
+
+private BraceMessageValue ::= '{' Message '}' {
+    pin=1
+    recoverWhile=BraceMessageRecovery
+}
+private BraceMessageRecovery ::= !(FieldName | '}')
+
+private PointyMessageValue ::= '<' Message '>' {
+    pin=1
+    recoverWhile=PointyMessageRecovery
+}
+private PointyMessageRecovery ::= !(FieldName | '>')
+
+
+ScalarList ::= '[' ScalarValue (',' ScalarValue)* ']' {
+    pin=1
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.ArrayValue"
+    ]
+}
+
+ScalarValue ::= StringValue | NumberValue | BooleanValue | EnumValue {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.WrappedValue"
+    ]
+}
+
+StringValue ::= STRING_LITERAL+ {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.StringValue"
+    ]
+}
+
+NumberValue ::= ('-' | '+')? (INTEGER_LITERAL | FLOAT_LITERAL | 'inf' | 'nan') {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.NumberValue"
+    ]
+}
+
+BooleanValue ::= (false | true) {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.BooleanValue"
+    ]
+}
+
+EnumValue ::= Identifier {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.EnumValue"
+    ]
+}
+
+FieldName ::= SymbolName | ExtensionName | AnyName {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+    ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.text.mixin.ProtoTextFieldNameMixin"
+}
+
+SymbolName ::= Identifier {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+    ]
+}
+
+TypeName ::= SymbolName ('.' TypeName)?  {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+    ]
+}
+
+Domain   ::= Identifier ( '.' Identifier )* {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+    ]
+}
+
+ExtensionName ::= '[' TypeName ']' {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+    ]
+}
+
+AnyName ::= '[' Domain '/' TypeName ']' {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+    ]
+}
+
+private Identifier ::= IDENTIFIER_LITERAL | <<parseKeyword>>

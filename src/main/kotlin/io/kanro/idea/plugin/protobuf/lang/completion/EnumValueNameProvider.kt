@@ -8,7 +8,7 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.string.toScreamingSnakeCase
 
 object EnumValueNameProvider : CompletionProvider<CompletionParameters>() {

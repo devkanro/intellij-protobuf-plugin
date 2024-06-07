@@ -13,7 +13,7 @@ import com.intellij.psi.tree.IElementType;
 %function advance
 %type IElementType
 %unicode
-%state LINE_COMMENT, BLOCK_COMMENT, AFTER_NUMBER
+%state LINE_COMMENT, SHARP_LINE_COMMENT, BLOCK_COMMENT, AFTER_NUMBER
 
 // General classes
 Alpha = [a-zA-Z_]
@@ -38,6 +38,7 @@ LeadingWhitespace = {NewLine} {WhitespaceNoNewline}*
 
 // Comments.
 CLineComment = ("//" [^\n]*)
+SharpLineComments = ("#" [^\n]*)
 CLineComments = {CLineComment} ({LeadingWhitespace} {CLineComment})*
 CBlockComment = "/*" !([^]* "*/" [^]*) "*/"?
 
@@ -92,6 +93,7 @@ String = {SingleQuotedString} | {DoubleQuotedString}
   "("                       { return ProtobufTokens.LPAREN; }
   "<"                       { return ProtobufTokens.LT; }
   "-"                       { return ProtobufTokens.MINUS; }
+  "+"                       { return ProtobufTokens.PLUS; }
   "}"                       { return ProtobufTokens.RBRACE; }
   "]"                       { return ProtobufTokens.RBRACK; }
   ")"                       { return ProtobufTokens.RPAREN; }
@@ -121,6 +123,7 @@ String = {SingleQuotedString} | {DoubleQuotedString}
   "service"                 { return ProtobufTokens.SERVICE; }
   "stream"                  { return ProtobufTokens.STREAM; }
   "syntax"                  { return ProtobufTokens.SYNTAX; }
+  "edition"                 { return ProtobufTokens.EDITION; }
   "to"                      { return ProtobufTokens.TO; }
   "true"                    { return ProtobufTokens.TRUE; }
   "false"                   { return ProtobufTokens.FALSE; }
@@ -142,6 +145,11 @@ String = {SingleQuotedString} | {DoubleQuotedString}
     yybegin(BLOCK_COMMENT);
   }
 
+  "#" {
+    yypushback(1);
+    yybegin(SHARP_LINE_COMMENT);
+  }
+
   // Additional unmatched symbols are matched individually as SYMBOL.
   {Symbol} { return ProtobufTokens.SYMBOL; }
 
@@ -151,6 +159,10 @@ String = {SingleQuotedString} | {DoubleQuotedString}
 
 <LINE_COMMENT> {
   {CLineComments}           { yybegin(YYINITIAL); return ProtobufTokens.LINE_COMMENT; }
+}
+
+<SHARP_LINE_COMMENT> {
+  {SharpLineComments}           { yybegin(YYINITIAL); return ProtobufTokens.SHARP_LINE_COMMENT; }
 }
 
 <BLOCK_COMMENT> {

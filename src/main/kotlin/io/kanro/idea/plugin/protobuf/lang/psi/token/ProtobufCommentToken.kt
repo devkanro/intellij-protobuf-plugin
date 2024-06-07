@@ -1,6 +1,6 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.token
 
 import com.intellij.psi.tree.IElementType
-import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
+import io.kanro.idea.plugin.protobuf.lang.ProtoBaseLanguage
 
-open class ProtobufCommentToken(name: String) : IElementType(name, ProtobufLanguage)
+open class ProtobufCommentToken(name: String) : IElementType(name, ProtoBaseLanguage)

@@ -19,7 +19,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
 import io.kanro.idea.plugin.protobuf.microservices.model.ProtobufRpcModel
 import io.kanro.idea.plugin.protobuf.microservices.model.ProtobufServiceModel
 

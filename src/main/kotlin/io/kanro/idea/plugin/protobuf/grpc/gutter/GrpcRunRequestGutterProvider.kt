@@ -9,8 +9,8 @@ import com.intellij.httpClient.executor.util.unwrap
 import com.intellij.httpClient.http.request.microservices.OpenInHttpClientLineMarkerBuilder
 import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.firstLeaf
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.stream
 import javax.swing.Icon
 

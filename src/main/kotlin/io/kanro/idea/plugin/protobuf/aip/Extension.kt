@@ -3,10 +3,9 @@ package io.kanro.idea.plugin.protobuf.aip
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.nullCachedValue
-import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 
 internal fun ProtobufRpcDefinition.transcodingBody(): String? {
     return CachedValuesManager.getCachedValue(this) {
@@ -14,7 +13,7 @@ internal fun ProtobufRpcDefinition.transcodingBody(): String? {
             options(AipOptions.httpOption).lastOrNull()
                 ?: return@getCachedValue nullCachedValue()
 
-        val result = option.value(AipOptions.httpRuleBodyField)?.stringValue() ?: ""
+        val result = option.value(AipOptions.httpRuleBodyField)?.toString() ?: ""
         CachedValueProvider.Result.create(result, PsiModificationTracker.MODIFICATION_COUNT)
     }
 }

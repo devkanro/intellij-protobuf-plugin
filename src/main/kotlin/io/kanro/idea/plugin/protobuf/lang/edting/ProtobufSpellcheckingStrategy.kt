@@ -5,7 +5,7 @@ import com.intellij.spellchecker.inspections.PlainTextSplitter
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy
 import com.intellij.spellchecker.tokenizer.Tokenizer
 import com.intellij.spellchecker.tokenizer.TokenizerBase
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
 
 class ProtobufSpellcheckingStrategy : SpellcheckingStrategy() {
     override fun getTokenizer(element: PsiElement?): Tokenizer<*> {

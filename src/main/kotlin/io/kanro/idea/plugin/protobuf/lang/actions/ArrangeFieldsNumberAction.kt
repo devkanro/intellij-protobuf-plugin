@@ -11,9 +11,9 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler
 import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValue
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumberScope
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufNumbered
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.ProtobufNumbered
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufNumberScope
 
 abstract class ArrangeFieldsNumberActionHandler : EditorActionHandler() {
     private fun findItemsToSort(

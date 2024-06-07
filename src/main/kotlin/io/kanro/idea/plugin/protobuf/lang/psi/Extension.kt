@@ -9,15 +9,18 @@ import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.QualifiedName
 import com.intellij.psi.util.elementType
 import com.intellij.psi.util.parentOfType
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionOwner
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItemContainer
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufVirtualScope
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueAssign
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScopeItem
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScopeItemContainer
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufVirtualScope
+import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextFile
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufKeywordToken
+import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
+import io.kanro.idea.plugin.protobuf.lang.psi.value.decodeStringFromStringLiteral
 import io.kanro.idea.plugin.protobuf.lang.support.WellknownTypes
 import io.kanro.idea.plugin.protobuf.string.parseDoubleOrNull
 import io.kanro.idea.plugin.protobuf.string.parseLongOrNull
@@ -156,111 +159,116 @@ inline fun PsiElement.forEachPrev(block: (PsiElement) -> Unit) {
     }
 }
 
-fun ProtobufImportStatement.public(): Boolean {
-    return importLabel?.textMatches("public") == true
-}
-
-fun ProtobufImportStatement.weak(): Boolean {
-    return importLabel?.textMatches("weak") == true
-}
-
-fun ProtobufImportStatement.resolve(): ProtobufFile? {
-    return reference?.resolve() as? ProtobufFile
-}
-
 fun ProtobufOptionName.field(): ProtobufFieldLike? {
-    this.fieldNameList.lastOrNull()?.let {
-        return it.reference?.resolve() as? ProtobufFieldLike
-    }
-    this.extensionOptionName?.let {
-        return it.typeName?.reference?.resolve() as? ProtobufFieldLike
-    }
-    this.builtInOptionName?.let {
+    this.optionFieldNameList.lastOrNull()?.let {
         return it.reference?.resolve() as? ProtobufFieldLike
     }
     return null
 }
 
-fun ProtobufFieldName.message(): ProtobufScope? {
-    val parent =
-        when (val parent = this.parent) {
-            is ProtobufArrayValue -> {
-                parent.parent.parent
-            }
-
-            else -> parent
-        }
-
-    val field =
-        when (parent) {
-            is ProtobufOptionName -> {
-                val prevField = this.prev<ProtobufFieldName>()
-                if (prevField == null) {
-                    parent.extensionOptionName?.typeName?.reference?.resolve()
-                } else {
-                    prevField.reference?.resolve()
-                }
-            }
-
-            is ProtobufFieldAssign -> {
-                val messageValue = parent.parent as? ProtobufMessageValue ?: return null
-                val assign =
-                    when (val assign = messageValue.parent.parent) {
-                        is ProtobufArrayValue -> {
-                            assign.parent.parent
-                        }
-
-                        else -> assign
-                    }
-
-                when (assign) {
-                    is ProtobufOptionAssign -> {
-                        assign.optionName.field()
-                    }
-
-                    is ProtobufFieldAssign -> {
-                        assign.fieldName.reference?.resolve() as? ProtobufDefinition
-                    }
-
-                    else -> null
-                }
-            }
-
-            else -> null
-        } ?: return null
-
-    return when (field) {
+fun ProtobufOptionFieldName.message(): ProtobufScope? {
+    return when (val field = reference?.resolve() as? ProtobufFieldLike) {
         is ProtobufGroupDefinition -> field
         is ProtobufFieldDefinition -> field.typeName.reference?.resolve() as? ProtobufMessageDefinition
         else -> null
     }
 }
 
-fun ProtobufBuiltInOptionName.isFieldDefaultOption(): Boolean {
+fun ProtobufOptionFieldName.isExtension(): Boolean {
+    return this.extensionFieldName != null
+}
+
+fun ProtobufFieldName.message(): ProtobufScope? {
+    val assign = parent as? ProtobufFieldAssign ?: return null
+    val message = assign.parent as? ProtobufTextMessage ?: return null
+    val parent = message.parent ?: return null
+
+    if (parent is ProtoTextFile) {
+        return parent.message()
+    } else {
+        val parentAssign = message.parentOfType<ValueAssign>() ?: return null
+
+        if (parentAssign is ProtobufFieldAssign && parentAssign.fieldName.anyFieldName != null) {
+            return parentAssign.fieldName.reference?.resolve() as? ProtobufScope
+        }
+
+        return when (val field = parentAssign.field()) {
+            is ProtobufGroupDefinition -> field
+            is ProtobufMapFieldDefinition -> field
+            is ProtobufFieldDefinition -> field.typeName.reference?.resolve() as? ProtobufMessageDefinition
+            else -> null
+        }
+    }
+}
+
+fun ProtobufOptionName.isFieldDefaultOption(): Boolean {
     return this.textMatches("default") && parentOfType<ProtobufOptionOwner>() is ProtobufFieldDefinition
 }
 
-fun ProtobufBuiltInOptionName.isFieldJsonNameOption(): Boolean {
+fun ProtobufOptionName.isFieldJsonNameOption(): Boolean {
     return this.textMatches("json_name") && parentOfType<ProtobufOptionOwner>() is ProtobufFieldDefinition
 }
 
+fun ProtobufOptionFieldName.isFieldDefaultOption(): Boolean {
+    return this.textMatches("default") && parentOfType<ProtobufOptionOwner>() is ProtobufFieldDefinition
+}
+
+fun ProtobufOptionFieldName.isFieldJsonNameOption(): Boolean {
+    return this.textMatches("json_name") && parentOfType<ProtobufOptionOwner>() is ProtobufFieldDefinition
+}
+
+fun ProtobufExtensionFieldName.absolutely(): Boolean {
+    return this.firstChild !is ProtobufSymbolName
+}
+
+fun ProtobufOptionFieldName.absolutely(): Boolean {
+    return this.extensionFieldName?.absolutely() == true
+}
+
+fun ProtobufReservedName.name(): String {
+    return if (firstChild.elementType == ProtobufTokens.STRING_LITERAL) {
+        decodeStringFromStringLiteral(firstChild)
+    } else {
+        text
+    }
+}
+
 fun ProtobufEnumValue.enum(): ProtobufEnumDefinition? {
-    val field =
-        when (val parent = this.parent.parent) {
-            is ProtobufOptionAssign -> {
-                parent.optionName.field() as? ProtobufFieldDefinition
-            }
+    val assign = parentOfType<ValueAssign>() ?: return null
+    val field = assign.field() ?: return null
 
-            is ProtobufFieldAssign -> {
-                parent.fieldName.reference?.resolve() as? ProtobufFieldDefinition
+    return when (field) {
+        is ProtobufFieldDefinition -> {
+            field.typeName.reference?.resolve() as? ProtobufEnumDefinition
+        }
+        is ProtobufMapFieldDefinition -> {
+            val targetField = assign.findChild<ProtobufFieldName>()?.text ?: return null
+            when (targetField) {
+                "key" -> field.key()?.reference?.resolve() as? ProtobufEnumDefinition
+                "value" -> field.value()?.reference?.resolve() as? ProtobufEnumDefinition
+                else -> null
             }
-
-            else -> null
-        } ?: return null
-    return field.typeName.reference?.resolve() as? ProtobufEnumDefinition
+        }
+        else -> null
+    }
 }
 
 fun ProtobufReservedRange.range(): LongRange? {
+    val numbers = integerValueList.map { it.text.toLong() }
+    return when (numbers.size) {
+        1 ->
+            if (lastChild.textMatches("max")) {
+                LongRange(numbers[0], Long.MAX_VALUE)
+            } else {
+                LongRange(numbers[0], numbers[0])
+            }
+
+        2 -> LongRange(numbers[0], numbers[1])
+        else -> null
+    }
+}
+
+fun ProtobufExtensionRange.range(): LongRange? {
     val numbers = integerValueList.map { it.text.toLong() }
     return when (numbers.size) {
         1 ->
@@ -342,10 +350,6 @@ fun ProtobufScope.realItems(): Array<ProtobufScopeItem> {
     return result.toTypedArray()
 }
 
-fun ProtobufStringValue.value(): String? {
-    return stringLiteral.text?.trim('"')
-}
-
 fun ProtobufStringValue.stringRange(): TextRange {
     return stringRange(textRange)
 }
@@ -386,11 +390,6 @@ fun ProtobufBooleanValue.value(): Boolean {
     return textMatches("true")
 }
 
-fun ProtobufConstant.stringValue(): String? {
-    if (stringValueList.isEmpty()) return null
-    return stringValueList.joinToString("") { it.value() ?: "" }
-}
-
 fun ProtobufRpcIO.stream(): Boolean {
     this.walkChildren<PsiElement>(false) {
         if (it.elementType is ProtobufKeywordToken && it.textMatches("stream")) {
@@ -404,7 +403,7 @@ fun ProtobufFieldLike.jsonName(): String? {
     return CachedValuesManager.getCachedValue(this) {
         val option = (this as? ProtobufOptionOwner)?.options("json_name")?.lastOrNull()
         val result =
-            option?.value()?.stringValue()
+            option?.value()?.toString()
                 ?: name()?.toCamelCase()
         CachedValueProvider.Result.create(
             result,
