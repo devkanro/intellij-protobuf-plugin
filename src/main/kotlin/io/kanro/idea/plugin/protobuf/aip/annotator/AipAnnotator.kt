@@ -12,8 +12,8 @@ import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcInputFieldReferenc
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcOutputFieldReference
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufVisitor
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.reference.ProtobufTypeNameReference
 import io.kanro.idea.plugin.protobuf.lang.quickfix.AddImportFix
-import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufTypeNameReference
 
 class AipAnnotator : Annotator {
     override fun annotate(

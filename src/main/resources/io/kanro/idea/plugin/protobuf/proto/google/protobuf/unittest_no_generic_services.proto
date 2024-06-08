@@ -15,18 +15,18 @@ package protobuf_unittest.no_generic_services_test;
 // *_generic_services are false by default.
 
 message TestMessage {
-  optional int32 a = 1;
-  extensions 1000 to max;
+    optional int32 a = 1;
+    extensions 1000 to max;
 }
 
 enum TestEnum {
-  FOO = 1;
+    FOO = 1;
 }
 
 extend TestMessage {
-  optional int32 test_extension = 1000;
+    optional int32 test_extension = 1000;
 }
 
 service TestService {
-  rpc Foo(TestMessage) returns (TestMessage);
+    rpc Foo (TestMessage) returns (TestMessage);
 }

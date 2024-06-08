@@ -18,9 +18,15 @@ option features.enum_type = CLOSED;
 
 // Some generic_services option(s) added automatically.
 // See:  http://go/proto2-generic-services-default
-option cc_generic_services = true;    // auto-added
-option java_generic_services = true;  // auto-added
-option py_generic_services = true;    // auto-added
+option cc_generic_services = true;
+
+// auto-added
+option java_generic_services = true;
+
+// auto-added
+option py_generic_services = true;
+
+// auto-added
 option cc_enable_arenas = true;
 
 // We don't put this in a package within proto2 because we need to make sure
@@ -36,6 +42,6 @@ option optimize_for = SPEED;
 option java_outer_classname = "UnittestLazyImportsEnumProto";
 
 enum LazyEnum {
-  LAZY_ENUM_0 = 0;
-  LAZY_ENUM_1 = 1;
+    LAZY_ENUM_0 = 0;
+    LAZY_ENUM_1 = 1;
 }

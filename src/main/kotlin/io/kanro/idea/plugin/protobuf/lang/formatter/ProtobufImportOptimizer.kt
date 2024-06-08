@@ -8,7 +8,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPackageStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPsiFactory
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufSyntaxStatement
-import io.kanro.idea.plugin.protobuf.lang.psi.resolve
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.resolve
 
 class ProtobufImportOptimizer : ImportOptimizer {
     override fun supports(file: PsiFile): Boolean {

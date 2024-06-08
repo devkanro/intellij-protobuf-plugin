@@ -3,9 +3,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.proto.element
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
-import io.kanro.idea.plugin.protobuf.lang.psi.jsonName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufMultiNameDefinition
@@ -32,8 +30,8 @@ interface ProtobufMapFieldDefinition : ProtobufFieldLike, ProtobufNumberScope, P
         val key = typeNames.getOrNull(0)
         val value = typeNames.getOrNull(1)
 
-        val keyTypeName = key?.symbolNameList?.lastOrNull()?.text ?: "?"
-        val valueTypeName = value?.symbolNameList?.lastOrNull()?.text ?: "?"
+        val keyTypeName = key?.leaf()?.text ?: "?"
+        val valueTypeName = value?.leaf()?.text ?: "?"
 
         return arrayOf(
             LookupElementBuilder.create("key")
@@ -60,8 +58,8 @@ interface ProtobufMapFieldDefinition : ProtobufFieldLike, ProtobufNumberScope, P
     override fun fieldType(): String? {
         val typeNames = findChildren<ProtobufTypeName>()
         if (typeNames.size != 2) return "map"
-        val key = typeNames[0].symbolNameList.lastOrNull()?.text ?: return "map"
-        val value = typeNames[1].symbolNameList.lastOrNull()?.text ?: return "map"
+        val key = typeNames[0].leaf().text ?: return "map"
+        val value = typeNames[1].leaf().text ?: return "map"
 
         return "map<$key, $value>"
     }

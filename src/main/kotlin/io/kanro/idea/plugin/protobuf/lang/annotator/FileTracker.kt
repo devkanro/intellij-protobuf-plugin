@@ -7,13 +7,13 @@ import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes
 import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPackageStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypes
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufFileReferenceContributor
-import io.kanro.idea.plugin.protobuf.lang.psi.resolve
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.resolve
 import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import io.kanro.idea.plugin.protobuf.lang.quickfix.OptimizeImportsFix
 import io.kanro.idea.plugin.protobuf.lang.util.asFilter

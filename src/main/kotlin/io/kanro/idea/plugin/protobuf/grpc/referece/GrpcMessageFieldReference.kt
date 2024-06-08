@@ -17,13 +17,12 @@ import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.filterItem
 import io.kanro.idea.plugin.protobuf.lang.psi.firstItemOrNull
-import io.kanro.idea.plugin.protobuf.lang.psi.jsonName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufGroupDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.repeated
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
-import io.kanro.idea.plugin.protobuf.lang.psi.repeated
 import io.kanro.idea.plugin.protobuf.lang.support.WellknownTypes
 import kotlin.math.max
 

@@ -35,6 +35,7 @@ class SisyphusKotlinLineMarkerProvider : RelatedItemLineMarkerProvider() {
                         .setTooltipText("Implementing")
                 result.add(builder.createLineMarkerInfo(element.firstLeaf()))
             }
+
             is UMethod -> {
                 val method = findMethodProtobufDefinition(parent) ?: return
                 val builder: NavigationGutterIconBuilder<PsiElement> =

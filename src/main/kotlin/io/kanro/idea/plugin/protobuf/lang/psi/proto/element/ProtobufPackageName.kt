@@ -9,18 +9,20 @@ import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.DocumentOwner
-import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupElement
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupableElement
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.NamedElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.util.doc
 import javax.swing.Icon
 
 interface ProtobufPackageName :
     NamedElement,
-    LookupElement,
+    LookupableElement,
     DocumentOwner,
     NavigatablePsiElement,
     ItemPresentation,
-    PsiNameIdentifierOwner {
+    PsiNameIdentifierOwner,
+    ProtobufElement {
     override fun name(): String? {
         return nameIdentifier?.text
     }

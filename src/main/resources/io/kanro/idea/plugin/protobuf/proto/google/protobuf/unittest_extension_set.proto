@@ -20,9 +20,9 @@ option csharp_namespace = "Google.ProtocolBuffers.TestProtos";
 
 // A message with message_set_wire_format.
 message TestExtensionSet {
-  extensions 4 to max;
+    extensions 4 to max;
 }
 
 message TestExtensionSetContainer {
-  optional TestExtensionSet extension = 1;
+    optional TestExtensionSet extension = 1;
 }

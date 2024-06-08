@@ -12,7 +12,6 @@ import io.kanro.idea.plugin.protobuf.compile.ServiceCompilingState
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.value
 
 class FileCompiler : BaseProtobufCompilerPlugin<FileCompilingState>() {
     override fun compile(
@@ -38,6 +37,7 @@ class FileCompiler : BaseProtobufCompilerPlugin<FileCompilingState>() {
                                 return@forEach
                             }
                     }
+
                     is ProtobufEnumDefinition -> {
                         this.enumType +=
                             try {
@@ -48,6 +48,7 @@ class FileCompiler : BaseProtobufCompilerPlugin<FileCompilingState>() {
                                 return@forEach
                             }
                     }
+
                     is ProtobufServiceDefinition -> {
                         this.service +=
                             try {

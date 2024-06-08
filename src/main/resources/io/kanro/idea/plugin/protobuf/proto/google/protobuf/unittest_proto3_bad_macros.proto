@@ -20,56 +20,56 @@ option java_package = "com.google.protobuf.testing.proto";
 
 // This generates `GID_MAX`, which is a macro in some circumstances.
 enum GID {
-  GID_UNUSED = 0;
+    GID_UNUSED = 0;
 }
 
 // This generates `UID_MAX`, which is a mcro in some circumstances.
 enum UID {
-  UID_UNUSED = 0;
+    UID_UNUSED = 0;
 }
 
 // Just a container for bad macro names. Some of these do not follow the normal
 // naming conventions, this is intentional, we just want to trigger a build
 // failure if the macro is left defined.
 enum BadNames {
-  // autoheader defines this in some circumstances.
-  PACKAGE = 0;
-  // The comment says "a few common headers define this".
-  PACKED = 1;
-  // Defined in many Linux system headers.
-  linux = 2;
-  // This is often a macro in `<math.h>`.
-  DOMAIN = 3;
-  // These are defined in both Windows and macOS headers.
-  TRUE = 4;
-  FALSE = 5;
-  // Sometimes defined in Windows system headers.
-  CREATE_NEW = 6;
-  DELETE = 7;
-  DOUBLE_CLICK = 8;
-  ERROR = 9;
-  ERROR_BUSY = 10;
-  ERROR_INSTALL_FAILED = 11;
-  ERROR_NOT_FOUND = 12;
-  GetClassName = 13;
-  GetCurrentTime = 14;
-  GetMessage = 15;
-  GetObject = 16;
-  IGNORE = 17;
-  IN = 18;
-  INPUT_KEYBOARD = 19;
-  NO_ERROR = 20;
-  OUT = 21;
-  OPTIONAL = 22;
-  NEAR = 23;
-  NO_DATA = 24;
-  REASON_UNKNOWN = 25;
-  SERVICE_DISABLED = 26;
-  SEVERITY_ERROR = 27;
-  STATUS_PENDING = 28;
-  STRICT = 29;
-  // Sometimed defined in macOS system headers.
-  TYPE_BOOL = 30;
-  // Defined in macOS, Windows, and Linux headers.
-  DEBUG = 31;
+    // autoheader defines this in some circumstances.
+    PACKAGE = 0;
+    // The comment says "a few common headers define this".
+    PACKED = 1;
+    // Defined in many Linux system headers.
+    linux = 2;
+    // This is often a macro in `<math.h>`.
+    DOMAIN = 3;
+    // These are defined in both Windows and macOS headers.
+    TRUE = 4;
+    FALSE = 5;
+    // Sometimes defined in Windows system headers.
+    CREATE_NEW = 6;
+    DELETE = 7;
+    DOUBLE_CLICK = 8;
+    ERROR = 9;
+    ERROR_BUSY = 10;
+    ERROR_INSTALL_FAILED = 11;
+    ERROR_NOT_FOUND = 12;
+    GetClassName = 13;
+    GetCurrentTime = 14;
+    GetMessage = 15;
+    GetObject = 16;
+    IGNORE = 17;
+    IN = 18;
+    INPUT_KEYBOARD = 19;
+    NO_ERROR = 20;
+    OUT = 21;
+    OPTIONAL = 22;
+    NEAR = 23;
+    NO_DATA = 24;
+    REASON_UNKNOWN = 25;
+    SERVICE_DISABLED = 26;
+    SEVERITY_ERROR = 27;
+    STATUS_PENDING = 28;
+    STRICT = 29;
+    // Sometimed defined in macOS system headers.
+    TYPE_BOOL = 30;
+    // Defined in macOS, Windows, and Linux headers.
+    DEBUG = 31;
 }

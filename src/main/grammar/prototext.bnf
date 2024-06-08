@@ -50,10 +50,11 @@
   ]
 }
 
-File ::= Message
+File ::= MessageBody
 
-Message ::= Field* {
+MessageBody ::= Field* {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
     ]
 }
@@ -61,6 +62,7 @@ Message ::= Field* {
 Field ::= FieldName (MessageField | ScalarField) (";" | ",")? {
     pin = 1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyOwner"
         "io.kanro.idea.plugin.protobuf.lang.psi.text.feature.ProtoTextFieldAssign"
@@ -76,6 +78,7 @@ private ScalarField ::= ':' ( ScalarValue | ScalarList ) {
 MessageList ::= '[' MessageValue (',' MessageValue)* ']' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.ArrayValue"
@@ -84,19 +87,20 @@ MessageList ::= '[' MessageValue (',' MessageValue)* ']' {
 
 MessageValue ::= BraceMessageValue | PointyMessageValue {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.MessageValue"
     ]
 }
 
-private BraceMessageValue ::= '{' Message '}' {
+private BraceMessageValue ::= '{' MessageBody '}' {
     pin=1
     recoverWhile=BraceMessageRecovery
 }
 private BraceMessageRecovery ::= !(FieldName | '}')
 
-private PointyMessageValue ::= '<' Message '>' {
+private PointyMessageValue ::= '<' MessageBody '>' {
     pin=1
     recoverWhile=PointyMessageRecovery
 }
@@ -106,6 +110,7 @@ private PointyMessageRecovery ::= !(FieldName | '>')
 ScalarList ::= '[' ScalarValue (',' ScalarValue)* ']' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.ArrayValue"
@@ -114,6 +119,7 @@ ScalarList ::= '[' ScalarValue (',' ScalarValue)* ']' {
 
 ScalarValue ::= StringValue | NumberValue | BooleanValue | EnumValue {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.WrappedValue"
     ]
@@ -121,13 +127,17 @@ ScalarValue ::= StringValue | NumberValue | BooleanValue | EnumValue {
 
 StringValue ::= STRING_LITERAL+ {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.StringValue"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.ReferenceElement"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.text.mixin.ProtoTextStringValueMixin"
 }
 
 NumberValue ::= ('-' | '+')? (INTEGER_LITERAL | FLOAT_LITERAL | 'inf' | 'nan') {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.NumberValue"
     ]
@@ -135,6 +145,7 @@ NumberValue ::= ('-' | '+')? (INTEGER_LITERAL | FLOAT_LITERAL | 'inf' | 'nan') {
 
 BooleanValue ::= (false | true) {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.BooleanValue"
     ]
@@ -142,6 +153,7 @@ BooleanValue ::= (false | true) {
 
 EnumValue ::= Identifier {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.EnumValue"
     ]
@@ -149,6 +161,7 @@ EnumValue ::= Identifier {
 
 FieldName ::= SymbolName | ExtensionName | AnyName {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
     ]
     mixin="io.kanro.idea.plugin.protobuf.lang.psi.text.mixin.ProtoTextFieldNameMixin"
@@ -156,30 +169,37 @@ FieldName ::= SymbolName | ExtensionName | AnyName {
 
 SymbolName ::= Identifier {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
     ]
 }
 
 TypeName ::= SymbolName ('.' TypeName)?  {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.QualifiedElement<ProtoTextTypeName>"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.text.mixin.ProtoTextTypeNameMixin"
 }
 
 Domain   ::= Identifier ( '.' Identifier )* {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
     ]
 }
 
 ExtensionName ::= '[' TypeName ']' {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
     ]
 }
 
 AnyName ::= '[' Domain '/' TypeName ']' {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
     ]
 }

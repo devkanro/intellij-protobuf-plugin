@@ -64,6 +64,7 @@ fun ProtobufMessageDefinition.fullClassName(): QualifiedName? {
             owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
                 className(),
             )
+
         else -> null
     }
 }
@@ -75,6 +76,7 @@ fun ProtobufMessageStub.fullClassName(): QualifiedName? {
             owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
                 className(),
             )
+
         else -> null
     }
 }
@@ -93,11 +95,13 @@ fun ProtobufMessageDefinition.fullMessageOrBuilderName(): QualifiedName? {
             owner.fullOuterClassName()?.append(messageOrBuilderName()) ?: QualifiedName.fromComponents(
                 messageOrBuilderName(),
             )
+
         is ProtobufMessageDefinition ->
             owner.fullClassName()?.append(messageOrBuilderName())
                 ?: QualifiedName.fromComponents(
                     messageOrBuilderName(),
                 )
+
         else -> null
     }
 }
@@ -108,11 +112,13 @@ fun ProtobufMessageStub.fullBuilderClassName(): QualifiedName? {
             owner.fullOuterClassName()?.append(messageOrBuilderName()) ?: QualifiedName.fromComponents(
                 messageOrBuilderName(),
             )
+
         is ProtobufMessageDefinition ->
             owner.fullClassName()?.append(messageOrBuilderName())
                 ?: QualifiedName.fromComponents(
                     messageOrBuilderName(),
                 )
+
         else -> null
     }
 }
@@ -284,6 +290,7 @@ fun ProtobufEnumDefinition.fullClassName(): QualifiedName? {
             owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
                 className(),
             )
+
         else -> null
     }
 }
@@ -295,6 +302,7 @@ fun ProtobufEnumStub.fullClassName(): QualifiedName? {
             owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
                 className(),
             )
+
         else -> null
     }
 }

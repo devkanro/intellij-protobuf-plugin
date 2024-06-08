@@ -17,6 +17,7 @@ class GoIndexProvider : ProtobufIndexProvider {
                 sink.occurrence(GoNameIndex.key, stub.unimplementedName() ?: return)
                 sink.occurrence(GoUnimplementedServerNameIndex.key, stub.unimplementedName() ?: return)
             }
+
             is ProtobufRpcStub -> {
                 sink.occurrence(GoNameIndex.key, stub.funcName() ?: return)
                 sink.occurrence(

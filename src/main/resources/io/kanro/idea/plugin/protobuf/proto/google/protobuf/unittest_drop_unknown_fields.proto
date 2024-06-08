@@ -15,23 +15,23 @@ option objc_class_prefix = "DropUnknowns";
 option csharp_namespace = "Google.Protobuf.TestProtos";
 
 message Foo {
-  enum NestedEnum {
-    FOO = 0;
-    BAR = 1;
-    BAZ = 2;
-  }
-  int32 int32_value = 1;
-  NestedEnum enum_value = 2;
+    enum NestedEnum {
+        FOO = 0;
+        BAR = 1;
+        BAZ = 2;
+    }
+    int32 int32_value = 1;
+    NestedEnum enum_value = 2;
 }
 
 message FooWithExtraFields {
-  enum NestedEnum {
-    FOO = 0;
-    BAR = 1;
-    BAZ = 2;
-    MOO = 3;
-  }
-  int32 int32_value = 1;
-  NestedEnum enum_value = 2;
-  int32 extra_int32_value = 3;
+    enum NestedEnum {
+        FOO = 0;
+        BAR = 1;
+        BAZ = 2;
+        MOO = 3;
+    }
+    int32 int32_value = 1;
+    NestedEnum enum_value = 2;
+    int32 extra_int32_value = 3;
 }

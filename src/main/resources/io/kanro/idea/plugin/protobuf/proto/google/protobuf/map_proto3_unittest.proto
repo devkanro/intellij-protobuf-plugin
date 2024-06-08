@@ -18,10 +18,10 @@ option features.field_presence = IMPLICIT;
 package proto3_unittest;
 
 message TestProto3BytesMap {
-  map<int32, bytes> map_bytes = 1;
-  map<int32, string> map_string = 2;
+    map<int32, bytes> map_bytes = 1;
+    map<int32, string> map_string = 2;
 }
 
 message TestI32StrMap {
-  map<int32, string> m_32_str = 1;
+    map<int32, string> m_32_str = 1;
 }

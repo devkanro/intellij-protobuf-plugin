@@ -8,11 +8,7 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufHighlighter
-import io.kanro.idea.plugin.protobuf.lang.psi.enum
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.ProtobufNumbered
-import io.kanro.idea.plugin.protobuf.lang.psi.field
-import io.kanro.idea.plugin.protobuf.lang.psi.float
-import io.kanro.idea.plugin.protobuf.lang.psi.int
 import io.kanro.idea.plugin.protobuf.lang.psi.items
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufConstant
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
@@ -35,14 +31,19 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufVisitor
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.enum
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.field
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.float
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.int
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.range
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.reference.ProtobufTypeNameReference
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.resolve
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufNumberScope
-import io.kanro.idea.plugin.protobuf.lang.psi.range
-import io.kanro.idea.plugin.protobuf.lang.psi.uint
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.uint
 import io.kanro.idea.plugin.protobuf.lang.quickfix.AddImportFix
 import io.kanro.idea.plugin.protobuf.lang.quickfix.RenameFix
-import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufTypeNameReference
 import io.kanro.idea.plugin.protobuf.lang.support.BuiltInType
 import io.kanro.idea.plugin.protobuf.string.case.CaseFormat
 import io.kanro.idea.plugin.protobuf.string.toCase
@@ -118,7 +119,7 @@ class ProtobufAnnotator : Annotator {
                 }
 
                 override fun visitTypeName(o: ProtobufTypeName) {
-                    if (o.symbolNameList.size == 1 && BuiltInType.isBuiltInType(o.text)) {
+                    if (o.typeName == null && BuiltInType.isBuiltInType(o.text)) {
                         holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
                             .range(o.textRange)
                             .textAttributes(ProtobufHighlighter.KEYWORD)
@@ -146,16 +147,19 @@ class ProtobufAnnotator : Annotator {
                                     .range(it.absoluteRange)
                                     .textAttributes(ProtobufHighlighter.FIELD)
                                     .create()
+
                             is ProtobufMessageDefinition ->
                                 holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
                                     .range(it.absoluteRange)
                                     .textAttributes(ProtobufHighlighter.MESSAGE)
                                     .create()
+
                             is ProtobufEnumDefinition ->
                                 holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
                                     .range(it.absoluteRange)
                                     .textAttributes(ProtobufHighlighter.ENUM)
                                     .create()
+
                             else ->
                                 holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
                                     .range(it.absoluteRange)
@@ -165,32 +169,29 @@ class ProtobufAnnotator : Annotator {
                     }
                 }
 
-                override fun visitOptionName(o: ProtobufOptionName) {
-                    if (o.optionFieldNameList.firstOrNull()?.reference?.resolve() == null) {
+                override fun visitOptionAssign(o: ProtobufOptionAssign) {
+                    if (o.optionName.resolve() == null) {
                         holder.newAnnotation(
                             HighlightSeverity.ERROR,
                             "Option '${o.text}' not found",
                         )
                             .range(o.textRange)
-                            .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
+                            .highlightType(ProblemHighlightType.ERROR)
                             .create()
                     }
                 }
 
-                override fun visitFieldName(o: ProtobufFieldName) {
-                    o.reference?.resolve()?.let { return }
-
-                    holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
-                        .range(o.textRange)
-                        .textAttributes(ProtobufHighlighter.FIELD)
-                        .create()
-                    holder.newAnnotation(
-                        HighlightSeverity.ERROR,
-                        "Field '${o.text}' not found",
-                    )
-                        .range(o.textRange)
-                        .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
-                        .create()
+                override fun visitOptionName(o: ProtobufOptionName) {
+                    val target: PsiElement = o.symbolName ?: o.extensionFieldName ?: return
+                    if (o.resolve() == null) {
+                        holder.newAnnotation(
+                            HighlightSeverity.ERROR,
+                            "Field '${target.text}' not found",
+                        )
+                            .range(target.textRange)
+                            .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
+                            .create()
+                    }
                 }
 
                 override fun visitEnumValue(o: ProtobufEnumValue) {
@@ -215,6 +216,7 @@ class ProtobufAnnotator : Annotator {
                             is ProtobufOptionAssign -> {
                                 parent.optionName.field() as? ProtobufFieldDefinition ?: return
                             }
+
                             else -> return
                         }
 
@@ -226,12 +228,14 @@ class ProtobufAnnotator : Annotator {
                                 } else {
                                     null
                                 }
+
                             BuiltInType.STRING.value() ->
                                 if (o.stringValue == null) {
                                     "Field \"${field.name()}\" required a string value"
                                 } else {
                                     null
                                 }
+
                             BuiltInType.FLOAT.value(),
                             BuiltInType.DOUBLE.value(),
                             ->
@@ -240,6 +244,7 @@ class ProtobufAnnotator : Annotator {
                                 } else {
                                     null
                                 }
+
                             BuiltInType.UINT32.value(),
                             BuiltInType.UINT64.value(),
                             BuiltInType.FIXED32.value(),
@@ -250,6 +255,7 @@ class ProtobufAnnotator : Annotator {
                                 } else {
                                     null
                                 }
+
                             BuiltInType.INT32.value(),
                             BuiltInType.INT64.value(),
                             BuiltInType.SINT32.value(),
@@ -262,6 +268,7 @@ class ProtobufAnnotator : Annotator {
                                 } else {
                                     null
                                 }
+
                             else -> {
                                 when (val typeDefinition = field.typeName.reference?.resolve()) {
                                     is ProtobufEnumDefinition ->
@@ -270,12 +277,14 @@ class ProtobufAnnotator : Annotator {
                                         } else {
                                             null
                                         }
+
                                     is ProtobufMessageDefinition ->
                                         if (o.messageValue == null) {
                                             "Field \"${field.name()}\" required \"${typeDefinition.qualifiedName()}\" value"
                                         } else {
                                             null
                                         }
+
                                     else -> null
                                 }
                             }

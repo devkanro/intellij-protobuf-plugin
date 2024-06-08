@@ -2,7 +2,6 @@ package io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl
 
 import com.intellij.psi.stubs.StubElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPackageName
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.ProtobufStub
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.type.ProtobufPackageNameStubType
 
 class ProtobufPackageNameStub(

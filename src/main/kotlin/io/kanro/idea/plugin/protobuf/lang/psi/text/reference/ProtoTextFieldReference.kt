@@ -6,19 +6,21 @@ import com.intellij.psi.PsiReferenceBase
 import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.items
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufGroupDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMapFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.key
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.value
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextFieldName
 import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextPsiFactory
-import io.kanro.idea.plugin.protobuf.lang.psi.text.message
+import io.kanro.idea.plugin.protobuf.lang.psi.text.ownerMessage
 
 class ProtoTextFieldReference(field: ProtoTextFieldName) :
     PsiReferenceBase<ProtoTextFieldName>(field) {
     override fun resolve(): PsiElement? {
-        val message = element.message() ?: return null
+        val message = element.ownerMessage() ?: return null
         if (message is ProtobufMapFieldDefinition) {
             when (element.text) {
                 "key" -> return message.key()
@@ -38,12 +40,26 @@ class ProtoTextFieldReference(field: ProtoTextFieldName) :
     }
 
     override fun getVariants(): Array<Any> {
-        val message = element.message() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
+        val message = element.ownerMessage() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         if (message is ProtobufMapFieldDefinition) {
-            return message.entryFields().map { it.withInsertHandler(fieldInsertHandler) }.toTypedArray()
+            return message.entryFields().map {
+                when (it.psiElement?.reference?.resolve()) {
+                    is ProtobufGroupDefinition,
+                    is ProtobufMessageDefinition -> it.withInsertHandler(messageFieldInsertHandler)
+
+                    else -> it.withInsertHandler(fieldInsertHandler)
+                }
+            }.toTypedArray()
         }
         return message.realItems().mapNotNull {
-            (it as? ProtobufFieldLike)?.lookup()?.withInsertHandler(fieldInsertHandler)
+            (it as? ProtobufFieldLike)?.lookup()?.let {
+                when (it.psiElement?.reference?.resolve()) {
+                    is ProtobufGroupDefinition,
+                    is ProtobufMessageDefinition -> it.withInsertHandler(messageFieldInsertHandler)
+
+                    else -> it.withInsertHandler(fieldInsertHandler)
+                }
+            }
         }.toTypedArray()
     }
 
@@ -55,5 +71,7 @@ class ProtoTextFieldReference(field: ProtoTextFieldName) :
 
     companion object {
         private val fieldInsertHandler = SmartInsertHandler(": ")
+
+        private val messageFieldInsertHandler = SmartInsertHandler(" {}", -1)
     }
 }

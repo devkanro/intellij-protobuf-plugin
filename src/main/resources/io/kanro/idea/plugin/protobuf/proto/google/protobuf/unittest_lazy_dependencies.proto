@@ -13,19 +13,25 @@
 
 edition = "2023";
 
-import "google/protobuf/unittest_lazy_dependencies_custom_option.proto";
-
 // Some generic_services option(s) added automatically.
 // See:  http://go/proto2-generic-services-default
-option cc_generic_services = true;    // auto-added
-option java_generic_services = true;  // auto-added
-option py_generic_services = true;    // auto-added
+option cc_generic_services = true;
+
+// auto-added
+option java_generic_services = true;
+
+// auto-added
+option py_generic_services = true;
+
+// auto-added
 option cc_enable_arenas = true;
 
 // We don't put this in a package within proto2 because we need to make sure
 // that the generated code doesn't depend on being in the proto2 namespace.
 // In test_util.h we do "using namespace unittest = protobuf_unittest".
 package protobuf_unittest.lazy_imports;
+
+import "google/protobuf/unittest_lazy_dependencies_custom_option.proto";
 
 // Protos optimized for SPEED use a strict superset of the generated code
 // of equivalent ones optimized for CODE_SIZE, so we should optimize all our
@@ -41,11 +47,11 @@ option java_outer_classname = "UnittestLazyImportsProto";
 // descriptor lazily and return it.
 
 message ImportedMessage {
-  LazyMessage lazy_message = 1;
+    LazyMessage lazy_message = 1;
 }
 
 message MessageCustomOption {}
 
 message MessageCustomOption2 {
-  option (lazy_enum_option) = LAZY_ENUM_0;
+    option (lazy_enum_option) = LAZY_ENUM_0;
 }

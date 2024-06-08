@@ -62,21 +62,31 @@ private TopLevelDefinition ::= MessageDefinition | EnumDefinition | ServiceDefin
 /* File statements */
 EditionStatement ::= edition '=' StringValue ';' {
     pin=1
-    implements=["io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"]
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
+    ]
 }
 
 SyntaxStatement ::= syntax '=' StringValue ';' {
     pin=1
-    implements=["io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"]
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
+    ]
 }
 
 PackageStatement ::= package PackageName ('.' PackageName)* ';' {
     pin=1
-    implements=["io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"]
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
+    ]
 }
 
 PackageName::= IdentifierWithKeyword {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufPackageName"
     ]
@@ -87,17 +97,24 @@ PackageName::= IdentifierWithKeyword {
 
 ImportStatement ::= import ImportLabel? StringValue ';' {
     pin=1
-    implements=["io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"]
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
+    ]
     mixin="io.kanro.idea.plugin.protobuf.lang.psi.proto.mixin.ProtobufImportStatementMixin"
 }
 
 ImportLabel ::= public | weak {
-    implements=["io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"]
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+    ]
 }
 
 FileOption ::= option OptionAssign ';' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionHover"
     ]
@@ -107,6 +124,7 @@ FileOption ::= option OptionAssign ';' {
 OptionAssign ::= OptionName '=' Constant {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufOptionAssign"
     ]
@@ -115,22 +133,22 @@ OptionAssign ::= OptionName '=' Constant {
 
 private OptionAssignRecovery ::= !(option | ',' | '}' | ']' | ';')
 
-OptionName ::= OptionFieldName ('.' OptionFieldName)* {
-    implements=["io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"]
+OptionName ::= OptionFieldName ('.' OptionName)? {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.QualifiedElement<ProtobufOptionName>"
+    ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.proto.mixin.ProtobufOptionNameMixin"
 }
 
-OptionFieldName ::= SymbolName | '(' ExtensionFieldName ')' {
-    implements=[
-        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
-        "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufFileReferenceContributor"
-    ]
-    mixin="io.kanro.idea.plugin.protobuf.lang.psi.proto.mixin.ProtobufOptionFieldNameMixin"
-}
+private OptionFieldName ::= SymbolName | '(' ExtensionFieldName ')'
 
 /* Message */
 MessageDefinition ::= message Identifier MessageBody {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufMessageDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner"
@@ -144,6 +162,7 @@ MessageDefinition ::= message Identifier MessageBody {
 MessageBody ::= '{' MessageElement* '}' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
     ]
@@ -167,6 +186,7 @@ private MessageElementRecovery ::= !(message | enum | extensions | reserved | ex
 MessageOption ::= option OptionAssign ';'  {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionHover"
     ]
@@ -176,6 +196,7 @@ MessageOption ::= option OptionAssign ';'  {
 FieldDefinition ::= FieldLabel? TypeName Identifier '=' IntegerValue FieldOptionBlock? ';'  {
     pin=2
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufFieldDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner"
@@ -189,6 +210,7 @@ FieldDefinition ::= FieldLabel? TypeName Identifier '=' IntegerValue FieldOption
 FieldOptionBlock ::= '[' FieldOption (',' FieldOption)* ']' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
     ]
@@ -196,6 +218,7 @@ FieldOptionBlock ::= '[' FieldOption (',' FieldOption)* ']' {
 
 FieldOption ::= OptionAssign {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionHover"
     ]
@@ -205,12 +228,16 @@ FieldOption ::= OptionAssign {
 private OptionBlockRecovery ::= !(',' | ']')
 
 FieldLabel ::= required | optional | repeated {
-    implements=["io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"]
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+    ]
 }
 
 OneofDefinition ::= oneof Identifier OneofBody {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufOneofDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner"
@@ -224,6 +251,7 @@ OneofDefinition ::= oneof Identifier OneofBody {
 OneofBody ::= '{' OneofElement* '}' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
     ]
@@ -234,6 +262,7 @@ private OneofElementRecovery ::= !(FieldLabel | option | group | TypeName | ';' 
 OneofOption ::= option OptionAssign ';'  {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionHover"
     ]
@@ -242,6 +271,7 @@ OneofOption ::= option OptionAssign ';'  {
 MapFieldDefinition ::= map '<' TypeName ',' TypeName '>' Identifier '=' IntegerValue FieldOptionBlock? ';' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufMapFieldDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner"
@@ -254,6 +284,7 @@ MapFieldDefinition ::= map '<' TypeName ',' TypeName '>' Identifier '=' IntegerV
 GroupDefinition ::= FieldLabel? group Identifier '=' IntegerValue MessageBody {
     pin=2
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufGroupDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner"
@@ -266,6 +297,7 @@ GroupDefinition ::= FieldLabel? group Identifier '=' IntegerValue MessageBody {
 ExtensionStatement ::= extensions ExtensionRanges ';' {
     pin = 1;
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
     ]
 }
@@ -275,6 +307,7 @@ private ExtensionRanges ::= ExtensionRange (',' ExtensionRange)*
 ExtensionRange ::= IntegerValue (to (IntegerValue | max))? ExtensionRangeOptionBlock? {
     recoverWhile=RangeRecovery
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyOwner"
@@ -284,12 +317,14 @@ ExtensionRange ::= IntegerValue (to (IntegerValue | max))? ExtensionRangeOptionB
 ExtensionRangeOptionBlock ::= '[' ExtensionRangeOption (',' ExtensionRangeOption)* ']' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
     ]
 }
 ExtensionRangeOption ::= OptionAssign {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionHover"
     ]
@@ -299,6 +334,7 @@ ExtensionRangeOption ::= OptionAssign {
 ReservedStatement ::= reserved ReservedElement ';'{
     pin = 1;
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
     ]
 }
@@ -308,6 +344,7 @@ private ReservedRanges ::= ReservedRange (',' ReservedRange)*
 ReservedRange ::= IntegerValue (to (IntegerValue | max))? {
     recoverWhile=RangeRecovery
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
     ]
 }
@@ -316,6 +353,7 @@ private RangeRecovery ::= !(IntegerValue | ',' | '[' | ';') MessageElementRecove
 private ReservedFieldNames ::= ReservedName  (',' ReservedName)*
 ReservedName ::= STRING_LITERAL | IdentifierWithKeyword {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
     ]
 }
@@ -323,6 +361,7 @@ ReservedName ::= STRING_LITERAL | IdentifierWithKeyword {
 EnumDefinition ::= enum Identifier EnumBody {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufEnumDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner"
@@ -336,6 +375,7 @@ EnumDefinition ::= enum Identifier EnumBody {
 EnumBody ::= '{' EnumElement* '}' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
     ]
@@ -345,6 +385,7 @@ private EnumElementRecovery ::= !(option | reserved | EnumValueDefinition | ';' 
 EnumOption ::= option OptionAssign ';' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionHover"
     ]
@@ -353,6 +394,7 @@ EnumOption ::= option OptionAssign ';' {
 EnumValueDefinition ::= Identifier '=' IntegerValue EnumValueOptionBlock? ';' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufEnumValueDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner"
@@ -366,6 +408,7 @@ EnumValueDefinition ::= Identifier '=' IntegerValue EnumValueOptionBlock? ';' {
 EnumValueOptionBlock ::= '[' EnumValueOption (',' EnumValueOption)* ']' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
     ]
@@ -373,6 +416,7 @@ EnumValueOptionBlock ::= '[' EnumValueOption (',' EnumValueOption)* ']' {
 
 EnumValueOption ::= OptionAssign {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionHover"
     ]
@@ -382,6 +426,7 @@ EnumValueOption ::= OptionAssign {
 ServiceDefinition ::= service Identifier ServiceBody  {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufServiceDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner"
@@ -395,6 +440,7 @@ ServiceDefinition ::= service Identifier ServiceBody  {
 ServiceBody ::= '{' ServiceElement* '}' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
     ]
@@ -405,6 +451,7 @@ private ServiceElementRecovery ::= !(option | stream | rpc | ';' | '}')
 ServiceOption ::= option OptionAssign ';' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionHover"
     ]
@@ -413,6 +460,7 @@ ServiceOption ::= option OptionAssign ';' {
 RpcDefinition ::= rpc Identifier RpcIO returns RpcIO ( RpcBody | ';') {
     pin = 1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufRpcDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner"
@@ -424,12 +472,16 @@ RpcDefinition ::= rpc Identifier RpcIO returns RpcIO ( RpcBody | ';') {
 }
 
 RpcIO ::= '(' stream? TypeName ')' {
-    implements=["io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"]
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
+    ]
 }
 
 RpcBody ::= '{' RpcElement* '}' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
     ]
@@ -440,6 +492,7 @@ private RpcElementRecovery ::= !(option | ';' | '}')
 RpcOption ::= option OptionAssign ';' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionHover"
     ]
@@ -448,6 +501,7 @@ RpcOption ::= option OptionAssign ';' {
 ExtendDefinition ::= extend TypeName ExtendBody  {
    pin=1
    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufExtendDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyOwner"
@@ -460,6 +514,7 @@ ExtendDefinition ::= extend TypeName ExtendBody  {
 ExtendBody ::=  '{' ExtendElement* '}' {
     pin=1
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
     ]
@@ -470,34 +525,42 @@ private ExtendElementRecovery ::= !(FieldLabel | group | TypeName | ';' | '}')
 
 Constant ::= StringValue | NumberValue | BooleanValue | MessageValue | EnumValue {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.WrappedValue"
     ]
 }
 
-TypeName ::= '.'? SymbolName ('.' SymbolName)* {
+TypeName ::= '.'? SymbolName ('.' TypeName)? {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+                "io.kanro.idea.plugin.protobuf.lang.psi.feature.QualifiedElement<ProtobufTypeName>"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufFileReferenceContributor"
-        "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceHost"
     ]
     mixin="io.kanro.idea.plugin.protobuf.lang.psi.proto.mixin.ProtobufTypeNameMixin"
 }
 
-ExtensionFieldName ::= '.'? SymbolName ('.' SymbolName)* {
+ExtensionFieldName ::= '.'? SymbolName ('.' ExtensionFieldName)? {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.QualifiedElement<ProtobufExtensionFieldName>"
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufFileReferenceContributor"
     ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.proto.mixin.ProtobufExtensionFieldNameMixin"
 }
 
 SymbolName::= IdentifierWithKeyword {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
     ]
 }
 
 EnumValue ::= IdentifierWithKeyword {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.EnumValue"
     ]
@@ -506,6 +569,7 @@ EnumValue ::= IdentifierWithKeyword {
 
 Identifier::= IdentifierWithKeyword {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
     ]
 }
@@ -514,9 +578,10 @@ private IdentifierWithKeyword ::= IDENTIFIER_LITERAL | <<parseKeyword>>
 
 StringValue ::= STRING_LITERAL+ {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufFileReferenceContributor"
-        "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceHost"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.ReferenceElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.StringValue"
     ]
     mixin="io.kanro.idea.plugin.protobuf.lang.psi.proto.mixin.ProtobufStringValueMixin"
@@ -524,6 +589,7 @@ StringValue ::= STRING_LITERAL+ {
 
 IntegerValue ::= ('-' | '+')? INTEGER_LITERAL{
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.IntegerValue"
     ]
@@ -531,6 +597,7 @@ IntegerValue ::= ('-' | '+')? INTEGER_LITERAL{
 
 NumberValue ::= ('-' | '+')? (INTEGER_LITERAL | FLOAT_LITERAL | 'inf' | 'nan'){
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.NumberValue"
     ]
@@ -538,6 +605,7 @@ NumberValue ::= ('-' | '+')? (INTEGER_LITERAL | FLOAT_LITERAL | 'inf' | 'nan'){
 
 BooleanValue ::= (false | true) {
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.BooleanValue"
     ]
@@ -545,12 +613,10 @@ BooleanValue ::= (false | true) {
 
 MessageValue ::= '{' << parseTextMessage >> '}' {
     pin=1
-    recoverWhile = MessageValueRecovery
     implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.MessageValue"
     ]
 }
-
-private MessageValueRecovery ::= !('}' | <<parseTextFieldName>>)

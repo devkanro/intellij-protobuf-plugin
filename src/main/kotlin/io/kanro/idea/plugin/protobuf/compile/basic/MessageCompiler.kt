@@ -13,16 +13,15 @@ import io.kanro.idea.plugin.protobuf.compile.MessageFieldCompilingState
 import io.kanro.idea.plugin.protobuf.compile.MessageMapEntryCompilingState
 import io.kanro.idea.plugin.protobuf.compile.MessageMapFieldCompilingState
 import io.kanro.idea.plugin.protobuf.compile.MessageOneofCompilingState
-import io.kanro.idea.plugin.protobuf.lang.psi.jsonName
-import io.kanro.idea.plugin.protobuf.lang.psi.key
-import io.kanro.idea.plugin.protobuf.lang.psi.optional
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMapFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOneofDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.repeated
-import io.kanro.idea.plugin.protobuf.lang.psi.required
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.key
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.optional
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.repeated
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.required
 import io.kanro.idea.plugin.protobuf.lang.support.BuiltInType
 import io.kanro.idea.plugin.protobuf.string.toPascalCase
 
@@ -47,6 +46,7 @@ class MessageCompiler : BaseProtobufCompilerPlugin<MessageCompilingState>() {
                                 return@forEach
                             }
                     }
+
                     is ProtobufEnumDefinition -> {
                         this.enumType +=
                             try {
@@ -57,6 +57,7 @@ class MessageCompiler : BaseProtobufCompilerPlugin<MessageCompilingState>() {
                                 return@forEach
                             }
                     }
+
                     is ProtobufFieldDefinition -> {
                         this.field +=
                             try {
@@ -67,6 +68,7 @@ class MessageCompiler : BaseProtobufCompilerPlugin<MessageCompilingState>() {
                                 return@forEach
                             }
                     }
+
                     is ProtobufOneofDefinition -> {
                         this.oneofDecl +=
                             try {
@@ -77,6 +79,7 @@ class MessageCompiler : BaseProtobufCompilerPlugin<MessageCompilingState>() {
                                 return@forEach
                             }
                     }
+
                     is ProtobufMapFieldDefinition -> {
                         this.nestedType +=
                             try {
@@ -131,6 +134,7 @@ class MessageFieldCompiler : BaseProtobufCompilerPlugin<MessageFieldCompilingSta
                         this.typeName = type.qualifiedName()?.let { ".$it" }
                             ?: throw IllegalStateException("Invalid field definition: invalid field type.")
                     }
+
                     is ProtobufEnumDefinition -> {
                         this.type = FieldDescriptorProto.Type.ENUM
                         this.typeName = type.qualifiedName()?.let { ".$it" }
@@ -225,11 +229,13 @@ class MessageMapEntryCompiler : BaseProtobufCompilerPlugin<MessageMapEntryCompil
                                 this.typeName = type.qualifiedName()?.let { ".$it" }
                                     ?: throw IllegalStateException("Invalid field definition: unresolvable value type.")
                             }
+
                             is ProtobufEnumDefinition -> {
                                 this.type = FieldDescriptorProto.Type.ENUM
                                 this.typeName = type.qualifiedName()?.let { ".$it" }
                                     ?: throw IllegalStateException("Invalid field definition: unresolvable value type.")
                             }
+
                             else -> throw IllegalStateException("Invalid field definition: invalid value type.")
                         }
                     }
@@ -268,6 +274,7 @@ class MessageMapFieldCompiler : BaseProtobufCompilerPlugin<MessageMapFieldCompil
                     root.element().qualifiedName()?.let { ".$it.$entryName" }
                         ?: throw IllegalStateException("Invalid map field definition: name missing.")
                 }
+
                 else -> throw IllegalStateException("Invalid map field definition: unsupported extension map field.")
             }
 

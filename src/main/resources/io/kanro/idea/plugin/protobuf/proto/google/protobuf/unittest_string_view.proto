@@ -10,9 +10,9 @@ option features.(pb.cpp).string_type = VIEW;
 
 // NEXT_TAG = 5;
 message TestStringView {
-  string singular_string = 1;
-  bytes singular_bytes = 2;
+    string singular_string = 1;
+    bytes singular_bytes = 2;
 
-  repeated string repeated_string = 3;
-  repeated bytes repeated_bytes = 4;
+    repeated string repeated_string = 3;
+    repeated bytes repeated_bytes = 4;
 }

@@ -154,7 +154,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <fileType name="prototext" language="prototext"
-                  implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtoTextFileType" extensions="txtpb;pbtxt;textproto;textpb;protoascii;pb.txt"/>
+                  implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtoTextFileType"
+                  extensions="txtpb;pbtxt;textproto;textpb;protoascii;pb.txt"/>
         <lang.parserDefinition language="prototext"
                                implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtoTextParserDefinition"/>
         <lang.syntaxHighlighter language="prototext"

@@ -36,6 +36,7 @@ class ProtobufLineMarkerProvider : RelatedItemLineMarkerProvider() {
                         .setTooltipText("Implemented")
                 result.add(builder.createLineMarkerInfo(element.identifierLiteral ?: element))
             }
+
             is ProtobufServiceDefinition -> {
                 val apis =
                     owner.toImplBaseClass()?.let {

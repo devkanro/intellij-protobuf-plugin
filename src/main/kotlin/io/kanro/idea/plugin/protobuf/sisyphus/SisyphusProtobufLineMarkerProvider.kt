@@ -28,6 +28,7 @@ class SisyphusProtobufLineMarkerProvider : RelatedItemLineMarkerProvider() {
                         .setTooltipText("Implemented")
                 result.add(builder.createLineMarkerInfo(element.identifierLiteral ?: element))
             }
+
             is ProtobufServiceDefinition -> {
                 val clazz = owner.toClass() ?: return
                 val apis = DirectClassInheritorsSearch.search(clazz).findAll().toList()

@@ -38,7 +38,10 @@ interface ProtoTextFile :
             } ?: return null
         val messageName = message.text.substringAfter(PROTOTEXT_HEADER_MESSAGE).trim()
 
-        return ProtobufSymbolResolver.resolveInScope(file, QualifiedName.fromDottedString(messageName)) as? ProtobufMessageDefinition
+        return ProtobufSymbolResolver.resolveInScope(
+            file,
+            QualifiedName.fromDottedString(messageName)
+        ) as? ProtobufMessageDefinition
     }
 
     object Type : IFileElementType("PROTOTEXT_FILE", ProtoTextLanguage)

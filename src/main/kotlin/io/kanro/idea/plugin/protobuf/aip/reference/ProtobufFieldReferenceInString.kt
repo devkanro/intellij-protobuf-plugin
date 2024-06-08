@@ -13,9 +13,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPsiFactory
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stringRangeInParent
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
-import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
 import io.kanro.idea.plugin.protobuf.lang.psi.text.feature.ProtoTextFieldAssign
 
 class ProtobufRpcInputFieldReference(field: ProtobufStringValue) :

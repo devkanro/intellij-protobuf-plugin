@@ -28,10 +28,10 @@ class ProtobufBlock(
     alignment: Alignment?,
     protected val spacingBuilder: SpacingBuilder,
 ) : AbstractBlock(
-        node,
-        warp,
-        alignment,
-    ) {
+    node,
+    warp,
+    alignment,
+) {
     override fun getSpacing(
         child1: Block?,
         child2: Block,
@@ -53,6 +53,7 @@ class ProtobufBlock(
                     Indent.getNormalIndent()
                 }
             }
+
             BlockType.FRAGMENT -> {
                 if (node.treePrev == null) return Indent.getNoneIndent()
                 when (node.elementType) {
@@ -67,6 +68,7 @@ class ProtobufBlock(
                     ProtobufTokens.LT,
                     ProtobufTokens.GT,
                     -> Indent.getNoneIndent()
+
                     else -> Indent.getContinuationWithoutFirstIndent()
                 }
             }
@@ -82,6 +84,7 @@ class ProtobufBlock(
                     Indent.getNormalIndent()
                 }
             }
+
             BlockType.STATEMENT -> Indent.getContinuationWithoutFirstIndent()
             BlockType.FRAGMENT -> Indent.getContinuationWithoutFirstIndent()
         }

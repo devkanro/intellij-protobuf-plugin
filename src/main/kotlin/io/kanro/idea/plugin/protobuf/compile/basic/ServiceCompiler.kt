@@ -7,7 +7,7 @@ import io.kanro.idea.plugin.protobuf.compile.ServiceCompilingState
 import io.kanro.idea.plugin.protobuf.compile.ServiceMethodCompilingState
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.stream
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stream
 
 class ServiceCompiler : BaseProtobufCompilerPlugin<ServiceCompilingState>() {
     override fun compile(

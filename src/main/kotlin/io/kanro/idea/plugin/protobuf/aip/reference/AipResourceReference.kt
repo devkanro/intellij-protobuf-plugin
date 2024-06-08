@@ -18,8 +18,8 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFileOption
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stringRangeInParent
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.ResourceTypeIndex
-import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 
 class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<ProtobufStringValue>(element) {

@@ -11,10 +11,12 @@ import com.intellij.openapi.ui.popup.ListPopupStep
 import com.intellij.openapi.ui.popup.PopupStep
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep
 import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.util.parentOfType
 import com.intellij.ui.popup.list.ListPopupImpl
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceHost
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufSymbolReferenceHover
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.ReferenceElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.util.removeCommonPrefix
 import java.awt.BorderLayout
 import javax.swing.JPanel
@@ -23,8 +25,7 @@ import javax.swing.ListCellRenderer
 class ProtobufAddImportAction(
     private val project: Project,
     private val editor: Editor,
-    private val host: ProtobufSymbolReferenceHost,
-    private val hover: ProtobufSymbolReferenceHover?,
+    private val host: ReferenceElement,
     private val elements: Array<ProtobufDefinition>,
 ) : QuestionAction {
     private fun hintText(): String {
@@ -106,24 +107,24 @@ class ProtobufAddImportAction(
             project,
             {
                 ApplicationManager.getApplication().runWriteAction {
-                    val file = host.file()
-                    val targetName = name.removeCommonPrefix(file.scope()).toString()
+                    val currentScope = host.parentOfType<ProtobufScope>() ?: return@runWriteAction
+                    val file = currentScope.file()
+                    val targetName = name.removeCommonPrefix(currentScope.scope())
 
                     file.addImport(element)
 
-                    if (hover != null) {
-                        val parts = hover.symbolParts()
-                        if (!hover.absolutely() && parts.size == 1) {
-                            if (parts.first().value != targetName) {
-                                hover.rename(targetName)
-                            }
+                    val symbol = host.symbol()
+                    if (symbol != null) {
+                        val parts = symbol.components
+                        if (parts.size == 1) {
+                            host.rename(targetName)
                         }
                     }
 
                     PsiDocumentManager.getInstance(project).commitAllDocuments()
                 }
             },
-            "Import ${element.importPath(host.file())}",
+            "Import ${element.importPath(host.containingFile.originalFile as ProtobufFile)}",
             null,
         )
         return true

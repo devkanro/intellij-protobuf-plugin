@@ -19,6 +19,8 @@ syntax = "proto2";
 // "using namespace unittest_import = protobuf_unittest_import".
 package protobuf_unittest_import;
 
+import public "google/protobuf/unittest_import_public.proto";
+
 option optimize_for = SPEED;
 option cc_enable_arenas = true;
 
@@ -29,21 +31,20 @@ option java_package = "com.google.protobuf.test";
 // one.
 
 // Test public import
-import public "google/protobuf/unittest_import_public.proto";
 
 message ImportMessage {
-  optional int32 d = 1;
+    optional int32 d = 1;
 }
 
 enum ImportEnum {
-  IMPORT_FOO = 7;
-  IMPORT_BAR = 8;
-  IMPORT_BAZ = 9;
+    IMPORT_FOO = 7;
+    IMPORT_BAR = 8;
+    IMPORT_BAZ = 9;
 }
 
 // To use an enum in a map, it must has the first value as 0.
 enum ImportEnumForMap {
-  UNKNOWN = 0;
-  FOO = 1;
-  BAR = 2;
+    UNKNOWN = 0;
+    FOO = 1;
+    BAR = 2;
 }

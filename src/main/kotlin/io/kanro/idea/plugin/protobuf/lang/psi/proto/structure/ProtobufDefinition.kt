@@ -8,7 +8,7 @@ import com.intellij.psi.PsiNameIdentifierOwner
 import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.DocumentOwner
-import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupElement
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupableElement
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.NamedElement
 import io.kanro.idea.plugin.protobuf.lang.psi.findChild
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufIdentifier
@@ -19,7 +19,7 @@ interface ProtobufDefinition :
     ProtobufScopeItem,
     PsiNameIdentifierOwner,
     NamedElement,
-    LookupElement,
+    LookupableElement,
     DocumentOwner,
     NavigatablePsiElement,
     ItemPresentation {

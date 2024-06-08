@@ -1,5 +1,6 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.proto
 
+import com.bybutter.sisyphus.string.escape
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiWhiteSpace
@@ -34,11 +35,21 @@ object ProtobufPsiFactory {
         throw IllegalStateException("Wrong type name '$text'")
     }
 
+    fun createExtensionFieldName(
+        project: Project,
+        text: String,
+    ): ProtobufExtensionFieldName {
+        createFile(project, "option ($text) = 1;").walkChildren<ProtobufExtensionFieldName> {
+            return it
+        }
+        throw IllegalStateException("Wrong extension field name '$text'")
+    }
+
     fun createStringValue(
         project: Project,
         text: String,
     ): ProtobufStringValue {
-        createFile(project, "import \"$text\";").walkChildren<ProtobufImportStatement> {
+        createFile(project, "import \"${text.escape()}\";").walkChildren<ProtobufImportStatement> {
             return it.stringValue!!
         }
         throw IllegalStateException("Wrong type name '$text'")

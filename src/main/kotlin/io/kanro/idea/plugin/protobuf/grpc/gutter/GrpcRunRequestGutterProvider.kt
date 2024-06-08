@@ -11,7 +11,7 @@ import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.firstLeaf
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.stream
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stream
 import javax.swing.Icon
 
 class GrpcRunRequestGutterProvider : RelatedItemLineMarkerProvider() {

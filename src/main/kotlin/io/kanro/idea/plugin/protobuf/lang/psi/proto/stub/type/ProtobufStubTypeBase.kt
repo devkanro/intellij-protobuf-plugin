@@ -19,9 +19,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.readStringArray
 abstract class ProtobufStubTypeBase<TStub : ProtobufStubBase<TPsi>, TPsi : PsiElement>(
     name: String,
 ) : IStubElementType<TStub, TPsi>(
-        name,
-        ProtobufLanguage,
-    ) {
+    name,
+    ProtobufLanguage,
+) {
     override fun serialize(
         stub: TStub,
         dataStream: StubOutputStream,

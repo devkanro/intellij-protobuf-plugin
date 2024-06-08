@@ -103,6 +103,7 @@ message GetMessageRequest {
                 consumer.renameStandardOption("SPACE_BEFORE_METHOD_LBRACE", "Option left bracket")
                 consumer.moveStandardOption("SPACE_BEFORE_METHOD_LBRACE", "Before block")
             }
+
             SettingsType.BLANK_LINES_SETTINGS -> {
                 val blankLines = CodeStyleSettingsCustomizableOptions.getInstance().BLANK_LINES
                 consumer.showCustomOption(

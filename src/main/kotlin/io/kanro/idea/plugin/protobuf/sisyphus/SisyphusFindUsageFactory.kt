@@ -28,30 +28,36 @@ class SisyphusFindUsageFactory : FindUsagesHandlerFactory() {
             is ProtobufMessageDefinition -> {
                 ProtoDefinitionFindUsage(element, listOfNotNull(element.toClass()).toTypedArray())
             }
+
             is ProtobufEnumDefinition -> {
                 ProtoDefinitionFindUsage(element, listOfNotNull(element.toClass()).toTypedArray())
             }
+
             is ProtobufServiceDefinition -> {
                 ProtoDefinitionFindUsage(
                     element,
                     listOfNotNull(element.toClass(), element.toClientClass()).toTypedArray(),
                 )
             }
+
             is ProtobufEnumValueDefinition -> {
                 ProtoDefinitionFindUsage(element, listOfNotNull(element.toEnumConstant()).toTypedArray())
             }
+
             is ProtobufRpcDefinition -> {
                 ProtoDefinitionFindUsage(
                     element,
                     listOfNotNull(element.toMethod(), element.toClientMethod()).toTypedArray(),
                 )
             }
+
             is ProtobufFieldLike -> {
                 ProtoDefinitionFindUsage(
                     element,
                     (element.toGetters() + element.toSetters()) as Array<PsiElement>,
                 )
             }
+
             else -> null
         }
     }

@@ -35,9 +35,11 @@ class JavaFindUsageFactory : FindUsagesHandlerFactory() {
                     ).toTypedArray(),
                 )
             }
+
             is ProtobufEnumDefinition -> {
                 ProtoDefinitionFindUsage(element, listOfNotNull(element.toClass()).toTypedArray())
             }
+
             is ProtobufServiceDefinition -> {
                 ProtoDefinitionFindUsage(
                     element,
@@ -50,9 +52,11 @@ class JavaFindUsageFactory : FindUsagesHandlerFactory() {
                     ).toTypedArray(),
                 )
             }
+
             is ProtobufEnumValueDefinition -> {
                 ProtoDefinitionFindUsage(element, listOfNotNull(element.toEnumConstant()).toTypedArray())
             }
+
             is ProtobufRpcDefinition -> {
                 ProtoDefinitionFindUsage(
                     element,
@@ -65,12 +69,14 @@ class JavaFindUsageFactory : FindUsagesHandlerFactory() {
                     ).toTypedArray(),
                 )
             }
+
             is ProtobufFieldLike -> {
                 ProtoDefinitionFindUsage(
                     element,
                     listOfNotNull(*element.toGetters(), *element.toSetters()).toTypedArray(),
                 )
             }
+
             else -> null
         }
     }

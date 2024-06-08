@@ -12,13 +12,13 @@ package pb;
 import "google/protobuf/descriptor.proto";
 
 extend google.protobuf.FeatureSet {
-  optional TestInvalidFeatures test_invalid = 9996;
+    optional TestInvalidFeatures test_invalid = 9996;
 }
 
 message TestInvalidFeatures {
-  repeated int32 repeated_feature = 1 [
-    retention = RETENTION_RUNTIME,
-    targets = TARGET_TYPE_FIELD,
-    edition_defaults = { edition: EDITION_2023, value: "3" }
-  ];
+    repeated int32 repeated_feature = 1 [
+        retention = RETENTION_RUNTIME,
+        targets = TARGET_TYPE_FIELD,
+        edition_defaults = {edition: EDITION_2023, value: "3"}
+    ];
 }

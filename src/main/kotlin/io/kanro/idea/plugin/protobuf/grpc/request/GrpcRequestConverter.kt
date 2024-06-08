@@ -12,7 +12,7 @@ import io.grpc.Metadata
 import io.kanro.idea.plugin.protobuf.grpc.referece.GrpcMethodReference
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.stream
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stream
 
 @Suppress("UnstableApiUsage")
 object GrpcRequestConverter : RequestConverter<GrpcRequest>() {
@@ -49,7 +49,8 @@ object GrpcRequestConverter : RequestConverter<GrpcRequest>() {
 
             val rpc =
                 element.requestTarget?.references?.filterIsInstance<GrpcMethodReference>()?.firstOrNull()
-                    ?.resolve() as? ProtobufRpcDefinition ?: throw IllegalStateException("Unsolvable rpc method '$method'.")
+                    ?.resolve() as? ProtobufRpcDefinition
+                    ?: throw IllegalStateException("Unsolvable rpc method '$method'.")
             val input = rpc.input() ?: throw IllegalStateException("Invalid rpc input.")
             val inputMessage =
                 rpc.input()?.typeName?.reference?.resolve() as? ProtobufMessageDefinition

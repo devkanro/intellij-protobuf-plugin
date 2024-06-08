@@ -2,6 +2,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.text
 
 import com.intellij.psi.util.parentsOfType
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueAssign
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScope
@@ -18,9 +19,25 @@ fun ProtoTextFieldName.isAny(): Boolean {
     return anyName != null
 }
 
-fun ProtoTextFieldName.message(): ProtobufScope? {
+fun ProtoTextFieldName.resolve(): ProtobufElement? {
+    symbolName?.let {
+        return reference?.resolve() as? ProtobufElement
+    }
+
+    extensionName?.let {
+        return it.typeName.leaf().reference?.resolve() as? ProtobufElement
+    }
+
+    anyName?.let {
+        return it.typeName.leaf().reference?.resolve() as? ProtobufElement
+    }
+
+    return null
+}
+
+fun ProtoTextFieldName.ownerMessage(): ProtobufScope? {
     val field = parent as? ProtoTextField ?: return null
-    val message = field.parent as? ProtoTextMessage ?: return null
+    val message = field.parent as? ProtoTextMessageBody ?: return null
     val parent = message.parent ?: return null
 
     if (parent is ProtoTextFile) {
@@ -32,11 +49,7 @@ fun ProtoTextFieldName.message(): ProtobufScope? {
             is ProtobufOptionAssign -> parentAssign.field()
 
             is ProtoTextField -> {
-                if (parentAssign.fieldName.isAny()) {
-                    return parentAssign.fieldName.reference?.resolve() as? ProtobufScope
-                }
-
-                parentAssign.field()
+                parentAssign.fieldName.resolve()
             }
 
             else -> return null

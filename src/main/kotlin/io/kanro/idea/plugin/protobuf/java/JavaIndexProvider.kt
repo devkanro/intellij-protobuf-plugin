@@ -21,6 +21,7 @@ class JavaIndexProvider : ProtobufIndexProvider {
                 sink.occurrence(JavaNameIndex.key, stub.fullFutureStubName().toString())
                 sink.occurrence(JavaNameIndex.key, stub.fullCoroutineStubName().toString())
             }
+
             is ProtobufRpcStub -> {
                 val methodName = stub.methodName()
 

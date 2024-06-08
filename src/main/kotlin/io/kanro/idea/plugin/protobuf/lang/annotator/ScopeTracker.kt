@@ -6,8 +6,8 @@ import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import io.kanro.idea.plugin.protobuf.lang.psi.items
-import io.kanro.idea.plugin.protobuf.lang.psi.name
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufReservedName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.name
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufMultiNameDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScope

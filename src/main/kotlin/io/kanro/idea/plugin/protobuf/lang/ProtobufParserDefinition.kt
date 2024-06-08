@@ -12,7 +12,7 @@ import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
 import io.kanro.idea.plugin.protobuf.lang.lexer.ProtobufLexer
 import io.kanro.idea.plugin.protobuf.lang.parser.ProtobufParser
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypes
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.impl.ProtobufFileImpl
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
 

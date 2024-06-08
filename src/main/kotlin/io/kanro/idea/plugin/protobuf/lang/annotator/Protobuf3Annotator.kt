@@ -4,7 +4,6 @@ import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
-import io.kanro.idea.plugin.protobuf.lang.psi.isFieldDefaultOption
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
@@ -19,7 +18,8 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOneofBody
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufVisitor
-import io.kanro.idea.plugin.protobuf.lang.psi.weak
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.isFieldDefaultOption
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.weak
 import io.kanro.idea.plugin.protobuf.lang.support.Options
 
 class Protobuf3Annotator : Annotator {

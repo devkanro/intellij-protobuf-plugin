@@ -1,42 +1,30 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.text.mixin
 
 import com.intellij.lang.ASTNode
-import com.intellij.psi.HintedReferenceHost
 import com.intellij.psi.PsiReference
-import com.intellij.psi.PsiReferenceService
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.PsiModificationTracker
 import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextElementBase
 import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextFieldName
 import io.kanro.idea.plugin.protobuf.lang.psi.text.reference.ProtoTextFieldReference
 
 abstract class ProtoTextFieldNameMixin(node: ASTNode) :
     ProtoTextElementBase(node),
-    ProtoTextFieldName,
-    HintedReferenceHost {
+    ProtoTextFieldName {
     override fun getReference(): PsiReference? {
         return references.firstOrNull()
     }
 
     override fun getReferences(): Array<PsiReference> {
-        symbolName?.let {
-            return arrayOf(ProtoTextFieldReference(this))
+        return CachedValuesManager.getCachedValue(this) {
+            CachedValueProvider.Result(
+                if (symbolName != null) {
+                    arrayOf(ProtoTextFieldReference(this))
+                } else {
+                    emptyArray()
+                }, PsiModificationTracker.MODIFICATION_COUNT
+            )
         }
-
-        extensionName?.let {
-            return emptyArray()
-        }
-
-        anyName?.let {
-            return emptyArray()
-        }
-
-        return emptyArray()
-    }
-
-    override fun getReferences(hints: PsiReferenceService.Hints): Array<PsiReference> {
-        return references
-    }
-
-    override fun shouldAskParentForReferences(hints: PsiReferenceService.Hints): Boolean {
-        return false
     }
 }

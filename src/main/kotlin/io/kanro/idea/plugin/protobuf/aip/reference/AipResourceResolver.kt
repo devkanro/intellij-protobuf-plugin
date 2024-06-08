@@ -4,8 +4,8 @@ import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.public
-import io.kanro.idea.plugin.protobuf.lang.psi.resolve
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.public
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.resolve
 import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import java.util.Stack
 

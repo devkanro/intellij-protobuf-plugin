@@ -59,6 +59,7 @@ fun ProtobufMessageDefinition.fullClassName(): QualifiedName? {
             owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
                 className(),
             )
+
         else -> null
     }
 }
@@ -70,6 +71,7 @@ fun ProtobufMessageStub.fullClassName(): QualifiedName? {
             owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
                 className(),
             )
+
         else -> null
     }
 }
@@ -80,6 +82,7 @@ fun ProtobufMessageDefinition.fullMutableClassName(): QualifiedName? {
         is ProtobufMessageDefinition ->
             owner.fullClassName()?.append(mutableClassName())
                 ?: QualifiedName.fromComponents(mutableClassName())
+
         else -> null
     }
 }
@@ -90,6 +93,7 @@ fun ProtobufMessageStub.fullMutableClassName(): QualifiedName? {
         is ProtobufMessageDefinition ->
             owner.fullClassName()?.append(mutableClassName())
                 ?: QualifiedName.fromComponents(mutableClassName())
+
         else -> null
     }
 }
@@ -165,6 +169,7 @@ fun ProtobufEnumDefinition.fullClassName(): QualifiedName? {
             owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
                 className(),
             )
+
         else -> null
     }
 }
@@ -176,6 +181,7 @@ fun ProtobufEnumStub.fullClassName(): QualifiedName? {
             owner.fullClassName()?.append(className()) ?: QualifiedName.fromComponents(
                 className(),
             )
+
         else -> null
     }
 }

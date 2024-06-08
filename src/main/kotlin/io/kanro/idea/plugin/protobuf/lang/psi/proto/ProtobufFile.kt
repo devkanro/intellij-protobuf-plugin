@@ -5,7 +5,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
-import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupElement
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupableElement
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.NamedElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionHover
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner
@@ -16,7 +16,7 @@ interface ProtobufFile :
     PsiFile,
     NamedElement,
     ProtobufScope,
-    LookupElement,
+    LookupableElement,
     ProtobufOptionOwner,
     ItemPresentation {
     fun messages(): Iterable<ProtobufMessageDefinition>

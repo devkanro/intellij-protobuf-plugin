@@ -13,7 +13,6 @@ import io.kanro.idea.plugin.protobuf.aip.transcodingBody
 import io.kanro.idea.plugin.protobuf.grpc.resolveRpc
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.filterItem
-import io.kanro.idea.plugin.protobuf.lang.psi.jsonName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 
 class GrpcTranscodingQueryReference(private val name: String, element: HttpRequestTarget, range: TextRange) :

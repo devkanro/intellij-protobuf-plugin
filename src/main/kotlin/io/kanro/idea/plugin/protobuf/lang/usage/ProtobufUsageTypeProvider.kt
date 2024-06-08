@@ -7,23 +7,24 @@ import io.kanro.idea.plugin.protobuf.ProtobufBundle
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMapFieldDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionFieldName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcIO
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypeName
+import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextFieldName
 
 class ProtobufUsageTypeProvider : UsageTypeProvider {
     override fun getUsageType(element: PsiElement): UsageType? {
         return when (element) {
-            is ProtobufFieldName -> ASSIGN_USAGE_TYPE
-            is ProtobufOptionFieldName -> OPTION_USAGE_TYPE
+            is ProtoTextFieldName -> ASSIGN_USAGE_TYPE
+            is ProtobufOptionName -> OPTION_USAGE_TYPE
             is ProtobufTypeName ->
-                when (element.parent.parent) {
+                when (element.parent) {
                     is ProtobufRpcIO -> METHOD_PARAMETER_USAGE_TYPE
-                    is ProtobufOptionFieldName -> OPTION_USAGE_TYPE
                     is ProtobufFieldDefinition, is ProtobufMapFieldDefinition -> FIELD_DECLARATION_USAGE_TYPE
                     is ProtobufExtendDefinition -> EXTEND_DECLARATION_USAGE_TYPE
                     else -> null
                 }
+
             else -> null
         }
     }

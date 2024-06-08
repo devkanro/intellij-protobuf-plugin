@@ -17,6 +17,7 @@ class ServiceMethodIndexProvider : ProtobufIndexProvider {
                     sink.occurrence(MessageShortNameIndex.key, it)
                 }
             }
+
             is ProtobufServiceStub -> {
                 stub.name()?.let {
                     sink.occurrence(ServiceShortNameIndex.key, it)
@@ -25,6 +26,7 @@ class ServiceMethodIndexProvider : ProtobufIndexProvider {
                     sink.occurrence(ServiceQualifiedNameIndex.key, it.toString())
                 }
             }
+
             is ProtobufRpcStub -> {
                 sink.occurrence(ServiceMethodIndex.key, "${stub.owner()?.qualifiedName()}/${stub.name()}")
             }

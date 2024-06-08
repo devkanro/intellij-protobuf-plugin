@@ -13,14 +13,12 @@ interface ProtobufOptionHover : ProtobufElement {
 
     fun isOption(extensionOptionName: QualifiedName): Boolean {
         val option = option() ?: return false
-        return option.optionName.optionFieldNameList.firstOrNull()
-            ?.extensionFieldName?.textMatches(extensionOptionName.toString()) == true
+        return option.optionName.extensionFieldName?.textMatches(extensionOptionName.toString()) == true
     }
 
     fun isOption(builtinOptionName: String): Boolean {
         val option = option() ?: return false
-        return option.optionName.optionFieldNameList.firstOrNull()
-            ?.symbolName?.textMatches(builtinOptionName) == true
+        return option.optionName.symbolName?.textMatches(builtinOptionName) == true
     }
 
     fun value(): Any? {
@@ -33,10 +31,10 @@ interface ProtobufOptionHover : ProtobufElement {
         val optionName = option()?.optionName ?: return null
         var findName = field
 
-        optionName.optionFieldNameList.forEach {
-            if (!it.textMatches(findName.firstComponent ?: return null)) return null
-            findName = findName.removeHead(1)
+        if (optionName.symbol()?.matches(*field.components.toTypedArray()) != true) {
+            return null
         }
+
         val value = value() ?: return null
         if (findName.componentCount == 0) return value
 

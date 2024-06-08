@@ -1,4 +1,4 @@
-package io.kanro.idea.plugin.protobuf.lang.reference
+package io.kanro.idea.plugin.protobuf.lang.psi.proto.reference
 
 import com.intellij.codeInsight.lookup.AutoCompletionPolicy
 import com.intellij.codeInsight.lookup.LookupElement
@@ -15,8 +15,7 @@ import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPsiFactory
-import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
-import io.kanro.idea.plugin.protobuf.lang.psi.value
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stringRangeInParent
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 
 class ProtobufImportReference(import: ProtobufImportStatement) : PsiReferenceBase<ProtobufImportStatement>(import) {

@@ -10,9 +10,9 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtensionRange
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufReservedRange
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.range
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufNumberScope
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScopeItem
-import io.kanro.idea.plugin.protobuf.lang.psi.range
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 
 open class NumberTracker(scope: ProtobufNumberScope, val minValue: Long) {

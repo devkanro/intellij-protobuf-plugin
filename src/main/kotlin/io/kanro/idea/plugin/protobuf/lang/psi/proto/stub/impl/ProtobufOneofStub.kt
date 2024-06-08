@@ -2,7 +2,6 @@ package io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl
 
 import com.intellij.psi.stubs.StubElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOneofDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.ProtobufStub
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.primitive.ProtobufDefinitionStub
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.primitive.ProtobufVirtualScopeStub
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.type.ProtobufOneofStubType

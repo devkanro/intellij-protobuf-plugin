@@ -18,6 +18,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionHover
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 
 class AipReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
@@ -76,7 +77,7 @@ class AipFieldReferenceProvider : PsiReferenceProvider() {
     private fun getReference(element: ProtobufStringValue): PsiReference? {
         if (element.textMatches("\"*\"")) return null
         val assign = element.parentOfType<ValueAssign>() ?: return null
-        val targetField = assign.field()?.qualifiedName()
+        val targetField = (assign.field() as? ProtobufFieldLike)?.qualifiedName()
         if (targetField == AipOptions.httpRuleBodyName) return ProtobufRpcInputFieldReference(element)
         if (targetField == AipOptions.httpRuleResponseBodyName) return ProtobufRpcOutputFieldReference(element)
         return null

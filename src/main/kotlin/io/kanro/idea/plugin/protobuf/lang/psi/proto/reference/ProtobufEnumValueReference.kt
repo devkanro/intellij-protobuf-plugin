@@ -1,15 +1,15 @@
-package io.kanro.idea.plugin.protobuf.lang.reference
+package io.kanro.idea.plugin.protobuf.lang.psi.proto.reference
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.util.ArrayUtilRt
-import io.kanro.idea.plugin.protobuf.lang.psi.enum
-import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupElement
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupableElement
 import io.kanro.idea.plugin.protobuf.lang.psi.items
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValue
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.enum
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 
 class ProtobufEnumValueReference(field: ProtobufEnumValue) :
@@ -30,7 +30,7 @@ class ProtobufEnumValueReference(field: ProtobufEnumValue) :
     override fun getVariants(): Array<Any> {
         return element.enum()?.realItems()?.mapNotNull {
             if (it !is ProtobufEnumValueDefinition) return@mapNotNull null
-            (it as? LookupElement)?.lookup()
+            (it as? LookupableElement)?.lookup()
         }?.toTypedArray() ?: ArrayUtilRt.EMPTY_OBJECT_ARRAY
     }
 

@@ -11,9 +11,9 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
 import io.kanro.idea.plugin.protobuf.lang.lexer.ProtobufLexer
-import io.kanro.idea.plugin.protobuf.lang.parser.ProtobufTextParser
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes
+import io.kanro.idea.plugin.protobuf.lang.parser.ProtoTextParser
 import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextFile
+import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextTypes
 import io.kanro.idea.plugin.protobuf.lang.psi.text.impl.ProtoTextFileImpl
 import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
 
@@ -23,7 +23,7 @@ class ProtoTextParserDefinition : ParserDefinition {
     }
 
     override fun createParser(project: Project): PsiParser {
-        return ProtobufTextParser()
+        return ProtoTextParser()
     }
 
     override fun getFileNodeType(): IFileElementType {
@@ -39,7 +39,7 @@ class ProtoTextParserDefinition : ParserDefinition {
     }
 
     override fun createElement(node: ASTNode): PsiElement {
-        return ProtobufTypes.Factory.createElement(node)
+        return ProtoTextTypes.Factory.createElement(node)
     }
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile {

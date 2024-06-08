@@ -44,7 +44,7 @@ class MarkdownSymbolReference(element: MarkdownShortReferenceLink) :
             ref as MarkdownSymbolReference
             val host =
                 InjectedLanguageManager.getInstance(ref.element.project).getInjectionHost(ref.element)
-                    as? ProtobufElement ?: return null
+                        as? ProtobufElement ?: return null
             val value = ref.rangeInElement.substring(ref.element.text)
             return if (value.startsWith('.')) {
                 ProtobufSymbolResolver.resolveAbsolutely(host, QualifiedName.fromDottedString(value), AnyElement)
@@ -63,7 +63,7 @@ class MarkdownSymbolReference(element: MarkdownShortReferenceLink) :
         val searchName = element.text.substringBefore(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED).trimStart('[')
         val host =
             InjectedLanguageManager.getInstance(element.project).getInjectionHost(element)
-                as? ProtobufElement ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
+                    as? ProtobufElement ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val result = mutableListOf<Any>()
         val addedElements = mutableSetOf<ProtobufElement>()
         getVariantsInCurrentScope(searchName, host, result, addedElements)
@@ -121,7 +121,7 @@ class MarkdownSymbolReference(element: MarkdownShortReferenceLink) :
         element: ProtobufElement,
         scope: QualifiedName,
     ): LookupElement? {
-        if (element !is io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupElement) return null
+        if (element !is io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupableElement) return null
         return if (element is ProtobufPackageName) {
             element.lookup()?.withLookupString(scope.append(element.name).toString())
                 ?.withInsertHandler(packageInsertHandler)

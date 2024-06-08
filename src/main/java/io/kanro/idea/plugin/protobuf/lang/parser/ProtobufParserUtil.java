@@ -19,7 +19,7 @@ public class ProtobufParserUtil extends GeneratedParserUtilBase {
     }
 
     public static boolean parseTextMessage(PsiBuilder builder, int level) {
-        return ProtoTextParser.Message(builder, level);
+        return ProtoTextParser.MessageBody(builder, level);
     }
 
     public static boolean parseTextFieldName(PsiBuilder builder, int level) {

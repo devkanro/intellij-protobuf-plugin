@@ -11,10 +11,11 @@ import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.refactoring.suggested.endOffset
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.DocumentElement
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.FoldingElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.util.renderDoc
 
 class ProtobufLineCommentImpl(type: IElementType, text: CharSequence) :
-    PsiCommentImpl(type, text), DocumentElement, FoldingElement {
+    PsiCommentImpl(type, text), DocumentElement, FoldingElement, ProtobufElement {
     override fun getOwner(): PsiElement? {
         this.prevSibling?.let {
             if (it !is PsiWhiteSpace) return null

@@ -19,13 +19,13 @@ option optimize_for = LITE_RUNTIME;
 option java_package = "com.google.protobuf";
 
 message ImportMessageLite {
-  int32 d = 1;
+    int32 d = 1;
 }
 
 enum ImportEnumLite {
-  option features.enum_type = CLOSED;
+    option features.enum_type = CLOSED;
 
-  IMPORT_LITE_FOO = 7;
-  IMPORT_LITE_BAR = 8;
-  IMPORT_LITE_BAZ = 9;
+    IMPORT_LITE_FOO = 7;
+    IMPORT_LITE_BAR = 8;
+    IMPORT_LITE_BAZ = 9;
 }

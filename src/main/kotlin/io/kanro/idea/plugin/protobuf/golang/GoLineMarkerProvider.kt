@@ -30,11 +30,11 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 val shadowedMethod =
                     type.allMethods.firstOrNull {
                         it != parent &&
-                            GoPsiUtil.isSameNamedMethod(
-                                parent,
-                                it,
-                                true,
-                            )
+                                GoPsiUtil.isSameNamedMethod(
+                                    parent,
+                                    it,
+                                    true,
+                                )
                     } as? GoMethodDeclaration ?: return
                 val unimplementedServerName = shadowedMethod.receiverType?.text ?: return
                 val indexName = "$unimplementedServerName.${parent.name}"
@@ -53,6 +53,7 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                         .setTooltipText("Implementing")
                 result.add(builder.createLineMarkerInfo(element.firstLeaf()))
             }
+
             is GoSpecType -> {
                 val spec = parent.parent as? GoTypeSpec ?: return
                 val type = spec.getGoUnderlyingType(null) as? GoStructType ?: return
@@ -76,6 +77,7 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                         .setTooltipText("Implementing")
                 result.add(builder.createLineMarkerInfo(element.firstLeaf()))
             }
+
             else -> return
         }
     }

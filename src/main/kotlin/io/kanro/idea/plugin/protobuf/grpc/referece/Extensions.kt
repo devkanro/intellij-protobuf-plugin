@@ -18,8 +18,8 @@ import io.kanro.idea.plugin.protobuf.grpc.isTranscoding
 import io.kanro.idea.plugin.protobuf.grpc.resolveRpc
 import io.kanro.idea.plugin.protobuf.lang.psi.nullCachedValue
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.resolveField
-import io.kanro.idea.plugin.protobuf.lang.psi.resolveFieldType
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.resolveField
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.resolveFieldType
 
 internal fun JsonProperty.contextJsonObject(): JsonObject? {
     return CachedValuesManager.getCachedValue(this) {

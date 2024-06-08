@@ -5,9 +5,8 @@ import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.findChild
-import io.kanro.idea.plugin.protobuf.lang.psi.jsonName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufMultiNameDefinition
@@ -41,7 +40,7 @@ interface ProtobufFieldDefinition : ProtobufFieldLike, ProtobufMultiNameDefiniti
         resourceType()?.let {
             return it
         }
-        return findChild<ProtobufTypeName>()?.symbolNameList?.lastOrNull()?.text
+        return findChild<ProtobufTypeName>()?.leaf()?.text
     }
 
     override fun names(): Set<String> {

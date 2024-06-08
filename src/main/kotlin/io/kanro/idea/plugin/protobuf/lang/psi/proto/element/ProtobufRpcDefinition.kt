@@ -7,8 +7,8 @@ import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
 import io.kanro.idea.plugin.protobuf.lang.psi.findLastChild
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcIO
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stream
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.stream
 import javax.swing.Icon
 
 interface ProtobufRpcDefinition : ProtobufDefinition {
@@ -45,8 +45,8 @@ interface ProtobufRpcDefinition : ProtobufDefinition {
     override fun tailText(): String? {
         val parameters = findChildren<ProtobufRpcIO>()
         if (parameters.size != 2) return "()"
-        var input = parameters[0].typeName.symbolNameList.lastOrNull()?.text ?: return "()"
-        var output = parameters[1].typeName.symbolNameList.lastOrNull()?.text ?: return "()"
+        var input = parameters[0].typeName.leaf().text ?: return "()"
+        var output = parameters[1].typeName.leaf().text ?: return "()"
         if (parameters[0].stream()) {
             input = "stream $input"
         }

@@ -56,6 +56,7 @@ fun ProtobufFieldLike.toGetters(): Array<PsiMethod> {
         is ProtobufMessageDefinition ->
             owner.toMutableClass()?.findMethodsByName(getterName(), true)
                 ?: PsiMethod.EMPTY_ARRAY
+
         else -> PsiMethod.EMPTY_ARRAY
     }
 }
@@ -65,6 +66,7 @@ fun ProtobufFieldLike.toSetters(): Array<PsiMethod> {
         is ProtobufMessageDefinition ->
             owner.toMutableClass()?.findMethodsByName(getterName(), true)
                 ?: PsiMethod.EMPTY_ARRAY
+
         else -> PsiMethod.EMPTY_ARRAY
     }
 }

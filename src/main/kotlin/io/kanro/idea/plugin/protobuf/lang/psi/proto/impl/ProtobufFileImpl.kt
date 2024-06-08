@@ -89,6 +89,7 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
                 }
                 "${system.getLocalByEntry(virtualFile)?.name}"
             }
+
             is LocalFileSystem -> {
                 val project = ProjectLocator.getInstance().guessProjectForFile(virtualFile)
                 if (project != null) {
@@ -101,6 +102,7 @@ class ProtobufFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvide
                 }
                 "(external)"
             }
+
             else -> "(unsupported)"
         }
     }

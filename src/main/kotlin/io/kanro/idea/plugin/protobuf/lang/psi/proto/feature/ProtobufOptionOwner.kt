@@ -1,9 +1,9 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.proto.feature
 
 import com.intellij.psi.util.QualifiedName
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyOwner
 
 interface ProtobufOptionOwner : ProtobufElement {
     fun options(): Array<ProtobufOptionHover> {

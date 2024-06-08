@@ -14,5 +14,5 @@ package protobuf_unittest_import;
 option java_package = "com.google.protobuf.test";
 
 message PublicImportMessage {
-  optional int32 e = 1;
+    optional int32 e = 1;
 }

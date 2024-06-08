@@ -5,7 +5,6 @@ import com.intellij.psi.stubs.IStubElementType
 import com.intellij.psi.stubs.StubBase
 import com.intellij.psi.stubs.StubElement
 import com.intellij.psi.stubs.StubOutputStream
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.ProtobufStub
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.writeMap
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.writeStringArray
 

@@ -14,7 +14,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.forEachPrev
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtensionStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufReservedStatement
-import io.kanro.idea.plugin.protobuf.lang.psi.range
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.range
 import io.kanro.idea.plugin.protobuf.lang.support.BuiltInType
 import io.kanro.idea.plugin.protobuf.string.case.CommonWordSplitter
 import io.kanro.idea.plugin.protobuf.string.case.SnakeCaseFormatter
@@ -29,7 +29,7 @@ object FieldNameProvider : CompletionProvider<CompletionParameters>() {
     ) {
         val element = parameters.position
         val field = element.parentOfType<ProtobufFieldDefinition>() ?: return
-        val type = field.typeName.symbolNameList.lastOrNull()?.text ?: return
+        val type = field.typeName.leaf()?.text ?: return
         val searchName = element.text.substringBeforeLast("_IntellijIdeaRulezzz", "")
         val prevNumber = prevFieldNumber(element)
         val inserter = fieldNumberInserter(prevNumber + 1)
@@ -73,6 +73,7 @@ object FieldNameProvider : CompletionProvider<CompletionParameters>() {
                 is ProtobufReservedStatement -> return it.reservedRangeList.maxOf {
                     it.range()?.last?.takeIf { it != Long.MAX_VALUE } ?: 0
                 }.takeIf { it != 0L } ?: return@forEachPrev
+
                 is ProtobufExtensionStatement -> return it.extensionRangeList.maxOf {
                     it.range()?.last?.takeIf { it != Long.MAX_VALUE } ?: 0
                 }.takeIf { it != 0L } ?: return@forEachPrev

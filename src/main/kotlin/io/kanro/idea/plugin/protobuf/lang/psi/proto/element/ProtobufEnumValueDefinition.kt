@@ -3,6 +3,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.proto.element
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.ProtobufNumbered
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
 import javax.swing.Icon
 
 interface ProtobufEnumValueDefinition : ProtobufNumbered {
