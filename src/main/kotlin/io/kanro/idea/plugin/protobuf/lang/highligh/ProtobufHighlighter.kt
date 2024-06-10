@@ -165,6 +165,7 @@ class ProtobufHighlighter : SyntaxHighlighterBase() {
                 ProtobufTokens.SERVICE to KEYWORD,
                 ProtobufTokens.STREAM to KEYWORD,
                 ProtobufTokens.SYNTAX to KEYWORD,
+                ProtobufTokens.EDITION to KEYWORD,
                 ProtobufTokens.TO to KEYWORD,
                 ProtobufTokens.TRUE to KEYWORD,
                 ProtobufTokens.WEAK to KEYWORD,
