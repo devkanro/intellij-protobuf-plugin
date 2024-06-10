@@ -49,7 +49,7 @@ class GrpcEndpointsProvider : EndpointsUrlTargetProvider<ProtobufServiceModel, P
     ): Iterable<ProtobufServiceModel> {
         return when (filter) {
             is SearchScopeEndpointsFilter -> {
-                val scope = filter.searchScope
+                val scope = filter.contentSearchScope
                 FileTypeIndex.getFiles(ProtobufFileType.INSTANCE, scope).flatMap {
                     val psi =
                         PsiManager.getInstance(project).findFile(it) as? ProtobufFile
