@@ -1,5 +1,6 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
 import org.jetbrains.kotlin.gradle.internal.ensureParentDirsCreated
 
@@ -118,10 +119,14 @@ tasks {
         systemProperty("jb.consents.confirmation.enabled", "false")
     }
 
+    runIde {
+        jvmArguments.add("-Didea.ProcessCanceledException=disabled")
+    }
+
     generateLexer {
         sourceFile = layout.projectDirectory.file("src/main/grammar/protobuf.flex")
         targetOutputDir =
-            layout.buildDirectory.dir("generated/sources/grammar/io/kanro/idea/plugin/protobuf/lang/lexer")
+            layout.buildDirectory.dir("generated/sources/grammar/io/kanro/idea/plugin/protobuf/lang/lexer/proto")
         purgeOldFiles = true
     }
 
@@ -129,7 +134,7 @@ tasks {
         sourceFile = layout.projectDirectory.file("src/main/grammar/protobuf.bnf")
         targetRootOutputDir = layout.buildDirectory.dir("generated/sources/grammar")
         purgeOldFiles = true
-        pathToParser = "io/kanro/idea/plugin/protobuf/lang/parser/ProtobufParser.java"
+        pathToParser = "io/kanro/idea/plugin/protobuf/lang/psi/proto/parser/ProtobufParser.java"
         pathToPsiRoot = "io/kanro/idea/plugin/protobuf/lang/psi/proto"
     }
 
@@ -137,8 +142,15 @@ tasks {
         sourceFile = layout.projectDirectory.file("src/main/grammar/prototext.bnf")
         targetRootOutputDir = layout.buildDirectory.dir("generated/sources/grammar")
         purgeOldFiles = true
-        pathToParser = "io/kanro/idea/plugin/protobuf/lang/parser/ProtoTextParser.java"
+        pathToParser = "io/kanro/idea/plugin/protobuf/lang/psi/text/parser/ProtoTextParser.java"
         pathToPsiRoot = "io/kanro/idea/plugin/protobuf/lang/psi/text"
+    }
+
+    create<GenerateLexerTask>("generateTextLexer") {
+        sourceFile = layout.projectDirectory.file("src/main/grammar/prototext.flex")
+        targetOutputDir =
+            layout.buildDirectory.dir("generated/sources/grammar/io/kanro/idea/plugin/protobuf/lang/lexer/text")
+        purgeOldFiles = true
     }
 
     prepareSandbox {
@@ -160,14 +172,16 @@ tasks {
         // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels = properties("pluginVersion").map {
-            listOf(
-                it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" })
-        }
+        channels =
+            properties("pluginVersion").map {
+                listOf(
+                    it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" },
+                )
+            }
     }
 
     compileKotlin {
-        dependsOn(generateLexer, generateParser, named("generateTextParser"))
+        dependsOn(generateParser, named("generateTextParser"), generateLexer, named("generateTextLexer"))
     }
 }
 

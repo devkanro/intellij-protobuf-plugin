@@ -12,7 +12,7 @@ import com.intellij.psi.impl.source.tree.LeafElement
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.ProtobufFileType
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.ProtobufNumbered
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufNumberScope
 
 abstract class ArrangeFieldsNumberActionHandler : EditorActionHandler() {
@@ -89,7 +89,7 @@ class ArrangeFieldsNumberToMaxHandler : ArrangeFieldsNumberActionHandler() {
             val maxInItems = items.maxOf { it.number() ?: -1 }.takeIf { it >= numbersNeed }
 
             var current =
-                if (items.first() is ProtobufEnumValue) {
+                if (items.first() is ProtobufEnumValueDefinition) {
                     maxInItems ?: (numbersNeed - 1)
                 } else {
                     maxInItems ?: numbersNeed
@@ -115,7 +115,7 @@ class ArrangeFieldsNumberToMaxHandler : ArrangeFieldsNumberActionHandler() {
             val numbersNeed = items.size.toLong()
             val maxInItems = items.maxOf { it.number() ?: -1 }.takeIf { it >= numbersNeed }
             var current =
-                if (items.first() is ProtobufEnumValue) {
+                if (items.first() is ProtobufEnumValueDefinition) {
                     maxInItems ?: (numbersNeed - 1)
                 } else {
                     maxInItems ?: numbersNeed
@@ -146,7 +146,7 @@ class ArrangeFieldsNumberFromMinHandler : ArrangeFieldsNumberActionHandler() {
         val minInItems = items.minOf { it.number() ?: -1 }.takeIf { it >= 0 }
 
         var current =
-            if (items.first() is ProtobufEnumValue) {
+            if (items.first() is ProtobufEnumValueDefinition) {
                 minInItems ?: 0
             } else {
                 minInItems ?: 1

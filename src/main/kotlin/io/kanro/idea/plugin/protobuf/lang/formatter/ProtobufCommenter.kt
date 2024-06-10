@@ -4,7 +4,7 @@ import com.intellij.lang.CodeDocumentationAwareCommenterEx
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IElementType
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.token.ProtobufTokens
 
 class ProtobufCommenter : CodeDocumentationAwareCommenterEx {
     override fun getBlockCommentPrefix(): String {

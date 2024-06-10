@@ -22,7 +22,7 @@ class ProtobufRpcInputFieldReference(field: ProtobufStringValue) :
     ProtobufFieldReferenceInString(field) {
     override fun message(): ProtobufMessageDefinition? {
         val rpc = element.parentOfType<ProtobufOptionOwner>() as? ProtobufRpcDefinition ?: return null
-        return rpc.input()?.typeName?.reference?.resolve() as? ProtobufMessageDefinition
+        return rpc.input()?.typeName?.resolve() as? ProtobufMessageDefinition
     }
 }
 
@@ -30,7 +30,7 @@ class ProtobufRpcOutputFieldReference(field: ProtobufStringValue) :
     ProtobufFieldReferenceInString(field) {
     override fun message(): ProtobufMessageDefinition? {
         val rpc = element.parentOfType<ProtobufOptionOwner>() as? ProtobufRpcDefinition ?: return null
-        return rpc.output()?.typeName?.reference?.resolve() as? ProtobufMessageDefinition
+        return rpc.output()?.typeName?.resolve() as? ProtobufMessageDefinition
     }
 }
 

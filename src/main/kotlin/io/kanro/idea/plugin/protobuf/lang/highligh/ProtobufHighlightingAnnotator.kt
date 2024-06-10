@@ -10,6 +10,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.feature.DocumentElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValue
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtensionFieldName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufGroupDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufIdentifier
@@ -27,57 +28,72 @@ class ProtobufHighlightingAnnotator : Annotator {
         element: PsiElement,
         holder: AnnotationHolder,
     ) {
-        element.accept(ProtobufHighlightingVisitor(holder))
+        ProtobufHighlightingAnnotator.annotate(element, holder)
     }
 
-    private class ProtobufHighlightingVisitor(val holder: AnnotationHolder) : ProtobufVisitor() {
-        override fun visitEnumValueDefinition(o: ProtobufEnumValueDefinition) {
-            createHighlight(o.identifier() ?: return, ProtobufHighlighter.ENUM_VALUE)
-        }
-
-        override fun visitEnumValue(o: ProtobufEnumValue) {
-            createHighlight(o, ProtobufHighlighter.ENUM_VALUE)
-        }
-
-        override fun visitNumberValue(o: ProtobufNumberValue) {
-            if (o.floatLiteral == null && o.integerLiteral == null) {
-                createHighlight(o, ProtobufHighlighter.KEYWORD)
-            }
-        }
-
-        override fun visitPackageName(o: ProtobufPackageName) {
-            createHighlight(o, ProtobufHighlighter.IDENTIFIER)
-        }
-
-        override fun visitIdentifier(o: ProtobufIdentifier) {
-            when (o.parent) {
-                is ProtobufMessageDefinition -> createHighlight(o, ProtobufHighlighter.MESSAGE)
-                is ProtobufFieldDefinition -> createHighlight(o, ProtobufHighlighter.FIELD)
-                is ProtobufMapFieldDefinition -> createHighlight(o, ProtobufHighlighter.FIELD)
-                is ProtobufOneofDefinition -> createHighlight(o, ProtobufHighlighter.FIELD)
-                is ProtobufGroupDefinition -> createHighlight(o, ProtobufHighlighter.MESSAGE)
-                is ProtobufEnumDefinition -> createHighlight(o, ProtobufHighlighter.ENUM)
-                is ProtobufServiceDefinition -> createHighlight(o, ProtobufHighlighter.SERVICE)
-                is ProtobufRpcDefinition -> createHighlight(o, ProtobufHighlighter.METHOD)
-            }
-        }
-
-        override fun visitComment(comment: PsiComment) {
-            if (comment is DocumentElement) {
-                if (comment.owner != null) {
-                    createHighlight(comment, ProtobufHighlighter.DOC_COMMENT)
-                }
-            }
-        }
-
-        private fun createHighlight(
+    companion object : Annotator {
+        override fun annotate(
             element: PsiElement,
-            textAttributesKey: TextAttributesKey,
+            holder: AnnotationHolder,
         ) {
-            holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
-                .range(element.textRange)
-                .textAttributes(textAttributesKey)
-                .create()
+            element.accept(
+                object : ProtobufVisitor() {
+                    override fun visitEnumValueDefinition(o: ProtobufEnumValueDefinition) {
+                        createHighlight(o.identifier() ?: return, ProtobufHighlighter.ENUM_VALUE)
+                    }
+
+                    override fun visitPackageName(o: ProtobufPackageName) {
+                        createHighlight(o, ProtobufHighlighter.IDENTIFIER)
+                    }
+
+                    override fun visitIdentifier(o: ProtobufIdentifier) {
+                        when (o.parent) {
+                            is ProtobufMessageDefinition -> createHighlight(o, ProtobufHighlighter.MESSAGE)
+                            is ProtobufFieldDefinition -> createHighlight(o, ProtobufHighlighter.FIELD)
+                            is ProtobufMapFieldDefinition -> createHighlight(o, ProtobufHighlighter.FIELD)
+                            is ProtobufOneofDefinition -> createHighlight(o, ProtobufHighlighter.FIELD)
+                            is ProtobufGroupDefinition -> createHighlight(o, ProtobufHighlighter.MESSAGE)
+                            is ProtobufEnumDefinition -> createHighlight(o, ProtobufHighlighter.ENUM)
+                            is ProtobufServiceDefinition -> createHighlight(o, ProtobufHighlighter.SERVICE)
+                            is ProtobufRpcDefinition -> createHighlight(o, ProtobufHighlighter.METHOD)
+                        }
+                    }
+
+                    override fun visitComment(comment: PsiComment) {
+                        if (comment is DocumentElement) {
+                            if (comment.owner != null) {
+                                createHighlight(comment, ProtobufHighlighter.DOC_COMMENT)
+                            }
+                        }
+                    }
+
+                    override fun visitEnumValue(o: ProtobufEnumValue) {
+                        createHighlight(o, ProtobufHighlighter.ENUM_VALUE)
+                    }
+
+                    override fun visitNumberValue(o: ProtobufNumberValue) {
+                        if (o.floatLiteral == null && o.integerLiteral == null) {
+                            createHighlight(o, ProtobufHighlighter.KEYWORD)
+                        }
+                    }
+
+                    override fun visitExtensionFieldName(o: ProtobufExtensionFieldName) {
+                        if (o.extensionFieldName == null) {
+                            createHighlight(o.symbolName, ProtobufHighlighter.FIELD)
+                        }
+                    }
+
+                    private fun createHighlight(
+                        element: PsiElement,
+                        textAttributesKey: TextAttributesKey,
+                    ) {
+                        holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
+                            .range(element.textRange)
+                            .textAttributes(textAttributesKey)
+                            .create()
+                    }
+                },
+            )
         }
     }
 }

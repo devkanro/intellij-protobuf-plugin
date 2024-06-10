@@ -7,10 +7,8 @@ interface ReferenceElement : PsiElement {
     fun symbol(): QualifiedName?
 
     fun rename(qualifiedName: QualifiedName)
-}
 
-interface QualifiedElement<T : QualifiedElement<T>> : ReferenceElement {
-    fun root(): T
-
-    fun leaf(): T
+    fun resolve(): PsiElement? {
+        return reference?.resolve()
+    }
 }

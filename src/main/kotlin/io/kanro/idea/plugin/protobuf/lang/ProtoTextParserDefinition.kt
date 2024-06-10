@@ -10,16 +10,16 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
-import io.kanro.idea.plugin.protobuf.lang.lexer.ProtobufLexer
-import io.kanro.idea.plugin.protobuf.lang.parser.ProtoTextParser
+import io.kanro.idea.plugin.protobuf.lang.lexer.ProtoTextLexer
 import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextFile
 import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextTypes
 import io.kanro.idea.plugin.protobuf.lang.psi.text.impl.ProtoTextFileImpl
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
+import io.kanro.idea.plugin.protobuf.lang.psi.text.parser.ProtoTextParser
+import io.kanro.idea.plugin.protobuf.lang.psi.text.token.ProtoTextTokens
 
 class ProtoTextParserDefinition : ParserDefinition {
     override fun createLexer(project: Project): Lexer {
-        return ProtobufLexer()
+        return ProtoTextLexer()
     }
 
     override fun createParser(project: Project): PsiParser {
@@ -47,7 +47,7 @@ class ProtoTextParserDefinition : ParserDefinition {
     }
 
     companion object {
-        val comments = TokenSet.create(ProtobufTokens.SHARP_LINE_COMMENT)
-        val string = TokenSet.create(ProtobufTokens.STRING_LITERAL)
+        val comments = TokenSet.create(ProtoTextTokens.SHARP_LINE_COMMENT)
+        val string = TokenSet.create(ProtoTextTokens.STRING_LITERAL)
     }
 }

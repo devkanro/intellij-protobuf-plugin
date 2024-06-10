@@ -23,7 +23,7 @@ class GrpcMessageEnumValueReference(value: JsonStringLiteral) :
     override fun resolve(): PsiElement? {
         val property = element.parent as? JsonProperty ?: return null
         val field = property.resolve() as? ProtobufFieldDefinition ?: return null
-        val enum = field.typeName.reference?.resolve() as? ProtobufEnumDefinition ?: return null
+        val enum = field.typeName.resolve() as? ProtobufEnumDefinition ?: return null
         return enum.firstItemOrNull<ProtobufEnumValueDefinition> { it.name() == element.value }
     }
 
@@ -31,7 +31,7 @@ class GrpcMessageEnumValueReference(value: JsonStringLiteral) :
         val property = element.parent as? JsonProperty ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val field = property.resolve() as? ProtobufFieldDefinition ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val enum =
-            field.typeName.reference?.resolve() as? ProtobufEnumDefinition ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
+            field.typeName.resolve() as? ProtobufEnumDefinition ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
 
         return enum.filterItem<ProtobufEnumValueDefinition> { true }.mapNotNull {
             it.lookup()?.withInsertHandler(SmartInsertHandler("\","))

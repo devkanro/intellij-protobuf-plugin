@@ -23,7 +23,8 @@ abstract class ProtoTextFieldNameMixin(node: ASTNode) :
                     arrayOf(ProtoTextFieldReference(this))
                 } else {
                     emptyArray()
-                }, PsiModificationTracker.MODIFICATION_COUNT
+                },
+                PsiModificationTracker.MODIFICATION_COUNT,
             )
         }
     }

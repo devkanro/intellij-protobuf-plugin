@@ -43,10 +43,10 @@ class ServiceMethodCompiler : BaseProtobufCompilerPlugin<ServiceMethodCompilingS
             val input = rpc.input() ?: throw IllegalStateException("Invalid rpc definition: input missing.")
             val output = rpc.output() ?: throw IllegalStateException("Invalid rpc definition: output missing.")
             this.inputType =
-                (input.typeName.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.let { ".$it" }
+                (input.typeName.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.let { ".$it" }
                     ?: throw IllegalStateException("Invalid rpc definition: unresolvable input message.")
             this.outputType =
-                (output.typeName.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.let { ".$it" }
+                (output.typeName.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.let { ".$it" }
                     ?: throw IllegalStateException("Invalid rpc definition: unresolvable output message.")
             this.clientStreaming = input.stream()
             this.serverStreaming = output.stream()

@@ -59,7 +59,7 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
                     checkBox("Auto-detect and decompile from binary descriptor")
                         .comment(
                             "Decompile proto from descriptor of some generated code(etc. GO) when open project, " +
-                                    "enabling this feature may make opening project slower.",
+                                "enabling this feature may make opening project slower.",
                         )
                         .applyToComponent {
                             checkBox = this
@@ -71,9 +71,9 @@ class ProtobufSettingsComponent(val project: Project) : ConfigurableUi<ProtobufS
                         cell(tablePanel).align(Align.FILL)
                             .comment(
                                 "Marking a root as 'common' means that it will be used in file " +
-                                        "resolving in all proto file, otherwise only files under " +
-                                        "this path will use this root, it is especially useful when there " +
-                                        "are multiple sets of independent protos in one project.",
+                                    "resolving in all proto file, otherwise only files under " +
+                                    "this path will use this root, it is especially useful when there " +
+                                    "are multiple sets of independent protos in one project.",
                                 MAX_LINE_LENGTH_WORD_WRAP,
                             )
                     }

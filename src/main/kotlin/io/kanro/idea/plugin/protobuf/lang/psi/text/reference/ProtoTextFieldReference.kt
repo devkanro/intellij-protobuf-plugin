@@ -6,6 +6,7 @@ import com.intellij.psi.PsiReferenceBase
 import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.items
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufGroupDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMapFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
@@ -41,26 +42,40 @@ class ProtoTextFieldReference(field: ProtoTextFieldName) :
 
     override fun getVariants(): Array<Any> {
         val message = element.ownerMessage() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
-        if (message is ProtobufMapFieldDefinition) {
-            return message.entryFields().map {
-                when (it.psiElement?.reference?.resolve()) {
-                    is ProtobufGroupDefinition,
-                    is ProtobufMessageDefinition -> it.withInsertHandler(messageFieldInsertHandler)
+        return when (message) {
+            is ProtobufMapFieldDefinition -> {
+                message.entryFields().map {
+                    when (it.psiElement?.reference?.resolve()) {
+                        is ProtobufGroupDefinition,
+                        is ProtobufMessageDefinition,
+                        -> it.withInsertHandler(messageFieldInsertHandler)
 
-                    else -> it.withInsertHandler(fieldInsertHandler)
-                }
-            }.toTypedArray()
-        }
-        return message.realItems().mapNotNull {
-            (it as? ProtobufFieldLike)?.lookup()?.let {
-                when (it.psiElement?.reference?.resolve()) {
-                    is ProtobufGroupDefinition,
-                    is ProtobufMessageDefinition -> it.withInsertHandler(messageFieldInsertHandler)
-
-                    else -> it.withInsertHandler(fieldInsertHandler)
-                }
+                        else -> it.withInsertHandler(fieldInsertHandler)
+                    }
+                }.toTypedArray()
             }
-        }.toTypedArray()
+
+            else -> {
+                message.realItems().mapNotNull {
+                    when (it) {
+                        is ProtobufFieldDefinition ->
+                            when (it.typeName.resolve()) {
+                                is ProtobufMessageDefinition -> {
+                                    it.lookup()?.withInsertHandler(messageFieldInsertHandler)
+                                }
+
+                                else -> it.lookup()?.withInsertHandler(fieldInsertHandler)
+                            }
+
+                        is ProtobufMapFieldDefinition -> it.lookup()?.withInsertHandler(messageFieldInsertHandler)
+
+                        is ProtobufGroupDefinition -> it.lookup()?.withInsertHandler(messageFieldInsertHandler)
+
+                        else -> null
+                    }
+                }.toTypedArray()
+            }
+        }
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {

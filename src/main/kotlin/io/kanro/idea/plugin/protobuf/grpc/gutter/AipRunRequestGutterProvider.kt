@@ -76,25 +76,25 @@ class AipRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
             HttpRequestUrlPathInfo.Computed(
                 raw.baseInfo,
                 requestBody =
-                RequestBody.CustomRequestBodyTemplate(
-                    TemplateImpl(
-                        "transcodingWithBody",
-                        "\ngrpc-method: $serviceName/$methodName\ncontent-type: application/json\n\n{\n}",
-                        "grpc",
+                    RequestBody.CustomRequestBodyTemplate(
+                        TemplateImpl(
+                            "transcodingWithBody",
+                            "\ngrpc-method: $serviceName/$methodName\ncontent-type: application/json\n\n{\n}",
+                            "grpc",
+                        ),
                     ),
-                ),
             )
         } else {
             HttpRequestUrlPathInfo.Computed(
                 raw.baseInfo,
                 requestBody =
-                RequestBody.CustomRequestBodyTemplate(
-                    TemplateImpl(
-                        "transcodingWithBody",
-                        "\ngrpc-method: $serviceName/$methodName",
-                        "grpc",
+                    RequestBody.CustomRequestBodyTemplate(
+                        TemplateImpl(
+                            "transcodingWithBody",
+                            "\ngrpc-method: $serviceName/$methodName",
+                            "grpc",
+                        ),
                     ),
-                ),
             )
         }
     }

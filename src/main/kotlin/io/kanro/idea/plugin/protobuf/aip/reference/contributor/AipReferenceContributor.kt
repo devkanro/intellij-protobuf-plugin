@@ -10,6 +10,7 @@ import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.aip.reference.AipResourceReference
+import io.kanro.idea.plugin.protobuf.aip.reference.AipTypeNameReference
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcInputFieldReference
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcOutputFieldReference
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueAssign
@@ -34,6 +35,13 @@ class AipReferenceContributor : PsiReferenceContributor() {
                 .inside(ProtobufRpcDefinition::class.java)
                 .inside(ProtobufOptionAssign::class.java),
             AipFieldReferenceProvider(),
+        )
+
+        registrar.registerReferenceProvider(
+            PlatformPatterns.psiElement(ProtobufStringValue::class.java)
+                .inside(ProtobufRpcDefinition::class.java)
+                .inside(ProtobufOptionAssign::class.java),
+            AipTypeNameReferenceProvider(),
         )
     }
 }
@@ -81,5 +89,31 @@ class AipFieldReferenceProvider : PsiReferenceProvider() {
         if (targetField == AipOptions.httpRuleBodyName) return ProtobufRpcInputFieldReference(element)
         if (targetField == AipOptions.httpRuleResponseBodyName) return ProtobufRpcOutputFieldReference(element)
         return null
+    }
+}
+
+class AipTypeNameReferenceProvider : PsiReferenceProvider() {
+    override fun getReferencesByElement(
+        element: PsiElement,
+        context: ProcessingContext,
+    ): Array<PsiReference> {
+        val stringValue = element as? ProtobufStringValue ?: return PsiReference.EMPTY_ARRAY
+        val reference = getReference(stringValue) ?: return PsiReference.EMPTY_ARRAY
+        return arrayOf(reference)
+    }
+
+    private fun getReference(element: ProtobufStringValue): PsiReference? {
+        val assign = element.parentOfType<ValueAssign>() ?: return null
+        when (assign.field()?.qualifiedName()) {
+            AipOptions.lroMetadataName -> {
+                return AipTypeNameReference(element)
+            }
+
+            AipOptions.lroResponseName -> {
+                return AipTypeNameReference(element)
+            }
+
+            else -> return null
+        }
     }
 }

@@ -22,13 +22,13 @@ import io.kanro.idea.plugin.protobuf.lang.psi.prev
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtensionFieldName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPackageName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.absolutely
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.optionType
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.resolve
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScopeItem
@@ -36,6 +36,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.ShortNameIndex
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolFilters
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolResolver
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
+import io.kanro.idea.plugin.protobuf.lang.util.or
 import io.kanro.idea.plugin.protobuf.lang.util.removeCommonPrefix
 
 class ProtobufExtensionFieldReference(fieldName: ProtobufExtensionFieldName) :
@@ -67,10 +68,16 @@ class ProtobufExtensionFieldReference(fieldName: ProtobufExtensionFieldName) :
 
     override fun resolve(): PsiElement? {
         element.extensionFieldName?.let {
-            when (val item = it.reference?.resolve()) {
-                is ProtobufScopeItem -> return item.owner()
-                is ProtobufPackageName -> return item.prev<ProtobufPackageName>()
-                else -> return null
+            return when (val item = it.reference?.resolve()) {
+                is ProtobufScopeItem -> {
+                    when (val owner = item.owner()) {
+                        is ProtobufFile -> owner.packageParts().lastOrNull()
+                        else -> owner
+                    }
+                }
+
+                is ProtobufPackageName -> item.prev<ProtobufPackageName>()
+                else -> null
             }
         }
 
@@ -91,11 +98,11 @@ class ProtobufExtensionFieldReference(fieldName: ProtobufExtensionFieldName) :
     }
 
     private fun extendMessage(): QualifiedName? {
-        val optionName = element.parent as? ProtobufOptionName ?: return null
+        val optionName = element.parentOfType<ProtobufOptionName>() ?: return null
         return when (val parent = optionName.parent) {
             is ProtobufOptionName -> {
                 val field = parent.resolve() as? ProtobufFieldDefinition ?: return null
-                val message = field.typeName.reference?.resolve() as? ProtobufMessageDefinition ?: return null
+                val message = field.typeName.resolve() as? ProtobufMessageDefinition ?: return null
                 message.qualifiedName() ?: return null
             }
 
@@ -114,7 +121,7 @@ class ProtobufExtensionFieldReference(fieldName: ProtobufExtensionFieldName) :
         val extendMessage = extendMessage() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val filter = ProtobufSymbolFilters.extensionField(extendMessage)
 
-        getVariantsInCurrentScope(filter, result, addedElements)
+        getVariantsInCurrentScope(filter or ProtobufSymbolFilters.packageName, result, addedElements)
         getVariantsInStubIndex(filter, result, addedElements)
         return result.toTypedArray()
     }

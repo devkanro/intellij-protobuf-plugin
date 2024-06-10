@@ -1,9 +1,9 @@
 {
   generate=[names="long" psi="yes" tokens="no"]
-  parserClass="io.kanro.idea.plugin.protobuf.lang.parser.ProtobufParser"
+  parserClass="io.kanro.idea.plugin.protobuf.lang.psi.proto.parser.ProtobufParser"
   parserUtilClass="io.kanro.idea.plugin.protobuf.lang.parser.ProtobufParserUtil"
   parserImports=[
-    "static io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens.*"
+    "static io.kanro.idea.plugin.protobuf.lang.psi.proto.token.ProtobufTokens.*"
   ]
   psiClassPrefix="Protobuf"
   psiImplClassSuffix="Impl"
@@ -523,14 +523,6 @@ ExtendBody ::=  '{' ExtendElement* '}' {
 private ExtendElement ::= GroupDefinition | FieldDefinition | ';' {recoverWhile=ExtendElementRecovery}
 private ExtendElementRecovery ::= !(FieldLabel | group | TypeName | ';' | '}')
 
-Constant ::= StringValue | NumberValue | BooleanValue | MessageValue | EnumValue {
-    implements=[
-        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
-        "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
-        "io.kanro.idea.plugin.protobuf.lang.psi.value.WrappedValue"
-    ]
-}
-
 TypeName ::= '.'? SymbolName ('.' TypeName)? {
     implements=[
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
@@ -556,15 +548,6 @@ SymbolName::= IdentifierWithKeyword {
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
     ]
-}
-
-EnumValue ::= IdentifierWithKeyword {
-    implements=[
-        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
-        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
-        "io.kanro.idea.plugin.protobuf.lang.psi.value.EnumValue"
-    ]
-    mixin="io.kanro.idea.plugin.protobuf.lang.psi.proto.mixin.ProtobufEnumValueMixin"
 }
 
 Identifier::= IdentifierWithKeyword {
@@ -595,13 +578,14 @@ IntegerValue ::= ('-' | '+')? INTEGER_LITERAL{
     ]
 }
 
-NumberValue ::= ('-' | '+')? (INTEGER_LITERAL | FLOAT_LITERAL | 'inf' | 'nan'){
+NumberValue ::= ('-' | '+')? (INTEGER_LITERAL | FLOAT_LITERAL | 'inf' | 'nan') {
     implements=[
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.NumberValue"
     ]
 }
+
 
 BooleanValue ::= (false | true) {
     implements=[
@@ -611,7 +595,73 @@ BooleanValue ::= (false | true) {
     ]
 }
 
-MessageValue ::= '{' << parseTextMessage >> '}' {
+EnumValue ::= IdentifierWithKeyword {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.EnumValue"
+    ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.proto.mixin.ProtobufEnumValueMixin"
+}
+
+Constant ::= StringValue | BooleanValue | NumberValue | MessageValue | EnumValue {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.WrappedValue"
+    ]
+}
+
+FieldName ::= SymbolName | ExtensionName | AnyName {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+    ]
+    mixin="io.kanro.idea.plugin.protobuf.lang.psi.proto.mixin.ProtobufFieldNameMixin"
+}
+
+Domain   ::= Identifier ( '.' Identifier )* {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+    ]
+}
+
+
+ExtensionName ::= '[' ExtensionFieldName ']' {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+    ]
+}
+
+AnyName ::= '[' Domain '/' TypeName ']' {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+    ]
+}
+
+
+ScalarList ::= '[' ScalarValue (',' ScalarValue)* ']' {
+    pin=1
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.ArrayValue"
+    ]
+}
+
+ScalarValue ::= StringValue | NumberValue | BooleanValue | EnumValue {
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.FragmentElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.WrappedValue"
+    ]
+}
+
+MessageValue ::= '{' Field* '}' {
     pin=1
     implements=[
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
@@ -619,4 +669,30 @@ MessageValue ::= '{' << parseTextMessage >> '}' {
         "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.value.MessageValue"
     ]
+}
+
+MessageList ::= '[' MessageValue (',' MessageValue)* ']' {
+    pin=1
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.value.ArrayValue"
+    ]
+}
+
+Field ::= FieldName (MessageField | ScalarField) (";" | ",")? {
+    pin = 1
+    implements=[
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyOwner"
+        "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufFieldAssign"
+    ]
+}
+
+private MessageField ::= ':'? ( MessageValue | MessageList )
+
+private ScalarField ::= ':' ( ScalarValue | ScalarList ) {
+    pin = 1
 }

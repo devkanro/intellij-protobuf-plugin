@@ -2,7 +2,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.value
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.elementType
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.token.ProtobufTokens
 
 fun decodeStringFromStringLiteral(textElement: PsiElement): String {
     if (textElement.elementType != ProtobufTokens.STRING_LITERAL) {

@@ -215,13 +215,13 @@ enum ForeignEnum {
 
 message TestReservedFields {
     reserved 2, 15, 9 to 11;
-    reserved   bar, baz;
+    reserved     bar, baz;
 }
 
 enum TestReservedEnumFields {
     UNKNOWN = 0;
     reserved 2, 15, 9 to 11;
-    reserved   bar , baz ;
+    reserved     bar , baz ;
 }
 
 message TestAllExtensions {
@@ -1225,7 +1225,7 @@ message TestHugeFieldNumbers {
         bytes oneof_bytes = 536870014;
     }
 
-    extensions 536860000 to 536869999 [declaration =   {
+    extensions 536860000 to 536869999 [declaration =     {
     number: 536860000
     full_name: ".edition_unittest.test_all_types"
     type: ".edition_unittest.TestAllTypes"

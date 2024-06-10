@@ -13,7 +13,7 @@ import com.intellij.psi.formatter.PsiBasedFormattingModel
 import com.intellij.psi.tree.TokenSet
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypes
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.token.ProtobufTokens
 
 class ProtobufFormattingModelBuilder : FormattingModelBuilder {
     override fun createModel(formattingContext: FormattingContext): FormattingModel {

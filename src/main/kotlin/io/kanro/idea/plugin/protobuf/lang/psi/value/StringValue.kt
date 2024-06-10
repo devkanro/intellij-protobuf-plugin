@@ -2,7 +2,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.value
 
 import com.intellij.psi.util.elementType
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueElement
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.token.ProtobufTokens
 
 interface StringValue : ValueElement<String> {
     override fun value(): String =

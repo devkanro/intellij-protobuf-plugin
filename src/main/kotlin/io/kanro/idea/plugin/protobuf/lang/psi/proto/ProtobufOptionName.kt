@@ -17,23 +17,16 @@ fun ProtobufOptionName.isFieldJsonNameOption(): Boolean {
     return this.textMatches("json_name") && parentOfType<ProtobufOptionOwner>() is ProtobufFieldDefinition
 }
 
-fun ProtobufOptionName.resolve(): ProtobufFieldLike? {
-    extensionFieldName?.let {
-        return it.reference?.resolve() as? ProtobufFieldLike
+fun ProtobufOptionName.optionType(): Options? =
+    when (parentOfType<ProtobufOptionOwner>()) {
+        is ProtobufFile -> Options.FILE_OPTIONS
+        is ProtobufMessageDefinition, is ProtobufGroupDefinition -> Options.MESSAGE_OPTIONS
+        is ProtobufFieldDefinition, is ProtobufMapFieldDefinition -> Options.FIELD_OPTIONS
+        is ProtobufOneofDefinition -> Options.ONEOF_OPTIONS
+        is ProtobufEnumDefinition -> Options.ENUM_OPTIONS
+        is ProtobufEnumValueDefinition -> Options.ENUM_VALUE_OPTIONS
+        is ProtobufServiceDefinition -> Options.SERVICE_OPTIONS
+        is ProtobufRpcDefinition -> Options.METHOD_OPTIONS
+        is ProtobufExtensionRange -> Options.EXTENSION_RANGE_OPTIONS
+        else -> null
     }
-
-    return reference?.resolve() as? ProtobufFieldLike
-}
-
-fun ProtobufOptionName.optionType(): Options? = when (parentOfType<ProtobufOptionOwner>()) {
-    is ProtobufFile -> Options.FILE_OPTIONS
-    is ProtobufMessageDefinition, is ProtobufGroupDefinition -> Options.MESSAGE_OPTIONS
-    is ProtobufFieldDefinition, is ProtobufMapFieldDefinition -> Options.FIELD_OPTIONS
-    is ProtobufOneofDefinition -> Options.ONEOF_OPTIONS
-    is ProtobufEnumDefinition -> Options.ENUM_OPTIONS
-    is ProtobufEnumValueDefinition -> Options.ENUM_VALUE_OPTIONS
-    is ProtobufServiceDefinition -> Options.SERVICE_OPTIONS
-    is ProtobufRpcDefinition -> Options.METHOD_OPTIONS
-    is ProtobufExtensionRange -> Options.EXTENSION_RANGE_OPTIONS
-    else -> null
-}

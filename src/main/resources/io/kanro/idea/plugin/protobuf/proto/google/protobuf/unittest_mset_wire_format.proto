@@ -26,7 +26,7 @@ message TestMessageSet {
     extensions 4 to 529999999;
 
     extensions 530000000 to max
-[declaration =   {
+[declaration =     {
     number: 1952731290,
     full_name: ".protobuf_unittest_v1api.TestMessageSetExtension3.message_set_extension",
     type: ".protobuf_unittest_v1api.TestMessageSetExtension3"

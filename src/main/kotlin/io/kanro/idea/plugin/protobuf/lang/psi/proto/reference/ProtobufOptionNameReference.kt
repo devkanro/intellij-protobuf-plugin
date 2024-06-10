@@ -8,6 +8,8 @@ import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.psi.impl.source.tree.LeafPsiElement
+import com.intellij.psi.util.QualifiedName
+import com.intellij.psi.util.parentOfType
 import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
@@ -18,20 +20,34 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufGroupDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.optionType
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.resolve
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolResolver
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import io.kanro.idea.plugin.protobuf.lang.support.Options
 
 class ProtobufOptionNameReference(optionName: ProtobufOptionName) : PsiReferenceBase<ProtobufOptionName>(optionName) {
-
     private object Resolver : ResolveCache.Resolver {
-        override fun resolve(ref: PsiReference, incompleteCode: Boolean): PsiElement? {
+        override fun resolve(
+            ref: PsiReference,
+            incompleteCode: Boolean,
+        ): PsiElement? {
             ref as ProtobufOptionNameReference
             val search = ref.element.symbolName?.text ?: return null
             val message = ref.ownerMessage() ?: return null
+
+            if (message.qualifiedName() == Options.FIELD_OPTIONS.qualifiedName) {
+                if (search == "default") {
+                    return ref.element.parentOfType<ProtobufOptionOwner>()
+                }
+                if (search == "json_name") {
+                    return ProtobufSymbolResolver.resolveAbsolutelyInFile(
+                        ref.descriptor() ?: return null,
+                        QualifiedName.fromDottedString("google.protobuf.FieldDescriptorProto.json_name"),
+                    )
+                }
+            }
 
             return message.items().firstOrNull {
                 (it as? NamedElement)?.name() == search
@@ -54,13 +70,13 @@ class ProtobufOptionNameReference(optionName: ProtobufOptionName) : PsiReference
             is ProtobufOptionAssign -> {
                 return ProtobufSymbolResolver.resolveAbsolutelyInFile(
                     descriptor() ?: return null,
-                    element.optionType()?.qualifiedName ?: return null
+                    element.optionType()?.qualifiedName ?: return null,
                 ) as? ProtobufMessageDefinition ?: return null
             }
 
             is ProtobufOptionName -> {
                 val field = parent.resolve() as? ProtobufFieldDefinition ?: return null
-                return field.typeName.reference?.resolve() as? ProtobufMessageDefinition ?: return null
+                return field.typeName.resolve() as? ProtobufMessageDefinition ?: return null
             }
 
             else -> return null
@@ -82,16 +98,18 @@ class ProtobufOptionNameReference(optionName: ProtobufOptionName) : PsiReference
 
     override fun getVariants(): Array<Any> {
         val message = ownerMessage() ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
-        val result = message.realItems().mapNotNull {
-            (it as? ProtobufFieldDefinition)?.lookup()?.let {
-                when (it.psiElement?.reference?.resolve()) {
-                    is ProtobufGroupDefinition,
-                    is ProtobufMessageDefinition -> it
+        val result =
+            message.realItems().mapNotNull {
+                (it as? ProtobufFieldDefinition)?.lookup()?.let {
+                    when (it.psiElement?.reference?.resolve()) {
+                        is ProtobufGroupDefinition,
+                        is ProtobufMessageDefinition,
+                        -> it
 
-                    else -> it.withInsertHandler(fieldInsertHandler)
+                        else -> it.withInsertHandler(fieldInsertHandler)
+                    }
                 }
-            }
-        }.toMutableList()
+            }.toMutableList()
 
         if (Options.FIELD_OPTIONS.qualifiedName == message.qualifiedName()) {
             result +=

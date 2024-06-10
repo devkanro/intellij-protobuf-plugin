@@ -51,7 +51,7 @@ class GrpcTranscodingQueryReferenceProvider : PsiReferenceProvider() {
             GrpcTranscodingQueryReference(
                 it.queryParameterKey.text ?: "",
                 element,
-                it.queryParameterKey.textRangeIn(element)
+                it.queryParameterKey.textRangeIn(element),
             )
         }?.toTypedArray() ?: PsiReference.EMPTY_ARRAY
     }

@@ -15,27 +15,32 @@ import io.kanro.idea.plugin.protobuf.lang.support.Options
 import io.kanro.idea.plugin.protobuf.lang.util.or
 
 object ProtobufSymbolFilters {
-    val packageName = PsiElementFilter {
-        it is ProtobufPackageName
-    }
+    val packageName =
+        PsiElementFilter {
+            it is ProtobufPackageName
+        }
 
-    val fieldType = PsiElementFilter {
-        it is ProtobufEnumDefinition || it is ProtobufMessageDefinition
-    }
+    val fieldType =
+        PsiElementFilter {
+            it is ProtobufEnumDefinition || it is ProtobufMessageDefinition
+        }
 
-    val message = PsiElementFilter {
-        it is ProtobufMessageDefinition
-    }
+    val message =
+        PsiElementFilter {
+            it is ProtobufMessageDefinition
+        }
 
     val messageTypeName = message or packageName
 
-    val field = PsiElementFilter {
-        it is ProtobufFieldDefinition || it is ProtobufGroupDefinition
-    }
+    val field =
+        PsiElementFilter {
+            it is ProtobufFieldDefinition || it is ProtobufGroupDefinition
+        }
 
-    val extensionField = PsiElementFilter {
-        (it is ProtobufFieldDefinition || it is ProtobufGroupDefinition) && it.parent is ProtobufExtendBody
-    }
+    val extensionField =
+        PsiElementFilter {
+            (it is ProtobufFieldDefinition || it is ProtobufGroupDefinition) && it.parent is ProtobufExtendBody
+        }
 
     fun extensionField(message: QualifiedName): PsiElementFilter = MessageExtensionFilter(message)
 
@@ -53,7 +58,7 @@ object ProtobufSymbolFilters {
         override fun isAccepted(element: PsiElement): Boolean {
             val extend = element.parentOfType<ProtobufExtendDefinition>() ?: return false
             val name =
-                (extend.typeName?.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName() ?: return false
+                (extend.typeName?.resolve() as? ProtobufMessageDefinition)?.qualifiedName() ?: return false
             return name == message
         }
     }

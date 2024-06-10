@@ -20,6 +20,9 @@ import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupableElement
 import io.kanro.idea.plugin.protobuf.lang.psi.prev
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMapFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPackageName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.absolutely
@@ -30,32 +33,55 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.ShortNameIndex
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolFilters
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolResolver
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
+import io.kanro.idea.plugin.protobuf.lang.util.or
 import io.kanro.idea.plugin.protobuf.lang.util.removeCommonPrefix
 
 class ProtobufTypeNameReference(typeName: ProtobufTypeName) : PsiReferenceBase<ProtobufTypeName>(typeName) {
-
     private object Resolver : ResolveCache.Resolver {
-        override fun resolve(ref: PsiReference, incompleteCode: Boolean): PsiElement? {
+        override fun resolve(
+            ref: PsiReference,
+            incompleteCode: Boolean,
+        ): PsiElement? {
             ref as ProtobufTypeNameReference
             val qualifiedName = QualifiedName.fromDottedString(ref.element.root().text)
             return if (ref.element.absolutely()) {
                 ProtobufSymbolResolver.resolveAbsolutely(
-                    ref.element, qualifiedName, ProtobufSymbolFilters.messageTypeName
+                    ref.element,
+                    qualifiedName,
+                    ref.filter(),
                 )
             } else {
                 ProtobufSymbolResolver.resolveRelatively(
-                    ref.element, qualifiedName, ProtobufSymbolFilters.messageTypeName
+                    ref.element,
+                    qualifiedName,
+                    ref.filter(),
                 )
             }
         }
     }
 
+    private fun filter(): PsiElementFilter {
+        return when (element.root().parent) {
+            is ProtobufMapFieldDefinition,
+            is ProtobufFieldDefinition,
+            -> ProtobufSymbolFilters.fieldType
+
+            else -> ProtobufSymbolFilters.message
+        }
+    }
+
     override fun resolve(): PsiElement? {
         element.typeName?.let {
-            when (val item = it.reference?.resolve()) {
-                is ProtobufScopeItem -> return item.owner()
-                is ProtobufPackageName -> return item.prev<ProtobufPackageName>()
-                else -> return null
+            return when (val item = it.reference?.resolve()) {
+                is ProtobufScopeItem -> {
+                    when (val owner = item.owner()) {
+                        is ProtobufFile -> owner.packageParts().lastOrNull()
+                        else -> owner
+                    }
+                }
+
+                is ProtobufPackageName -> item.prev<ProtobufPackageName>()
+                else -> null
             }
         }
 
@@ -78,8 +104,7 @@ class ProtobufTypeNameReference(typeName: ProtobufTypeName) : PsiReferenceBase<P
     override fun getVariants(): Array<Any> {
         val result = mutableListOf<Any>()
         val addedElements = mutableSetOf<ProtobufElement>()
-        val filter = ProtobufSymbolFilters.messageTypeName
-
+        val filter = filter() or ProtobufSymbolFilters.packageName
         getVariantsInCurrentScope(filter, result, addedElements)
         getVariantsInStubIndex(filter, result, addedElements)
         return result.toTypedArray()
@@ -145,11 +170,12 @@ class ProtobufTypeNameReference(typeName: ProtobufTypeName) : PsiReferenceBase<P
         if (element !is ProtobufDefinition) return null
         val qualifiedName = element.qualifiedName() ?: return null
 
-        val targetName = if (currentScope != null) {
-            qualifiedName.removeCommonPrefix(currentScope)
-        } else {
-            qualifiedName
-        }
+        val targetName =
+            if (currentScope != null) {
+                qualifiedName.removeCommonPrefix(currentScope)
+            } else {
+                qualifiedName
+            }
         return LookupElementBuilder.create(targetName).withLookupString(qualifiedName.lastComponent!!)
             .withPresentableText(qualifiedName.lastComponent!!).withIcon(element.getIcon(false))
             .withTailText("${element.tailText() ?: ""} (${qualifiedName.removeTail(1)})", true)

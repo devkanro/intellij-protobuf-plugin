@@ -45,6 +45,16 @@ object ProtobufPsiFactory {
         throw IllegalStateException("Wrong extension field name '$text'")
     }
 
+    fun createFieldName(
+        project: Project,
+        text: String,
+    ): ProtobufFieldName {
+        createFile(project, "option test = { $text : 1 };").walkChildren<ProtobufFieldName> {
+            return it
+        }
+        throw IllegalStateException("Wrong extension field name '$text'")
+    }
+
     fun createStringValue(
         project: Project,
         text: String,

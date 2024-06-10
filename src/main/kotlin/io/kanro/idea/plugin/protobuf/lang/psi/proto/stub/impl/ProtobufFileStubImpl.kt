@@ -13,7 +13,7 @@ class ProtobufFileStubImpl(
     private val external: Map<String, String> = file?.stubExternalData() ?: mapOf(),
 ) :
     PsiFileStubImpl<ProtobufFile>(file),
-    io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.ProtobufFileStub {
+        io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.ProtobufFileStub {
     override fun scope(): QualifiedName {
         return QualifiedName.fromComponents(childrenStubs.filterIsInstance<ProtobufPackageNameStub>().map { it.name() })
     }

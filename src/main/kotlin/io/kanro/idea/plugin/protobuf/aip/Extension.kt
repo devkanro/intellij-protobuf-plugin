@@ -21,7 +21,7 @@ internal fun ProtobufRpcDefinition.transcodingBody(): String? {
 internal fun ProtobufRpcDefinition.resolveInput(): ProtobufMessageDefinition? {
     return CachedValuesManager.getCachedValue(this) {
         val input =
-            this.rpcIOList.firstOrNull()?.typeName?.reference?.resolve() as? ProtobufMessageDefinition
+            this.rpcIOList.firstOrNull()?.typeName?.resolve() as? ProtobufMessageDefinition
                 ?: return@getCachedValue nullCachedValue()
         return@getCachedValue CachedValueProvider.Result.create(input, PsiModificationTracker.MODIFICATION_COUNT)
     }

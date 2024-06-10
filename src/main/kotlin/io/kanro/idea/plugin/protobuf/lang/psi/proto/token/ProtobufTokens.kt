@@ -1,4 +1,4 @@
-package io.kanro.idea.plugin.protobuf.lang.psi.token
+package io.kanro.idea.plugin.protobuf.lang.psi.proto.token
 
 import com.intellij.psi.tree.IElementType
 
@@ -93,9 +93,6 @@ object ProtobufTokens {
 
     @JvmField
     val LINE_COMMENT = put(ProtobufCommentToken("LINE_COMMENT"))
-
-    @JvmField
-    val SHARP_LINE_COMMENT = put(ProtobufCommentToken("SHARP_LINE_COMMENT"))
 
     @JvmField
     val SYMBOL = put(ProtobufToken("SYMBOL"))

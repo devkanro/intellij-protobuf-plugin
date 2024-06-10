@@ -7,8 +7,6 @@ import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElementBase
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPsiFactory
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScope
-import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextPsiFactory
 
 abstract class ProtobufStringValueMixin(node: ASTNode) : ProtobufElementBase(node), ProtobufStringValue {
     override fun getReference(): PsiReference? {
@@ -20,7 +18,7 @@ abstract class ProtobufStringValueMixin(node: ASTNode) : ProtobufElementBase(nod
     }
 
     override fun symbol(): QualifiedName? {
-        return (reference?.resolve() as? ProtobufScope)?.scope()
+        return value().takeIf { it.isNotEmpty() }?.let { QualifiedName.fromDottedString(it) }
     }
 
     override fun rename(qualifiedName: QualifiedName) {

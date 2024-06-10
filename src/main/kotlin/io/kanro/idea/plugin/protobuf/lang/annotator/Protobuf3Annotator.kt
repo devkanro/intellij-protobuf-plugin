@@ -56,7 +56,7 @@ class Protobuf3Annotator : Annotator {
 
                 override fun visitExtendDefinition(o: ProtobufExtendDefinition) {
                     val typename = o.typeName ?: return
-                    val name = (typename.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName() ?: return
+                    val name = (typename.resolve() as? ProtobufMessageDefinition)?.qualifiedName() ?: return
                     if (Options.all.contains(name)) {
                         return
                     }

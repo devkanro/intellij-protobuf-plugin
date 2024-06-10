@@ -1,6 +1,7 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.proto.mixin
 
 import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElementBase
@@ -25,6 +26,14 @@ abstract class ProtobufOptionNameMixin(node: ASTNode) : ProtobufElementBase(node
     }
 
     override fun rename(qualifiedName: QualifiedName) {
+    }
+
+    override fun resolve(): PsiElement? {
+        extensionFieldName?.let {
+            return it.resolve()
+        }
+
+        return reference?.resolve()
     }
 
     override fun leaf(): ProtobufOptionName {

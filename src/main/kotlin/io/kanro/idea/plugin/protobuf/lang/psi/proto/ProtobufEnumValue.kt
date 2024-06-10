@@ -9,14 +9,14 @@ fun ProtobufEnumValue.enum(): ProtobufEnumDefinition? {
 
     return when (field) {
         is ProtobufFieldDefinition -> {
-            field.typeName.reference?.resolve() as? ProtobufEnumDefinition
+            field.typeName.resolve() as? ProtobufEnumDefinition
         }
 
         is ProtobufMapFieldDefinition -> {
             val targetField = assign.field()?.text ?: return null
             when (targetField) {
-                "key" -> field.key()?.reference?.resolve() as? ProtobufEnumDefinition
-                "value" -> field.value()?.reference?.resolve() as? ProtobufEnumDefinition
+                "key" -> field.key()?.resolve() as? ProtobufEnumDefinition
+                "value" -> field.value()?.resolve() as? ProtobufEnumDefinition
                 else -> null
             }
         }

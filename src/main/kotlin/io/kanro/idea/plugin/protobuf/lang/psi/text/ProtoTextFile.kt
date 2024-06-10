@@ -2,46 +2,41 @@ package io.kanro.idea.plugin.protobuf.lang.psi.text
 
 import com.intellij.navigation.ItemPresentation
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiManager
 import com.intellij.psi.tree.IFileElementType
-import com.intellij.psi.util.QualifiedName
-import com.intellij.psi.util.elementType
 import io.kanro.idea.plugin.protobuf.lang.ProtoTextLanguage
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.NamedElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
-import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolResolver
-import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
+import io.kanro.idea.plugin.protobuf.lang.psi.text.impl.ProtoTextSharpLineCommentImpl
+import io.kanro.idea.plugin.protobuf.lang.psi.text.reference.ProtoTextHeaderFileReference
+import io.kanro.idea.plugin.protobuf.lang.psi.text.reference.ProtoTextHeaderMessageReference
+import io.kanro.idea.plugin.protobuf.lang.psi.value.MessageValue
 
 interface ProtoTextFile :
     PsiFile,
     NamedElement,
-    ItemPresentation {
-    fun descriptorFile(): ProtobufFile? {
-        val file =
-            children.firstOrNull {
-                it.elementType == ProtobufTokens.SHARP_LINE_COMMENT && it.text.startsWith(PROTOTEXT_HEADER_FILE)
-            } ?: return null
-        val filename = file.text.substringAfter(PROTOTEXT_HEADER_FILE).trim()
-
-        return ProtobufRootResolver.findFile(filename, this).firstOrNull()?.let {
-            PsiManager.getInstance(this.project).findFile(it) as? ProtobufFile
+    ItemPresentation,
+    MessageValue {
+    fun schemaFile(): ProtobufFile? {
+        children.forEach {
+            if (it is ProtoTextSharpLineCommentImpl) {
+                when (val reference = it.reference) {
+                    is ProtoTextHeaderFileReference -> return reference.resolve() as? ProtobufFile
+                }
+            }
         }
+        return null
     }
 
-    fun message(): ProtobufMessageDefinition? {
-        val file = descriptorFile() ?: return null
-        val message =
-            children.firstOrNull {
-                it.elementType == ProtobufTokens.SHARP_LINE_COMMENT && it.text.startsWith(PROTOTEXT_HEADER_MESSAGE)
-            } ?: return null
-        val messageName = message.text.substringAfter(PROTOTEXT_HEADER_MESSAGE).trim()
-
-        return ProtobufSymbolResolver.resolveInScope(
-            file,
-            QualifiedName.fromDottedString(messageName)
-        ) as? ProtobufMessageDefinition
+    fun schema(): ProtobufMessageDefinition? {
+        children.forEach {
+            if (it is ProtoTextSharpLineCommentImpl) {
+                when (val reference = it.reference) {
+                    is ProtoTextHeaderMessageReference -> return reference.resolve() as? ProtobufMessageDefinition
+                }
+            }
+        }
+        return null
     }
 
     object Type : IFileElementType("PROTOTEXT_FILE", ProtoTextLanguage)

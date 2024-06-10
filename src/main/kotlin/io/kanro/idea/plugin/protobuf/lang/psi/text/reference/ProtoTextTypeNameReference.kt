@@ -35,19 +35,22 @@ import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import io.kanro.idea.plugin.protobuf.lang.util.removeCommonPrefix
 
 class ProtoTextTypeNameReference(typeName: ProtoTextTypeName) : PsiReferenceBase<ProtoTextTypeName>(typeName) {
-
     private object Resolver : ResolveCache.Resolver {
-        override fun resolve(ref: PsiReference, incompleteCode: Boolean): PsiElement? {
+        override fun resolve(
+            ref: PsiReference,
+            incompleteCode: Boolean,
+        ): PsiElement? {
             ref as ProtoTextTypeNameReference
             val qualifiedName = QualifiedName.fromDottedString(ref.element.root().text)
 
-            val filter = when (ref.element.scope()) {
-                is ProtoTextAnyName -> ProtobufSymbolFilters.message
-                is ProtoTextExtensionName -> ProtobufSymbolFilters.extensionField
-                else -> return null
-            }
+            val filter =
+                when (ref.element.scope()) {
+                    is ProtoTextAnyName -> ProtobufSymbolFilters.message
+                    is ProtoTextExtensionName -> ProtobufSymbolFilters.extensionField
+                    else -> return null
+                }
 
-            val scope = ref.element.scopeElement() ?: return null
+            val scope = ref.element.schemaFile() ?: return null
             return ProtobufSymbolResolver.resolveAbsolutely(scope, qualifiedName, filter)
         }
     }
@@ -80,11 +83,12 @@ class ProtoTextTypeNameReference(typeName: ProtoTextTypeName) : PsiReferenceBase
     override fun getVariants(): Array<Any> {
         val result = mutableListOf<Any>()
         val addedElements = mutableSetOf<ProtobufElement>()
-        val filter = when (val scope = element.scope()) {
-            is ProtoTextAnyName -> ProtobufSymbolFilters.messageTypeName
-            is ProtoTextExtensionName -> ProtobufSymbolFilters.extensionFieldQualifiedName
-            else -> return ArrayUtilRt.EMPTY_OBJECT_ARRAY
-        }
+        val filter =
+            when (val scope = element.scope()) {
+                is ProtoTextAnyName -> ProtobufSymbolFilters.messageTypeName
+                is ProtoTextExtensionName -> ProtobufSymbolFilters.extensionFieldQualifiedName
+                else -> return ArrayUtilRt.EMPTY_OBJECT_ARRAY
+            }
 
         getVariantsInCurrentScope(filter, result, addedElements)
         getVariantsInStubIndex(filter, result, addedElements)
@@ -97,7 +101,7 @@ class ProtoTextTypeNameReference(typeName: ProtoTextTypeName) : PsiReferenceBase
         elements: MutableSet<ProtobufElement>,
     ) {
         val parentScope = element.symbol() ?: return
-        val scopeElement = element.scopeElement() ?: return
+        val scopeElement = element.schemaFile() ?: return
         ProtobufSymbolResolver.collectAbsolute(scopeElement, parentScope, filter).forEach {
             if (it in elements) return@forEach
             result += lookupFor(it, parentScope) ?: return@forEach
@@ -153,11 +157,12 @@ class ProtoTextTypeNameReference(typeName: ProtoTextTypeName) : PsiReferenceBase
         if (element !is ProtobufDefinition) return null
         val qualifiedName = element.qualifiedName() ?: return null
 
-        val targetName = if (currentScope != null) {
-            qualifiedName.removeCommonPrefix(currentScope)
-        } else {
-            qualifiedName
-        }
+        val targetName =
+            if (currentScope != null) {
+                qualifiedName.removeCommonPrefix(currentScope)
+            } else {
+                qualifiedName
+            }
         return LookupElementBuilder.create(targetName).withLookupString(qualifiedName.lastComponent!!)
             .withPresentableText(qualifiedName.lastComponent!!).withIcon(element.getIcon(false))
             .withTailText("${element.tailText() ?: ""} (${qualifiedName.removeTail(1)})", true)

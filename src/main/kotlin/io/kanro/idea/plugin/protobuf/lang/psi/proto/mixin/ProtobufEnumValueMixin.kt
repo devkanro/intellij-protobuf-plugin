@@ -7,7 +7,11 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValue
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.reference.ProtobufEnumValueReference
 
 abstract class ProtobufEnumValueMixin(node: ASTNode) : ProtobufElementBase(node), ProtobufEnumValue {
-    override fun getReference(): PsiReference {
-        return ProtobufEnumValueReference(this)
+    override fun getReference(): PsiReference? {
+        return references.firstOrNull()
+    }
+
+    override fun getReferences(): Array<PsiReference> {
+        return arrayOf(ProtobufEnumValueReference(this))
     }
 }

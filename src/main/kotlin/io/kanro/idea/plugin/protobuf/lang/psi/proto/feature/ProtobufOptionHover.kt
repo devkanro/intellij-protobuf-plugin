@@ -28,18 +28,11 @@ interface ProtobufOptionHover : ProtobufElement {
     fun value(field: QualifiedName): Any? {
         if (field.componentCount == 0) return value()
 
-        val optionName = option()?.optionName ?: return null
-        var findName = field
-
-        if (optionName.symbol()?.matches(*field.components.toTypedArray()) != true) {
-            return null
-        }
-
         val value = value() ?: return null
-        if (findName.componentCount == 0) return value
+        if (field.componentCount == 0) return value
 
         if (value is MessageValue) {
-            return value.value(findName)
+            return value.value(field)
         }
 
         return null

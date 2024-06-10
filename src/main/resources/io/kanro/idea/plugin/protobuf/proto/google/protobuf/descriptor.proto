@@ -1072,7 +1072,7 @@ message FeatureSet {
     reserved 999;
 
     extensions 1000 to 9994 [
-    declaration =   {
+    declaration =     {
     number: 1000,
     full_name: ".pb.cpp",
     type: ".pb.CppFeatures"

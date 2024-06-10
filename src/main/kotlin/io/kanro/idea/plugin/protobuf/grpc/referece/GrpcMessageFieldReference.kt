@@ -114,7 +114,7 @@ private class JsonFieldSmartInsertHandler(private val element: ProtobufFieldLike
                     if (element.repeated()) {
                         LIST_INSERT_HANDLER
                     } else {
-                        when (val type = element.typeName.reference?.resolve()) {
+                        when (val type = element.typeName.resolve()) {
                             is ProtobufMessageDefinition -> {
                                 val name = type.qualifiedName().toString()
                                 if (name in WellknownTypes.types) {

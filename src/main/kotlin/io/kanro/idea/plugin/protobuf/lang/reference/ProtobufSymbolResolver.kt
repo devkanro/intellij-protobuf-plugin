@@ -128,11 +128,12 @@ object ProtobufSymbolResolver {
         filter: PsiElementFilter = AnyElement,
     ): ProtobufElement? {
         scope.items<ProtobufDefinition> {
-            val matched = if (it is ProtobufMultiNameDefinition) {
-                symbol.firstComponent in it.names()
-            } else {
-                it.name() == symbol.firstComponent
-            }
+            val matched =
+                if (it is ProtobufMultiNameDefinition) {
+                    symbol.firstComponent in it.names()
+                } else {
+                    it.name() == symbol.firstComponent
+                }
             if (matched) {
                 if (symbol.componentCount == 1) {
                     return it.takeIf { filter.isAccepted(it) }

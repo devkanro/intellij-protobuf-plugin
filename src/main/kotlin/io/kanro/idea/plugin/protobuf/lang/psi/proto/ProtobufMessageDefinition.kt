@@ -50,7 +50,7 @@ fun ProtobufMessageDefinition.resolveFieldType(
 
         when (fieldDefinition) {
             is ProtobufFieldDefinition -> {
-                val type = fieldDefinition.typeName.reference?.resolve() as? ProtobufElement ?: return null
+                val type = fieldDefinition.typeName.resolve() as? ProtobufElement ?: return null
                 if (q.isEmpty()) return type
                 scope = type as? ProtobufMessageDefinition ?: return null
             }
@@ -111,7 +111,6 @@ fun ProtobufMessageDefinition.resolveField(
         else -> null
     }
 }
-
 
 fun ProtobufFieldDefinition.repeated(): Boolean {
     return this.fieldLabel?.textMatches("repeated") == true

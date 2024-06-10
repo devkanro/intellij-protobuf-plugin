@@ -126,7 +126,7 @@ class MessageFieldCompiler : BaseProtobufCompilerPlugin<MessageFieldCompilingSta
                 this.type = builtInType.toFieldType()
             } else {
                 val type =
-                    field.typeName.reference?.resolve()
+                    field.typeName.resolve()
                         ?: throw IllegalStateException("Invalid field definition: unresolvable field type.")
                 when (type) {
                     is ProtobufMessageDefinition -> {
@@ -208,7 +208,7 @@ class MessageMapEntryCompiler : BaseProtobufCompilerPlugin<MessageMapEntryCompil
                     this.type = builtInType?.toFieldType() ?: FieldDescriptorProto.Type.ENUM
                     if (this.type == FieldDescriptorProto.Type.ENUM) {
                         this.typeName =
-                            (key.reference?.resolve() as? ProtobufEnumDefinition)?.qualifiedName()?.let { ".$it" }
+                            (key.resolve() as? ProtobufEnumDefinition)?.qualifiedName()?.let { ".$it" }
                                 ?: throw IllegalStateException("Invalid map field definition: unsolvable key type.")
                     }
                 }
@@ -221,7 +221,7 @@ class MessageMapEntryCompiler : BaseProtobufCompilerPlugin<MessageMapEntryCompil
                         this.type = builtInType.toFieldType()
                     } else {
                         val type =
-                            value.reference?.resolve()
+                            value.resolve()
                                 ?: throw IllegalStateException("Invalid field definition: unresolvable value type.")
                         when (type) {
                             is ProtobufMessageDefinition -> {

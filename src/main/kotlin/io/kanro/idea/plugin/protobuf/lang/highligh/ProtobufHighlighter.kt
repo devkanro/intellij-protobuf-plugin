@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.psi.tree.IElementType
 import io.kanro.idea.plugin.protobuf.lang.lexer.ProtobufLexer
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.token.ProtobufTokens
 
 class ProtobufHighlighter : SyntaxHighlighterBase() {
     override fun getHighlightingLexer(): Lexer {
@@ -140,7 +140,6 @@ class ProtobufHighlighter : SyntaxHighlighterBase() {
                 ProtobufTokens.STRING_LITERAL to STRING,
                 ProtobufTokens.BLOCK_COMMENT to BLOCK_COMMENT,
                 ProtobufTokens.LINE_COMMENT to LINE_COMMENT,
-                ProtobufTokens.SHARP_LINE_COMMENT to LINE_COMMENT,
                 ProtobufTokens.BUILT_IN_TYPE to KEYWORD,
                 ProtobufTokens.DEFAULT to KEYWORD,
                 ProtobufTokens.ENUM to KEYWORD,

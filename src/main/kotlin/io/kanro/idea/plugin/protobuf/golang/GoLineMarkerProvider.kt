@@ -30,11 +30,11 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 val shadowedMethod =
                     type.allMethods.firstOrNull {
                         it != parent &&
-                                GoPsiUtil.isSameNamedMethod(
-                                    parent,
-                                    it,
-                                    true,
-                                )
+                            GoPsiUtil.isSameNamedMethod(
+                                parent,
+                                it,
+                                true,
+                            )
                     } as? GoMethodDeclaration ?: return
                 val unimplementedServerName = shadowedMethod.receiverType?.text ?: return
                 val indexName = "$unimplementedServerName.${parent.name}"

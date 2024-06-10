@@ -4,7 +4,7 @@ import com.intellij.lang.BracePair
 import com.intellij.lang.PairedBraceMatcher
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.token.ProtobufTokens
 
 class ProtobufPairedBraceMatcher : PairedBraceMatcher {
     override fun getPairs(): Array<BracePair> {

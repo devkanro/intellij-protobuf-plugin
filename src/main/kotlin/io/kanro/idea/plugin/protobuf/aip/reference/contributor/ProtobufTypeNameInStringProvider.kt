@@ -1,19 +1,6 @@
 package io.kanro.idea.plugin.protobuf.aip.reference.contributor
 
-import com.intellij.openapi.util.TextRange
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
-import com.intellij.psi.util.PsiElementFilter
-import com.intellij.psi.util.PsiModificationTracker
-import com.intellij.psi.util.parentOfType
-import io.kanro.idea.plugin.protobuf.aip.AipOptions
-import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueAssign
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPsiFactory
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
-import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolFilters
-import io.kanro.idea.plugin.protobuf.string.splitToRange
-
-//class ProtobufTypeNameInStringProvider : ProtobufSymbolReferenceProvider {
+// class ProtobufTypeNameInStringProvider : ProtobufSymbolReferenceProvider {
 //    override fun hovers(element: ProtobufSymbolReferenceHost): ProtobufSymbolReferenceHover? {
 //        if (element !is ProtobufStringValue) return null
 //        return CachedValuesManager.getCachedValue(element) {
@@ -44,12 +31,12 @@ import io.kanro.idea.plugin.protobuf.string.splitToRange
 //            }
 //        }
 //    }
-//}
+// }
 //
-//class StringProtobufSymbolReferenceHover(
+// class StringProtobufSymbolReferenceHover(
 //    val element: ProtobufStringValue,
 //    private val filter: PsiElementFilter,
-//) : ProtobufSymbolReferenceHover {
+// ) : ProtobufSymbolReferenceHover {
 //    private var text = element.text
 //    private val range: TextRange
 //    private val parts: List<ProtobufSymbolReferenceHover.SymbolPart>
@@ -114,4 +101,4 @@ import io.kanro.idea.plugin.protobuf.string.splitToRange
 //    override fun variantFilter(): PsiElementFilter {
 //        return filter
 //    }
-//}
+// }

@@ -9,11 +9,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufHighlighter
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.ProtobufNumbered
-import io.kanro.idea.plugin.protobuf.lang.psi.items
+import io.kanro.idea.plugin.protobuf.lang.psi.findChild
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufConstant
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValue
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
@@ -31,17 +30,12 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufVisitor
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.enum
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.field
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.float
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.int
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.range
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.reference.ProtobufTypeNameReference
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.resolve
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufNumberScope
-import io.kanro.idea.plugin.protobuf.lang.psi.proto.uint
+import io.kanro.idea.plugin.protobuf.lang.psi.value.IntegerValue
 import io.kanro.idea.plugin.protobuf.lang.quickfix.AddImportFix
 import io.kanro.idea.plugin.protobuf.lang.quickfix.RenameFix
 import io.kanro.idea.plugin.protobuf.lang.support.BuiltInType
@@ -84,10 +78,7 @@ class ProtobufAnnotator : Annotator {
                         holder.newAnnotation(
                             HighlightSeverity.WARNING,
                             "$type should be ${case.name.toCase(case)}",
-                        )
-                            .range(o.identifier()?.textRange ?: o.textRange)
-                            .withFix(RenameFix(name.toCase(case)))
-                            .create()
+                        ).range(o.identifier()?.textRange ?: o.textRange).withFix(RenameFix(name.toCase(case))).create()
                     }
                 }
 
@@ -108,10 +99,9 @@ class ProtobufAnnotator : Annotator {
                         holder.newAnnotation(
                             HighlightSeverity.ERROR,
                             "$keyType is not a valid key type of map",
-                        )
-                            .range(types[0].textRange)
-                            .create()
+                        ).range(types[0].textRange).create()
                     }
+                    visitFieldLike(o)
                 }
 
                 override fun visitImportStatement(o: ProtobufImportStatement) {
@@ -120,94 +110,30 @@ class ProtobufAnnotator : Annotator {
 
                 override fun visitTypeName(o: ProtobufTypeName) {
                     if (o.typeName == null && BuiltInType.isBuiltInType(o.text)) {
-                        holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
-                            .range(o.textRange)
-                            .textAttributes(ProtobufHighlighter.KEYWORD)
-                            .create()
+                        holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY).range(o.textRange)
+                            .textAttributes(ProtobufHighlighter.KEYWORD).create()
                         return
                     }
 
-                    if (o.reference?.resolve() == null) {
+                    if (o.parent !is ProtobufTypeName && o.resolve() == null) {
                         holder.newAnnotation(
                             HighlightSeverity.ERROR,
                             "Symbol '${o.text}' not found",
-                        )
-                            .range(o.textRange)
-                            .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
-                            .withFix(AddImportFix(o))
-                            .create()
-                    }
-
-                    o.references.forEach {
-                        if (it !is ProtobufTypeNameReference) return@forEach
-                        val result = it.resolve() ?: return@forEach
-                        when (result) {
-                            is ProtobufFieldLike ->
-                                holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
-                                    .range(it.absoluteRange)
-                                    .textAttributes(ProtobufHighlighter.FIELD)
-                                    .create()
-
-                            is ProtobufMessageDefinition ->
-                                holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
-                                    .range(it.absoluteRange)
-                                    .textAttributes(ProtobufHighlighter.MESSAGE)
-                                    .create()
-
-                            is ProtobufEnumDefinition ->
-                                holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
-                                    .range(it.absoluteRange)
-                                    .textAttributes(ProtobufHighlighter.ENUM)
-                                    .create()
-
-                            else ->
-                                holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
-                                    .range(it.absoluteRange)
-                                    .textAttributes(ProtobufHighlighter.IDENTIFIER)
-                                    .create()
-                        }
-                    }
-                }
-
-                override fun visitOptionAssign(o: ProtobufOptionAssign) {
-                    if (o.optionName.resolve() == null) {
-                        holder.newAnnotation(
-                            HighlightSeverity.ERROR,
-                            "Option '${o.text}' not found",
-                        )
-                            .range(o.textRange)
-                            .highlightType(ProblemHighlightType.ERROR)
-                            .create()
+                        ).range(o.textRange).highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
+                            .withFix(AddImportFix(o)).create()
                     }
                 }
 
                 override fun visitOptionName(o: ProtobufOptionName) {
                     val target: PsiElement = o.symbolName ?: o.extensionFieldName ?: return
+
                     if (o.resolve() == null) {
+                        val isRoot = o.parent !is ProtobufOptionName
                         holder.newAnnotation(
                             HighlightSeverity.ERROR,
-                            "Field '${target.text}' not found",
-                        )
-                            .range(target.textRange)
-                            .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
-                            .create()
+                            "${if (isRoot) "Option" else "Field"} '${target.text}' not found",
+                        ).range(target.textRange).highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL).create()
                     }
-                }
-
-                override fun visitEnumValue(o: ProtobufEnumValue) {
-                    val enum = o.enum() ?: return
-                    enum.items<ProtobufEnumValueDefinition> {
-                        if (it.name() == element.text) {
-                            return
-                        }
-                    }
-                    holder.newAnnotation(
-                        HighlightSeverity.ERROR,
-                        "Enum value '${o.text}' not found",
-                    )
-                        .range(o.textRange)
-                        .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
-                        .create()
                 }
 
                 override fun visitConstant(o: ProtobufConstant) {
@@ -239,7 +165,7 @@ class ProtobufAnnotator : Annotator {
                             BuiltInType.FLOAT.value(),
                             BuiltInType.DOUBLE.value(),
                             ->
-                                if (o.numberValue?.float() == null) {
+                                if (o.numberValue == null) {
                                     "Field \"${field.name()}\" required a number value"
                                 } else {
                                     null
@@ -250,7 +176,7 @@ class ProtobufAnnotator : Annotator {
                             BuiltInType.FIXED32.value(),
                             BuiltInType.FIXED64.value(),
                             ->
-                                if (o.numberValue?.uint() == null) {
+                                if (o.numberValue == null) {
                                     "Field \"${field.name()}\" required a uint value"
                                 } else {
                                     null
@@ -263,14 +189,14 @@ class ProtobufAnnotator : Annotator {
                             BuiltInType.SFIXED32.value(),
                             BuiltInType.SFIXED64.value(),
                             ->
-                                if (o.numberValue?.int() == null) {
+                                if (o.numberValue == null) {
                                     "Field \"${field.name()}\" required a int value"
                                 } else {
                                     null
                                 }
 
                             else -> {
-                                when (val typeDefinition = field.typeName.reference?.resolve()) {
+                                when (val typeDefinition = field.typeName.resolve()) {
                                     is ProtobufEnumDefinition ->
                                         if (o.enumValue == null) {
                                             "Field \"${field.name()}\" required a value of \"${typeDefinition.qualifiedName()}\""
@@ -291,9 +217,7 @@ class ProtobufAnnotator : Annotator {
                         }
 
                     message?.let {
-                        holder.newAnnotation(HighlightSeverity.ERROR, it)
-                            .range(o.textRange)
-                            .create()
+                        holder.newAnnotation(HighlightSeverity.ERROR, it).range(o.textRange).create()
                     }
                 }
 
@@ -303,9 +227,17 @@ class ProtobufAnnotator : Annotator {
                         holder.newAnnotation(
                             HighlightSeverity.ERROR,
                             "Enum must not be empty",
-                        )
-                            .range(o.body()?.textRange ?: o.textRange)
-                            .create()
+                        ).range(o.body()?.textRange ?: o.textRange).create()
+                    }
+                }
+
+                private fun visitFieldLike(o: ProtobufFieldLike) {
+                    val value = o.number() ?: return
+                    if (value < 1) {
+                        holder.newAnnotation(
+                            HighlightSeverity.ERROR,
+                            "Field number must be greater than 0",
+                        ).range(o.findChild<IntegerValue>()?.textRange ?: o.textRange).create()
                     }
                 }
 
@@ -315,12 +247,13 @@ class ProtobufAnnotator : Annotator {
                     o.owner()?.let { ScopeTracker.tracker(it).visit(o, holder) }
                     o.parentOfType<ProtobufNumberScope>()?.let { NumberTracker.tracker(it).visit(o, holder) }
                     visitExtendItem(o)
+                    visitFieldLike(o)
                 }
 
                 private fun visitExtendItem(o: ProtobufElement) {
                     if (o.parentOfType<ProtobufGroupDefinition>() != null) return
                     val extendMessage =
-                        o.parentOfType<ProtobufExtendDefinition>()?.typeName?.reference?.resolve() as? ProtobufMessageDefinition
+                        o.parentOfType<ProtobufExtendDefinition>()?.typeName?.resolve() as? ProtobufMessageDefinition
                             ?: return
 
                     val insideExtension =
@@ -333,9 +266,7 @@ class ProtobufAnnotator : Annotator {
                         holder.newAnnotation(
                             HighlightSeverity.ERROR,
                             "Extend field number must defined in extension range.",
-                        )
-                            .range((o as? ProtobufNumbered)?.intValue()?.textRange ?: o.textRange)
-                            .create()
+                        ).range((o as? ProtobufNumbered)?.intValue()?.textRange ?: o.textRange).create()
                     }
                     ScopeTracker.tracker(extendMessage).visit(o as? ProtobufDefinition ?: return, holder)
                     NumberTracker.tracker(extendMessage).visit(o as? ProtobufNumbered ?: return, holder)
@@ -347,6 +278,7 @@ class ProtobufAnnotator : Annotator {
                     o.owner()?.let { ScopeTracker.tracker(it).visit(o, holder) }
                     o.parentOfType<ProtobufNumberScope>()?.let { NumberTracker.tracker(it).visit(o, holder) }
                     visitExtendItem(o)
+                    visitFieldLike(o)
                 }
 
                 override fun visitMessageDefinition(o: ProtobufMessageDefinition) {
@@ -380,10 +312,16 @@ class ProtobufAnnotator : Annotator {
                             holder.newAnnotation(
                                 HighlightSeverity.WARNING,
                                 "Value name of root enum should be start with enum name",
-                            )
-                                .range(o.identifier()?.textRange ?: o.textRange)
-                                .create()
+                            ).range(o.identifier()?.textRange ?: o.textRange).create()
                         }
+                    }
+
+                    val number = o.number() ?: return
+                    if (number < 0) {
+                        holder.newAnnotation(
+                            HighlightSeverity.WARNING,
+                            "Enum value number should be greater than or equal to 0",
+                        ).range(o.integerValue?.textRange ?: o.textRange).create()
                     }
                 }
 

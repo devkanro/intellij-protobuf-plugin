@@ -53,11 +53,11 @@ object GrpcRequestConverter : RequestConverter<GrpcRequest>() {
                     ?: throw IllegalStateException("Unsolvable rpc method '$method'.")
             val input = rpc.input() ?: throw IllegalStateException("Invalid rpc input.")
             val inputMessage =
-                rpc.input()?.typeName?.reference?.resolve() as? ProtobufMessageDefinition
+                rpc.input()?.typeName?.resolve() as? ProtobufMessageDefinition
                     ?: throw IllegalStateException("Unsolvable rpc input '${input.typeName.text}'.")
             val output = rpc.output() ?: throw IllegalStateException("Invalid rpc input.")
             val outputMessage =
-                rpc.output()?.typeName?.reference?.resolve() as? ProtobufMessageDefinition
+                rpc.output()?.typeName?.resolve() as? ProtobufMessageDefinition
                     ?: throw IllegalStateException("Unsolvable rpc input '${input.typeName.text}'.")
 
             GrpcRequest(

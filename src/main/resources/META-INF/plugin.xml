@@ -135,13 +135,15 @@
         <psi.referenceContributor
                 language="protobuf"
                 implementation="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolReferenceContributor"/>
+        <colorSettingsPage
+                implementation="io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufColorSettingsPage"/>
 
         <!-- Stub -->
         <stubElementTypeHolder externalIdPrefix="protobuf"
-                               class="io.kanro.idea.plugin.protobuf.lang.psi.stub.type.ProtobufStubTypes"/>
-        <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ShortNameIndex"/>
-        <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex"/>
-        <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ResourceTypeIndex"/>
+                               class="io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.type.ProtobufStubTypes"/>
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.ShortNameIndex"/>
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.QualifiedNameIndex"/>
+        <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.ResourceTypeIndex"/>
 
         <!-- AIP Spec -->
         <psi.referenceContributor language="protobuf"
@@ -159,7 +161,28 @@
         <lang.parserDefinition language="prototext"
                                implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtoTextParserDefinition"/>
         <lang.syntaxHighlighter language="prototext"
-                                implementationClass="io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufHighlighter"/>
+                                implementationClass="io.kanro.idea.plugin.protobuf.lang.highligh.ProtoTextHighlighter"/>
+        <langCodeStyleSettingsProvider
+                implementation="io.kanro.idea.plugin.protobuf.lang.formatter.ProtoTextLanguageCodeStyleSettingsProvider"/>
+        <annotator language="prototext"
+                   implementationClass="io.kanro.idea.plugin.protobuf.lang.highligh.ProtoTextHighlightingAnnotator"
+                   order="FIRST"/>
+        <annotator language="prototext"
+                   implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.ProtoTextAnnotator"/>
+        <lang.braceMatcher language="prototext"
+                           implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtoTextPairedBraceMatcher"/>
+        <lang.formatter language="prototext"
+                        implementationClass="io.kanro.idea.plugin.protobuf.lang.formatter.ProtoTextFormattingModelBuilder"/>
+        <lang.quoteHandler language="prototext"
+                           implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtoTextQuoteHandler"/>
+        <lang.commenter language="prototext"
+                        implementationClass="io.kanro.idea.plugin.protobuf.lang.formatter.ProtoTextCommenter"/>
+        <spellchecker.support language="prototext"
+                              implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtoTextSpellcheckingStrategy"/>
+        <lang.ast.factory implementationClass="io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextASTFactory"
+                          language="prototext"/>
+        <psi.referenceContributor language="prototext"
+                                  implementation="io.kanro.idea.plugin.protobuf.lang.psi.text.reference.ProtoTextSharpCommentReferenceContributor"/>
     </extensions>
 
 

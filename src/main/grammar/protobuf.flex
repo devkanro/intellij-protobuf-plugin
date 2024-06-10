@@ -1,6 +1,6 @@
-package io.kanro.idea.plugin.protobuf.lang.lexer;
+package io.kanro.idea.plugin.protobuf.lang.lexer.proto;
 
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens;
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.token.ProtobufTokens;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
@@ -13,7 +13,7 @@ import com.intellij.psi.tree.IElementType;
 %function advance
 %type IElementType
 %unicode
-%state LINE_COMMENT, SHARP_LINE_COMMENT, BLOCK_COMMENT, AFTER_NUMBER
+%state LINE_COMMENT, BLOCK_COMMENT, AFTER_NUMBER
 
 // General classes
 Alpha = [a-zA-Z_]
@@ -38,7 +38,6 @@ LeadingWhitespace = {NewLine} {WhitespaceNoNewline}*
 
 // Comments.
 CLineComment = ("//" [^\n]*)
-SharpLineComments = ("#" [^\n]*)
 CLineComments = {CLineComment} ({LeadingWhitespace} {CLineComment})*
 CBlockComment = "/*" !([^]* "*/" [^]*) "*/"?
 
@@ -145,11 +144,6 @@ String = {SingleQuotedString} | {DoubleQuotedString}
     yybegin(BLOCK_COMMENT);
   }
 
-  "#" {
-    yypushback(1);
-    yybegin(SHARP_LINE_COMMENT);
-  }
-
   // Additional unmatched symbols are matched individually as SYMBOL.
   {Symbol} { return ProtobufTokens.SYMBOL; }
 
@@ -159,10 +153,6 @@ String = {SingleQuotedString} | {DoubleQuotedString}
 
 <LINE_COMMENT> {
   {CLineComments}           { yybegin(YYINITIAL); return ProtobufTokens.LINE_COMMENT; }
-}
-
-<SHARP_LINE_COMMENT> {
-  {SharpLineComments}           { yybegin(YYINITIAL); return ProtobufTokens.SHARP_LINE_COMMENT; }
 }
 
 <BLOCK_COMMENT> {

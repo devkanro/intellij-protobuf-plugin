@@ -2,11 +2,11 @@ package io.kanro.idea.plugin.protobuf.lang.psi.proto.mixin
 
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiReference
-import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry
 import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElementBase
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPsiFactory
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypeName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.reference.ProtobufTypeNameReference
 
 abstract class ProtobufTypeNameMixin(node: ASTNode) : ProtobufElementBase(node), ProtobufTypeName {
     override fun getReference(): PsiReference? {
@@ -14,7 +14,7 @@ abstract class ProtobufTypeNameMixin(node: ASTNode) : ProtobufElementBase(node),
     }
 
     override fun getReferences(): Array<PsiReference> {
-        return ReferenceProvidersRegistry.getReferencesFromProviders(this)
+        return arrayOf(ProtobufTypeNameReference(this))
     }
 
     override fun symbol(): QualifiedName? {
