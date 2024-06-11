@@ -1,7 +1,7 @@
 package io.kanro.idea.plugin.protobuf.aip.method
 
 import com.intellij.lang.annotation.AnnotationHolder
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 
 interface AipSpecMethod {
     val action: String

@@ -16,7 +16,7 @@ import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.elementType
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.psi.firstLeaf
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 
 class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
     override fun collectNavigationMarkers(
@@ -53,6 +53,7 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                         .setTooltipText("Implementing")
                 result.add(builder.createLineMarkerInfo(element.firstLeaf()))
             }
+
             is GoSpecType -> {
                 val spec = parent.parent as? GoTypeSpec ?: return
                 val type = spec.getGoUnderlyingType(null) as? GoStructType ?: return
@@ -76,6 +77,7 @@ class GoLineMarkerProvider : RelatedItemLineMarkerProvider() {
                         .setTooltipText("Implementing")
                 result.add(builder.createLineMarkerInfo(element.firstLeaf()))
             }
+
             else -> return
         }
     }

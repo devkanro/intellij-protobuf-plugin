@@ -11,8 +11,8 @@ import com.intellij.psi.stubs.StubIndex
 import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.grpc.index.ServiceMethodIndex
 import io.kanro.idea.plugin.protobuf.grpc.index.ServiceQualifiedNameIndex
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
 
 class GrpcMethodReference(element: HttpRequestTarget, range: TextRange) :
     PsiReferenceBase<HttpRequestTarget>(element, range) {

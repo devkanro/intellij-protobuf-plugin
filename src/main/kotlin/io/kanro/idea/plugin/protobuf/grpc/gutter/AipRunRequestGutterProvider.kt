@@ -14,11 +14,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldAssign
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcOption
 import io.kanro.idea.plugin.protobuf.lang.psi.firstLeaf
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.element.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufField
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcOption
 import javax.swing.Icon
 
 class AipRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
@@ -39,14 +38,14 @@ class AipRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
         element: PsiElement,
         result: MutableCollection<in RelatedItemLineMarkerInfo<*>>,
     ) {
-        if (element !is ProtobufFieldAssign) return
+        if (element !is ProtobufField) return
         val option = element.parentOfType<ProtobufRpcOption>() ?: return
         val grpcDefinition = element.parentOfType<ProtobufRpcDefinition>() ?: return
         if (!option.isOption(AipOptions.httpOption)) return
         val fieldName = element.field()?.qualifiedName() ?: return
         if (fieldName !in AipOptions.httpRulesName) return
         val httpMethod = fieldName.lastComponent?.uppercase() ?: return
-        val path = element.constant?.stringValue() ?: return
+        val path = element.value()?.toString() ?: return
 
         val service = grpcDefinition.owner() ?: return
         val serviceName = service.qualifiedName() ?: return
@@ -83,10 +82,9 @@ class AipRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
         methodName: String,
         hasBody: Boolean,
     ): HttpRequestUrlPathInfo.Computed {
-        val raw = info.compute()
         return if (hasBody) {
             HttpRequestUrlPathInfo.Computed(
-                raw.baseInfo,
+                info,
                 requestBody =
                     RequestBody.CustomRequestBodyTemplate(
                         TemplateImpl(
@@ -98,7 +96,7 @@ class AipRunRequestGutterProvider : RelatedItemLineMarkerProvider() {
             )
         } else {
             HttpRequestUrlPathInfo.Computed(
-                raw.baseInfo,
+                info,
                 requestBody =
                     RequestBody.CustomRequestBodyTemplate(
                         TemplateImpl(

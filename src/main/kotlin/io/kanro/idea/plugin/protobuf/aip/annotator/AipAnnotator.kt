@@ -7,14 +7,13 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.aip.quickfix.AddResourceImportFix
 import io.kanro.idea.plugin.protobuf.aip.reference.AipResourceReference
+import io.kanro.idea.plugin.protobuf.aip.reference.AipTypeNameReference
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufFieldReferenceInString
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcInputFieldReference
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcOutputFieldReference
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufVisitor
-import io.kanro.idea.plugin.protobuf.lang.psi.value
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufVisitor
 import io.kanro.idea.plugin.protobuf.lang.quickfix.AddImportFix
-import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufTypeNameReference
 
 class AipAnnotator : Annotator {
     override fun annotate(
@@ -52,7 +51,7 @@ class AipAnnotator : Annotator {
                                         .create()
                                 }
 
-                                is ProtobufTypeNameReference -> {
+                                is AipTypeNameReference -> {
                                     holder.newAnnotation(
                                         HighlightSeverity.ERROR,
                                         "Type \"${o.value()}\" not found.",

@@ -8,12 +8,10 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.stubs.StubIndex
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufSymbolReferenceHost
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ResourceTypeIndex
-import io.kanro.idea.plugin.protobuf.lang.psi.value
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.ResourceTypeIndex
 import io.kanro.idea.plugin.protobuf.lang.quickfix.ProtobufAddImportAction
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 
@@ -60,10 +58,10 @@ class AddResourceImportFix(
     private fun createAction(
         project: Project,
         editor: Editor,
-        host: ProtobufSymbolReferenceHost,
+        host: ProtobufStringValue,
         elements: Array<ProtobufDefinition>,
     ): ProtobufAddImportAction {
-        return ProtobufAddImportAction(project, editor, host, null, elements)
+        return ProtobufAddImportAction(project, editor, host, elements)
     }
 
     override fun getText(): String {

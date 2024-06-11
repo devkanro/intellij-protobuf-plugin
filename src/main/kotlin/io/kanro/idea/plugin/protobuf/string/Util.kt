@@ -71,6 +71,7 @@ fun CharSequence.lineCommentRanges(): List<TextRange> {
                         start = pos
                     }
                 }
+
                 else -> {
                     start = pos
                     pos++
@@ -85,6 +86,7 @@ fun CharSequence.lineCommentRanges(): List<TextRange> {
                     }
                     start = null
                 }
+
                 else -> {
                     pos++
                 }

@@ -1,14 +1,13 @@
 package io.kanro.idea.plugin.protobuf.golang
 
 import com.intellij.psi.stubs.IndexSink
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufIndexProvider
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufStub
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufRpcStub
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufServiceStub
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufIndexProvider
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufRpcStub
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufServiceStub
 
 class GoIndexProvider : ProtobufIndexProvider {
     override fun buildIndex(
-        stub: ProtobufStub<*>,
+        stub: io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.ProtobufStub<*>,
         sink: IndexSink,
     ) {
         when (stub) {
@@ -18,6 +17,7 @@ class GoIndexProvider : ProtobufIndexProvider {
                 sink.occurrence(GoNameIndex.key, stub.unimplementedName() ?: return)
                 sink.occurrence(GoUnimplementedServerNameIndex.key, stub.unimplementedName() ?: return)
             }
+
             is ProtobufRpcStub -> {
                 sink.occurrence(GoNameIndex.key, stub.funcName() ?: return)
                 sink.occurrence(

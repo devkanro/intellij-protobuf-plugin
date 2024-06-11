@@ -1,7 +1,7 @@
 package io.kanro.idea.plugin.protobuf.microservices.model
 
 import com.intellij.psi.SmartPsiElementPointer
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 
 class ProtobufRpcModel(private val pointer: SmartPsiElementPointer<ProtobufRpcDefinition>) {
     fun getPsi(): ProtobufRpcDefinition? {

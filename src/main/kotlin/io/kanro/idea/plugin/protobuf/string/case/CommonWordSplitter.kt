@@ -23,15 +23,19 @@ object CommonWordSplitter : WordSplitter {
             ch.isDigit() -> {
                 handleDigital(string, pos, stack, result)
             }
+
             ch.isLowerCase() -> {
                 handleLowerCase(string, pos, stack, result)
             }
+
             ch.isUpperCase() -> {
                 handleUpperCase(string, pos, stack, result)
             }
+
             ch.isDelimiter() -> {
                 handleDelimiter(string, pos, stack, result)
             }
+
             else -> {
                 handleUnknown(string, pos, stack, result)
             }
@@ -55,11 +59,13 @@ object CommonWordSplitter : WordSplitter {
                     digital.append(ch)
                     index++
                 }
+
                 ch.isUpperCase() -> {
                     digital.append(ch)
                     index++
                     return handleUpperCaseAfterDigital(string, index, stack, digital, result)
                 }
+
                 ch.isLowerCase() -> {
                     digital.append(ch)
                     index++
@@ -73,6 +79,7 @@ object CommonWordSplitter : WordSplitter {
                         handleLowerCase(string, index, stack, result)
                     }
                 }
+
                 else -> {
                     stack.append(digital)
                     return entryPoint(string, index, stack, result)
@@ -96,9 +103,11 @@ object CommonWordSplitter : WordSplitter {
                     stack.append(ch)
                     index++
                 }
+
                 ch.isDigit() -> {
                     return handleDigital(string, index, stack, result)
                 }
+
                 else -> {
                     return entryPoint(string, index, stack, result)
                 }
@@ -121,6 +130,7 @@ object CommonWordSplitter : WordSplitter {
                     stack.append(ch)
                     index++
                 }
+
                 ch.isLowerCase() -> {
                     val last = stack.last()
                     stack.deleteCharAt(stack.length - 1)
@@ -128,9 +138,11 @@ object CommonWordSplitter : WordSplitter {
                     stack.append(last)
                     return handleLowerCase(string, index, stack, result)
                 }
+
                 ch.isDigit() -> {
                     return handleDigital(string, index, stack, result)
                 }
+
                 else -> {
                     return entryPoint(string, index, stack, result)
                 }
@@ -154,6 +166,7 @@ object CommonWordSplitter : WordSplitter {
                     digital.append(ch)
                     index++
                 }
+
                 ch.isLowerCase() -> {
                     val last = digital.last()
                     digital.deleteCharAt(digital.length - 1)
@@ -169,6 +182,7 @@ object CommonWordSplitter : WordSplitter {
                     stack.append(last)
                     return handleLowerCase(string, index, stack, result)
                 }
+
                 else -> {
                     if (!digital.last().isDigit()) {
                         result.append(stack)
@@ -194,6 +208,7 @@ object CommonWordSplitter : WordSplitter {
                 ch.isUpperCase() || ch.isLowerCase() || ch.isDigit() || ch.isDelimiter() -> {
                     return entryPoint(string, index, stack, result)
                 }
+
                 else -> {
                     stack.append(ch)
                     index++
@@ -216,6 +231,7 @@ object CommonWordSplitter : WordSplitter {
                 ch.isDelimiter() -> {
                     index++
                 }
+
                 else -> {
                     return entryPoint(string, index, stack, result)
                 }

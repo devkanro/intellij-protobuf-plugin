@@ -7,12 +7,12 @@ import com.intellij.psi.PsiEnumConstant
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.QualifiedName
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufFieldLike
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.sisyphus.isSisyphus
 
 fun PsiElement.findJavaClass(name: QualifiedName?): PsiClass? {
@@ -37,6 +37,7 @@ fun ProtobufFieldLike.toGetters(): Array<PsiMethod> {
         is ProtobufMessageDefinition ->
             owner.toBuilderClass()?.findMethodsByName(getterName(), true)
                 ?: PsiMethod.EMPTY_ARRAY
+
         else -> PsiMethod.EMPTY_ARRAY
     }
 }
@@ -46,6 +47,7 @@ fun ProtobufFieldLike.toSetters(): Array<PsiMethod> {
         is ProtobufMessageDefinition ->
             owner.toBuilderClass()?.findMethodsByName(setterName(), true)
                 ?: PsiMethod.EMPTY_ARRAY
+
         else -> PsiMethod.EMPTY_ARRAY
     }
 }

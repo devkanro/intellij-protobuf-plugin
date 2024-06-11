@@ -5,12 +5,13 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufReservedName
 import io.kanro.idea.plugin.protobuf.lang.psi.items
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufMultiNameDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScope
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufScopeItem
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufReservedName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.name
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufMultiNameDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScope
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScopeItem
 
 open class ScopeTracker(scope: ProtobufScope) {
     private val nameMap = mutableMapOf<String, MutableList<ProtobufScopeItem>>()
@@ -37,7 +38,7 @@ open class ScopeTracker(scope: ProtobufScope) {
     }
 
     protected open fun record(reserved: ProtobufReservedName) {
-        val name = reserved.identifierLiteral?.text ?: return
+        val name = reserved.name()
         reservedNameMap.getOrPut(name) {
             mutableListOf()
         }.add(reserved)
@@ -55,7 +56,7 @@ open class ScopeTracker(scope: ProtobufScope) {
         reserved: ProtobufReservedName,
         holder: AnnotationHolder,
     ) {
-        val name = reserved.identifierLiteral?.text ?: return
+        val name = reserved.name()
         createError(reserved, buildMessage(name, reserved) ?: return, holder)
     }
 

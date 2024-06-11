@@ -7,11 +7,11 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.filterItem
 import io.kanro.idea.plugin.protobuf.lang.psi.firstItemOrNull
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
 
 class GrpcMessageEnumValueReference(value: JsonStringLiteral) :
     PsiReferenceBase<JsonStringLiteral>(value),
@@ -23,7 +23,7 @@ class GrpcMessageEnumValueReference(value: JsonStringLiteral) :
     override fun resolve(): PsiElement? {
         val property = element.parent as? JsonProperty ?: return null
         val field = property.resolve() as? ProtobufFieldDefinition ?: return null
-        val enum = field.typeName.reference?.resolve() as? ProtobufEnumDefinition ?: return null
+        val enum = field.typeName.resolve() as? ProtobufEnumDefinition ?: return null
         return enum.firstItemOrNull<ProtobufEnumValueDefinition> { it.name() == element.value }
     }
 
@@ -31,7 +31,7 @@ class GrpcMessageEnumValueReference(value: JsonStringLiteral) :
         val property = element.parent as? JsonProperty ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val field = property.resolve() as? ProtobufFieldDefinition ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
         val enum =
-            field.typeName.reference?.resolve() as? ProtobufEnumDefinition ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
+            field.typeName.resolve() as? ProtobufEnumDefinition ?: return ArrayUtilRt.EMPTY_OBJECT_ARRAY
 
         return enum.filterItem<ProtobufEnumValueDefinition> { true }.mapNotNull {
             it.lookup()?.withInsertHandler(SmartInsertHandler("\","))

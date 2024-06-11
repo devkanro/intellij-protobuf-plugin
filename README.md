@@ -35,7 +35,10 @@ Analyzing features:
 ✅ Decompile from proto descriptor for golang  
 ✅ Send gRPC native/transcoding requests via [Http Client](https://plugins.jetbrains.com/plugin/13121-http-client)  
 ✅ Explore gRPC APIs via [Endpoints](https://plugins.jetbrains.com/plugin/16890-endpoints)  
-✅ [Buf](https://buf.build/) support via [Buf for Protocol Buffers](https://plugins.jetbrains.com/plugin/19147-buf-for-protocol-buffers)
+✅ [Buf](https://buf.build/) support
+via [Buf for Protocol Buffers](https://plugins.jetbrains.com/plugin/19147-buf-for-protocol-buffers)  
+✅ [Protobuf Editions](https://protobuf.dev/editions/overview/) support  
+✅ [Protobuf Text Format](https://protobuf.dev/reference/protobuf/textformat-spec/) support
 
 Editor features:
 
@@ -48,10 +51,6 @@ Editor features:
 ✅ Edit protobuf line comments as markdown
 
 <!-- Plugin description end -->
-
-Planned features:
-
-🙋 Proto text support
 
 ## Screenshots
 

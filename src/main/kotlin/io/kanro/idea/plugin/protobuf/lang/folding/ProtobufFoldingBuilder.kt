@@ -11,10 +11,9 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
-import com.intellij.refactoring.suggested.startOffset
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufImportStatement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufFolding
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.FoldingElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufImportStatement
 import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import java.util.Stack
 
@@ -28,7 +27,7 @@ class ProtobufFoldingBuilder : FoldingBuilderEx(), DumbAware {
         val file = (root.containingFile as? ProtobufFile) ?: return arrayOf()
         result += buildFoldingDescriptorForFile(file)
 
-        root.walkChildren<ProtobufFolding> {
+        root.walkChildren<FoldingElement> {
             it.folding()?.let { result += it }
         }
         return result.toTypedArray()
@@ -54,6 +53,7 @@ class ProtobufFoldingBuilder : FoldingBuilderEx(), DumbAware {
                 is PsiComment,
                 -> {
                 }
+
                 else -> {
                     if (stack.size >= 2) {
                         val start = stack.firstElement()
@@ -61,8 +61,8 @@ class ProtobufFoldingBuilder : FoldingBuilderEx(), DumbAware {
                         stack.clear()
                         val range =
                             TextRange.create(
-                                start.stringValue?.startOffset ?: return@forEach,
-                                end.startOffset + end.textLength,
+                                start.stringValue?.textRange?.startOffset ?: return@forEach,
+                                end.textRange.startOffset + end.textLength,
                             )
 
                         result +=

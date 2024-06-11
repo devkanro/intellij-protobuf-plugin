@@ -10,14 +10,16 @@ import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.aip.reference.AipResourceReference
+import io.kanro.idea.plugin.protobuf.aip.reference.AipTypeNameReference
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcInputFieldReference
 import io.kanro.idea.plugin.protobuf.aip.reference.ProtobufRpcOutputFieldReference
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufOptionAssign
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.stratify.ProtobufOptionHover
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.structure.ProtobufValueAssign
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueAssign
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionAssign
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionHover
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 
 class AipReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
@@ -33,6 +35,13 @@ class AipReferenceContributor : PsiReferenceContributor() {
                 .inside(ProtobufRpcDefinition::class.java)
                 .inside(ProtobufOptionAssign::class.java),
             AipFieldReferenceProvider(),
+        )
+
+        registrar.registerReferenceProvider(
+            PlatformPatterns.psiElement(ProtobufStringValue::class.java)
+                .inside(ProtobufRpcDefinition::class.java)
+                .inside(ProtobufOptionAssign::class.java),
+            AipTypeNameReferenceProvider(),
         )
     }
 }
@@ -50,17 +59,16 @@ class AipResourceReferenceProvider : PsiReferenceProvider() {
     private fun getReference(element: ProtobufStringValue): PsiReference? {
         val hover = element.parentOfType<ProtobufOptionHover>() ?: return null
         if (!hover.isOption(AipOptions.resourceReferenceOption)) return null
-        if (hover.value(AipOptions.resourceTypeField)?.stringValueList?.firstOrNull() == element) {
-            return AipResourceReference(
-                element,
-            )
-        }
-        if (hover.value(AipOptions.resourceChildTypeField)?.stringValueList?.firstOrNull() == element) {
+        if (element.value().matches(resourceTypePattern)) {
             return AipResourceReference(
                 element,
             )
         }
         return null
+    }
+
+    companion object {
+        private val resourceTypePattern = Regex("""^(\w+\.)*\w+/(\w+\.)*\w+$""")
     }
 }
 
@@ -76,10 +84,36 @@ class AipFieldReferenceProvider : PsiReferenceProvider() {
 
     private fun getReference(element: ProtobufStringValue): PsiReference? {
         if (element.textMatches("\"*\"")) return null
-        val assign = element.parentOfType<ProtobufValueAssign>() ?: return null
-        val targetField = assign.field()?.qualifiedName()
+        val assign = element.parentOfType<ValueAssign>() ?: return null
+        val targetField = (assign.field() as? ProtobufFieldLike)?.qualifiedName()
         if (targetField == AipOptions.httpRuleBodyName) return ProtobufRpcInputFieldReference(element)
         if (targetField == AipOptions.httpRuleResponseBodyName) return ProtobufRpcOutputFieldReference(element)
         return null
+    }
+}
+
+class AipTypeNameReferenceProvider : PsiReferenceProvider() {
+    override fun getReferencesByElement(
+        element: PsiElement,
+        context: ProcessingContext,
+    ): Array<PsiReference> {
+        val stringValue = element as? ProtobufStringValue ?: return PsiReference.EMPTY_ARRAY
+        val reference = getReference(stringValue) ?: return PsiReference.EMPTY_ARRAY
+        return arrayOf(reference)
+    }
+
+    private fun getReference(element: ProtobufStringValue): PsiReference? {
+        val assign = element.parentOfType<ValueAssign>() ?: return null
+        when (assign.field()?.qualifiedName()) {
+            AipOptions.lroMetadataName -> {
+                return AipTypeNameReference(element)
+            }
+
+            AipOptions.lroResponseName -> {
+                return AipTypeNameReference(element)
+            }
+
+            else -> return null
+        }
     }
 }

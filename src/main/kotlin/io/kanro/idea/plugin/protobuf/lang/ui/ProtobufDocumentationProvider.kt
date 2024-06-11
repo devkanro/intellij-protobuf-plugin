@@ -6,10 +6,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.stubs.StubIndex
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufDocument
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufDocumented
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.DocumentElement
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.DocumentOwner
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.QualifiedNameIndex
 import io.kanro.idea.plugin.protobuf.lang.psi.walkChildren
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolResolver
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
@@ -21,8 +21,8 @@ class ProtobufDocumentationProvider : DocumentationProvider {
         element: PsiElement?,
         originalElement: PsiElement?,
     ): String? {
-        (originalElement as? ProtobufDocumented)?.navigateInfo()?.let { return it }
-        (element as? ProtobufDocumented)?.navigateInfo()?.let { return it }
+        (originalElement as? DocumentOwner)?.navigateInfo()?.let { return it }
+        (element as? DocumentOwner)?.navigateInfo()?.let { return it }
         return null
     }
 
@@ -30,8 +30,8 @@ class ProtobufDocumentationProvider : DocumentationProvider {
         element: PsiElement?,
         originalElement: PsiElement?,
     ): String? {
-        (originalElement as? ProtobufDocumented)?.document()?.let { return it }
-        (element as? ProtobufDocumented)?.document()?.let { return it }
+        (originalElement as? DocumentOwner)?.document()?.let { return it }
+        (element as? DocumentOwner)?.document()?.let { return it }
         return null
     }
 
@@ -39,8 +39,8 @@ class ProtobufDocumentationProvider : DocumentationProvider {
         element: PsiElement,
         originalElement: PsiElement?,
     ): String? {
-        (originalElement as? ProtobufDocumented)?.hoverDocument()?.let { return it }
-        (element as? ProtobufDocumented)?.hoverDocument()?.let { return it }
+        (originalElement as? DocumentOwner)?.hoverDocument()?.let { return it }
+        (element as? DocumentOwner)?.hoverDocument()?.let { return it }
         return null
     }
 
@@ -60,14 +60,14 @@ class ProtobufDocumentationProvider : DocumentationProvider {
     }
 
     override fun generateRenderedDoc(comment: PsiDocCommentBase): String? {
-        return (comment as? ProtobufDocument)?.render()
+        return (comment as? DocumentElement)?.render()
     }
 
     override fun collectDocComments(
         file: PsiFile,
         sink: Consumer<in PsiDocCommentBase>,
     ) {
-        file.walkChildren<ProtobufDocument> {
+        file.walkChildren<DocumentElement> {
             if (it.owner != null) {
                 sink.accept(it)
             }

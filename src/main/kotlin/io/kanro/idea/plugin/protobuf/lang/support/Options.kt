@@ -11,6 +11,7 @@ enum class Options(val messageName: String) {
     ENUM_VALUE_OPTIONS("EnumValueOptions"),
     SERVICE_OPTIONS("ServiceOptions"),
     METHOD_OPTIONS("MethodOptions"),
+    EXTENSION_RANGE_OPTIONS("ExtensionRangeOptions"),
     ;
 
     val qualifiedName by lazy {

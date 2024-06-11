@@ -10,9 +10,10 @@ import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings
 import com.intellij.psi.formatter.FormattingDocumentModelImpl
 import com.intellij.psi.formatter.PsiBasedFormattingModel
+import com.intellij.psi.tree.TokenSet
 import io.kanro.idea.plugin.protobuf.lang.ProtobufLanguage
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypes
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypes
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.token.ProtobufTokens
 
 class ProtobufFormattingModelBuilder : FormattingModelBuilder {
     override fun createModel(formattingContext: FormattingContext): FormattingModel {
@@ -75,7 +76,7 @@ class ProtobufFormattingModelBuilder : FormattingModelBuilder {
                 .spacing(0, 0, 1, true, customSettings.KEEP_BLANK_LINES_BETWEEN_IMPORTS)
                 .between(ProtobufTypes.FILE_OPTION, ProtobufTypes.FILE_OPTION)
                 .spacing(0, 0, 1, true, customSettings.KEEP_BLANK_LINES_BETWEEN_FILE_OPTIONS)
-                .after(ProtobufTypes.SYNTAX_STATEMENT)
+                .after(TokenSet.create(ProtobufTypes.SYNTAX_STATEMENT, ProtobufTypes.EDITION_STATEMENT))
                 .blankLines(customSettings.BLANK_LINES_AFTER_SYNTAX)
                 .after(ProtobufTypes.PACKAGE_STATEMENT)
                 .blankLines(commonSettings.BLANK_LINES_AFTER_PACKAGE)

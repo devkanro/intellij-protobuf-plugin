@@ -9,10 +9,10 @@ import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.firstLeaf
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstanceOrNull
 import org.jetbrains.uast.UClass
@@ -39,6 +39,7 @@ class JavaLineMarkerProvider : RelatedItemLineMarkerProvider() {
                         .setTooltipText("Implementing")
                 result.add(builder.createLineMarkerInfo(element.firstLeaf()))
             }
+
             is UMethod -> {
                 val method =
                     findMethodProtobufDefinition(parent)

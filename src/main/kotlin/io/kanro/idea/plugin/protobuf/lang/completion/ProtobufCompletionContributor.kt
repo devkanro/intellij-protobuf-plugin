@@ -4,16 +4,16 @@ import com.intellij.codeInsight.completion.CompletionContributor
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiErrorElement
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumBody
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufEnumValueDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFieldDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFile
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufIdentifier
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcBody
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufSyntaxStatement
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufTypeName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumBody
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufEnumValueDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufIdentifier
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcBody
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufSyntaxStatement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypeName
 
 class ProtobufCompletionContributor : CompletionContributor() {
     init {

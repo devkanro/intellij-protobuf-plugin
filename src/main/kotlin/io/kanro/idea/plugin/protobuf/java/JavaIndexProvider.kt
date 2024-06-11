@@ -1,14 +1,13 @@
 package io.kanro.idea.plugin.protobuf.java
 
 import com.intellij.psi.stubs.IndexSink
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.feature.ProtobufIndexProvider
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.ProtobufStub
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufRpcStub
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.impl.ProtobufServiceStub
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufIndexProvider
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufRpcStub
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufServiceStub
 
 class JavaIndexProvider : ProtobufIndexProvider {
     override fun buildIndex(
-        stub: ProtobufStub<*>,
+        stub: io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.ProtobufStub<*>,
         sink: IndexSink,
     ) {
         when (stub) {
@@ -22,6 +21,7 @@ class JavaIndexProvider : ProtobufIndexProvider {
                 sink.occurrence(JavaNameIndex.key, stub.fullFutureStubName().toString())
                 sink.occurrence(JavaNameIndex.key, stub.fullCoroutineStubName().toString())
             }
+
             is ProtobufRpcStub -> {
                 val methodName = stub.methodName()
 

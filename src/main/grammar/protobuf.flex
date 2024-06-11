@@ -1,6 +1,6 @@
-package io.kanro.idea.plugin.protobuf.lang.lexer;
+package io.kanro.idea.plugin.protobuf.lang.lexer.proto;
 
-import io.kanro.idea.plugin.protobuf.lang.psi.token.ProtobufTokens;
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.token.ProtobufTokens;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
@@ -92,6 +92,7 @@ String = {SingleQuotedString} | {DoubleQuotedString}
   "("                       { return ProtobufTokens.LPAREN; }
   "<"                       { return ProtobufTokens.LT; }
   "-"                       { return ProtobufTokens.MINUS; }
+  "+"                       { return ProtobufTokens.PLUS; }
   "}"                       { return ProtobufTokens.RBRACE; }
   "]"                       { return ProtobufTokens.RBRACK; }
   ")"                       { return ProtobufTokens.RPAREN; }
@@ -121,6 +122,7 @@ String = {SingleQuotedString} | {DoubleQuotedString}
   "service"                 { return ProtobufTokens.SERVICE; }
   "stream"                  { return ProtobufTokens.STREAM; }
   "syntax"                  { return ProtobufTokens.SYNTAX; }
+  "edition"                 { return ProtobufTokens.EDITION; }
   "to"                      { return ProtobufTokens.TO; }
   "true"                    { return ProtobufTokens.TRUE; }
   "false"                   { return ProtobufTokens.FALSE; }

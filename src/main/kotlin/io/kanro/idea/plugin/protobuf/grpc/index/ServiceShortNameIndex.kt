@@ -2,7 +2,7 @@ package io.kanro.idea.plugin.protobuf.grpc.index
 
 import com.intellij.psi.stubs.StringStubIndexExtension
 import com.intellij.psi.stubs.StubIndexKey
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufServiceDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
 
 class ServiceShortNameIndex : StringStubIndexExtension<ProtobufServiceDefinition>() {
     override fun getKey(): StubIndexKey<String, ProtobufServiceDefinition> {

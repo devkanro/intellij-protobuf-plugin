@@ -5,9 +5,9 @@ import io.kanro.idea.plugin.protobuf.compile.BaseProtobufCompilerPlugin
 import io.kanro.idea.plugin.protobuf.compile.CompileContext
 import io.kanro.idea.plugin.protobuf.compile.ServiceCompilingState
 import io.kanro.idea.plugin.protobuf.compile.ServiceMethodCompilingState
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.stream
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stream
 
 class ServiceCompiler : BaseProtobufCompilerPlugin<ServiceCompilingState>() {
     override fun compile(
@@ -43,10 +43,10 @@ class ServiceMethodCompiler : BaseProtobufCompilerPlugin<ServiceMethodCompilingS
             val input = rpc.input() ?: throw IllegalStateException("Invalid rpc definition: input missing.")
             val output = rpc.output() ?: throw IllegalStateException("Invalid rpc definition: output missing.")
             this.inputType =
-                (input.typeName.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.let { ".$it" }
+                (input.typeName.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.let { ".$it" }
                     ?: throw IllegalStateException("Invalid rpc definition: unresolvable input message.")
             this.outputType =
-                (output.typeName.reference?.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.let { ".$it" }
+                (output.typeName.resolve() as? ProtobufMessageDefinition)?.qualifiedName()?.let { ".$it" }
                     ?: throw IllegalStateException("Invalid rpc definition: unresolvable output message.")
             this.clientStreaming = input.stream()
             this.serverStreaming = output.stream()

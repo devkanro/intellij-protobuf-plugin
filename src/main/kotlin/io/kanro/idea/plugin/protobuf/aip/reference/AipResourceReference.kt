@@ -14,19 +14,17 @@ import io.kanro.idea.plugin.protobuf.aip.AipOptions
 import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.ComposedInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufFileOption
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufMessageDefinition
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufStringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.stringRangeInParent
-import io.kanro.idea.plugin.protobuf.lang.psi.stringValue
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.ResourceTypeIndex
-import io.kanro.idea.plugin.protobuf.lang.psi.value
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFileOption
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufStringValue
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stringRangeInParent
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.ResourceTypeIndex
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
 
 class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<ProtobufStringValue>(element) {
     override fun resolve(): PsiElement? {
-        val resourceName = element.stringLiteral.text.trim('"')
+        val resourceName = element.value()
         return AipResourceResolver.resolveAbsolutely(element.file(), resourceName)
     }
 
@@ -93,7 +91,7 @@ class AipResourceReference(element: ProtobufStringValue) : PsiReferenceBase<Prot
 
                 is ProtobufFileOption -> {
                     val resourceName =
-                        element.value(AipOptions.resourceTypeField)?.stringValue() ?: return null
+                        element.value(AipOptions.resourceTypeField)?.toString() ?: return null
                     LookupElementBuilder.create(
                         resourceName,
                     ).withLookupString(resourceName.substringAfterLast('/'))

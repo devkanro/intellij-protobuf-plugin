@@ -15,17 +15,28 @@
 ## 1.7.30 - 2023-12-08
 
 - Changelog update - `v1.7.20` by @github-actions in https://github.com/devkanro/intellij-protobuf-plugin/pull/203
-- ⬆️ Bump org.jetbrains.intellij from 1.13.3 to 1.16.0 by @dependabot in https://github.com/devkanro/intellij-protobuf-plugin/pull/206
-- ⬆️ Bump org.jetbrains.grammarkit from 2022.3.1 to 2022.3.2 by @dependabot in https://github.com/devkanro/intellij-protobuf-plugin/pull/205
-- ⬆️ Bump org.jetbrains.changelog from 2.0.0 to 2.2.0 by @dependabot in https://github.com/devkanro/intellij-protobuf-plugin/pull/204
-- ⬆️ Bump org.jmailen.kotlinter from 4.0.1 to 4.1.0 by @dependabot in https://github.com/devkanro/intellij-protobuf-plugin/pull/207
-- ⬆️ Bump com.fasterxml.jackson.dataformat:jackson-dataformat-yaml from 2.15.3 to 2.16.0 by @dependabot in https://github.com/devkanro/intellij-protobuf-plugin/pull/208
-- ⬆️ Bump org.jetbrains.kotlin.jvm from 1.9.20 to 1.9.21 by @dependabot in https://github.com/devkanro/intellij-protobuf-plugin/pull/209
-- ⬆️ Bump com.bybutter.sisyphus:sisyphus-jackson-protobuf from 2.1.20 to 2.1.21 by @dependabot in https://github.com/devkanro/intellij-protobuf-plugin/pull/211
-- ⬆️ Bump io.grpc:grpc-netty from 1.59.0 to 1.59.1 by @dependabot in https://github.com/devkanro/intellij-protobuf-plugin/pull/212
-- ⬆️ Bump com.bybutter.sisyphus:sisyphus-grpc from 2.1.20 to 2.1.21 by @dependabot in https://github.com/devkanro/intellij-protobuf-plugin/pull/210
-- ⬆️ Bump org.jetbrains.intellij from 1.16.0 to 1.16.1 by @dependabot in https://github.com/devkanro/intellij-protobuf-plugin/pull/213
-- ⬆️ Bump io.grpc:grpc-netty from 1.59.1 to 1.60.0 by @dependabot in https://github.com/devkanro/intellij-protobuf-plugin/pull/215
+- ⬆️ Bump org.jetbrains.intellij from 1.13.3 to 1.16.0 by @dependabot
+  in https://github.com/devkanro/intellij-protobuf-plugin/pull/206
+- ⬆️ Bump org.jetbrains.grammarkit from 2022.3.1 to 2022.3.2 by @dependabot
+  in https://github.com/devkanro/intellij-protobuf-plugin/pull/205
+- ⬆️ Bump org.jetbrains.changelog from 2.0.0 to 2.2.0 by @dependabot
+  in https://github.com/devkanro/intellij-protobuf-plugin/pull/204
+- ⬆️ Bump org.jmailen.kotlinter from 4.0.1 to 4.1.0 by @dependabot
+  in https://github.com/devkanro/intellij-protobuf-plugin/pull/207
+- ⬆️ Bump com.fasterxml.jackson.dataformat:jackson-dataformat-yaml from 2.15.3 to 2.16.0 by @dependabot
+  in https://github.com/devkanro/intellij-protobuf-plugin/pull/208
+- ⬆️ Bump org.jetbrains.kotlin.jvm from 1.9.20 to 1.9.21 by @dependabot
+  in https://github.com/devkanro/intellij-protobuf-plugin/pull/209
+- ⬆️ Bump com.bybutter.sisyphus:sisyphus-jackson-protobuf from 2.1.20 to 2.1.21 by @dependabot
+  in https://github.com/devkanro/intellij-protobuf-plugin/pull/211
+- ⬆️ Bump io.grpc:grpc-netty from 1.59.0 to 1.59.1 by @dependabot
+  in https://github.com/devkanro/intellij-protobuf-plugin/pull/212
+- ⬆️ Bump com.bybutter.sisyphus:sisyphus-grpc from 2.1.20 to 2.1.21 by @dependabot
+  in https://github.com/devkanro/intellij-protobuf-plugin/pull/210
+- ⬆️ Bump org.jetbrains.intellij from 1.16.0 to 1.16.1 by @dependabot
+  in https://github.com/devkanro/intellij-protobuf-plugin/pull/213
+- ⬆️ Bump io.grpc:grpc-netty from 1.59.1 to 1.60.0 by @dependabot
+  in https://github.com/devkanro/intellij-protobuf-plugin/pull/215
 
 ## 1.7.20 - 2023-11-13
 

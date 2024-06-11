@@ -21,6 +21,7 @@ object ProtobufIcons {
     val MESSAGE: Icon = loadIcon("message.svg")
     val RESOURCE_MESSAGE: Icon = loadIcon("resource_message.svg")
     val FILE: Icon = loadIcon("protobuf_file.svg")
+    val TEXT_FILE: Icon = loadIcon("protobuf_text_file.svg")
     val LOGO: Icon = loadIcon("logo.svg")
     val FOLDER: Icon = PlatformIcons.FOLDER_ICON
 

@@ -8,8 +8,8 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import io.kanro.idea.plugin.protobuf.compile.Protoc
-import io.kanro.idea.plugin.protobuf.lang.psi.primitive.ProtobufElement
-import io.kanro.idea.plugin.protobuf.lang.psi.stub.index.QualifiedNameIndex
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.QualifiedNameIndex
 
 class ProtoFileReflection(private val context: ProtobufElement) : LocalProtoReflection() {
     private val wellknownProtoFiles =

@@ -5,7 +5,7 @@ import com.intellij.microservices.url.UrlPath
 import com.intellij.microservices.url.UrlTargetInfo
 import com.intellij.psi.PsiElement
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
-import io.kanro.idea.plugin.protobuf.lang.psi.ProtobufRpcDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 import javax.swing.Icon
 
 @Suppress("UnstableApiUsage")
