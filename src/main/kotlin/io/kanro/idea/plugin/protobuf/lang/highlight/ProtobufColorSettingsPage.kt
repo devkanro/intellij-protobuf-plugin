@@ -1,4 +1,4 @@
-package io.kanro.idea.plugin.protobuf.lang.highligh
+package io.kanro.idea.plugin.protobuf.lang.highlight
 
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighter

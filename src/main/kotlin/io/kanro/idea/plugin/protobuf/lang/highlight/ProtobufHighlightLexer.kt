@@ -1,4 +1,4 @@
-package io.kanro.idea.plugin.protobuf.lang.highligh
+package io.kanro.idea.plugin.protobuf.lang.highlight
 
 import com.intellij.lexer.DelegateLexer
 import com.intellij.lexer.Lexer

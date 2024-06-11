@@ -7,7 +7,7 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
-import io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufHighlighter
+import io.kanro.idea.plugin.protobuf.lang.highlight.ProtobufHighlighter
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.ProtobufNumbered
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueElement

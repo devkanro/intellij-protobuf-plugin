@@ -1,4 +1,4 @@
-package io.kanro.idea.plugin.protobuf.lang.highligh
+package io.kanro.idea.plugin.protobuf.lang.highlight
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType
 import com.intellij.lang.annotation.AnnotationHolder

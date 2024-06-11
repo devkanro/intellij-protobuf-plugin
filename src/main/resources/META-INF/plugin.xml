@@ -76,9 +76,9 @@
         <lang.parserDefinition language="protobuf"
                                implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtobufParserDefinition"/>
         <lang.syntaxHighlighter language="protobuf"
-                                implementationClass="io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufHighlighter"/>
+                                implementationClass="io.kanro.idea.plugin.protobuf.lang.highlight.ProtobufHighlighter"/>
         <annotator language="protobuf"
-                   implementationClass="io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufHighlightingAnnotator"
+                   implementationClass="io.kanro.idea.plugin.protobuf.lang.highlight.ProtobufHighlightingAnnotator"
                    order="FIRST"/>
 
         <annotator language="protobuf"
@@ -134,7 +134,7 @@
                 language="protobuf"
                 implementation="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolReferenceContributor"/>
         <colorSettingsPage
-                implementation="io.kanro.idea.plugin.protobuf.lang.highligh.ProtobufColorSettingsPage"/>
+                implementation="io.kanro.idea.plugin.protobuf.lang.highlight.ProtobufColorSettingsPage"/>
 
         <!-- Stub -->
         <stubElementTypeHolder externalIdPrefix="protobuf"
@@ -159,11 +159,11 @@
         <lang.parserDefinition language="prototext"
                                implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtoTextParserDefinition"/>
         <lang.syntaxHighlighter language="prototext"
-                                implementationClass="io.kanro.idea.plugin.protobuf.lang.highligh.ProtoTextHighlighter"/>
+                                implementationClass="io.kanro.idea.plugin.protobuf.lang.highlight.ProtoTextHighlighter"/>
         <langCodeStyleSettingsProvider
                 implementation="io.kanro.idea.plugin.protobuf.lang.formatter.ProtoTextLanguageCodeStyleSettingsProvider"/>
         <annotator language="prototext"
-                   implementationClass="io.kanro.idea.plugin.protobuf.lang.highligh.ProtoTextHighlightingAnnotator"
+                   implementationClass="io.kanro.idea.plugin.protobuf.lang.highlight.ProtoTextHighlightingAnnotator"
                    order="FIRST"/>
         <annotator language="prototext"
                    implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.ProtoTextAnnotator"/>
@@ -181,6 +181,8 @@
                           language="prototext"/>
         <psi.referenceContributor language="prototext"
                                   implementation="io.kanro.idea.plugin.protobuf.lang.psi.text.reference.ProtoTextSharpCommentReferenceContributor"/>
+        <colorSettingsPage
+                implementation="io.kanro.idea.plugin.protobuf.lang.highlight.ProtoTextHighlighter"/>
     </extensions>
 
 
