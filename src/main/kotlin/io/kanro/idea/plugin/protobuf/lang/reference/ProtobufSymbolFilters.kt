@@ -30,6 +30,11 @@ object ProtobufSymbolFilters {
             it is ProtobufMessageDefinition
         }
 
+    val extendMessage =
+        PsiElementFilter {
+            it is ProtobufMessageDefinition || it is ProtobufGroupDefinition
+        }
+
     val messageTypeName = message or packageName
 
     val field =

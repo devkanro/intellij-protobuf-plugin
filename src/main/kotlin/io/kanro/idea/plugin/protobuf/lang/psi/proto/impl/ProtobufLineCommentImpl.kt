@@ -32,10 +32,11 @@ class ProtobufLineCommentImpl(type: IElementType, text: CharSequence) :
     }
 
     override fun folding(): FoldingDescriptor? {
+        val range = textRange
         return FoldingDescriptor(
             this,
-            startOffset,
-            endOffset,
+            range.startOffset,
+            range.endOffset,
             null,
             "//...",
         )

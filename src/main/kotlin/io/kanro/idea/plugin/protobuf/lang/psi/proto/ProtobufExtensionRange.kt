@@ -7,10 +7,10 @@ fun ProtobufExtensionRange.range(): LongRange? {
             if (lastChild.textMatches("max")) {
                 LongRange(numbers[0], Long.MAX_VALUE)
             } else {
-                LongRange(numbers[0], numbers[0] + 1)
+                LongRange(numbers[0], numbers[0])
             }
 
-        2 -> LongRange(numbers[0], numbers[1] + 1)
+        2 -> LongRange(numbers[0], numbers[1])
         else -> null
     }
 }

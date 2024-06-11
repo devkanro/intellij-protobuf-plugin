@@ -2,6 +2,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.proto.element
 
 import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueType
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufMultiNameDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufNumberScope
@@ -25,6 +26,8 @@ interface ProtobufGroupDefinition : ProtobufFieldLike, ProtobufNumberScope, Prot
     override fun fieldType(): String? {
         return identifier()?.text
     }
+
+    override fun fieldValueType(): ValueType = ValueType.MESSAGE
 
     override fun name(): String? {
         return identifier()?.text

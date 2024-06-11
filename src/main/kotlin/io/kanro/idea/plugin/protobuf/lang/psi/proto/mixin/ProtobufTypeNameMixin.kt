@@ -19,7 +19,7 @@ abstract class ProtobufTypeNameMixin(node: ASTNode) : ProtobufElementBase(node),
 
     override fun symbol(): QualifiedName? {
         return buildList<String> {
-            var parent = parent as? ProtobufTypeName
+            var parent = this@ProtobufTypeNameMixin as? ProtobufTypeName
             while (parent != null) {
                 add(parent.symbolName.text)
                 parent = parent.parent as? ProtobufTypeName

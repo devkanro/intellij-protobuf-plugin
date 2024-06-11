@@ -18,11 +18,15 @@ import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.lang.completion.AddImportInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupableElement
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.prev
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtensionFieldName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtensionName
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufField
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufGroupDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionName
@@ -49,7 +53,7 @@ class ProtobufExtensionFieldReference(fieldName: ProtobufExtensionFieldName) :
             ref as ProtobufExtensionFieldReference
 
             val extendMessage = ref.extendMessage() ?: return null
-            val qualifiedName = QualifiedName.fromDottedString(ref.element.root().text)
+            val qualifiedName = ref.element.leaf().symbol() ?: return null
             return if (ref.element.absolutely()) {
                 ProtobufSymbolResolver.resolveAbsolutely(
                     ref.element,
@@ -98,17 +102,33 @@ class ProtobufExtensionFieldReference(fieldName: ProtobufExtensionFieldName) :
     }
 
     private fun extendMessage(): QualifiedName? {
-        val optionName = element.parentOfType<ProtobufOptionName>() ?: return null
-        return when (val parent = optionName.parent) {
+        val host = element.root().parent ?: return null
+        return when (host) {
             is ProtobufOptionName -> {
-                val field = parent.resolve() as? ProtobufFieldDefinition ?: return null
-                val message = field.typeName.resolve() as? ProtobufMessageDefinition ?: return null
-                message.qualifiedName() ?: return null
+                return when (val parent = host.parent) {
+                    is ProtobufOptionName -> {
+                        val field = parent.resolve() as? ProtobufFieldDefinition ?: return null
+                        val message = field.typeName.resolve() as? ProtobufMessageDefinition ?: return null
+                        message.qualifiedName()
+                    }
+
+                    is ProtobufOptionAssign -> {
+                        val optionType = host.optionType() ?: return null
+                        optionType.qualifiedName
+                    }
+
+                    else -> null
+                }
+
             }
 
-            is ProtobufOptionAssign -> {
-                val optionType = optionName.optionType() ?: return null
-                optionType.qualifiedName ?: return null
+            is ProtobufExtensionName -> {
+                val assign = host.parentOfType<ValueAssign>()?.parentOfType<ValueAssign>() ?: return null
+                return when (val field = assign.field()) {
+                    is ProtobufGroupDefinition -> field.scope()
+                    is ProtobufFieldDefinition -> (field.typeName.resolve() as? ProtobufMessageDefinition)?.qualifiedName()
+                    else -> null
+                }
             }
 
             else -> null

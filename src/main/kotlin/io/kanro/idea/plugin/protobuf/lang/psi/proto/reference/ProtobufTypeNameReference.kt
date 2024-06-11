@@ -20,6 +20,7 @@ import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupableElement
 import io.kanro.idea.plugin.protobuf.lang.psi.prev
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufExtendDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMapFieldDefinition
@@ -43,7 +44,7 @@ class ProtobufTypeNameReference(typeName: ProtobufTypeName) : PsiReferenceBase<P
             incompleteCode: Boolean,
         ): PsiElement? {
             ref as ProtobufTypeNameReference
-            val qualifiedName = QualifiedName.fromDottedString(ref.element.root().text)
+            val qualifiedName = ref.element.leaf().symbol() ?: return null
             return if (ref.element.absolutely()) {
                 ProtobufSymbolResolver.resolveAbsolutely(
                     ref.element,
@@ -65,6 +66,8 @@ class ProtobufTypeNameReference(typeName: ProtobufTypeName) : PsiReferenceBase<P
             is ProtobufMapFieldDefinition,
             is ProtobufFieldDefinition,
             -> ProtobufSymbolFilters.fieldType
+
+            is ProtobufExtendDefinition -> ProtobufSymbolFilters.extendMessage
 
             else -> ProtobufSymbolFilters.message
         }

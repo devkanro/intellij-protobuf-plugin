@@ -19,7 +19,7 @@ abstract class ProtobufExtensionFieldNameMixin(node: ASTNode) : ProtobufElementB
 
     override fun symbol(): QualifiedName? {
         return buildList<String> {
-            var parent = parent as? ProtobufExtensionFieldName
+            var parent = this@ProtobufExtensionFieldNameMixin as? ProtobufExtensionFieldName
             while (parent != null) {
                 add(parent.symbolName.text)
                 parent = parent.parent as? ProtobufExtensionFieldName

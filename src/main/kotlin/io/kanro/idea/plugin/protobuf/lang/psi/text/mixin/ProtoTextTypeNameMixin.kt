@@ -27,7 +27,7 @@ abstract class ProtoTextTypeNameMixin(node: ASTNode) : ProtoTextElementBase(node
 
     override fun symbol(): QualifiedName? {
         return buildList<String> {
-            var parent = parent as? ProtoTextTypeName
+            var parent = this@ProtoTextTypeNameMixin as? ProtoTextTypeName
             while (parent != null) {
                 add(parent.symbolName.text)
                 parent = parent.parent as? ProtoTextTypeName

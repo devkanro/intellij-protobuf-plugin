@@ -123,7 +123,7 @@ class Protobuf3Annotator : Annotator {
                             .create()
                     } else if (zeroDefinition != first) {
                         holder.newAnnotation(
-                            HighlightSeverity.WARNING,
+                            HighlightSeverity.WEAK_WARNING,
                             "'${zeroDefinition.name()}' needs be first element in proto3 for compatibility with the proto2.",
                         )
                             .range(o.textRange)

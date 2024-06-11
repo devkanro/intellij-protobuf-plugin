@@ -1,6 +1,7 @@
 package io.kanro.idea.plugin.protobuf.lang.psi.value
 
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueElement
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueType
 
 interface NumberValue : ValueElement<Number> {
     override fun value(): Number {
@@ -16,4 +17,6 @@ interface NumberValue : ValueElement<Number> {
             else -> this.text.toLong()
         }
     }
+
+    override fun valueType(): ValueType = ValueType.NUMBER
 }

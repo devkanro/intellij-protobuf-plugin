@@ -56,8 +56,6 @@
                       implementation="io.kanro.idea.plugin.protobuf.lang.root.ImportRootProvider"/>
         <rootProvider id="decompile"
                       implementation="io.kanro.idea.plugin.protobuf.decompile.DecompiledRootProvider"/>
-        <symbolReferenceProvider
-                implementation="io.kanro.idea.plugin.protobuf.aip.reference.contributor.ProtobufTypeNameInStringProvider"/>
         <stubExternalProvider
                 implementation="io.kanro.idea.plugin.protobuf.java.FileJavaOptionsProvider"/>
         <protocPlugin implementation="io.kanro.idea.plugin.protobuf.compile.basic.FileCompiler"/>

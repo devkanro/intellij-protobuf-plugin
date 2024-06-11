@@ -26,6 +26,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufOneofStub
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufPackageNameStub
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufRpcStub
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufServiceStub
+import io.kanro.idea.plugin.protobuf.string.toCamelCase
 
 abstract class ProtobufMessageDefinitionMixin :
     StubBasedProtobufElementBase<ProtobufMessageStub>,
@@ -86,6 +87,10 @@ abstract class ProtobufGroupDefinitionMixin :
     constructor(node: ASTNode) : super(node)
 
     constructor(stub: ProtobufGroupStub, type: IStubElementType<*, *>) : super(stub, type)
+
+    override fun fieldName(): String? {
+        return name()?.lowercase()
+    }
 
     override fun stubData(): Array<String> {
         return arrayOf(identifier?.text ?: "")

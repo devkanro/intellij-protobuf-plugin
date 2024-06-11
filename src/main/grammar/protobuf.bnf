@@ -288,6 +288,7 @@ GroupDefinition ::= FieldLabel? group Identifier '=' IntegerValue MessageBody {
         "io.kanro.idea.plugin.protobuf.lang.psi.type.StatementElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.element.ProtobufGroupDefinition"
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner"
+        "io.kanro.idea.plugin.protobuf.lang.psi.feature.BodyOwner"
     ]
     mixin="io.kanro.idea.plugin.protobuf.lang.psi.proto.mixin.ProtobufGroupDefinitionMixin"
     stubClass= "io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.impl.ProtobufGroupStub"

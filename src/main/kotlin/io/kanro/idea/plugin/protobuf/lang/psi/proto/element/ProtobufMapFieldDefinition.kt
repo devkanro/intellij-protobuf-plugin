@@ -3,6 +3,7 @@ package io.kanro.idea.plugin.protobuf.lang.psi.proto.element
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.util.QualifiedName
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
+import io.kanro.idea.plugin.protobuf.lang.psi.feature.ValueType
 import io.kanro.idea.plugin.protobuf.lang.psi.findChildren
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufTypeName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
@@ -24,6 +25,8 @@ interface ProtobufMapFieldDefinition : ProtobufFieldLike, ProtobufNumberScope, P
     override fun items(): Array<ProtobufScopeItem> {
         return emptyArray()
     }
+
+    override fun fieldValueType(): ValueType = ValueType.MESSAGE
 
     fun entryFields(): Array<LookupElementBuilder> {
         val typeNames = findChildren<ProtobufTypeName>()

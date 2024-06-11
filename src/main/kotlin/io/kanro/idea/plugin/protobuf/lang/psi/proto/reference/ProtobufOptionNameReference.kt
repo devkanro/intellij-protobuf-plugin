@@ -13,7 +13,7 @@ import com.intellij.psi.util.parentOfType
 import com.intellij.util.ArrayUtilRt
 import io.kanro.idea.plugin.protobuf.ProtobufIcons
 import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
-import io.kanro.idea.plugin.protobuf.lang.psi.feature.NamedElement
+import io.kanro.idea.plugin.protobuf.lang.psi.items
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufGroupDefinition
@@ -22,6 +22,8 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionAssign
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.feature.ProtobufOptionOwner
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.optionType
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufFieldLike
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.realItems
 import io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolResolver
 import io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootResolver
@@ -37,7 +39,7 @@ class ProtobufOptionNameReference(optionName: ProtobufOptionName) : PsiReference
             val search = ref.element.symbolName?.text ?: return null
             val message = ref.ownerMessage() ?: return null
 
-            if (message.qualifiedName() == Options.FIELD_OPTIONS.qualifiedName) {
+            if (message.scope() == Options.FIELD_OPTIONS.qualifiedName) {
                 if (search == "default") {
                     return ref.element.parentOfType<ProtobufOptionOwner>()
                 }
@@ -49,9 +51,13 @@ class ProtobufOptionNameReference(optionName: ProtobufOptionName) : PsiReference
                 }
             }
 
-            return message.items().firstOrNull {
-                (it as? NamedElement)?.name() == search
+            message.items<ProtobufFieldLike> {
+                if (it.fieldName() == search) {
+                    return it
+                }
             }
+
+            return null
         }
     }
 
@@ -65,18 +71,21 @@ class ProtobufOptionNameReference(optionName: ProtobufOptionName) : PsiReference
         }
     }
 
-    private fun ownerMessage(): ProtobufMessageDefinition? {
+    private fun ownerMessage(): ProtobufScope? {
         when (val parent = element.parent) {
             is ProtobufOptionAssign -> {
                 return ProtobufSymbolResolver.resolveAbsolutelyInFile(
                     descriptor() ?: return null,
                     element.optionType()?.qualifiedName ?: return null,
-                ) as? ProtobufMessageDefinition ?: return null
+                ) as? ProtobufScope ?: return null
             }
 
             is ProtobufOptionName -> {
-                val field = parent.resolve() as? ProtobufFieldDefinition ?: return null
-                return field.typeName.resolve() as? ProtobufMessageDefinition ?: return null
+                return when (val field = parent.resolve() as? ProtobufFieldLike) {
+                    is ProtobufGroupDefinition -> field
+                    is ProtobufFieldDefinition -> field.typeName.resolve() as? ProtobufScope
+                    else -> null
+                }
             }
 
             else -> return null
@@ -111,7 +120,7 @@ class ProtobufOptionNameReference(optionName: ProtobufOptionName) : PsiReference
                 }
             }.toMutableList()
 
-        if (Options.FIELD_OPTIONS.qualifiedName == message.qualifiedName()) {
+        if (Options.FIELD_OPTIONS.qualifiedName == message.scope()) {
             result +=
                 LookupElementBuilder.create("default").withTypeText("option").withIcon(ProtobufIcons.FIELD)
                     .withInsertHandler(fieldInsertHandler)

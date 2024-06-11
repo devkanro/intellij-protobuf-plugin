@@ -10,6 +10,7 @@ import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.psi.impl.source.tree.LeafPsiElement
+import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.QualifiedName
@@ -20,10 +21,13 @@ import io.kanro.idea.plugin.protobuf.lang.completion.SmartInsertHandler
 import io.kanro.idea.plugin.protobuf.lang.psi.feature.LookupableElement
 import io.kanro.idea.plugin.protobuf.lang.psi.prev
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufFile
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPackageName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScope
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.structure.ProtobufScopeItem
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.QualifiedNameIndex
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.ShortNameIndex
 import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextAnyName
 import io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextExtensionName
@@ -41,26 +45,40 @@ class ProtoTextTypeNameReference(typeName: ProtoTextTypeName) : PsiReferenceBase
             incompleteCode: Boolean,
         ): PsiElement? {
             ref as ProtoTextTypeNameReference
-            val qualifiedName = QualifiedName.fromDottedString(ref.element.root().text)
+            val qualifiedName = ref.element.leaf().symbol() ?: return null
 
-            val filter =
-                when (ref.element.scope()) {
-                    is ProtoTextAnyName -> ProtobufSymbolFilters.message
-                    is ProtoTextExtensionName -> ProtobufSymbolFilters.extensionField
-                    else -> return null
+            return when (ref.element.scope()) {
+                is ProtoTextAnyName -> {
+                     StubIndex.getElements(
+                        QualifiedNameIndex.key,
+                        qualifiedName.toString(),
+                        ref.element.project,
+                        GlobalSearchScope.allScope(ref.element.project),
+                        ProtobufElement::class.java,
+                    ).firstOrNull { it is ProtobufMessageDefinition } as? ProtobufMessageDefinition
                 }
 
-            val scope = ref.element.schemaFile() ?: return null
-            return ProtobufSymbolResolver.resolveAbsolutely(scope, qualifiedName, filter)
+                is ProtoTextExtensionName -> {
+                    val scope = ref.element.schemaFile() ?: return null
+                    ProtobufSymbolResolver.resolveAbsolutely(scope, qualifiedName, ProtobufSymbolFilters.extensionField)
+                }
+
+                else -> null
+            }
         }
     }
 
     override fun resolve(): PsiElement? {
         element.typeName?.let {
-            when (val item = it.reference?.resolve()) {
-                is ProtobufScopeItem -> return item.owner()
-                is ProtobufPackageName -> return item.prev<ProtobufPackageName>()
-                else -> return null
+            return when (val item = it.reference?.resolve()) {
+                is ProtobufScopeItem -> {
+                    when (val owner = item.owner()) {
+                        is ProtobufFile -> owner.packageParts().lastOrNull()
+                        else -> owner
+                    }
+                }
+                is ProtobufPackageName -> item.prev<ProtobufPackageName>()
+                else -> null
             }
         }
 
