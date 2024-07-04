@@ -182,7 +182,7 @@
         <psi.referenceContributor language="prototext"
                                   implementation="io.kanro.idea.plugin.protobuf.lang.psi.text.reference.ProtoTextSharpCommentReferenceContributor"/>
         <colorSettingsPage
-                implementation="io.kanro.idea.plugin.protobuf.lang.highlight.ProtoTextHighlighter"/>
+                implementation="io.kanro.idea.plugin.protobuf.lang.highlight.ProtoTextColorSettingsPage"/>
     </extensions>
 
 

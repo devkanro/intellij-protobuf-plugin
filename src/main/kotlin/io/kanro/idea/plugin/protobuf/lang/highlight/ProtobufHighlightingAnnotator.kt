@@ -18,6 +18,7 @@ import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMapFieldDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufMessageDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufNumberValue
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOneofDefinition
+import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufOptionName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufPackageName
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufRpcDefinition
 import io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufServiceDefinition
@@ -43,6 +44,10 @@ class ProtobufHighlightingAnnotator : Annotator {
                     }
 
                     override fun visitPackageName(o: ProtobufPackageName) {
+                        createHighlight(o, ProtobufHighlighter.IDENTIFIER)
+                    }
+
+                    override fun visitOptionName(o: ProtobufOptionName) {
                         createHighlight(o, ProtobufHighlighter.IDENTIFIER)
                     }
 

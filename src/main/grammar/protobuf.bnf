@@ -645,7 +645,7 @@ AnyName ::= '[' Domain '/' TypeName ']' {
 
 
 ScalarList ::= '[' ScalarValue (',' ScalarValue)* ']' {
-    pin=1
+    pin=2
     implements=[
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
@@ -673,7 +673,7 @@ MessageValue ::= '{' Field* '}' {
 }
 
 MessageList ::= '[' MessageValue (',' MessageValue)* ']' {
-    pin=1
+    pin=2
     implements=[
         "io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufElement"
         "io.kanro.idea.plugin.protobuf.lang.psi.type.BlockElement"
