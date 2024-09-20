@@ -33,7 +33,7 @@ dependencies {
     implementation("org.commonmark:commonmark-ext-autolink:0.22.0")
     implementation("com.bybutter.sisyphus:sisyphus-grpc:2.1.22")
     implementation("com.bybutter.sisyphus:sisyphus-jackson-protobuf:2.1.22")
-    implementation("io.grpc:grpc-netty:1.65.0")
+    implementation("io.grpc:grpc-netty:1.68.0")
 }
 
 // Set the JVM language level used to build the project.
