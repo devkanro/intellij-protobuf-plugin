@@ -130,9 +130,6 @@
                              instance="io.kanro.idea.plugin.protobuf.lang.settings.ProtobufSettingsConfigurable"/>
         <gotoSymbolContributor
                 implementation="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufGotoSymbolContributor"/>
-        <psi.referenceContributor
-                language="protobuf"
-                implementation="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufSymbolReferenceContributor"/>
         <colorSettingsPage
                 implementation="io.kanro.idea.plugin.protobuf.lang.highlight.ProtobufColorSettingsPage"/>
 
