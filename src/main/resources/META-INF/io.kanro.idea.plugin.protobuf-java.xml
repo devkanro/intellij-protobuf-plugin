@@ -11,4 +11,7 @@
                                         implementationClass="io.kanro.idea.plugin.protobuf.java.ProtobufLineMarkerProvider"/>
         <findUsagesHandlerFactory implementation="io.kanro.idea.plugin.protobuf.java.JavaFindUsageFactory"/>
     </extensions>
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <supportsKotlinPluginMode supportK2Mode="true" />
+    </extensions>
 </idea-plugin>
