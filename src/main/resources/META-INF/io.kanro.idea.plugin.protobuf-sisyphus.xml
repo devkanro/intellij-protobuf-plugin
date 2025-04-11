@@ -11,4 +11,8 @@
                                         implementationClass="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusProtobufLineMarkerProvider"/>
         <findUsagesHandlerFactory implementation="io.kanro.idea.plugin.protobuf.sisyphus.SisyphusFindUsageFactory"/>
     </extensions>
+
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <supportsKotlinPluginMode supportK2Mode="true" />
+    </extensions>
 </idea-plugin>
