@@ -1,11 +1,9 @@
 ---
 name: ship
 description: >-
-  Ship workflow for committing and pushing changes. Use when user says "ship",
-  "commit", "push", "deploy", "let's ship it", "we're done", or wants to
-  finalize and push current work. Handles build verification, test execution,
-  brainstorm status validation, git commit, and push. Always use this skill
-  instead of raw git commands for shipping work.
+  Ship workflow for committing and pushing changes. Use when user says "ship", "commit", "push", "deploy",
+  or wants to finalize and submit their work. Handles build verification, test execution, brainstorm status check,
+  changelog updates, and git operations.
 ---
 
 # Ship
@@ -26,7 +24,7 @@ Before any commit, run through these checks **in order**. Stop at the first fail
 
 ### 1. Brainstorm Status Check
 
-Read `.copilot/brainstorm.md` if it exists:
+Read `.github/brainstorm.md` if it exists:
 
 | Brainstorm Status | Ship Allowed? | Action |
 |---|---|---|
@@ -92,6 +90,10 @@ Generate the commit message based on the actual changes. Present it to the user 
 1. `git add` — stage relevant files (not blindly `git add .`; be intentional)
 2. `git commit` — with the approved message
 3. `git push` — push to the current branch's remote
+4. **Create or update PR**:
+   - If no PR exists for this branch → create one with `gh pr create`
+   - If a PR already exists → push is sufficient, the PR updates automatically
+   - PR title follows the commit message format; body summarizes the changes
 
 If push fails due to diverged history, inform the user and suggest options (pull --rebase, force push, etc.) rather than acting unilaterally.
 

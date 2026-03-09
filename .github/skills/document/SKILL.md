@@ -1,12 +1,9 @@
 ---
 name: document
 description: >-
-  Documentation management skill. Use when user asks to find, create, update,
-  or organize documentation. Also use when code changes may require doc updates,
-  when user asks "where is this documented?", "update the docs", or needs to
-  understand the documentation structure. All documentation operations should
-  go through this skill. Triggers on mentions of README, CHANGELOG, docs,
-  documentation, or doc-related file paths.
+  Documentation management workflow. Use when user asks to create, update, or find documentation,
+  when code changes need doc updates, or when user asks "where is the doc for X". Manages docmap,
+  code-to-doc mapping, and all documentation operations.
 ---
 
 # Document
@@ -26,7 +23,7 @@ Documentation is only useful if it's findable and current. This skill maintains 
 
 ## Documentation Map
 
-Maintain a documentation map in `.copilot/docmap.md` that tracks:
+Maintain a documentation map in `.github/docmap.md` that tracks:
 
 ```markdown
 ---
@@ -42,7 +39,7 @@ updated: 2024-01-15
 | README.md | Project overview, setup, usage | build.gradle.kts, src/ |
 | CHANGELOG.md | Version history, release notes | All changes |
 | CODE_OF_CONDUCT.md | Community guidelines | — |
-| .copilot/brainstorm.md | Active design discussion | Current feature |
+| .github/brainstorm.md | Active design discussion | Current feature |
 
 ## Sections Index
 
@@ -63,7 +60,7 @@ updated: 2024-01-15
 
 When user asks "where is X documented?" or "is there docs for Y?":
 
-1. Read `.copilot/docmap.md` for the mapping
+1. Read `.github/docmap.md` for the mapping
 2. Search documentation files for relevant content
 3. Report findings with file paths and line numbers
 4. If not documented, suggest where it should be added
@@ -74,7 +71,7 @@ When adding new documentation:
 
 1. Determine the right location based on the doc map
 2. Follow the existing style and format of nearby docs
-3. Update `.copilot/docmap.md` with the new entry
+3. Update `.github/docmap.md` with the new entry
 4. Cross-reference related code paths
 
 ### Updating Documentation
@@ -128,7 +125,7 @@ When asked to review documentation health:
 
 ## Bootstrap
 
-If `.copilot/docmap.md` doesn't exist yet, create it by scanning the project:
+If `.github/docmap.md` doesn't exist yet, create it by scanning the project:
 
 1. Find all `.md` files
 2. Read each file's purpose from its content
