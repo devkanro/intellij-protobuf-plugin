@@ -1,11 +1,9 @@
 ---
 name: ship
 description: >-
-  Ship workflow for committing and pushing changes. Use when user says "ship",
-  "commit", "push", "deploy", "let's ship it", "we're done", or wants to
-  finalize and push current work. Handles build verification, test execution,
-  brainstorm status validation, git commit, and push. Always use this skill
-  instead of raw git commands for shipping work.
+  Ship workflow for committing and pushing changes. Use when user says "ship", "commit", "push", "deploy",
+  or wants to finalize and submit their work. Handles build verification, test execution, brainstorm status check,
+  changelog updates, and git operations.
 ---
 
 # Ship
@@ -26,7 +24,7 @@ Before any commit, run through these checks **in order**. Stop at the first fail
 
 ### 1. Brainstorm Status Check
 
-Read `.copilot/brainstorm.md` if it exists:
+Read `.github/brainstorm.md` if it exists:
 
 | Brainstorm Status | Ship Allowed? | Action |
 |---|---|---|
