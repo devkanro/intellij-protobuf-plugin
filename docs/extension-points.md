@@ -91,4 +91,10 @@ Hooks into the protobuf compilation process, allowing custom code generation plu
 | `FileCompiler` | File-level compilation |
 | `MessageCompiler` | Message type compilation |
 | `EnumCompiler` | Enum type compilation |
+| `MessageFieldCompiler` | Message field compilation |
+| `MessageMapEntryCompiler` | Map entry type compilation |
+| `MessageMapFieldCompiler` | Map field compilation |
+| `MessageOneofCompiler` | Oneof field compilation |
+| `EnumValueCompiler` | Enum value compilation |
 | `ServiceCompiler` | Service compilation |
+| `ServiceMethodCompiler` | Service method compilation |

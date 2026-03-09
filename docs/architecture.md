@@ -76,6 +76,9 @@ ProtobufElement (base)
 - **Features** (`lang/psi/feature/`) — Interfaces that PSI elements implement to participate in cross-cutting features (symbol references, indexing, external stub data).
 
 **Code**: `lang/psi/`
+### Protobuf Editions Support
+
+Since v2.0.0, the plugin supports [Protobuf Editions](https://protobuf.dev/editions/) — a new syntax evolution that replaces `syntax = "proto2"` / `syntax = "proto3"` with `edition = "2023"` (and future editions). The grammar accepts `EditionStatement` as an alternative to `SyntaxStatement`, and `ProtobufEditionAnnotator` provides edition-specific semantic validation.
 
 ## Indexing & Stub Layer
 
@@ -109,7 +112,7 @@ Built on top of PSI, provides the IDE features users interact with.
 | Feature | Implementation | Code |
 |---------|---------------|------|
 | Syntax highlighting | `ProtobufHighlighter`, `ProtobufHighlightingAnnotator` | `lang/highligh/` |
-| Semantic annotations | `ProtobufAnnotator`, `Protobuf2Annotator`, `Protobuf3Annotator` | `lang/annotator/` |
+| Semantic annotations | `ProtobufAnnotator`, `Protobuf2Annotator`, `Protobuf3Annotator`, `ProtobufEditionAnnotator` | `lang/annotator/` |
 | Code completion | `ProtobufCompletionContributor` | `lang/completion/` |
 | Code formatting | `ProtobufFormattingModelBuilder` | `lang/formatter/` |
 | Import optimization | `ProtobufImportOptimizer` | `lang/formatter/` |

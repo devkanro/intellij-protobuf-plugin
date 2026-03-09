@@ -2,9 +2,9 @@
 
 ## Prerequisites
 
-- **JDK 17** — Required for building and running
+- **JDK 21** — Required for building and running
 - **IntelliJ IDEA** — Ultimate Edition recommended (for full plugin development support)
-- **Gradle 8.7** — Bundled via wrapper (`gradlew`)
+- **Gradle 8.10.2** — Bundled via wrapper (`gradlew`)
 
 ## Building
 
@@ -60,6 +60,7 @@ The parser and lexer are generated from grammar files:
 | `protobuf.bnf` | Grammar-Kit | Parser + PSI classes |
 | `protobuf.flex` | JFlex | Lexer |
 | `prototext.bnf` | Grammar-Kit | Proto text parser + PSI |
+| `prototext.flex` | JFlex | Proto text lexer |
 
 Generated code goes to `build/generated/sources/grammar/`. Do not edit generated files directly — modify the grammar definitions instead.
 
@@ -85,14 +86,14 @@ To regenerate after grammar changes, run the build. IntelliJ also supports gener
 ### gradle.properties
 
 ```properties
-pluginVersion=2.0.0
+pluginVersion=2.3.0
 platformType=IU
-platformVersion=2024.1
+platformVersion=2025.3
 ```
 
 ### Plugin Compatibility
 
-The plugin supports IntelliJ platform builds `241` through `242.*` (defined in `build.gradle.kts`).
+The plugin supports IntelliJ platform builds `253` through `253.*` (defined in `build.gradle.kts`).
 
 ## CI/CD
 
