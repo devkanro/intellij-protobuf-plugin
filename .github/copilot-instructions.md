@@ -30,8 +30,8 @@ Trivial changes (bug fixes, typos, config tweaks) skip the brainstorm and go str
 | `.copilot/brainstorm.md` | Active design discussion (one per branch) |
 | `.copilot/knowledge.md` | Accumulated learnings and patterns |
 | `.copilot/docmap.md` | Documentation structure and code-to-doc mapping |
-| `.copilot/instructions.md` | This file — workflow overview |
-| `.copilot/skills/` | Custom skill definitions |
+| `.github/copilot-instructions.md` | This file — workflow overview |
+| `.github/instructions/` | Custom skill definitions |
 
 ## Knowledge Base
 
@@ -56,7 +56,7 @@ Before starting new work, read the knowledge base. Past reflections often contai
 ## Rules
 
 1. **No code changes during design** — Until brainstorm reaches `Implementing`, only `.copilot/brainstorm.md` may be modified
-2. **Always ship through the skill** — Don't use raw git commands for committing; the ship skill enforces quality gates
+2. **Always ship through the ship workflow** — Don't use raw git commands for committing; the ship skill enforces quality gates
 3. **Reflect after every ship** — Even quick fixes deserve a brief reflection
-4. **Ask before changing skills** — The reflect skill may propose workflow improvements, but always gets user approval first
+4. **Ask before changing skills** — The reflect workflow may propose workflow improvements, but always gets user approval first
 5. **Keep knowledge current** — Update `.copilot/knowledge.md` after each reflection, curate patterns when they recur

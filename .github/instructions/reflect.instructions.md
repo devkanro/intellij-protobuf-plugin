@@ -1,14 +1,3 @@
----
-name: reflect
-description: >-
-  Post-ship reflection skill. Use after every successful ship to reflect on
-  what was done, capture learnings in .copilot/knowledge.md, and propose
-  workflow improvements. Also triggers when user says "reflect", "what did
-  we learn", "retrospective", or asks to review the knowledge base. May
-  propose new skills or skill modifications — always asks user approval
-  before changing skills.
----
-
 # Reflect
 
 Captures lessons learned after each ship and feeds them back into the workflow.

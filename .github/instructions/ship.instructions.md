@@ -1,13 +1,3 @@
----
-name: ship
-description: >-
-  Ship workflow for committing and pushing changes. Use when user says "ship",
-  "commit", "push", "deploy", "let's ship it", "we're done", or wants to
-  finalize and push current work. Handles build verification, test execution,
-  brainstorm status validation, git commit, and push. Always use this skill
-  instead of raw git commands for shipping work.
----
-
 # Ship
 
 A disciplined shipping workflow that ensures quality before code leaves the branch.

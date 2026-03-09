@@ -1,14 +1,3 @@
----
-name: document
-description: >-
-  Documentation management skill. Use when user asks to find, create, update,
-  or organize documentation. Also use when code changes may require doc updates,
-  when user asks "where is this documented?", "update the docs", or needs to
-  understand the documentation structure. All documentation operations should
-  go through this skill. Triggers on mentions of README, CHANGELOG, docs,
-  documentation, or doc-related file paths.
----
-
 # Document
 
 Manages the project's documentation structure, maintains a code-to-doc mapping, and ensures docs stay in sync with code changes.
