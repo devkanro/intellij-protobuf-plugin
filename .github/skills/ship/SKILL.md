@@ -24,7 +24,7 @@ Before any commit, run through these checks **in order**. Stop at the first fail
 
 ### 1. Brainstorm Status Check
 
-Read `.copilot/brainstorm.md` if it exists:
+Read `.github/brainstorm.md` if it exists:
 
 | Brainstorm Status | Ship Allowed? | Action |
 |---|---|---|

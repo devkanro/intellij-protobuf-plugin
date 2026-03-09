@@ -11,12 +11,12 @@ description: >-
 
 A single-file state machine for managing design discussions before implementation.
 
-Every branch has at most one active brainstorm, tracked entirely in `.copilot/brainstorm.md`. The file is both the state record and the design document — no external database, no hidden state. Anyone can open the file and see exactly where the discussion stands.
+Every branch has at most one active brainstorm, tracked entirely in `.github/brainstorm.md`. The file is both the state record and the design document — no external database, no hidden state. Anyone can open the file and see exactly where the discussion stands.
 
 ## When to Use
 
 - User starts a new feature discussion or says "let's design..."
-- User asks to create, edit, or manage `.copilot/brainstorm.md`
+- User asks to create, edit, or manage `.github/brainstorm.md`
 - Need to check brainstorm status or transition state
 - User asks about the quick fix path or whether something needs a brainstorm
 - User says "pause" or "resume" for an active brainstorm
@@ -81,13 +81,13 @@ Completed → (terminal)
 ### Rules
 
 1. **Never skip states.** Cannot go from Planning directly to Implementing — the design must pass through Ready first, because that confirmation step is where the user commits to a specific plan.
-2. **No code changes until Implementing.** During Planning/Questioning/Ready, only `.copilot/brainstorm.md` may be modified. This prevents premature coding that might need to be thrown away.
+2. **No code changes until Implementing.** During Planning/Questioning/Ready, only `.github/brainstorm.md` may be modified. This prevents premature coding that might need to be thrown away.
 3. **Paused remembers.** Record the previous state in `paused_from` so resuming returns to exactly where things left off.
 4. **Completed is near-terminal.** Only documentation changes are allowed after completion.
 
 ## File Format
 
-`.copilot/brainstorm.md` uses YAML frontmatter for machine-readable state, followed by markdown sections for human-readable content:
+`.github/brainstorm.md` uses YAML frontmatter for machine-readable state, followed by markdown sections for human-readable content:
 
 ```markdown
 ---
@@ -138,11 +138,11 @@ paused_from:
 
 ### Starting a New Brainstorm
 
-1. Check if `.copilot/brainstorm.md` already exists on this branch
+1. Check if `.github/brainstorm.md` already exists on this branch
    - If it exists and is active (not Completed), warn the user and ask how to proceed
    - If it exists and is Completed, archive or overwrite based on user preference
 2. Create `.github/` directory if needed
-3. Create `.copilot/brainstorm.md` with status `Planning`
+3. Create `.github/brainstorm.md` with status `Planning`
 4. Fill in the Problem section based on the user's description
 5. Begin the design discussion
 
@@ -187,7 +187,7 @@ When status is `Completed`, the feature implementation is done. The brainstorm f
 
 ## Status Check
 
-When asked about brainstorm status, read `.copilot/brainstorm.md` and report:
+When asked about brainstorm status, read `.github/brainstorm.md` and report:
 - Current state
 - Brief summary of the design
 - Open questions (if any)

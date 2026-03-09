@@ -2,7 +2,7 @@
 name: reflect
 description: >-
   Post-ship reflection workflow. Use after shipping changes to reflect on what was done, capture lessons
-  in .copilot/knowledge.md, and optionally propose workflow improvements. Also triggered when user says
+  in .github/knowledge.md, and optionally propose workflow improvements. Also triggered when user says
   "reflect", "what did we learn", or "update knowledge".
 ---
 
@@ -10,7 +10,7 @@ description: >-
 
 Captures lessons learned after each ship and feeds them back into the workflow.
 
-The reflect skill closes the feedback loop. After shipping code, it asks: what went well, what was harder than expected, what patterns emerged? These observations accumulate in `.copilot/knowledge.md` — a living knowledge base that makes every future task a little smoother.
+The reflect skill closes the feedback loop. After shipping code, it asks: what went well, what was harder than expected, what patterns emerged? These observations accumulate in `.github/knowledge.md` — a living knowledge base that makes every future task a little smoother.
 
 ## When to Use
 
@@ -27,7 +27,7 @@ Read the following to understand what just happened:
 
 - `git log` — recent commits on this branch
 - `git diff` — what changed (compare with main/master)
-- `.copilot/brainstorm.md` — the design discussion (if exists)
+- `.github/brainstorm.md` — the design discussion (if exists)
 - Changed files — scope and nature of the work
 
 ### 2. Generate Reflection
@@ -57,7 +57,7 @@ Present the reflection to the user for review before saving.
 
 ### 3. Update Knowledge Base
 
-Append the reflection to `.copilot/knowledge.md`. The file structure:
+Append the reflection to `.github/knowledge.md`. The file structure:
 
 ```markdown
 ---
@@ -108,7 +108,7 @@ Wait for explicit confirmation before making any skill changes.
 
 When user asks "have we seen this before?" or "what do we know about X?":
 
-1. Read `.copilot/knowledge.md`
+1. Read `.github/knowledge.md`
 2. Search for relevant entries in both curated sections and individual reflections
 3. Report findings with context
 
@@ -123,7 +123,7 @@ Periodically (or when asked), review the reflections and:
 
 ## Bootstrap
 
-If `.copilot/knowledge.md` doesn't exist, create it with the template structure and the first reflection entry.
+If `.github/knowledge.md` doesn't exist, create it with the template structure and the first reflection entry.
 
 ## Integration with Other Skills
 
