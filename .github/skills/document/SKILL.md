@@ -1,3 +1,11 @@
+---
+name: document
+description: >-
+  Documentation management workflow. Use when user asks to create, update, or find documentation,
+  when code changes need doc updates, or when user asks "where is the doc for X". Manages docmap,
+  code-to-doc mapping, and all documentation operations.
+---
+
 # Document
 
 Manages the project's documentation structure, maintains a code-to-doc mapping, and ensures docs stay in sync with code changes.

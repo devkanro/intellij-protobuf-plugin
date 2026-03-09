@@ -1,3 +1,11 @@
+---
+name: reflect
+description: >-
+  Post-ship reflection workflow. Use after shipping changes to reflect on what was done, capture lessons
+  in .copilot/knowledge.md, and optionally propose workflow improvements. Also triggered when user says
+  "reflect", "what did we learn", or "update knowledge".
+---
+
 # Reflect
 
 Captures lessons learned after each ship and feeds them back into the workflow.

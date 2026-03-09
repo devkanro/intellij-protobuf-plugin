@@ -1,3 +1,12 @@
+---
+name: brainstorm
+description: >-
+  Brainstorm workflow for design discussions. Use when creating, discussing, or managing brainstorm files,
+  or when user starts a new feature discussion. Also use when user says "let's think about", "how should we design",
+  "I have an idea", wants to discuss architecture, or asks about the quick fix path. Any non-trivial change that
+  involves design decisions should go through this skill.
+---
+
 # Brainstorm
 
 A single-file state machine for managing design discussions before implementation.

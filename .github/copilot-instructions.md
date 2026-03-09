@@ -31,7 +31,7 @@ Trivial changes (bug fixes, typos, config tweaks) skip the brainstorm and go str
 | `.copilot/knowledge.md` | Accumulated learnings and patterns |
 | `.copilot/docmap.md` | Documentation structure and code-to-doc mapping |
 | `.github/copilot-instructions.md` | This file — workflow overview |
-| `.github/instructions/` | Custom skill definitions |
+| `.github/skills/` | Custom skill definitions |
 
 ## Knowledge Base
 
