@@ -90,6 +90,10 @@ Generate the commit message based on the actual changes. Present it to the user 
 1. `git add` — stage relevant files (not blindly `git add .`; be intentional)
 2. `git commit` — with the approved message
 3. `git push` — push to the current branch's remote
+4. **Create or update PR**:
+   - If no PR exists for this branch → create one with `gh pr create`
+   - If a PR already exists → push is sufficient, the PR updates automatically
+   - PR title follows the commit message format; body summarizes the changes
 
 If push fails due to diverged history, inform the user and suggest options (pull --rebase, force push, etc.) rather than acting unilaterally.
 
