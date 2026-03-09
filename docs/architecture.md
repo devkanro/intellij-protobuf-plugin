@@ -1,169 +1,80 @@
 # Architecture
 
-This document describes the high-level architecture of the IntelliJ Protobuf Plugin.
+A high-level map of how the plugin is structured. For the *why* behind each subsystem, see the [design documents](design/).
 
-## Layered Architecture
-
-The plugin follows a multi-layered modular design. Each layer depends only on the layer below it.
+## Layer Diagram
 
 ```
-+---------------------------------------------+
-|           UI & Settings Layer               |
-|  Settings, Structure View, Icons, Actions   |
-+---------------------------------------------+
-|          Language Support Layer              |
-|  Highlighting, Completion, Formatting,      |
-|  References, Annotations, Quick Fixes       |
-+---------------------------------------------+
-|          PSI (Program Structure) Layer       |
-|  Elements, Mixins, Scope, References        |
-+---------------------------------------------+
-|          Indexing & Stub Layer               |
-|  Stub Indices, Root Providers, Caching      |
-+---------------------------------------------+
-|          Parsing & Lexing Layer              |
-|  Lexer (FLEX), Parser (BNF), Language Def   |
-+---------------------------------------------+
-|       Integration Modules (Optional)        |
-|  Java, Go, Sisyphus, gRPC, AIP             |
-+---------------------------------------------+
+┌─────────────────────────────────────────────┐
+│             UI & Settings                   │
+│   Settings, Structure View, Icons, Actions  │
+├─────────────────────────────────────────────┤
+│           Language Support                  │
+│   Completion, Formatting, Annotations,      │
+│   References, Quick Fixes, Find Usages      │
+├─────────────────────────────────────────────┤
+│         PSI (Program Structure)             │
+│   Elements, Mixins, Scope, Features         │
+├─────────────────────────────────────────────┤
+│           Indexing & Stubs                  │
+│   Stub Indices, Root Providers, Caching     │
+├─────────────────────────────────────────────┤
+│           Parsing & Lexing                  │
+│   Lexer (FLEX), Parser (BNF), Language Def  │
+├─────────────────────────────────────────────┤
+│       Integration Modules (Optional)        │
+│   Java, Go, Sisyphus, gRPC, AIP            │
+└─────────────────────────────────────────────┘
 ```
 
-## Parsing & Lexing Layer
+Each layer depends only on the layer below it. Integration modules sit alongside, hooking into specific layers via extension points.
 
-The foundation. Transforms `.proto` source text into a structured AST.
+## Parsing & Lexing
 
-- **Grammar files** in `src/main/grammar/` define the language syntax
-  - `protobuf.bnf` — BNF grammar for proto2/proto3, generates parser and PSI classes
-  - `protobuf.flex` — FLEX lexer definition, generates tokenizer
-  - `prototext.bnf` — BNF grammar for proto text format (`.textproto`, `.pbtxt`)
-- **Language definitions** register the file types with IntelliJ
-  - `ProtobufLanguage` / `ProtoTextLanguage` — language singletons
-  - `ProtobufFileType` / `ProtoTextFileType` — file type associations
-  - `ProtobufParserDefinition` / `ProtoTextParserDefinition` — parser entry points
+Transforms `.proto` source text into a structured AST. Grammar files in `src/main/grammar/` define the syntax — `protobuf.bnf` for proto2/proto3/editions, `prototext.bnf` for text format. Grammar-Kit and JFlex generate the parser and lexer.
 
-**Code**: `lang/ProtobufLanguage.kt`, `lang/ProtobufFileType.kt`, `lang/ProtobufParserDefinition.kt`
+→ Design: [ProtoText](design/prototext.md), [Editions](design/editions.md)
 
 ## PSI Layer
 
-The Program Structure Interface represents the parsed AST as a tree of typed elements.
+The parsed AST becomes a tree of typed PSI elements. Behavior is injected via *mixins* (not inheritance) so generated classes stay untouched. *Feature interfaces* define cross-cutting capabilities like naming, scoping, and reference resolution.
 
-### Element Hierarchy
+→ Design: [PSI & Mixin Pattern](design/psi-and-mixin.md)
 
-```
-ProtobufElement (base)
-+-- ProtobufFile
-|   +-- ProtobufPackageStatement
-|   +-- ProtobufImportStatement
-|   +-- ProtobufOptionAssign
-|   +-- ProtobufMessageDefinition
-|   |   +-- ProtobufFieldDefinition
-|   |   +-- ProtobufMapFieldDefinition
-|   |   +-- ProtobufOneofDefinition
-|   |   +-- ProtobufGroupDefinition
-|   |   +-- (nested messages, enums)
-|   +-- ProtobufServiceDefinition
-|   |   +-- ProtobufRpcDefinition
-|   +-- ProtobufEnumDefinition
-|   |   +-- ProtobufEnumValueDefinition
-|   +-- ProtobufExtendDefinition
-```
+## Indexing & Stubs
 
-### Key Patterns
+Stubs are lightweight serialized snapshots of PSI elements that enable fast symbol lookup without parsing every file. Three indices (`ShortName`, `QualifiedName`, `ResourceType`) cover the common lookup patterns. Root providers aggregate proto files from project sources, libraries, SDKs, and decompiled descriptors.
 
-- **Mixins** (`lang/psi/proto/mixin/`) — Add behavior to generated PSI classes without modifying generated code. Each element type has a mixin that provides methods like `name()`, `qualifiedName()`, `scope()`.
-- **Stubs** (`lang/psi/stub/`) — Serialized summaries of PSI elements for fast indexing without full parsing. Stub types are defined in `lang/psi/stub/type/`.
-- **Features** (`lang/psi/feature/`) — Interfaces that PSI elements implement to participate in cross-cutting features (symbol references, indexing, external stub data).
+→ Design: [Stub Indexing](design/stub-indexing.md)
 
-**Code**: `lang/psi/`
-### Protobuf Editions Support
+## Language Support
 
-Since v2.0.0, the plugin supports [Protobuf Editions](https://protobuf.dev/editions/) — a new syntax evolution that replaces `syntax = "proto2"` / `syntax = "proto3"` with `edition = "2023"` (and future editions). The grammar accepts `EditionStatement` as an alternative to `SyntaxStatement`, and `ProtobufEditionAnnotator` provides edition-specific semantic validation.
+The IDE features users interact with: completion, annotations, formatting, references, quick fixes. Each feature follows IntelliJ's extension model but with design choices specific to protobuf's needs.
 
-## Indexing & Stub Layer
+→ Design: [Code Completion](design/code-completion.md), [Annotation System](design/annotation-system.md), [Symbol Resolution](design/symbol-resolution.md)
 
-Enables fast symbol lookup across the entire project without parsing every file.
+## Internal Compiler
 
-### Stub Indices
+The plugin includes an in-process protobuf compiler that generates `FileDescriptorProto` from PSI — without calling external `protoc`. This enables IDE features that need descriptor information (like option validation) to work without build tool configuration.
 
-- `ShortNameIndex` — Find elements by simple name
-- `QualifiedNameIndex` — Find elements by fully qualified name
-- `ResourceTypeIndex` — Find AIP resource types
-
-### Root Providers
-
-Root providers tell the plugin where to find `.proto` files for import resolution:
-
-| Provider | Source |
-|----------|--------|
-| `ModuleSourceRootProvider` | Module source directories |
-| `LibraryRootProvider` | Project library JARs |
-| `EmbeddedRootProvider` | Built-in Google proto definitions |
-| `DecompiledRootProvider` | Decompiled proto descriptors |
-
-Root providers are an **extension point** — integrations (Go, etc.) can add their own.
-
-**Code**: `lang/root/`, `lang/psi/stub/`
-
-## Language Support Layer
-
-Built on top of PSI, provides the IDE features users interact with.
-
-| Feature | Implementation | Code |
-|---------|---------------|------|
-| Syntax highlighting | `ProtobufHighlighter`, `ProtobufHighlightingAnnotator` | `lang/highligh/` |
-| Semantic annotations | `ProtobufAnnotator`, `Protobuf2Annotator`, `Protobuf3Annotator`, `ProtobufEditionAnnotator` | `lang/annotator/` |
-| Code completion | `ProtobufCompletionContributor` | `lang/completion/` |
-| Code formatting | `ProtobufFormattingModelBuilder` | `lang/formatter/` |
-| Import optimization | `ProtobufImportOptimizer` | `lang/formatter/` |
-| Reference resolution | `ProtobufSymbolReferenceContributor` | `lang/reference/` |
-| Quick fixes | `AddImportFix`, `RenameFix`, `OptimizeImportsFix` | `lang/quickfix/` |
-| Find usages | `ProtobufFindUsageProvider` | `lang/usage/` |
-| Code folding | `ProtobufFoldingBuilder` | `lang/folding/` |
-| Refactoring | `ProtobufRefactoringSupportProvider` | `lang/reference/` |
-| Documentation | `ProtobufDocumentationProvider` | `lang/docs/` |
-| Structure view | `ProtobufStructureViewFactory` | `lang/ui/` |
-
-**Code**: `lang/` subpackages
-
-## UI & Settings Layer
-
-User-facing configuration and visual elements.
-
-- **Settings** (`lang/settings/`) — Plugin configuration UI (import roots, features)
-- **Structure view** (`lang/ui/`) — Outline panel for proto files
-- **Icons** (`ProtobufIcons.kt`) — File type, element, and gutter icons
-- **Actions** (`lang/actions/`) — Editor actions (arrange field numbers)
+→ Design: [Compiler System](design/compiler-system.md)
 
 ## Integration Modules
 
-Optional modules loaded only when their dependencies are present. Each is declared in a separate XML config file.
+Optional modules activate when their IDE dependencies are present (e.g., Java module loads only if `com.intellij.modules.java` is available). Each module extends the core via extension points to add language-specific navigation, decompilation, or code generation features.
 
-| Module | Config | Purpose | Documentation |
-|--------|--------|---------|---------------|
-| Java | `*-java.xml` | Proto <-> Java generated code navigation | [modules/java.md](modules/java.md) |
-| Go | `*-go.xml` | Proto <-> Go code navigation, decompilation | [modules/go.md](modules/go.md) |
-| Sisyphus | `*-sisyphus.xml` | Sisyphus Kotlin/gRPC framework support | [modules/sisyphus.md](modules/sisyphus.md) |
-| gRPC Client | `*-client.xml` | gRPC request execution via HTTP Client | [modules/grpc.md](modules/grpc.md) |
-| Microservices | `*-microservices.xml` | Endpoints view integration | [modules/grpc.md](modules/grpc.md) |
-| AIP | (in main plugin.xml) | Google API Improvement Proposals support | [modules/aip.md](modules/aip.md) |
-| Markdown | `*-markdown.xml` | Markdown rendering in proto comments | — |
+→ Docs: [Java](modules/java.md), [Go](modules/go.md), [gRPC](modules/grpc.md), [AIP](modules/aip.md), [Sisyphus](modules/sisyphus.md)
 
 ## Extension Points
 
-The plugin defines its own extension points for third-party extensions:
+Five extension points allow third-party plugins to extend the core:
 
-| Extension Point | Interface | Purpose |
-|-----------------|-----------|---------|
-| `rootProvider` | `ProtobufRootProvider` | Custom import root sources |
-| `symbolReferenceProvider` | `ProtobufSymbolReferenceProvider` | Custom symbol reference resolution |
-| `indexProvider` | `ProtobufIndexProvider` | Custom index contributions |
-| `stubExternalProvider` | `ProtobufStubExternalProvider` | External stub data |
-| `protocPlugin` | `ProtobufCompilerPlugin` | Custom protoc compiler plugins |
+| Extension Point | What It Enables |
+|-----------------|-----------------|
+| `rootProvider` | Add custom proto file search locations |
+| `symbolReferenceProvider` | Add custom symbol resolution strategies |
+| `indexProvider` | Contribute additional data to stub indices |
+| `stubExternalProvider` | Attach external metadata to stubs |
+| `protocPlugin` | Extend the internal compiler |
 
-## Utility Packages
-
-- **`string/`** — Case conversion (camelCase, snake_case, PascalCase, etc.) and English pluralization
-- **`compile/`** — Protobuf compilation infrastructure (protoc integration)
-- **`decompile/`** — Reconstruct `.proto` from compiled descriptors
-- **`ui/`** — Shared UI components (smart tree, tooltip)
+→ Docs: [Extension Points](extension-points.md)

@@ -1,85 +1,124 @@
 ---
-status: Questioning
+status: Implementing
 created: 2026-03-09
 updated: 2026-03-09
 paused_from:
 ---
 
-# Feature: Deep-Dive Documentation for Plugin Internals
+# Feature: Documentation Overhaul — Structure, Design Docs, and README
 
 ## Problem
 
-The existing docs (`docs/architecture.md`, `docs/development.md`, `docs/extension-points.md`, `docs/modules/`) provide a good bird's-eye view — what exists and where — but lack the depth needed to understand *how* things work. Key subsystems like symbol resolution, stub indexing, and the PSI mixin pattern are mentioned only briefly. A new contributor or future-us would struggle to trace a symbol resolve call or understand how stubs are built without reading dozens of source files.
+The existing docs describe *what* exists and *where* — class names, file locations, feature lists. But that information is already in the code. What's missing is the *why*: why was the mixin pattern chosen for PSI elements? Why does symbol resolution have separate absolute and relative phases? Why use a custom in-process compiler instead of calling protoc? These design decisions are invisible in code but critical for making good future decisions.
+
+Additionally, the current docs structure is flat and unfriendly to newcomers — opening `architecture.md` immediately throws PSI hierarchies, stub indices, and compiler internals at the reader with no gradual on-ramp.
+
+The README is also bare-bones: a checklist of features with no visual appeal or project identity.
 
 ## Approach
 
-Create focused, single-topic documentation files for each major subsystem. Each doc should explain the design, walk through the key code paths, and provide enough context that a reader can navigate the subsystem confidently. Prioritize the areas that are most complex and least documented.
+Create design-intent documentation that answers *why*, not *what*. Each doc should:
+
+- **Explain the problem** the subsystem solves and why it's non-trivial
+- **Describe the design choices** and what alternatives were considered or rejected
+- **Reveal the tradeoffs** — what was gained, what was sacrificed
+- **Connect decisions to constraints** — IntelliJ platform requirements, protobuf spec demands, performance needs
+
+Reorganize the doc structure by reader journey (overview → architecture → design deep-dives) so newcomers aren't overwhelmed. Refresh the README for visual impact and add Copilot workflow section.
 
 ## Design
 
-### Proposed Documentation Files
-
-Based on codebase analysis (~352 Kotlin files, 2 BNF grammars), here are the candidates grouped by priority:
-
-#### Tier 1 — Core Internals (Very High Priority)
-
-| Doc | Covers | Key Classes |
-|-----|--------|-------------|
-| `docs/internals/psi-hierarchy.md` | PSI element types, mixin pattern, feature interfaces, BNF-to-PSI generation | `ProtobufElement`, `ProtobufElementBase`, `*Mixin.kt`, feature interfaces |
-| `docs/internals/symbol-resolution.md` | Name resolution pipeline, scope system, cross-file imports, public imports | `ProtobufSymbolResolver`, `ProtobufScope`, 6 proto + 5 textproto reference classes |
-| `docs/internals/stub-indexing.md` | Stub types, indices, serialization, external data, querying | 11 stub types, `ShortNameIndex`, `QualifiedNameIndex`, `ResourceTypeIndex` |
-
-#### Tier 2 — Important Subsystems (High Priority)
-
-| Doc | Covers | Key Classes |
-|-----|--------|-------------|
-| `docs/internals/annotation-system.md` | Annotators, version-specific validation, quick fixes, error severity | `ProtobufAnnotator`, `Protobuf2/3Annotator`, `ProtobufEditionAnnotator`, 5 quick fixes |
-| `docs/internals/code-completion.md` | Completion contributors, providers, insert handlers, context detection | `ProtobufCompletionContributor`, 9 providers, 4 insert handlers |
-| `docs/internals/compiler-system.md` | Internal protoc, compiler plugins, state machine, descriptor generation | `Protoc`, `ProtobufCompilerPlugin`, `States.kt`, 10 compiler classes |
-
-#### Tier 3 — Specialized Topics (Medium Priority)
-
-| Doc | Covers | Key Classes |
-|-----|--------|-------------|
-| `docs/internals/prototext-support.md` | Text format language, header comments, schema-based validation | `prototext.bnf`, `ProtoTextFile`, 5 reference classes, `ProtoTextAnnotator` |
-| `docs/internals/edition-support.md` | Editions vs syntax versions, feature sets, current implementation status | `ProtobufFeature`, `ProtobufEditionAnnotator`, `EditionStatement` |
-
-### Directory Structure
+### New Documentation Structure
 
 ```
 docs/
-├── architecture.md          (existing — high-level overview)
-├── development.md           (existing — build & dev guide)
-├── extension-points.md      (existing — public API)
-├── modules/                 (existing — per-module docs)
-│   ├── java.md
-│   ├── go.md
-│   ├── grpc.md
-│   ├── aip.md
-│   └── sisyphus.md
-└── internals/               (NEW — deep-dive subsystem docs)
-    ├── psi-hierarchy.md
-    ├── symbol-resolution.md
-    ├── stub-indexing.md
-    ├── annotation-system.md
-    ├── code-completion.md
-    ├── compiler-system.md
-    ├── prototext-support.md
-    └── edition-support.md
+├── README.md                    ← Documentation index / navigation page
+├── overview.md                  ← What the plugin does, user experience, key concepts
+├── architecture.md              ← Simplified: layer diagram + one paragraph per layer
+├── getting-started.md           ← Dev environment setup (extracted from development.md)
+├── contributing.md              ← How to contribute: grammar, features, modules
+├── extension-points.md          ← Extension API reference (existing, refined)
+├── design/                      ← Deep-dive "why" documents
+│   ├── psi-and-mixin.md         ← Why mixin pattern? Why feature interfaces?
+│   ├── symbol-resolution.md     ← Why two-phase resolve? Why scope hierarchy?
+│   ├── stub-indexing.md         ← Why stubs? What tradeoffs in index design?
+│   ├── annotation-system.md     ← Why per-version annotators? Validation philosophy
+│   ├── code-completion.md       ← Why provider-per-context? Insert handler design
+│   ├── compiler-system.md       ← Why in-process compiler? Plugin architecture
+│   ├── prototext.md             ← Why separate language? Schema linking design
+│   └── editions.md              ← Why feature-set model? Migration from syntax versions
+└── modules/                     ← Per-module integration docs (existing, preserved)
+    ├── java.md
+    ├── go.md
+    ├── grpc.md
+    ├── aip.md
+    └── sisyphus.md
+```
+
+### Reader Journeys
+
+- **"What does this do?"** → README → `overview.md`
+- **"I want to contribute"** → `getting-started.md` → `architecture.md` → `design/*`
+- **"I want to extend it"** → `extension-points.md` → `modules/*`
+- **"Why was X designed this way?"** → `design/*` directly
+
+### README Overhaul
+
+Redesign `README.md` at project root:
+
+1. **Hero section**: Logo + one-line tagline + badges (existing) + install button/link
+2. **Feature highlights**: Visual cards/sections with screenshots inline, not a checklist
+3. **Quick start**: 3-step install guide
+4. **Compatibility warning**: Keep the JetBrains plugin conflict note but style it better
+5. **Architecture at a glance**: Simple layer diagram or feature overview image
+6. **Copilot workflow section**: New — explain that this project uses AI-assisted development with a structured brainstorm → implement → ship → reflect cycle. Link to `.github/copilot-instructions.md` and `.github/skills/`
+7. **Contributing**: Link to `docs/contributing.md`
+8. **Screenshots gallery**: Reorganize existing screenshots with better captions
+
+### Design Doc Template
+
+Each `docs/design/*.md` follows this structure:
+
+```markdown
+# [Subsystem Name]
+
+## The Problem
+What challenge does this subsystem address? Why isn't it trivial?
+
+## Design Decisions
+### Decision 1: [Choice made]
+**Context**: What constraints or requirements drove this?
+**Alternatives considered**: What else could have been done?
+**Why this approach**: What made it the best fit?
+**Tradeoffs**: What was sacrificed?
+
+### Decision 2: ...
+
+## How It Fits Together
+Brief sketch of how this subsystem connects to others.
+(Not a code walkthrough — just enough to navigate.)
+
+## Key Insight
+One or two sentences capturing the essential "aha" for this subsystem.
 ```
 
 ## Questions
 
-Open questions that affect scope and approach:
-
-- [ ] **Scope**: Should we do all 8 docs in one pass, or start with Tier 1 (3 docs) and iterate?
-- [ ] **Depth vs. breadth**: Should each doc include code walkthroughs (e.g., "trace a symbol resolve from user click to result"), or stay at the design/architecture level?
-- [ ] **Audience**: Are these docs primarily for contributors to this plugin, or also for users who want to build extensions on top of it?
-- [ ] **Formatting/navigation docs**: The formatter and navigation (go-to-symbol, find-usages, rename) are medium-complexity. Worth separate docs or fold into existing `architecture.md`?
+- [x] **Scope**: All 8 design docs + restructure + README — *decided: do it all*
+- [x] **Why vs. What**: Focus on design intent and rationale — *decided: why-first*
+- [x] **Audience**: Contributors and future-us (including AI) — *decided*
+- [x] **Formatting/navigation**: Fold into architecture.md, not separate docs — *decided*
+- [x] **Doc structure**: Progressive journey (overview → architecture → design/) — *decided*
+- [x] **README**: Visual refresh + Copilot workflow section — *decided*
 
 ## Decisions
 
-(Pending answers to questions above)
+1. **Why-first documentation**: Each doc focuses on design intent and rationale rather than describing current implementation. Code tells you *what*; docs tell you *why*.
+2. **Progressive structure**: Docs organized by reader journey — newcomers start with overview, contributors drill into design/, extenders use extension-points.
+3. **All 8 design docs in one pass**: Subsystems are interconnected; writing them together gives coherent coverage.
+4. **Audience is contributors + AI**: Not extension developers (extension-points.md already serves them).
+5. **Formatting/navigation merged into architecture.md**: Standard IntelliJ patterns, not enough unique "why" for standalone docs.
+6. **README overhaul**: Visual refresh with feature highlights, quick start, and Copilot workflow section.
 
 ## Tasks
 
@@ -91,7 +130,33 @@ Open questions that affect scope and approach:
 **Topic**: Initial brainstorm — what documentation to create
 **Key points**:
 - Codebase analysis identified 10 major subsystems, of which 7+ have thin/missing documentation
-- Existing docs cover the "what" well but lack the "how" — PSI mixin pattern, symbol resolution pipeline, stub lifecycle are barely explained
+- Existing docs cover the "what" well but lack the "how"
 - Proposed 8 new docs organized under `docs/internals/` in 3 priority tiers
-- Extension points doc already exists but could be enhanced with implementation walkthroughs
-**Outcome**: Proposed plan needs user input on scope, depth, and audience before finalizing
+**Outcome**: Proposed plan needs user input on scope, depth, and audience
+
+### Round 2 — 2026-03-09
+**Topic**: Documentation philosophy — why vs. what
+**Key points**:
+- User pointed out docs should explain *why* (design intent) not *what* (current implementation)
+- "What" is already in the code; "why" is the invisible knowledge that gets lost
+- Docs become more stable across refactors because rationale outlives implementation
+**Outcome**: Decided on why-first approach
+
+### Round 3 — 2026-03-09
+**Topic**: Scope, audience, and open questions
+**Key points**:
+- All 8 docs in one pass (subsystems are interconnected)
+- Audience: contributors + future-us/AI (extension-points.md already serves extenders)
+- Formatting/navigation: merge into architecture.md (standard IntelliJ patterns)
+- Renamed `internals/` to `design/` to match why-first philosophy
+**Outcome**: All open questions resolved
+
+### Round 4 — 2026-03-09
+**Topic**: Documentation structure reorganization + README
+**Key points**:
+- Current flat structure is unfriendly to newcomers
+- Reorganize by reader journey: overview → architecture → design/
+- Split development.md into getting-started.md + contributing.md
+- README needs visual refresh: feature highlights instead of checklist, quick start, screenshots inline
+- Add Copilot workflow section to README explaining brainstorm → implement → ship → reflect cycle
+**Outcome**: Full scope finalized — ready to implement
