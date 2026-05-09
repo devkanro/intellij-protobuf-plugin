@@ -14,6 +14,8 @@
 
 ---
 
+<!-- Plugin description -->
+
 ## ✨ What It Does
 
 This plugin turns your JetBrains IDE into a protobuf-aware development environment — not just syntax highlighting, but deep understanding of your schema.
@@ -21,6 +23,8 @@ This plugin turns your JetBrains IDE into a protobuf-aware development environme
 > [!WARNING]
 > Not compatible with the bundled [JetBrains Protocol Buffer plugin](https://plugins.jetbrains.com/plugin/14004-protocol-buffers).
 > Disable **Protocol Buffer** and **gRPC** before installing.
+
+<!-- Plugin description end -->
 
 ## 🚀 Quick Start
 
