@@ -16,7 +16,7 @@
 
 <!-- Plugin description -->
 
-## ✨ What It Does
+## What It Does
 
 This plugin turns your JetBrains IDE into a protobuf-aware development environment — not just syntax highlighting, but deep understanding of your schema.
 
