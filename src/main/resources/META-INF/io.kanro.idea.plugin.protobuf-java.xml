@@ -7,7 +7,7 @@
         <stubIndex implementation="io.kanro.idea.plugin.protobuf.java.JavaNameIndex"/>
         <codeInsight.lineMarkerProvider language="UAST"
                                         implementationClass="io.kanro.idea.plugin.protobuf.java.JavaLineMarkerProvider"/>
-        <codeInsight.lineMarkerProvider language="protobuf"
+        <codeInsight.lineMarkerProvider language="protocol_buffers"
                                         implementationClass="io.kanro.idea.plugin.protobuf.java.ProtobufLineMarkerProvider"/>
         <findUsagesHandlerFactory implementation="io.kanro.idea.plugin.protobuf.java.JavaFindUsageFactory"/>
     </extensions>

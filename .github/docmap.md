@@ -1,5 +1,5 @@
 ---
-updated: 2026-03-09
+updated: 2026-09-11
 ---
 
 # Documentation Map
@@ -8,14 +8,14 @@ updated: 2026-03-09
 
 | File | Purpose | Related Code |
 |---|---|---|
-| README.md | Project overview, features, install, Copilot workflow | — |
+| README.md | Project overview, features, install, language ID migration, Copilot workflow | lang/ProtobufLanguage.kt, lang/ProtoTextLanguage.kt, lang/*FileType.kt |
 | CHANGELOG.md | Version history, release notes | All changes |
 | docs/README.md | Documentation index / navigation page | — |
 | docs/overview.md | What the plugin does, key concepts | — |
 | docs/architecture.md | High-level layer diagram, subsystem overview | All `src/main/kotlin/` |
 | docs/getting-started.md | Build, run, test guide | build.gradle.kts, gradle.properties, .github/workflows/ |
 | docs/contributing.md | Code style, adding features/modules, Copilot workflow | lang/, META-INF/ |
-| docs/extension-points.md | Custom extension point API docs | lang/root/, lang/psi/feature/, compile/ |
+| docs/extension-points.md | Language bindings and custom extension point API docs | lang/ProtobufLanguage.kt, lang/ProtoTextLanguage.kt, META-INF/, lang/root/, lang/psi/feature/, compile/ |
 | docs/design/psi-and-mixin.md | Why mixin pattern for PSI elements | lang/psi/, lang/psi/proto/mixin/, lang/psi/feature/ |
 | docs/design/symbol-resolution.md | Why two-phase resolve, scope hierarchy | lang/psi/proto/ProtobufSymbolResolver, lang/psi/proto/ProtobufScope, lang/root/ |
 | docs/design/stub-indexing.md | Why stubs, index design tradeoffs | lang/psi/stub/, lang/psi/stub/type/, lang/psi/stub/index/ |

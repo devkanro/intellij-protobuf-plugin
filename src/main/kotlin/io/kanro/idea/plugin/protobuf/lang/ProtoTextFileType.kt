@@ -16,7 +16,7 @@ class ProtoTextFileType : LanguageFileType(ProtoTextLanguage) {
     }
 
     override fun getName(): String {
-        return ProtoTextLanguage.id
+        return "prototext"
     }
 
     override fun getDescription(): String {
