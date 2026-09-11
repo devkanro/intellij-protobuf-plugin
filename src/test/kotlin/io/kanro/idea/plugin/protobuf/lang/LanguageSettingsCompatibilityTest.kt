@@ -9,38 +9,38 @@ import org.jdom.Element
 class LanguageSettingsCompatibilityTest : BasePlatformTestCase() {
     fun testLegacySettingsSurviveWithoutBeingAppliedToNewLanguages() {
         for ((oldId, language) in listOf("protobuf" to ProtobufLanguage, "prototext" to ProtoTextLanguage)) {
-            val defaults = CodeStyle.createTestSettings().getCommonSettings(language).KEEP_BLANK_LINES_IN_CODE
+            val defaults = CodeStyle.createTestSettings().getCommonSettings(language).BLANK_LINES_AFTER_IMPORTS
             val legacyValue = defaults + 5
             val settings = CodeStyle.createTestSettings()
             settings.readExternal(scheme(oldId to legacyValue))
 
-            assertEquals(defaults, settings.getCommonSettings(language).KEEP_BLANK_LINES_IN_CODE)
+            assertEquals(defaults, settings.getCommonSettings(language).BLANK_LINES_AFTER_IMPORTS)
             val saved = serialize(settings)
             assertEquals(legacyValue.toString(), blankLinesValue(saved, oldId))
 
             val reloaded = CodeStyle.createTestSettings()
             reloaded.readExternal(saved)
-            assertEquals(defaults, reloaded.getCommonSettings(language).KEEP_BLANK_LINES_IN_CODE)
+            assertEquals(defaults, reloaded.getCommonSettings(language).BLANK_LINES_AFTER_IMPORTS)
             assertEquals(legacyValue.toString(), blankLinesValue(serialize(reloaded), oldId))
         }
     }
 
     fun testLegacySettingsDoNotOverwriteExistingNewLanguageSettings() {
         for ((oldId, language) in listOf("protobuf" to ProtobufLanguage, "prototext" to ProtoTextLanguage)) {
-            val defaults = CodeStyle.createTestSettings().getCommonSettings(language).KEEP_BLANK_LINES_IN_CODE
+            val defaults = CodeStyle.createTestSettings().getCommonSettings(language).BLANK_LINES_AFTER_IMPORTS
             val legacyValue = defaults + 5
             val newValue = defaults + 10
             val settings = CodeStyle.createTestSettings()
             settings.readExternal(scheme(oldId to legacyValue, language.id to newValue))
 
-            assertEquals(newValue, settings.getCommonSettings(language).KEEP_BLANK_LINES_IN_CODE)
+            assertEquals(newValue, settings.getCommonSettings(language).BLANK_LINES_AFTER_IMPORTS)
             val saved = serialize(settings)
             assertEquals(legacyValue.toString(), blankLinesValue(saved, oldId))
             assertEquals(newValue.toString(), blankLinesValue(saved, language.id))
 
             val reloaded = CodeStyle.createTestSettings()
             reloaded.readExternal(saved)
-            assertEquals(newValue, reloaded.getCommonSettings(language).KEEP_BLANK_LINES_IN_CODE)
+            assertEquals(newValue, reloaded.getCommonSettings(language).BLANK_LINES_AFTER_IMPORTS)
             assertEquals(legacyValue.toString(), blankLinesValue(serialize(reloaded), oldId))
         }
     }
@@ -69,7 +69,7 @@ class LanguageSettingsCompatibilityTest : BasePlatformTestCase() {
                 addContent(
                     Element("codeStyleSettings").setAttribute("language", id).addContent(
                         Element("option")
-                            .setAttribute("name", "KEEP_BLANK_LINES_IN_CODE")
+                            .setAttribute("name", "BLANK_LINES_AFTER_IMPORTS")
                             .setAttribute("value", value.toString()),
                     ),
                 )
@@ -83,6 +83,6 @@ class LanguageSettingsCompatibilityTest : BasePlatformTestCase() {
         scheme.getChildren("codeStyleSettings")
             .single { it.getAttributeValue("language") == languageId }
             .getChildren("option")
-            .single { it.getAttributeValue("name") == "KEEP_BLANK_LINES_IN_CODE" }
+            .single { it.getAttributeValue("name") == "BLANK_LINES_AFTER_IMPORTS" }
             .getAttributeValue("value")
 }
