@@ -72,59 +72,59 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileType name="protobuf" language="protobuf"
+        <fileType name="protobuf" language="protocol_buffers"
                   implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtobufFileType" extensions="proto"/>
-        <lang.parserDefinition language="protobuf"
+        <lang.parserDefinition language="protocol_buffers"
                                implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtobufParserDefinition"/>
-        <lang.syntaxHighlighter language="protobuf"
+        <lang.syntaxHighlighter language="protocol_buffers"
                                 implementationClass="io.kanro.idea.plugin.protobuf.lang.highlight.ProtobufHighlighter"/>
-        <annotator language="protobuf"
+        <annotator language="protocol_buffers"
                    implementationClass="io.kanro.idea.plugin.protobuf.lang.highlight.ProtobufHighlightingAnnotator"
                    order="FIRST"/>
 
-        <annotator language="protobuf"
+        <annotator language="protocol_buffers"
                    implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.ProtobufAnnotator"/>
         <annotator
-                language="protobuf"
+                language="protocol_buffers"
                 implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.Protobuf3Annotator"/>
         <annotator
-                language="protobuf"
+                language="protocol_buffers"
                 implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.Protobuf2Annotator"/>
 
         <iconProvider implementation="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufIconProvider"/>
         <lang.ast.factory implementationClass="io.kanro.idea.plugin.protobuf.lang.psi.proto.ProtobufASTFactory"
-                          language="protobuf"/>
-        <lang.documentationProvider language="protobuf"
+                          language="protocol_buffers"/>
+        <lang.documentationProvider language="protocol_buffers"
                                     implementationClass="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufDocumentationProvider"/>
-        <lang.quoteHandler language="protobuf"
+        <lang.quoteHandler language="protocol_buffers"
                            implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtobufQuoteHandler"/>
-        <completion.contributor language="protobuf"
+        <completion.contributor language="protocol_buffers"
                                 implementationClass="io.kanro.idea.plugin.protobuf.lang.completion.ProtobufCompletionContributor"/>
-        <lang.psiStructureViewFactory language="protobuf"
+        <lang.psiStructureViewFactory language="protocol_buffers"
                                       implementationClass="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufStructureViewFactory"/>
         <elementDescriptionProvider
                 implementation="io.kanro.idea.plugin.protobuf.lang.ui.ProtobufElementDescriptionProvider"/>
-        <lang.importOptimizer language="protobuf"
+        <lang.importOptimizer language="protocol_buffers"
                               implementationClass="io.kanro.idea.plugin.protobuf.lang.formatter.ProtobufImportOptimizer"/>
-        <lang.commenter language="protobuf"
+        <lang.commenter language="protocol_buffers"
                         implementationClass="io.kanro.idea.plugin.protobuf.lang.formatter.ProtobufCommenter"/>
         <codeStyleSettingsProvider
                 implementation="io.kanro.idea.plugin.protobuf.lang.formatter.ProtobufCodeStyleSettingsProvider"/>
         <langCodeStyleSettingsProvider
                 implementation="io.kanro.idea.plugin.protobuf.lang.formatter.ProtobufLanguageCodeStyleSettingsProvider"/>
-        <lang.braceMatcher language="protobuf"
+        <lang.braceMatcher language="protocol_buffers"
                            implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtobufPairedBraceMatcher"/>
-        <lang.formatter language="protobuf"
+        <lang.formatter language="protocol_buffers"
                         implementationClass="io.kanro.idea.plugin.protobuf.lang.formatter.ProtobufFormattingModelBuilder"/>
-        <lang.findUsagesProvider language="protobuf"
+        <lang.findUsagesProvider language="protocol_buffers"
                                  implementationClass="io.kanro.idea.plugin.protobuf.lang.usage.ProtobufFindUsageProvider"
         />
         <usageTypeProvider implementation="io.kanro.idea.plugin.protobuf.lang.usage.ProtobufUsageTypeProvider"/>
-        <lang.foldingBuilder language="protobuf"
+        <lang.foldingBuilder language="protocol_buffers"
                              implementationClass="io.kanro.idea.plugin.protobuf.lang.folding.ProtobufFoldingBuilder"/>
-        <lang.refactoringSupport language="protobuf"
+        <lang.refactoringSupport language="protocol_buffers"
                                  implementationClass="io.kanro.idea.plugin.protobuf.lang.reference.ProtobufRefactoringSupportProvider"/>
-        <spellchecker.support language="protobuf"
+        <spellchecker.support language="protocol_buffers"
                               implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtobufSpellcheckingStrategy"/>
 
         <projectConfigurable groupId="language"
@@ -142,42 +142,42 @@
         <stubIndex implementation="io.kanro.idea.plugin.protobuf.lang.psi.proto.stub.index.ResourceTypeIndex"/>
 
         <!-- AIP Spec -->
-        <psi.referenceContributor language="protobuf"
+        <psi.referenceContributor language="protocol_buffers"
                                   implementation="io.kanro.idea.plugin.protobuf.aip.reference.contributor.AipReferenceContributor"/>
-        <annotator language="protobuf" implementationClass="io.kanro.idea.plugin.protobuf.aip.annotator.AipAnnotator"/>
-        <completion.contributor language="protobuf"
+        <annotator language="protocol_buffers" implementationClass="io.kanro.idea.plugin.protobuf.aip.annotator.AipAnnotator"/>
+        <completion.contributor language="protocol_buffers"
                                 implementationClass="io.kanro.idea.plugin.protobuf.aip.completion.AipCompletionContributor"/>
         <iconMapper mappingFile="io/kanro/idea/plugin/protobuf/icon/expui/ProtobufIconMappings.json"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileType name="prototext" language="prototext"
+        <fileType name="prototext" language="protocol_buffers_text"
                   implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtoTextFileType"
                   extensions="txtpb;pbtxt;textproto;textpb;protoascii;pb.txt"/>
-        <lang.parserDefinition language="prototext"
+        <lang.parserDefinition language="protocol_buffers_text"
                                implementationClass="io.kanro.idea.plugin.protobuf.lang.ProtoTextParserDefinition"/>
-        <lang.syntaxHighlighter language="prototext"
+        <lang.syntaxHighlighter language="protocol_buffers_text"
                                 implementationClass="io.kanro.idea.plugin.protobuf.lang.highlight.ProtoTextHighlighter"/>
         <langCodeStyleSettingsProvider
                 implementation="io.kanro.idea.plugin.protobuf.lang.formatter.ProtoTextLanguageCodeStyleSettingsProvider"/>
-        <annotator language="prototext"
+        <annotator language="protocol_buffers_text"
                    implementationClass="io.kanro.idea.plugin.protobuf.lang.highlight.ProtoTextHighlightingAnnotator"
                    order="FIRST"/>
-        <annotator language="prototext"
+        <annotator language="protocol_buffers_text"
                    implementationClass="io.kanro.idea.plugin.protobuf.lang.annotator.ProtoTextAnnotator"/>
-        <lang.braceMatcher language="prototext"
+        <lang.braceMatcher language="protocol_buffers_text"
                            implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtoTextPairedBraceMatcher"/>
-        <lang.formatter language="prototext"
+        <lang.formatter language="protocol_buffers_text"
                         implementationClass="io.kanro.idea.plugin.protobuf.lang.formatter.ProtoTextFormattingModelBuilder"/>
-        <lang.quoteHandler language="prototext"
+        <lang.quoteHandler language="protocol_buffers_text"
                            implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtoTextQuoteHandler"/>
-        <lang.commenter language="prototext"
+        <lang.commenter language="protocol_buffers_text"
                         implementationClass="io.kanro.idea.plugin.protobuf.lang.formatter.ProtoTextCommenter"/>
-        <spellchecker.support language="prototext"
+        <spellchecker.support language="protocol_buffers_text"
                               implementationClass="io.kanro.idea.plugin.protobuf.lang.edting.ProtoTextSpellcheckingStrategy"/>
         <lang.ast.factory implementationClass="io.kanro.idea.plugin.protobuf.lang.psi.text.ProtoTextASTFactory"
-                          language="prototext"/>
-        <psi.referenceContributor language="prototext"
+                          language="protocol_buffers_text"/>
+        <psi.referenceContributor language="protocol_buffers_text"
                                   implementation="io.kanro.idea.plugin.protobuf.lang.psi.text.reference.ProtoTextSharpCommentReferenceContributor"/>
         <colorSettingsPage
                 implementation="io.kanro.idea.plugin.protobuf.lang.highlight.ProtoTextColorSettingsPage"/>

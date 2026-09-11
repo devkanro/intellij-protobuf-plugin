@@ -16,7 +16,7 @@ class ProtobufFileType : LanguageFileType(ProtobufLanguage) {
     }
 
     override fun getName(): String {
-        return ProtobufLanguage.id
+        return "protobuf"
     }
 
     override fun getDescription(): String {
