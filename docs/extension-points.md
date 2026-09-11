@@ -2,6 +2,22 @@
 
 The plugin defines custom extension points that allow third-party plugins to extend its functionality. All extension points are dynamic (support runtime loading/unloading).
 
+## Language Bindings
+
+Use the following IDs for IntelliJ language extension registrations and language lookups:
+
+| Language | Language ID | File type name (unchanged) |
+|----------|-------------|----------------------------|
+| Protocol Buffers | `protocol_buffers` | `protobuf` |
+| Protocol Buffers text format | `protocol_buffers_text` | `prototext` |
+
+The old language IDs `protobuf` and `prototext` are not aliases. Bindings using them may resolve
+to JetBrains' bundled languages instead of this plugin. Code using `ProtobufLanguage` or
+`ProtoTextLanguage` directly follows the new IDs without changing the class names.
+The plugin ID and custom extension point namespace remain `io.kanro.idea.plugin.protobuf`;
+stub external IDs and index keys also remain unchanged.
+See the [upgrade guidance](../README.md#upgrading-from-the-old-language-ids) for persisted settings.
+
 ## rootProvider
 
 **Interface**: `io.kanro.idea.plugin.protobuf.lang.root.ProtobufRootProvider`

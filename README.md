@@ -32,6 +32,29 @@ This plugin turns your JetBrains IDE into a protobuf-aware development environme
 2. Search for **"Protobuf"** by kanro
 3. Install and restart
 
+### Upgrading from the old language IDs
+
+The language IDs are now `protocol_buffers` (previously `protobuf`) and
+`protocol_buffers_text` (previously `prototext`). File type names, extensions, display names,
+plugin settings, and color scheme keys are unchanged. No aliases for the old language IDs are registered.
+
+Language-specific code style settings and custom integrations that reference the old IDs may need
+manual migration. Back up your IDE and project settings first. For code style schemes, copy only
+the `codeStyleSettings` entry for the old language to the new language ID **if the destination is
+absent**; keep the original entry and never overwrite existing settings for the new ID.
+The separate `ProtobufCodeStyleSettings` entry does not need renaming.
+Update custom language injection targets, `@Language` annotations, and language injection comments
+that reference the old IDs only when they are intended for this plugin, not the bundled plugin.
+Live Template context IDs are separate from language IDs and are not renamed; review custom template
+applicability rather than replacing their context IDs. Third-party plugins must update their language
+bindings or lookups to the new IDs.
+
+Migration is not automatic: the old IDs can also identify JetBrains' bundled languages, so their
+settings cannot safely be attributed to this plugin. Legacy code style entries are retained by the
+platform, but are not automatically applied to the new languages. Ordinary file associations retain their
+existing file type names. This change does **not** establish full coexistence with the bundled
+Protocol Buffer and gRPC plugins; the compatibility warning above still applies.
+
 ## 🔍 Feature Highlights
 
 ### Schema Intelligence

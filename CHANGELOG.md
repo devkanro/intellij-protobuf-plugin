@@ -4,6 +4,16 @@
 
 ## Unreleased
 
+### Changed
+
+- Rename language IDs from `protobuf` to `protocol_buffers` and from `prototext` to
+  `protocol_buffers_text` to avoid collisions with bundled languages ([#296](https://github.com/devkanro/intellij-protobuf-plugin/pull/296)).
+  Update core, Java, Sisyphus, and HTTP Client language bindings without registering legacy aliases.
+- Preserve file type names, extensions, display names, settings storage, stub/index IDs, and color
+  scheme keys. Language-ID-based settings and external integrations may require
+  [manual migration](README.md#upgrading-from-the-old-language-ids); existing settings are not overwritten.
+  Full coexistence with bundled Protocol Buffer and gRPC plugins remains unverified.
+
 ## 1.7.50 - 2023-12-25
 
 - Remove support for buf
