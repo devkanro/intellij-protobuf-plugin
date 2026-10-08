@@ -2,6 +2,7 @@ import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
+import org.gradle.api.tasks.testing.Test
 import org.jetbrains.kotlin.gradle.internal.ensureParentDirsCreated
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
@@ -197,6 +198,14 @@ tasks {
 
     compileKotlin {
         dependsOn(generateParser, named("generateTextParser"), generateLexer, named("generateTextLexer"))
+    }
+
+    withType<Test>().configureEach {
+        if (project.hasProperty("skipLanguageMigrationTests")) {
+            exclude("**/LanguageRegistrationTest.class")
+            exclude("**/LanguageSettingsCompatibilityTest.class")
+            exclude("**/LanguageDescriptorTest.class")
+        }
     }
 }
 
