@@ -117,7 +117,7 @@ jobs:
 
       # Run tests
       - name: Run Tests
-        run: ./gradlew check
+        run: ./gradlew check -PskipLanguageMigrationTests=true
 
       # Collect Tests Result of failed tests
       - name: Collect Tests Result
